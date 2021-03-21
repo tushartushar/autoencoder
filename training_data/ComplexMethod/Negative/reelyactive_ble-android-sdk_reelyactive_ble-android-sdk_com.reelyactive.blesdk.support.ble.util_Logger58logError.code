@@ -1,0 +1,10 @@
+public static void logError(String message,Exception... e){
+  if (Log.isLoggable(TAG,Log.ERROR)) {
+    if (e == null || e.length == 0) {
+      Log.e(TAG,message);
+    }
+ else {
+      Log.e(TAG,message,e[0]);
+    }
+  }
+}

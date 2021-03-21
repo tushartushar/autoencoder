@@ -1,0 +1,3 @@
+public static final Node makeLeaf(long offset,long time){
+  return new Node(null,null,offset,0,time,time,1,true);
+}

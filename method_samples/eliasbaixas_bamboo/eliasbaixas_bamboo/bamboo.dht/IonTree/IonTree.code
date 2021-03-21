@@ -1,0 +1,5 @@
+public IonTree(long n,long r,long c){
+  now=n;
+  rate=r;
+  capacity=c;
+}

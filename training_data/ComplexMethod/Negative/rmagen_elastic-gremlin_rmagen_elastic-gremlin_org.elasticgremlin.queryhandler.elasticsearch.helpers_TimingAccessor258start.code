@@ -1,0 +1,11 @@
+public void start(String name){
+  timer(name).start();
+}
+public void start(){
+  if (!sw.isStarted()) {
+    sw.start();
+    return;
+  }
+  if (!sw.isSuspended())   stop();
+  sw.resume();
+}

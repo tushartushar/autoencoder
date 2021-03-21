@@ -1,0 +1,6 @@
+public Object clone() throws CloneNotSupportedException {
+  RoutingNeighborAnnounce result=(RoutingNeighborAnnounce)super.clone();
+  result.guid=guid;
+  result.add=add;
+  return result;
+}

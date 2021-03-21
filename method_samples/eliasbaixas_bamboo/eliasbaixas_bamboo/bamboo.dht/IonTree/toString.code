@@ -1,0 +1,3 @@
+public String toString(){
+  return node_to_string(root);
+}

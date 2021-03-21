@@ -1,0 +1,125 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  String homedir=config_get_string(config,"homedir");
+  File directory=new File(homedir);
+  try {
+    if (!directory.exists()) {
+      if (!directory.mkdirs()) {
+        logger.fatal("could not mkdir " + homedir);
+        System.exit(1);
+      }
+    }
+  }
+ catch (  SecurityException e) {
+    logger.fatal("caught " + e + " trying to create "+ homedir,e);
+  }
+  boolean print_open_cursors=config_get_boolean(config,"print_open_cursors");
+  int cache_size=config_get_int(config,"libdb_cache_size");
+  if (cache_size == -1)   cache_size=1024 * 1024;
+  env=new DbEnv(0);
+  env.setCacheSize(cache_size,1);
+  env.setFlags(Db.DB_TXN_NOSYNC,true);
+  env.setFlags(Db.DB_LOG_AUTOREMOVE,true);
+  env.open(homedir,Db.DB_INIT_MPOOL | Db.DB_INIT_TXN | Db.DB_INIT_LOCK| Db.DB_RECOVER| Db.DB_CREATE,0);
+  DbTxn txn=env.txnBegin(null,Db.DB_TXN_SYNC);
+  client_counts=new Db(env,0);
+  client_counts.open(txn,"client_counts.db",null,Db.DB_BTREE,Db.DB_CREATE | Db.DB_DIRTY_READ,0);
+  txn.commit(Db.DB_TXN_SYNC);
+  txn=env.txnBegin(null,Db.DB_TXN_SYNC);
+  by_time=new Db(env,0);
+  by_time.open(txn,homedir + "/by_time.db",null,Db.DB_BTREE,Db.DB_CREATE | Db.DB_DIRTY_READ,0);
+  by_guid=new Db(env,0);
+  by_guid.setFlags(Db.DB_DUPSORT);
+  by_guid.open(txn,homedir + "/by_guid.db",null,Db.DB_BTREE,Db.DB_CREATE | Db.DB_DIRTY_READ,0);
+  by_time.associate(txn,by_guid,guid_key_creator,0);
+  by_guid_and_data_hash=new Db(env,0);
+  by_guid_and_data_hash.setFlags(Db.DB_DUPSORT);
+  by_guid_and_data_hash.open(txn,homedir + "/by_guid_and_data_hash.db",null,Db.DB_BTREE,Db.DB_CREATE | Db.DB_DIRTY_READ,0);
+  by_time.associate(txn,by_guid_and_data_hash,guid_and_data_hash_key_creator,0);
+  txn.commit(Db.DB_TXN_SYNC);
+  txn=env.txnBegin(null,Db.DB_TXN_SYNC);
+  recycling=new Db(env,0);
+  recycling.open(txn,homedir + "/recycling.db",null,Db.DB_BTREE,Db.DB_CREATE | Db.DB_DIRTY_READ,0);
+  txn.commit(Db.DB_TXN_SYNC);
+  long test_start=now_ms();
+  logger.info("Testing database");
+  Key k=ZERO_KEY;
+  byte[] kbuf=new byte[Key.SIZE];
+  ByteBuffer bb=ByteBuffer.wrap(kbuf);
+  k.to_byte_buffer(bb);
+  Dbt key=new Dbt(kbuf);
+  key.setSize(kbuf.length);
+  Dbc cursor=open_cursor(by_time,null,"handle_get_by_time_req");
+  int retval=0;
+  Dbt data=new Dbt();
+  data.setFlags(Db.DB_DBT_PARTIAL);
+  data.setPartialLength(0);
+  try {
+    retval=cursor.get(key,data,Db.DB_SET_RANGE);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  close_cursor(cursor);
+  long test_end=now_ms();
+  if (test_end - test_start < 60 * 1000) {
+    logger.info("Test successful");
+  }
+ else {
+    logger.fatal("Test took too long.  Reading one value took " + ((test_end - test_start) / 1000.0) + " seconds");
+    logger.fatal("Closing environment");
+    try {
+      txn=env.txnBegin(null,Db.DB_TXN_SYNC);
+      env.close(0);
+      txn.commit(Db.DB_TXN_SYNC);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    logger.fatal("Exiting");
+    System.exit(1);
+  }
+  if (!sim_running) {
+    Thread t=new Thread(){
+      public void run(){
+        try {
+          while (true) {
+            QueueElementIF head=null;
+            int sz=0;
+synchronized (to_bdb_thread) {
+              while (to_bdb_thread.isEmpty()) {
+                try {
+                  to_bdb_thread.wait();
+                }
+ catch (                InterruptedException e) {
+                }
+              }
+              head=(QueueElementIF)to_bdb_thread.removeFirst();
+              sz=to_bdb_thread.size();
+              last_dequeue_ms=timer_ms();
+            }
+            if (logger.isDebugEnabled())             logger.debug("to_bdb_thread.size()=" + sz);
+            the_real_handle_event(head);
+          }
+        }
+ catch (        OutOfMemoryError e) {
+          bamboo.lss.DustDevilSink.reserve=null;
+          System.gc();
+          logger.fatal("uncaught error",e);
+          System.exit(1);
+        }
+catch (        Throwable e) {
+          logger.fatal("uncaught exception",e);
+          System.exit(1);
+        }
+      }
+    }
+;
+    t.setName("StorageManager.BerkeleyDbThread-" + my_node_id);
+    t.start();
+  }
+  Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+  rand=new Random(now_ms() ^ my_node_id.hashCode());
+  classifier.dispatch_later(new SyncAlarm(),30 * 1000 + rand.nextInt(60 * 1000));
+  classifier.dispatch_later(new Alarm(),30 * 1000 + rand.nextInt(60 * 1000));
+}

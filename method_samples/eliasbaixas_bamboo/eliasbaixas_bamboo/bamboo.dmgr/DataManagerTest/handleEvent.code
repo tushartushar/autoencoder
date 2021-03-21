@@ -1,0 +1,20 @@
+public void handleEvent(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("got " + item);
+  if (item instanceof StagesInitializedSignal) {
+    dispatch(new PrintDataAlarm());
+  }
+ else   if (item instanceof PutOrRemoveResp) {
+  }
+ else   if (item instanceof PrintDataAlarm) {
+    print_data();
+  }
+ else   if (item instanceof StorageManager.GetByTimeResp) {
+    handle_get_by_time_resp((StorageManager.GetByTimeResp)item);
+  }
+ else   if (item instanceof StorageManager.GetByGuidResp) {
+    handle_get_by_guid_resp((StorageManager.GetByGuidResp)item);
+  }
+ else {
+    throw new IllegalArgumentException(item.getClass().getName());
+  }
+}

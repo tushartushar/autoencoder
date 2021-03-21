@@ -1,0 +1,7 @@
+/** 
+ * Get the current idle ble scan time that has been set
+ * @VisibleForTesting
+ */
+int getScanIdleMillis(){
+  return (overrideScanActiveMillis != -1) ? overrideScanIdleMillis : scanIdleMillis;
+}

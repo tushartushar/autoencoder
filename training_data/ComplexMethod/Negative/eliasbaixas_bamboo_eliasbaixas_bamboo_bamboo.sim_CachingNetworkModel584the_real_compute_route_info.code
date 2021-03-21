@@ -1,0 +1,1 @@
+protected abstract RouteInfo the_real_compute_route_info(int src,int dst);

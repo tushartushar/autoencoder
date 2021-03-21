@@ -1,0 +1,3 @@
+private boolean checkSearchCriteriaIsEmpty(SearchBean searchCriteria){
+  return StringUtils.trimToNull(searchCriteria.getApplicationName()) == null && StringUtils.trimToNull(searchCriteria.getUniqueProcessId()) == null && StringUtils.trimToNull(searchCriteria.getTransactionType()) == null && StringUtils.trimToNull(searchCriteria.getMessageFormat()) == null && StringUtils.trimToNull(searchCriteria.getJournalSequence()) == null && StringUtils.trimToNull(searchCriteria.getApplicationTransactionId()) == null && StringUtils.trimToNull(searchCriteria.getSegment()) == null && searchCriteria.getTransactionStartDateTime() == null && searchCriteria.getTransactionEndDateTime() == null;
+}

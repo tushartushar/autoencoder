@@ -1,0 +1,6 @@
+protected double configGetDouble(ConfigDataIF config,String name,double defaultValue){
+  double result=config.getDouble(name);
+  if (result == -1.0)   result=defaultValue;
+  logger.info("config." + name + "="+ result);
+  return result;
+}

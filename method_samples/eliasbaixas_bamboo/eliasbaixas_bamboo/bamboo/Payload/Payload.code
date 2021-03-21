@@ -1,0 +1,6 @@
+public Payload(String m){
+  message=m;
+}
+public Payload(InputBuffer b){
+  message=b.nextString();
+}

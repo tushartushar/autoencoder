@@ -1,0 +1,16 @@
+public static Vertex vertexToVertex(Vertex originalVertex,Edge edge,Direction direction){
+switch (direction) {
+case OUT:
+    return edge.inVertex();
+case IN:
+  return edge.outVertex();
+case BOTH:
+Vertex outV=edge.outVertex();
+Vertex inV=edge.inVertex();
+if (outV.id().equals(inV.id())) return originalVertex;
+if (originalVertex.id().equals(inV.id())) return outV;
+if (originalVertex.id().equals(outV.id())) return inV;
+default :
+throw new IllegalArgumentException(direction.toString());
+}
+}

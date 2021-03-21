@@ -1,0 +1,4 @@
+/** 
+ * @return a JPanel object containing the GUI
+ */
+JPanel getPanel();

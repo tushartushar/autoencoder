@@ -1,0 +1,4 @@
+public PutResp(int r,Object ud){
+  result=r;
+  user_data=ud;
+}

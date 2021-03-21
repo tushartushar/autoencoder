@@ -1,0 +1,6 @@
+/** 
+ * @return whether the area of the selection region is zero.
+ */
+public boolean isEmpty(){
+  return dimension() < 2;
+}

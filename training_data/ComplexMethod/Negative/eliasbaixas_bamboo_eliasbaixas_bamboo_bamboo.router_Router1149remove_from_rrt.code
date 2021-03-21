@@ -1,0 +1,8 @@
+protected boolean remove_from_rrt(NeighborInfo ni){
+  if (reverse_rt.remove(ni)) {
+    BambooNeighborInfo[] removed={new BambooNeighborInfo(ni.node_id,ni.guid)};
+    notify_reverse_routing_table_changed(null,removed);
+    return true;
+  }
+  return false;
+}

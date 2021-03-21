@@ -1,0 +1,6 @@
+public LinkedList<NeighborInfo> as_list(){
+  LinkedList result=new LinkedList<NeighborInfo>();
+  for (int j=leaf_pred_count - 1; j >= 0; --j)   result.addLast(leaf_preds[j]);
+  for (int j=0; j < leaf_succ_count; ++j)   result.addLast(leaf_succs[j]);
+  return result;
+}

@@ -1,0 +1,3 @@
+@Column(name="creationTime",nullable=true) @Temporal(TemporalType.TIMESTAMP) public java.util.Date getCreationTime(){
+  return creationTime;
+}

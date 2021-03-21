@@ -1,0 +1,3 @@
+public void serialize(Object msg,ByteBuffer buf){
+  buf.put((ByteBuffer)msg);
+}

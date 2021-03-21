@@ -1,0 +1,13 @@
+public JoinState(InetSocketAddress a,BigInteger k,BigInteger n,int l,int t,String app,JoinCb c,Object u){
+  addr=a;
+  key=k;
+  namespace=n;
+  levels=l;
+  ttl_s=t;
+  cb=c;
+  user_data=u;
+  current_level=levels - 1;
+  done=false;
+  addr_bytes=addr2bytes(addr);
+  application=app;
+}

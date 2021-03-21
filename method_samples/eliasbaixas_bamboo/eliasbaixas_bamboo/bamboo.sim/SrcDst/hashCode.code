@@ -1,0 +1,3 @@
+public int hashCode(){
+  return (src << 16) | (dst & 0xffff);
+}

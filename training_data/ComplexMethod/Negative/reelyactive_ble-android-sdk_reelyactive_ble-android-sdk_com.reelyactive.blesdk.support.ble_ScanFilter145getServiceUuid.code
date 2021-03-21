@@ -1,0 +1,6 @@
+/** 
+ * Returns the filter set on the service uuid.
+ */
+@Nullable public ParcelUuid getServiceUuid(){
+  return mServiceUuid;
+}

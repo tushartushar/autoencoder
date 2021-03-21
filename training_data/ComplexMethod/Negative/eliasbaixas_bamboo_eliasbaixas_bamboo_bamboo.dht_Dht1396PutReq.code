@@ -1,0 +1,14 @@
+public PutReq(BigInteger k,ByteBuffer v,byte[] sh,byte[] vh,boolean p,SinkIF q,Object ud,int t,InetAddress c){
+  key=k;
+  value=v;
+  secret_hash=sh;
+  value_hash=vh;
+  put=p;
+  completion_queue=q;
+  user_data=ud;
+  ttl_sec=t;
+  client_id=c;
+}
+public PutReq(BigInteger k,ByteBuffer v,byte[] vh,boolean p,SinkIF q,Object ud,int t,InetAddress c){
+  this(k,v,null,vh,p,q,ud,t,c);
+}

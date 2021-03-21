@@ -1,0 +1,135 @@
+protected void create_response(ConnState state,byte[] resp){
+  StringBuffer r=new StringBuffer(1024 + resp.length);
+  r.append("HTTP/1.0 200 OK\r\n");
+  r.append("Date: Wed, 19 Nov 2003 01:49:00 GMT\r\n");
+  r.append("Server: bamboo\r\n");
+  r.append("Connection: close\r\n");
+  r.append("Content-Type: text/xml\r\n");
+  r.append("Content-Length: " + resp.length + "\r\n");
+  r.append("\r\n");
+  r.append(new String(resp));
+  state.resp=ByteBuffer.wrap(r.toString().getBytes());
+}
+protected void create_response(ConnState state){
+  StringBuffer r=new StringBuffer(10 * 1024);
+  r.append("HTTP/1.0 200 OK\n");
+  r.append("Date: Wed, 19 Nov 2003 01:49:00 GMT\n");
+  r.append("Server: bamboo\nConnection: close\n");
+  r.append("Content-Type: text/html; charset=iso-8859-1\r\n\r\n");
+  r.append("<http>\n<head>\n<title>Bamboo Node ");
+  r.append(hostname);
+  r.append(':');
+  r.append(my_node_id.port());
+  r.append("</title>\n<style type=\"text/css\">\n");
+  r.append("body { margin-top:  1em; margin-bottom: 1em;\n");
+  r.append("margin-left: 1em; margin-right:  1em; }\n");
+  r.append("</style>\n</head>\n<body>\n");
+  r.append("<center><h2>Bamboo Node Status Page</h2>\n");
+  r.append("<table>\n");
+  r.append("<tr><td width=\"40%\"align=\"center\"><h3>Node Info</h3></td>\n");
+  r.append("<td width=\"10%\"> </td>\n");
+  r.append("<td><h3 width=\"50%\"align=\"center\">Leaf Set</h3></td>\n");
+  r.append("</tr>\n<tr><td align=\"center\" valign=\"top\">\n<table>\n");
+  r.append("<tr><td><em>Build:</em></td><td width=10></td><td>");
+  r.append(build);
+  r.append("</td></tr>\n");
+  r.append("<tr><td><em>Hostname:</em></td><td></td><td>");
+  r.append(hostname);
+  r.append("</td></tr>\n");
+  r.append("<tr><td><em>IP Address:</em></td><td></td><td>");
+  r.append(my_node_id.address().getHostAddress());
+  r.append("</td></tr>\n");
+  r.append("<tr><td><em>Port:</em></td><td></td><td>");
+  r.append(my_node_id.port());
+  r.append("</td></tr>\n");
+  r.append("<tr><td><em>ID:</em></td><td></td><td>0x");
+  r.append(GuidTools.guid_to_string(my_guid));
+  r.append("</td></tr>");
+  r.append("<tr><td><em>Uptime:</em></td><td></td><td>");
+  long uptime_s=(now_ms() - init_start_time_ms) / 1000;
+  StringUtil.time_to_sbuf(uptime_s,r);
+  r.append("</td></tr>\n");
+  r.append("<tr><td><em>Current Storage:</em></td><td></td><td>");
+  StringUtil.byte_cnt_to_sbuf(total_storage,r);
+  r.append("</td></tr>\n");
+  r.append("<tr><td><em>Virtual Coordinates:</em></td><td></td><td>");
+  if (coordinate != null) {
+    double[] c=coordinate.getCoordinates();
+    NumberFormat n=NumberFormat.getInstance();
+    n.setMaximumFractionDigits(2);
+    n.setGroupingUsed(false);
+    for (int i=0; i < c.length; ++i) {
+      r.append(n.format(c[i]));
+      if (i < c.length - 1)       r.append(", ");
+    }
+  }
+  r.append("</td></tr>\n");
+  r.append("<tr><td><em>Estimated Network Size:</em></td><td></td><td>");
+  BigDecimal nodes=new BigDecimal(1.0);
+  if ((preds != null) && (succs != null) && (preds.length > 0 && succs.length > 0)&& (!preds[preds.length - 1].guid.equals(succs[succs.length - 1].guid))) {
+    BigDecimal span=new BigDecimal(GuidTools.calc_dist(preds[preds.length - 1].guid,succs[succs.length - 1].guid,MODULUS));
+    BigDecimal slots=new BigDecimal(BigInteger.valueOf(preds.length + succs.length));
+    BigDecimal pernode=span.divide(slots,3,BigDecimal.ROUND_UP);
+    nodes=(new BigDecimal(MODULUS)).divide(pernode,0,BigDecimal.ROUND_UP);
+  }
+  r.append(nodes);
+  r.append(" nodes</td></tr>\n</td>\n<td></td><td>");
+  r.append("</table>\n</td><td> </td><td valign=\"top\">");
+  r.append("<table width=\"100%\">\n");
+  r.append("<tr><td align=\"center\"><em>Position</em></td>");
+  r.append("<td align=\"center\"><em>IP Address</em></td>");
+  r.append("<td align=\"center\"><em>Port</em></td>");
+  r.append("<td align=\"center\"><em>ID</em></td>");
+  r.append("<td align=\"center\"><em>RTT (ms)</em></td></tr>\n");
+  if (preds != null) {
+    for (int i=preds.length - 1; i >= 0; --i) {
+      Long rtt_ms=(Long)latencies.get(preds[i].node_id);
+      print_ls_table_row(r,-1 * (i + 1),preds[i],rtt_ms);
+    }
+  }
+  if (succs != null) {
+    for (int i=0; i < succs.length; ++i) {
+      Long rtt_ms=(Long)latencies.get(succs[i].node_id);
+      print_ls_table_row(r,i + 1,succs[i],rtt_ms);
+    }
+  }
+  r.append("</table>\n</td></tr></table>\n");
+  r.append("<p><p>\n<table width=\"50%\">\n<tr>\n");
+  r.append("<td><h3 align=\"center\">Routing Table</h3></td>\n");
+  r.append("</tr>\n<tr>\n<td>\n");
+  r.append("<table width=\"100%\">");
+  r.append("<tr><td align=\"center\"><em>Level</em></td>");
+  r.append("<td align=\"center\"><em>Digit</em></td>");
+  r.append("<td align=\"center\"><em>IP Address</em></td>");
+  r.append("<td align=\"center\"><em>Port</em></td>");
+  r.append("<td align=\"center\"><em>ID</em></td>");
+  r.append("<td align=\"center\"><em>RTT (ms)</em></td></tr>");
+  for (int i=0; i <= rt.highest_level(); ++i) {
+    for (int j=0; j < DIGIT_VALUES; ++j) {
+      RoutingTable.RoutingEntry re=rt.primary_re(i,j);
+      if ((re != null) && (!re.ni.node_id.equals(my_node_id))) {
+        Long rtt_ms=(Long)latencies.get(re.ni.node_id);
+        r.append("<tr><td align=\"center\">");
+        r.append(i);
+        r.append("</td><td align=\"center\">");
+        r.append(j);
+        r.append("</td><td align=\"center\"><a href=\"http://");
+        r.append(re.ni.node_id.address().getHostAddress());
+        r.append(':');
+        r.append(re.ni.node_id.port() + 1);
+        r.append("/\">");
+        r.append(re.ni.node_id.address().getHostAddress());
+        r.append("</a></td><td align=\"center\">");
+        r.append(re.ni.node_id.port());
+        r.append("</td><td align=\"center\">0x");
+        r.append(GuidTools.guid_to_string(re.ni.guid));
+        r.append("</td><td align=\"center\">");
+        if (rtt_ms == null)         r.append("???");
+ else         r.append(rtt_ms);
+        r.append("</td></tr>\n");
+      }
+    }
+  }
+  r.append("</table>\n</td>\n</tr>\n</table>\n</center>\n" + "</body>\n</html>\n");
+  state.resp=ByteBuffer.wrap(r.toString().getBytes());
+}

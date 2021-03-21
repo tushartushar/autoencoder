@@ -1,0 +1,3 @@
+public static boolean isValidURI(String uri){
+  return uri.matches(URI_PATTERN);
+}

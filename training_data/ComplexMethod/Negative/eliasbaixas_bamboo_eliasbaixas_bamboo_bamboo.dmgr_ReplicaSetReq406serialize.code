@@ -1,0 +1,5 @@
+public void serialize(OutputBuffer buffer){
+  return_address.serialize(buffer);
+  buffer.add(guid);
+  buffer.add(nonce);
+}

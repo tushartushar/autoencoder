@@ -1,0 +1,6 @@
+public Set<NeighborInfo> as_set(){
+  Set<NeighborInfo> result=new LinkedHashSet<NeighborInfo>();
+  for (int j=0; j < leaf_pred_count; ++j)   result.add(leaf_preds[j]);
+  for (int j=0; j < leaf_succ_count; ++j)   result.add(leaf_succs[j]);
+  return result;
+}

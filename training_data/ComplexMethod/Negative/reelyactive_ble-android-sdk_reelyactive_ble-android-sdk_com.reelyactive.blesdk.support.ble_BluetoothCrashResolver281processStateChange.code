@@ -1,0 +1,8 @@
+private void processStateChange(){
+  if (updateNotifier != null) {
+    updateNotifier.dataUpdated();
+  }
+  if (new Date().getTime() - lastStateSaveTime > MIN_TIME_BETWEEN_STATE_SAVES_MILLIS) {
+    saveState();
+  }
+}

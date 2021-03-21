@@ -1,0 +1,3 @@
+public final double x_pos_g(BigInteger guid){
+  return Math.cos(theta(guid)) * ring_radius;
+}

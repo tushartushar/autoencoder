@@ -1,0 +1,6 @@
+/** 
+ * Do we have an ack to send?
+ */
+public final boolean can_send_ack(){
+  return !ack_q.isEmpty();
+}

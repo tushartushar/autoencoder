@@ -1,0 +1,4 @@
+public boolean acceptPut(long ttl,long size){
+  Node newRoot=addPut(root,now,rate,ttl,size);
+  return newRoot.value() + newRoot.offset() <= capacity;
+}

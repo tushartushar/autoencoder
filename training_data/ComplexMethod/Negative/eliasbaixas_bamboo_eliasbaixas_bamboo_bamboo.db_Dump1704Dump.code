@@ -1,0 +1,3 @@
+public Dump(){
+  event_types=new Class[]{GetByTimeResp.class,GetByKeyResp.class};
+}

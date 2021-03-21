@@ -1,0 +1,3 @@
+public PartitionCheckCB(NodeId n){
+  node_id=n;
+}

@@ -1,0 +1,58 @@
+/** 
+ * Send <code>msg</code> to <code>dst</code> with the default timeout and no notification of success or failure.
+ */
+public Object send(QuickSerializable msg,InetSocketAddress dst){
+  return send(msg,dst,DEFAULT_TIMEOUT);
+}
+/** 
+ * Send <code>msg</code> to <code>dst</code> with the default timeout and call <code>callback</code> with the result, where <code>true</code> indicates success and <code>false</code> indicates failure.
+ */
+public Object send(QuickSerializable msg,InetSocketAddress dst,Thunk1<Boolean> callback){
+  return send(msg,dst,DEFAULT_TIMEOUT,callback);
+}
+/** 
+ * Send <code>msg</code> to <code>dst</code> if we can do so within <code>timeoutSeconds</code> seconds.
+ */
+public Object send(QuickSerializable msg,InetSocketAddress dst,long timeoutSeconds){
+  return send(msg,dst,timeoutSeconds,nullSendCallback);
+}
+/** 
+ * Send <code>msg</code> to <code>dst</code> if we can do so within <code>timeoutSeconds</code> seconds and call <code>callback</code> with the result, where <code>true</code> indicates success and <code>false</code> indicates failure.
+ */
+public Object send(final QuickSerializable msg,final InetSocketAddress dst,final long timeoutSeconds,final Thunk1<Boolean> callback){
+  if (drop_prob > 0.0) {
+    double dp=1.0;
+    long ts=timeoutSeconds;
+    do {
+      dp*=drop_prob;
+      ts-=5;
+    }
+ while (ts > 0);
+    if (rand.nextDouble() < dp) {
+      if (callback != null) {
+        acore.registerTimer(timeoutSeconds * 1000,curry(callback,new Boolean(false)));
+      }
+      return bogusToken;
+    }
+  }
+  if (udpcc_thread == null) {
+    return udpcc.send(msg,dst,timeoutSeconds,callback);
+  }
+  udpcc_thread.registerTimer(0,new Runnable(){
+    public void run(){
+      udpcc.send(msg,dst,timeoutSeconds,new Thunk1<Boolean>(){
+        public void run(        final Boolean success){
+          acore.registerTimer(0,new Runnable(){
+            public void run(){
+              callback.run(success);
+            }
+          }
+);
+        }
+      }
+);
+    }
+  }
+);
+  return null;
+}

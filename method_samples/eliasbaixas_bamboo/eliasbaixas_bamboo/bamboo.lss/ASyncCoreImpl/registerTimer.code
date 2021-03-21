@@ -1,0 +1,3 @@
+public Object registerTimer(long time_ms,Runnable cb){
+  return register_timer_impl(time_ms,cb,null);
+}

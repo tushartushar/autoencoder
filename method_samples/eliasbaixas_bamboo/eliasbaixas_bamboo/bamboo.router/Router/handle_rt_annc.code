@@ -1,0 +1,5 @@
+protected void handle_rt_annc(RoutingNeighborAnnounce annc){
+  NeighborInfo ni=new NeighborInfo(annc.peer,annc.guid);
+  if (annc.add)   add_to_rrt(ni);
+ else   remove_from_rrt(ni);
+}

@@ -1,0 +1,5 @@
+public void setImage(BufferedImage img){
+  if (img != null)   image=new BufferedImage(img.getColorModel(),img.copyData(null),img.isAlphaPremultiplied(),null);
+ else   image=null;
+  this.repaint();
+}

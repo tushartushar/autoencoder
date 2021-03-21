@@ -1,0 +1,6 @@
+/** 
+ * Returns the received signal strength in dBm. The valid range is [-127, 127].
+ */
+public int getRssi(){
+  return mRssi;
+}

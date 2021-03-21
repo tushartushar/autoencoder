@@ -1,0 +1,7 @@
+public Object clone() throws CloneNotSupportedException {
+  LeafSetChanged result=(LeafSetChanged)super.clone();
+  result.guid=guid;
+  result.leaf_set=leaf_set;
+  result.want_reply=want_reply;
+  return result;
+}

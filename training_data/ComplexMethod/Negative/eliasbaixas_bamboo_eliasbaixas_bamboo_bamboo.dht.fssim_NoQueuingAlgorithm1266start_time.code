@@ -1,0 +1,5 @@
+protected long start_time(int client){
+  Long lft=(Long)latest_finish_times.get(new Integer(client));
+  if (lft == null)   return virtual_time;
+ else   return Math.max(virtual_time,lft.longValue());
+}

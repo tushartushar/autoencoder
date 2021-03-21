@@ -1,0 +1,4 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  sinks.put(my_node_id,my_sink);
+}

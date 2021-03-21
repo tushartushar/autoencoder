@@ -1,0 +1,16 @@
+public StageIF createStage(String stagename,EventHandlerIF handler,String initargs[]) throws Exception {
+  SinkIF sink=new SimulatorSink(handler);
+  StageIF stage=new SimulatorStage(stagename,new StageWrapper(handler),sink);
+  addStage(stagename,stage);
+  ConfigData config_data=new ConfigData(this,initargs);
+  config_data.setStage(stage);
+  try {
+    handler.init(config_data);
+  }
+ catch (  Exception e) {
+    System.err.println("Error: caught an exception " + e + " while trying to initialize the stage "+ handler+ " Stack trace follows:");
+    e.printStackTrace(System.err);
+    System.exit(1);
+  }
+  return stage;
+}

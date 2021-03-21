@@ -1,0 +1,31 @@
+protected FillHolesState fill_holes_no_children(FillHolesState state,long now_ms){
+  if (logger.isDebugEnabled())   logger.debug("no children");
+  if (logger.isDebugEnabled())   logger.debug("state=" + state);
+  if (state == null) {
+    if (logger.isDebugEnabled())     logger.debug("need a scan");
+    return new FillHolesState(max(),range_low(),range_high());
+  }
+  if ((state.range_low != range_low()) || (state.range_high != range_high())) {
+    if (logger.isDebugEnabled())     logger.debug("bad range: wanted [" + Long.toHexString(range_low()) + ", "+ Long.toHexString(range_high())+ "] but got ["+ Long.toHexString(state.range_low)+ ", "+ Long.toHexString(state.range_high)+ "]");
+    return new FillHolesState(max(),range_low(),range_high());
+  }
+  if (state.digest != null) {
+    if (state.earliest_expiry_usec < (now_ms * 1000)) {
+      return new FillHolesState(max(),range_low(),range_high());
+    }
+    assert state.leaves_below <= max() : "too many leaves";
+    if (logger.isDebugEnabled())     logger.debug("good scan");
+    set_hash(state.digest);
+    set_earliest_expiry_usec(state.earliest_expiry_usec);
+    set_leaves_below(state.leaves_below);
+    assert valid(now_ms) : "not valid at end of fill_holes_no_children";
+    return null;
+  }
+  if (state.leaves_below <= max())   throw new IllegalArgumentException("leaves_below <= max: why isn't digest filled in?");
+  if (logger.isDebugEnabled())   logger.debug("creating children");
+  for (Iter i=children(); i.hasNext(); ) {
+    i.next();
+    i.create();
+  }
+  return fill_holes_have_children(null,now_ms);
+}

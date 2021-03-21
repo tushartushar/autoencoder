@@ -1,0 +1,6 @@
+/** 
+ * Sets the delay after which a device will be marked as lost if it hasn't been sighted within the given time. Set to a negative value to allow default behaviour.
+ */
+public void setScanLostOverride(long lostOverrideMillis){
+  scanLostOverrideMillis=lostOverrideMillis;
+}

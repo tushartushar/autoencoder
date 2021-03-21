@@ -1,0 +1,6 @@
+protected static int calcMaxGetRespSize(){
+  GetValue gv=new GetValue(ByteBuffer.allocate(1024),0,new byte[20]);
+  CountBuffer cb=new CountBuffer();
+  gv.serialize(cb);
+  return cb.size();
+}

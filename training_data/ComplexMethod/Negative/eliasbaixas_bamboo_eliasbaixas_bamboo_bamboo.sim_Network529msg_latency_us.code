@@ -1,0 +1,7 @@
+protected static final long msg_latency_us(NetworkModel.RouteInfo ri,int sz){
+  return Math.round(Math.ceil(ri.inv_bw_us_per_byte * sz)) + ri.latency_us;
+}
+public static long msg_latency_us(NodeId a,NodeId b,int sz){
+  NetworkModel.RouteInfo ri=route_info(a,b);
+  return msg_latency_us(ri,sz);
+}

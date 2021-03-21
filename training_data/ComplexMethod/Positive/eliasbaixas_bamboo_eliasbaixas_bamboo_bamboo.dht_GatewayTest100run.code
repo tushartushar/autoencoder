@@ -1,0 +1,122 @@
+public void run(){
+  try {
+    sleep(rand.nextInt(5000));
+  }
+ catch (  InterruptedException e) {
+  }
+  logger.info("Connecting to host.");
+  try {
+    client=new gateway_protClient(gateway_host,gateway_port,OncRpcProtocols.ONCRPC_TCP);
+  }
+ catch (  Exception e) {
+    logger.fatal("Couldn't connect",e);
+    System.exit(1);
+  }
+  while (true) {
+    double which=rand.nextDouble();
+    if (which <= (1.0 / (puts.size() / 20 + 1))) {
+      bamboo_put_args put=new bamboo_put_args();
+      int size=rand.nextInt(1005) + 20;
+      put.application="bamboo.dht.GatewayTest $Revision: 1.17 $";
+      put.client_library="oncrpc";
+      put.value=new bamboo_value();
+      put.value.value=new byte[size];
+      rand.nextBytes(put.value.value);
+      put.key=new bamboo_key();
+      put.key.value=digest.digest(put.value.value);
+      put.ttl_sec=(rand.nextInt(10) + 1) * 60;
+      int put_res=0;
+      long start_time_ms=System.currentTimeMillis();
+      try {
+        put_res=client.BAMBOO_DHT_PROC_PUT_2(put);
+      }
+ catch (      Exception e) {
+        logger.fatal("Couldn't put",e);
+        System.exit(1);
+      }
+      long latency_ms=System.currentTimeMillis() - start_time_ms;
+      if (put_res != bamboo_stat.BAMBOO_OK) {
+        logger.info("Put failed (code=" + put_res + "): size="+ put.value.value.length+ " key="+ ByteUtils.print_bytes(put.key.value)+ " ttl_sec="+ put.ttl_sec+ " lat="+ latency_ms+ " ms");
+      }
+ else {
+        logger.info("Put successful: size=" + put.value.value.length + " key="+ ByteUtils.print_bytes(put.key.value,0,4)+ " ttl_sec="+ put.ttl_sec+ " lat="+ latency_ms+ " ms");
+        PutInfo pi=new PutInfo(put.key.value,System.currentTimeMillis() + put.ttl_sec * 1000);
+        assert !puts.contains(pi);
+        puts.add(pi);
+      }
+    }
+ else {
+      PutInfo pi=null;
+      while (true) {
+        if (puts.size() == 0)         break;
+        int which_one=rand.nextInt(puts.size());
+        Iterator i=puts.iterator();
+        while (i.hasNext()) {
+          pi=(PutInfo)i.next();
+          if (pi.expiry_time_ms < System.currentTimeMillis() + 30 * 1000) {
+            i.remove();
+            pi=null;
+            continue;
+          }
+ else           if (which_one-- == 0) {
+            break;
+          }
+        }
+        if (pi != null)         break;
+      }
+      if (pi != null) {
+        bamboo_get_args get_args=new bamboo_get_args();
+        get_args.application="bamboo.dht.GatewayTest $Revision: 1.17 $";
+        get_args.client_library="oncrpc";
+        get_args.key=new bamboo_key();
+        get_args.key.value=pi.key;
+        get_args.maxvals=1;
+        get_args.placemark=new bamboo_placemark();
+        get_args.placemark.value=new byte[]{};
+        long now_ms=System.currentTimeMillis();
+        while (true) {
+          bamboo_get_res get_res=null;
+          try {
+            get_res=client.BAMBOO_DHT_PROC_GET_2(get_args);
+          }
+ catch (          Exception e) {
+            logger.fatal("Couldn't get",e);
+            System.exit(1);
+          }
+          long latency_ms=System.currentTimeMillis() - now_ms;
+          if (get_res.values.length == 0) {
+            logger.info("Get failed: key=" + ByteUtils.print_bytes(pi.key,0,4));
+            if (System.currentTimeMillis() < now_ms + 20 * 1000) {
+              logger.info("trying again");
+            }
+ else {
+              logger.info("giving up, lat=" + latency_ms + " ms");
+              break;
+            }
+          }
+ else {
+            PutInfo pi2=new PutInfo(digest.digest(get_res.values[0].value),0);
+            if (!pi.equals(pi2)) {
+              logger.info("Get got bad data: key=" + ByteUtils.print_bytes(pi.key) + " value hash="+ ByteUtils.print_bytes(pi2.key)+ " lat="+ latency_ms+ " ms");
+            }
+ else {
+              logger.info("Get successful: key=" + ByteUtils.print_bytes(pi.key,0,4) + " lat="+ latency_ms+ " ms");
+            }
+            break;
+          }
+          try {
+            sleep(1000);
+          }
+ catch (          InterruptedException e) {
+          }
+        }
+      }
+    }
+    long sleep_time=rand.nextInt(9001) + 1000;
+    try {
+      sleep(sleep_time);
+    }
+ catch (    InterruptedException e) {
+    }
+  }
+}

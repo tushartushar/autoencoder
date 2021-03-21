@@ -1,0 +1,71 @@
+public NeighborInfo add_node(NeighborInfo ni){
+  Set old_leaf_set=null;
+  if (ni.guid.equals(my_guid))   return null;
+  if (leaf_pred_count == 0) {
+    leaf_preds[0]=leaf_succs[0]=ni;
+    leaf_pred_count=leaf_succ_count=1;
+    overlap=true;
+    return my_neighbor_info;
+  }
+  boolean duplicate=false;
+  for (int i=0; i < leaf_pred_count; ++i)   if (leaf_preds[i].guid.equals(ni.guid))   duplicate=true;
+  if (!duplicate) {
+    int i=0;
+    for (i=0; i < leaf_pred_count; ++i) {
+      if (in_range_mod(leaf_preds[i].guid,my_guid,ni.guid)) {
+        if (old_leaf_set == null)         old_leaf_set=as_set();
+        for (int j=leaf_set_size - 1; j > i; --j)         leaf_preds[j]=leaf_preds[j - 1];
+        leaf_preds[i]=ni;
+        if (leaf_pred_count < leaf_set_size)         ++leaf_pred_count;
+        break;
+      }
+    }
+    if ((i == leaf_pred_count) && (leaf_pred_count < leaf_set_size)) {
+      if (old_leaf_set == null)       old_leaf_set=as_set();
+      leaf_preds[leaf_pred_count]=ni;
+      ++leaf_pred_count;
+    }
+  }
+  duplicate=false;
+  for (int i=0; i < leaf_succ_count; ++i)   if (leaf_succs[i].guid.equals(ni.guid))   duplicate=true;
+  if (!duplicate) {
+    int i;
+    for (i=0; i < leaf_succ_count; ++i) {
+      if (in_range_mod(my_guid,leaf_succs[i].guid,ni.guid)) {
+        if (old_leaf_set == null)         old_leaf_set=as_set();
+        for (int j=leaf_set_size - 1; j > i; --j)         leaf_succs[j]=leaf_succs[j - 1];
+        leaf_succs[i]=ni;
+        if (leaf_succ_count < leaf_set_size)         ++leaf_succ_count;
+        break;
+      }
+    }
+    if ((i == leaf_succ_count) && (leaf_succ_count < leaf_set_size)) {
+      if (old_leaf_set == null)       old_leaf_set=as_set();
+      leaf_succs[leaf_succ_count]=ni;
+      ++leaf_succ_count;
+    }
+  }
+  if (old_leaf_set != null) {
+    updateOverlap();
+    old_leaf_set.removeAll(as_set());
+    if (old_leaf_set.isEmpty())     return my_neighbor_info;
+    if (old_leaf_set.size() != 1) {
+      System.err.println("Error adding " + ni);
+      System.err.println("old_leaf_set=");
+      Iterator i=old_leaf_set.iterator();
+      while (i.hasNext()) {
+        NeighborInfo other=(NeighborInfo)i.next();
+        System.err.println("  " + other);
+      }
+      System.err.println("leaf_set=");
+      i=as_set().iterator();
+      while (i.hasNext()) {
+        NeighborInfo other=(NeighborInfo)i.next();
+        System.err.println("  " + other);
+      }
+      assert false;
+    }
+    return (NeighborInfo)old_leaf_set.iterator().next();
+  }
+  return null;
+}

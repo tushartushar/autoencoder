@@ -1,0 +1,13 @@
+public JoinResp(NodeId dest,LinkedList p,Set l){
+  super(dest,false);
+  path=p;
+  leaf_set=l;
+}
+public JoinResp(InputBuffer buffer) throws QSException {
+  super(buffer);
+  int path_len=buffer.nextInt();
+  while (path_len-- > 0)   path.addLast(new NeighborInfo(buffer));
+  path_len=buffer.nextInt();
+  leaf_set=new TreeSet();
+  while (path_len-- > 0)   leaf_set.add(new NeighborInfo(buffer));
+}

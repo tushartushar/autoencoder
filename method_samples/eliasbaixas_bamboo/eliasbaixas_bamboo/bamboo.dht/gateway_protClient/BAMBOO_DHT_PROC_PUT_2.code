@@ -1,0 +1,12 @@
+/** 
+ * Call remote procedure BAMBOO_DHT_PROC_PUT_2.
+ * @param arg1 parameter (of type bamboo_put_args) to the remote procedure call.
+ * @return Result from remote procedure call (of type bamboo_stat).
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public int BAMBOO_DHT_PROC_PUT_2(bamboo_put_args arg1) throws OncRpcException, IOException {
+  XdrInt result$=new XdrInt();
+  client.call(gateway_prot.BAMBOO_DHT_PROC_PUT_2,gateway_prot.BAMBOO_DHT_GATEWAY_VERSION,arg1,result$);
+  return result$.intValue();
+}

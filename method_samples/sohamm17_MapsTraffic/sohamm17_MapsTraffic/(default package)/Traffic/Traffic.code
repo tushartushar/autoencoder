@@ -1,0 +1,59 @@
+public Traffic(RouteInfo.maneuvar.latlon bbLatLon1,RouteInfo.maneuvar.latlon bbLatlon2) throws URISyntaxException {
+  try (CloseableHttpClient httpClient=HttpClientBuilder.create().build()){
+    String boundingBox=bbLatLon1.toString() + ";" + bbLatlon2.toString();
+    String url="http://traffic.cit.api.here.com/traffic/6.1/flow.json";
+    URIBuilder builder=new URIBuilder(url).addParameter("app_id",APP_ID).addParameter("app_code",APP_CODE).addParameter("bbox",boundingBox).addParameter("metricSystem","metric");
+    System.out.println(builder.build());
+    HttpGet request=new HttpGet(builder.build());
+    request.addHeader("content-type","application/json");
+    HttpResponse result=httpClient.execute(request);
+    String json=EntityUtils.toString(result.getEntity(),"UTF-8");
+    try {
+      StringReader reader=new StringReader(json);
+      JsonReader jsonReader=Json.createReader(reader);
+      JsonObject wholeObject=jsonReader.readObject();
+      JsonArray RoadWays=(JsonArray)wholeObject.get("RWS");
+      for (      JsonValue eachRWS : RoadWays) {
+        JsonObject eachRWSObject=(JsonObject)eachRWS;
+        JsonArray Roads=eachRWSObject.getJsonArray("RW");
+        for (        JsonValue eachRoad : Roads) {
+          JsonObject eachRoadObject=(JsonObject)eachRoad;
+          mainRoadway rw=new mainRoadway();
+          roadways.add(rw);
+          String eachRoadName=eachRoadObject.getJsonString("DE").getString();
+          rw.description=eachRoadName;
+          JsonArray flowItemElements=eachRoadObject.getJsonArray("FIS");
+          for (          JsonValue eachFlowItemElement : flowItemElements) {
+            JsonArray singleFlowItems=((JsonObject)eachFlowItemElement).getJsonArray("FI");
+            for (            JsonValue eachSingleFlowItem : singleFlowItems) {
+              mainRoadway.crossFlow cf=new mainRoadway.crossFlow();
+              rw.crossingRoads.add(cf);
+              JsonObject singleFlowTMC=((JsonObject)eachSingleFlowItem).getJsonObject("TMC");
+              cf.description=singleFlowTMC.getJsonString("DE").getString();
+              cf.direction=singleFlowTMC.getJsonString("QD").getString();
+              JsonArray currentFlows=((JsonObject)eachSingleFlowItem).getJsonArray("CF");
+              for (              JsonValue eachCurrentFlow : currentFlows) {
+                JsonObject eachCurrentFlowObject=((JsonObject)eachCurrentFlow);
+                cf.jamFactor=eachCurrentFlowObject.getJsonNumber("JF").doubleValue();
+                cf.confidence=eachCurrentFlowObject.getJsonNumber("CN").doubleValue();
+                cf.freeFlowSpeed=eachCurrentFlowObject.getJsonNumber("FF").doubleValue();
+                cf.speedUncapped=eachCurrentFlowObject.getJsonNumber("SU").doubleValue();
+                cf.speedCapped=eachCurrentFlowObject.getJsonNumber("SP").doubleValue();
+              }
+            }
+          }
+        }
+      }
+      this.bbLatLon1=bbLatLon1;
+      this.bbLatLon2=bbLatlon2;
+    }
+ catch (    Exception e) {
+      System.err.println("Error: " + e.getMessage());
+      e.printStackTrace();
+    }
+  }
+ catch (  IOException e) {
+    System.err.println("Error: " + e.getMessage());
+    e.printStackTrace();
+  }
+}

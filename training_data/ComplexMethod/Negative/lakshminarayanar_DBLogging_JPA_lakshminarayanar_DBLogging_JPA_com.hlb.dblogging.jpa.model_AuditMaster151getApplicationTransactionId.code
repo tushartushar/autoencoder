@@ -1,0 +1,3 @@
+@Column(name="APPLTRANSID",nullable=false,length=255) public String getApplicationTransactionId(){
+  return applicationTransactionId;
+}

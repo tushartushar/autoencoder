@@ -1,0 +1,17 @@
+public FetchKeysResp(NodeId dest,LinkedList k,long s){
+  super(dest,false);
+  keys=k;
+  seq=s;
+}
+public FetchKeysResp(InputBuffer buffer) throws QSException {
+  super(buffer);
+  int cnt=buffer.nextInt();
+  if (cnt > 0) {
+    keys=new LinkedList();
+    while (cnt-- > 0) {
+      StorageManager.Key k=new StorageManager.Key(buffer);
+      keys.addLast(k);
+    }
+  }
+  seq=buffer.nextLong();
+}

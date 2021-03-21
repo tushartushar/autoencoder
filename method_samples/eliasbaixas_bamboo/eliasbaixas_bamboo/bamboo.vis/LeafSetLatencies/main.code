@@ -1,0 +1,31 @@
+public static void main(String[] args) throws Exception {
+  PatternLayout pl=new PatternLayout("%d{ISO8601} %m\n");
+  ConsoleAppender ca=new ConsoleAppender(pl);
+  Logger.getRoot().addAppender(ca);
+  Logger.getRoot().setLevel(Level.INFO);
+  final FetchNodeInfoThread fetcher=new FetchNodeInfoThread(FetchDoneCb,null);
+  for (int i=0; i < args.length; ++i) {
+    NodeId id=new NodeId(args[i]);
+    already_probed.add(id);
+    fetcher.add_work(nid2url(id),null);
+  }
+  fetcher.start();
+  Thread check_done=new Thread(){
+    public void run(){
+      while (true) {
+        boolean all_idle=true;
+        if (!fetcher.idle())         all_idle=false;
+        if (all_idle)         System.exit(0);
+ else {
+          try {
+            sleep(1000);
+          }
+ catch (          Exception e) {
+          }
+        }
+      }
+    }
+  }
+;
+  check_done.start();
+}

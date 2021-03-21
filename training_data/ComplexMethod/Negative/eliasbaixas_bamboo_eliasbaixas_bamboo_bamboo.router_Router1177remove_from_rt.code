@@ -1,0 +1,16 @@
+protected boolean remove_from_rt(NeighborInfo ni){
+  int level=rt.remove(ni);
+  if (level == -1)   return false;
+  if (logger.isInfoEnabled()) {
+    StringBuffer buf=new StringBuffer(50);
+    buf.append("removed ");
+    buf.append(ni.node_id.address().getHostAddress());
+    buf.append(":");
+    buf.append(ni.node_id.port());
+    buf.append(" from routing table");
+    logger.info(buf);
+  }
+  BambooNeighborInfo[] removed={new BambooNeighborInfo(ni.node_id,ni.guid)};
+  notify_routing_table_changed(null,removed);
+  return true;
+}

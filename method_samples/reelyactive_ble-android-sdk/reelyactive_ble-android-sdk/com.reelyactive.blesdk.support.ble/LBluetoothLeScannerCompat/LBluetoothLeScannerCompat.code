@@ -1,0 +1,17 @@
+/** 
+ * Package-protected constructor, used by  {@link BluetoothLeScannerCompatProvider}. <p> Cannot be called from emulated devices that don't implement a BluetoothAdapter.
+ */
+LBluetoothLeScannerCompat(Context context,BluetoothManager manager,AlarmManager alarmManager){
+  this(manager,alarmManager,new SystemClock(),PendingIntent.getBroadcast(context,0,new Intent(context,ScanWakefulBroadcastReceiver.class).putExtra(ScanWakefulService.EXTRA_USE_LOLLIPOP_API,true),0));
+}
+LBluetoothLeScannerCompat(BluetoothManager manager,AlarmManager alarmManager,Clock clock,PendingIntent alarmIntent){
+  super(clock,alarmManager,alarmIntent);
+  Logger.logDebug("BLE 'L' hardware access layer activated");
+  BluetoothAdapter adapter=manager.getAdapter();
+  if (adapter != null) {
+    this.osScanner=adapter.getBluetoothLeScanner();
+  }
+ else {
+    this.osScanner=null;
+  }
+}

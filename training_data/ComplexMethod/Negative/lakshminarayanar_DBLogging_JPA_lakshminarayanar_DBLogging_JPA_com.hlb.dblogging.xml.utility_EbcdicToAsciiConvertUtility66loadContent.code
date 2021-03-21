@@ -1,0 +1,14 @@
+private int[] loadContent(Reader reader) throws IOException {
+  int[] buffer=new int[INITIAL_BUFFER_SIZE];
+  int bufferIndex=0;
+  int bufferSize=buffer.length;
+  int character;
+  while ((character=reader.read()) != -1) {
+    if (bufferIndex == bufferSize) {
+      buffer=resizeArray(buffer,bufferSize + INITIAL_BUFFER_SIZE);
+      bufferSize=buffer.length;
+    }
+    buffer[bufferIndex++]=character;
+  }
+  return resizeArray(buffer,bufferIndex);
+}

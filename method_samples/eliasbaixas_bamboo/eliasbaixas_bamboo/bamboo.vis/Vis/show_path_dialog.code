@@ -1,0 +1,15 @@
+protected void show_path_dialog(){
+  String s=(String)JOptionPane.showInputDialog(frame,"Enter identifier to look up (in hex)","Change Dot Radius",JOptionPane.PLAIN_MESSAGE,null,null,"0x12345678");
+  if (s != null) {
+    if (s.indexOf("0x") == 0)     s=s.substring(2);
+    BigInteger blah=new BigInteger(s,16);
+    blah=blah.multiply(BigInteger.valueOf(2).pow(128));
+    final BigInteger dest=blah;
+    for_all_nodes(new ForNodeFn(){
+      public void for_node(      BambooNode node){
+        node.show_path(dest);
+      }
+    }
+);
+  }
+}

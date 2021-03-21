@@ -1,0 +1,38 @@
+protected void handle_put_req_payload(BambooRouteDeliver msg,PutReqPayload payload){
+  int put_sz=storage_size(payload);
+  int ttl_sec=payload.ttl_sec;
+  InetAddress client=payload.client_id;
+  if (leaf_set_size + 1 < min_replica_count) {
+    if (logger.isInfoEnabled())     logger.info("don't have enough neighbors to accept put");
+    PutRespMsg outb=new PutRespMsg(payload.return_addr,payload.seq,bamboo_stat.BAMBOO_CAP);
+    outb.timeout_sec=300;
+    dispatch(outb);
+    return;
+  }
+  if (slop_empty(ttl_sec) && disk_space_avail(put_sz,ttl_sec)) {
+    if (logger.isDebugEnabled())     logger.debug("client=" + client.getHostAddress() + " slop is empty and disk space is available");
+    add_to_disk(put_sz,ttl_sec);
+    PutOrRemoveReq outb=new PutOrRemoveReq(payload.time_usec,ttl_sec,payload.key,payload.value,payload.secret_hash,payload.value_hash,payload.put,client,my_sink,msg);
+    dispatch(outb);
+  }
+ else   if (slop_space_avail(client,put_sz,ttl_sec) && below_fair_share(client,put_sz,ttl_sec)) {
+    if (logger.isDebugEnabled()) {
+      if (slop_empty(ttl_sec)) {
+        logger.debug("client=" + client.getHostAddress() + " no disk space but below fair share");
+      }
+ else {
+        logger.debug("client=" + client.getHostAddress() + " slop not empty and below fair share");
+      }
+    }
+    add_to_slop(msg,payload);
+  }
+ else {
+    if (logger.isDebugEnabled()) {
+      if (slop_space_avail(client,put_sz,ttl_sec))       logger.debug("client=" + client.getHostAddress() + " slop available but above fair share");
+ else       logger.debug("client=" + client.getHostAddress() + " no slop space available");
+    }
+    PutRespMsg outb=new PutRespMsg(payload.return_addr,payload.seq,bamboo_stat.BAMBOO_CAP);
+    outb.timeout_sec=300;
+    dispatch(outb);
+  }
+}

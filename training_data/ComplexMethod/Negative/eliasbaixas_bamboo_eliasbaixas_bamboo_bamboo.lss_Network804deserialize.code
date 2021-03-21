@@ -1,0 +1,4 @@
+public Object deserialize(ByteBuffer buf) throws Exception {
+  InputBuffer ib=new NioInputBuffer(buf);
+  return ib.nextObject();
+}

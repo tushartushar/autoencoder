@@ -1,0 +1,6 @@
+@Before public void startUp() throws InstantiationException, IOException, ExecutionException, InterruptedException {
+  ElasticGraphGraphProvider elasticGraphProvider=new ElasticGraphGraphProvider();
+  final Configuration configuration=elasticGraphProvider.newGraphConfiguration("testGraph",this.getClass(),"spatialTests",LoadGraphWith.GraphData.MODERN);
+  this.graph=elasticGraphProvider.openTestGraph(configuration);
+  createGeoShapeMapping(elasticGraphProvider.getClient(),DOCUMENT_TYPE);
+}

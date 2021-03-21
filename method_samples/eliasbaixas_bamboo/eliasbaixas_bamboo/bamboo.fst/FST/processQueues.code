@@ -1,0 +1,27 @@
+public void processQueues(){
+  assert !queues.isEmpty();
+  long now_ms=acore.nowMillis();
+  tree.shiftTime(now_ms);
+  PriorityQueue pq=new PriorityQueue(queues.size());
+  for (  Client client : queues.keySet()) {
+    PutInfo pi=queues.get(client).getFirst();
+    pq.add(pi,pi.startTime);
+  }
+  while (!pq.isEmpty()) {
+    PutInfo pi=(PutInfo)pq.removeFirst();
+    if (tree.addPut(pi.ttl,pi.size)) {
+      LinkedList<PutInfo> ll=acceptPut(pi);
+      if (!ll.isEmpty()) {
+        pi=ll.getFirst();
+        pq.add(pi,pi.startTime);
+      }
+    }
+ else {
+      nextAcceptTime=tree.nextAccept(pi.ttl,pi.size);
+      nextAcceptPutInfo=pi;
+      acore.registerTimer(nextAcceptTime - now_ms,waitDone);
+      break;
+    }
+  }
+  assert queues.isEmpty() || (nextAcceptPutInfo != null);
+}

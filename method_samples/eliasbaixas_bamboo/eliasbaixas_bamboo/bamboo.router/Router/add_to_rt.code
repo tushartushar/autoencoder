@@ -1,0 +1,6 @@
+protected void add_to_rt(NeighborInfo ni){
+  if (!rt.contains(ni)) {
+    if (have_rtt_ms(ni))     add_to_rt_ping_time(ni,rtt_ms(ni));
+ else     send_ping(ni);
+  }
+}

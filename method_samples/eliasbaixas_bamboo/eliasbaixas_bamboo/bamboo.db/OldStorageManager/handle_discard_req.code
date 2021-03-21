@@ -1,0 +1,74 @@
+protected void handle_discard_req(DiscardReq req){
+  byte[] buf=new byte[Key.SIZE];
+  req.key.to_byte_buffer(ByteBuffer.wrap(buf));
+  Dbt key=new Dbt(buf);
+  key.setSize(buf.length);
+  Dbt data=new Dbt();
+  DbTxn xact=null;
+  try {
+    xact=env.txnBegin(null,Db.DB_TXN_NOSYNC);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  int retval=0;
+  try {
+    retval=by_time.get(xact,key,data,0);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  if (retval == 0) {
+    try {
+      retval=by_time.delete(xact,key,0);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    assert retval == 0 : retval;
+    storage_changed(false,req.key,data.getSize(),xact);
+    if (logger.isInfoEnabled()) {
+      StringBuffer sbuf=new StringBuffer(105);
+      if (req.recycle)       sbuf.append("recycling key=0x");
+ else       sbuf.append("dropping expired key=0x");
+      sbuf.append(GuidTools.guid_to_string(req.key.guid));
+      sbuf.append(" time_usec=0x");
+      sbuf.append(Long.toHexString(req.key.time_usec));
+      sbuf.append(" ttl=");
+      sbuf.append(req.key.ttl_sec);
+      sbuf.append("s client_id=");
+      sbuf.append(req.key.client_id.getHostAddress());
+      sbuf.append(" data_hash=0x");
+      sbuf.append(ByteUtils.print_bytes(req.key.data_hash,0,4));
+      sbuf.append("size=");
+      sbuf.append(data.getSize());
+      logger.info(sbuf);
+    }
+    if (req.recycle) {
+      byte[] sbuf=new byte[Key.SIZE];
+      System.arraycopy(buf,12,sbuf,0,20);
+      System.arraycopy(buf,0,sbuf,20,8);
+      System.arraycopy(buf,8,sbuf,28,4);
+      System.arraycopy(buf,32,sbuf,32,Key.SIZE - 32);
+      Dbt skey=new Dbt(sbuf);
+      skey.setSize(sbuf.length);
+      try {
+        retval=recycling.put(xact,skey,data,0);
+      }
+ catch (      DbException e) {
+        BUG(e);
+      }
+      assert retval == 0 : retval;
+    }
+  }
+ else {
+    assert retval == Db.DB_NOTFOUND : retval;
+    if (logger.isDebugEnabled())     logger.debug("could not find key " + key);
+  }
+  try {
+    xact.commit(Db.DB_TXN_NOSYNC);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+}

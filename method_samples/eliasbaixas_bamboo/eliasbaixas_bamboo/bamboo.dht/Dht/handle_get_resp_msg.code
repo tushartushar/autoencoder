@@ -1,0 +1,18 @@
+protected void handle_get_resp_msg(GetRespMsg msg){
+  Pair<GetReq,IterGetState> pair=active_gets.remove(new Long(msg.seq));
+  if (pair == null) {
+    if (logger.isDebugEnabled())     logger.debug("Got unexpected " + msg);
+    return;
+  }
+  StringBuffer sbuf=new StringBuffer(200);
+  sbuf.append("received get resp key=0x");
+  sbuf.append(GuidTools.guid_to_string(msg.key));
+  sbuf.append(" return addr=");
+  sbuf.append(my_node_id);
+  sbuf.append(" seq=");
+  sbuf.append(msg.seq);
+  logger.info(sbuf.toString());
+  GetReq req=(GetReq)pair.first;
+  GetResp outb=new GetResp(msg.values,req.user_data,msg.new_placemark);
+  enqueue(req.completion_queue,outb);
+}

@@ -1,0 +1,10 @@
+public void timer_cb(Object user_data){
+  try {
+    client.registerReceiver(Payload.class,recv);
+  }
+ catch (  Exception e) {
+    assert false : e;
+  }
+  acore.register_timer(0,new JoinCb(),null);
+  acore.register_timer(5000,new SendCb(),null);
+}

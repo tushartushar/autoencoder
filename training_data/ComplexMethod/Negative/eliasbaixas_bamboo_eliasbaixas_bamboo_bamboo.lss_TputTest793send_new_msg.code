@@ -1,0 +1,3 @@
+public static void send_new_msg(){
+  udpcc.send(ByteBuffer.allocate(1024),peer,3600,cbs,null);
+}

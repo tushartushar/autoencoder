@@ -1,0 +1,13 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  int debug_level=config_get_int(config,"debug_level");
+  if (debug_level > 0)   logger.setLevel(Level.DEBUG);
+  int port=config_get_int(config,"port");
+  if (port == -1)   port=my_node_id.port() + 3;
+  my_addr=new InetSocketAddress(my_node_id.address(),port);
+  ssock_channel=ServerSocketChannel.open();
+  ServerSocket ssock=ssock_channel.socket();
+  ssock.bind(new InetSocketAddress(port));
+  ssock_channel.configureBlocking(false);
+  acore.register_selectable(ssock_channel,SelectionKey.OP_ACCEPT,new ServerSocketCb(),null);
+}

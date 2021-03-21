@@ -1,0 +1,6 @@
+@Override public void onServiceConnected(ComponentName name,IBinder remoteService){
+  bound=true;
+  service=((BleService.LocalBinder)remoteService).getService();
+  service.registerClient(ReelyAwareApplicationCallback.this);
+  onBleServiceBound();
+}

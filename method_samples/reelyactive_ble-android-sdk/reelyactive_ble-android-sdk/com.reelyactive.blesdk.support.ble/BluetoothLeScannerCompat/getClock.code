@@ -1,0 +1,3 @@
+protected Clock getClock(){
+  return clock;
+}

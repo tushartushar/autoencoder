@@ -1,0 +1,11 @@
+@Override @Transactional(rollbackFor={Exception.class,BSLException.class}) public Role create(Role role){
+  try {
+    Role roleToBeCreated=role;
+    log.info("New Role is saving into database with Name :" + roleToBeCreated.getRole());
+    return roleRepository.save(roleToBeCreated);
+  }
+ catch (  Exception e) {
+    log.error("Error while saving new Role :" + role.getRole(),e);
+    throw new BSLException("err.role.create",e);
+  }
+}

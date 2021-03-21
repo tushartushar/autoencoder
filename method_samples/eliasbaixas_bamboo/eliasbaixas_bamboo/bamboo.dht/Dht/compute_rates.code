@@ -1,0 +1,48 @@
+protected void compute_rates(){
+  if (ls_disk_sizes[0].isEmpty()) {
+    for (int i=0; i < fill_rates.length; ++i) {
+      fill_rates[i]=disk_sizes[i] / ttl_sec_ranges[i] / 1000.0;
+      if (logger.isInfoEnabled()) {
+        StringBuffer sbuf=new StringBuffer(100);
+        sbuf.append("ttl=");
+        StringUtil.time_to_sbuf(ttl_sec_ranges[i],sbuf);
+        sbuf.append(", disk size=");
+        StringUtil.byte_cnt_to_sbuf(Math.round(disk_sizes[i]),sbuf);
+        sbuf.append(", rate=");
+        StringUtil.byte_cnt_to_sbuf(Math.round(fill_rates[i] * 1000.0),sbuf);
+        sbuf.append("/s");
+        logger.info(sbuf);
+      }
+    }
+  }
+ else {
+    for (int i=0; i < fill_rates.length; ++i) {
+      PriorityQueue ds=new PriorityQueue(succs.length + preds.length + 1);
+      for (      Object peer : ls_disk_sizes[i].keySet()) {
+        Double size=(Double)ls_disk_sizes[i].get(peer);
+        ds.add(peer,Math.round(size.doubleValue()));
+      }
+      ds.add(my_node_id,Math.round(disk_sizes[i]));
+      for (int k=0; k < ds.size() - min_replica_count - 1; ++k)       ds.removeFirst();
+      double min_size=(double)ds.getFirstPriority();
+      fill_rates[i]=min_size / ls_disk_sizes[i].size() / ttl_sec_ranges[i]/ 1000.0;
+      if (logger.isInfoEnabled()) {
+        StringBuffer sbuf=new StringBuffer(100);
+        sbuf.append("ttl=");
+        StringUtil.time_to_sbuf(ttl_sec_ranges[i],sbuf);
+        sbuf.append(", min size=");
+        StringUtil.byte_cnt_to_sbuf(Math.round(min_size),sbuf);
+        sbuf.append(", ls size=");
+        sbuf.append(ds.size());
+        sbuf.append(", rate=");
+        StringUtil.byte_cnt_to_sbuf(Math.round(fill_rates[i] * 1000.0),sbuf);
+        sbuf.append("/s, limited by ");
+        NodeId limit=(NodeId)ds.getFirst();
+        sbuf.append(limit.address().getHostAddress());
+        sbuf.append(":");
+        sbuf.append(limit.port());
+        logger.info(sbuf);
+      }
+    }
+  }
+}

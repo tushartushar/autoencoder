@@ -1,0 +1,4 @@
+public final BigInteger leaf_set_low(){
+  if (leaf_pred_count == 0)   return my_guid;
+ else   return leaf_preds[leaf_pred_count - 1].guid;
+}

@@ -1,0 +1,16 @@
+public void handleEvent(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("got " + item);
+  if (item instanceof Dht.PutResp) {
+    Dht.PutResp resp=(Dht.PutResp)item;
+    Thunk1<Dht.PutResp> cb=(Thunk1<Dht.PutResp>)resp.user_data;
+    cb.run(resp);
+  }
+ else   if (item instanceof Dht.GetResp) {
+    Dht.GetResp resp=(Dht.GetResp)item;
+    Thunk1<Dht.GetResp> cb=(Thunk1<Dht.GetResp>)resp.user_data;
+    cb.run(resp);
+  }
+ else {
+    BUG("unexpected event: " + item);
+  }
+}

@@ -1,0 +1,3 @@
+@Override public BaseVertex addVertex(Object id,String label,Object[] properties){
+  return elasticDocVertexHandler.addVertex(id,label,properties);
+}

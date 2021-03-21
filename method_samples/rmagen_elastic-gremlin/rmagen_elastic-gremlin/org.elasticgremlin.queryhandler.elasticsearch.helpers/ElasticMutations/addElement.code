@@ -1,0 +1,6 @@
+public void addElement(Element element,String index,String routing,boolean create){
+  IndexRequestBuilder indexRequest=client.prepareIndex(index,element.label(),element.id().toString()).setSource(propertiesMap(element)).setRouting(routing).setCreate(create);
+  if (bulkRequest != null)   bulkRequest.add(indexRequest);
+ else   indexRequest.execute().actionGet();
+  revision++;
+}

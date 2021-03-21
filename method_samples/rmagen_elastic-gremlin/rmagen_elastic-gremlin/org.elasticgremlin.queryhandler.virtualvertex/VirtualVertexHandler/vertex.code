@@ -1,0 +1,7 @@
+@Override public BaseVertex vertex(Object vertexId,String vertexLabel,Edge edge,Direction direction){
+  checkBulk();
+  BaseVertex vertex=new VirtualVertex(vertexId,vertexLabel,graph,null);
+  vertex.setSiblings(vertices);
+  vertices.add(vertex);
+  return vertex;
+}

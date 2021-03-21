@@ -1,0 +1,4 @@
+protected void send_pkt(ByteBuffer pkt){
+  waiting.addLast(pkt);
+  skey.interestOps(skey.interestOps() | SelectionKey.OP_WRITE);
+}

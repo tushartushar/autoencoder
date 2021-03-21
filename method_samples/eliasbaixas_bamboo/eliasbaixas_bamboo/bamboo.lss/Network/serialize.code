@@ -1,0 +1,4 @@
+public void serialize(Object msg,ByteBuffer buf){
+  OutputBuffer ob=new NioOutputBuffer(buf);
+  ob.add((QuickSerializable)msg);
+}

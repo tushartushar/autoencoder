@@ -1,0 +1,7 @@
+/** 
+ * Used to force a recovery operation
+ */
+public void forceFlush(){
+  startRecovery();
+  processStateChange();
+}

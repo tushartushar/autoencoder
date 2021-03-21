@@ -1,0 +1,16 @@
+protected final void add_to_rr(Connection conn){
+  if (!conn.in_rr) {
+    if (DEBUG)     debugln("adding conn=" + conn.addr + " to rr");
+    conn.in_rr=true;
+    if (rr_first == null)     rr_first=rr_last=conn;
+ else {
+      rr_last.next=conn;
+      rr_last=conn;
+    }
+    conn.next=null;
+    skey.interestOps(skey.interestOps() | SelectionKey.OP_WRITE);
+  }
+ else {
+    if (DEBUG)     debugln("conn=" + conn.addr + " already in rr");
+  }
+}

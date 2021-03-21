@@ -1,0 +1,7 @@
+public Object clone() throws CloneNotSupportedException {
+  ReplicaSetReq result=(ReplicaSetReq)super.clone();
+  result.return_address=return_address;
+  result.guid=guid;
+  result.nonce=nonce;
+  return result;
+}

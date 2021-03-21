@@ -1,0 +1,4 @@
+public String sig_alg() throws InvalidException {
+  if (!checked)   check();
+  return sig_alg;
+}

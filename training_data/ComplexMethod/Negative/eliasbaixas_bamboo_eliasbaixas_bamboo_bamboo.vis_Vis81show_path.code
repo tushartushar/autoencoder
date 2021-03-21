@@ -1,0 +1,22 @@
+public void show_path(BigInteger guid){
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  BambooNode current=this;
+  while (true) {
+    Set ignore=new TreeSet();
+    ExtendedNeighborInfo result=null;
+    if (current.leaf_set.within_leaf_set(guid)) {
+      result=new ExtendedNeighborInfo(current.leaf_set.closest_leaf(guid,ignore));
+    }
+ else {
+      result=new ExtendedNeighborInfo(current.routing_table.next_hop(guid,ignore));
+      if (result == null)       result=new ExtendedNeighborInfo(current.leaf_set.closest_leaf(guid,ignore));
+    }
+    if (result.equals(new ExtendedNeighborInfo(current.node_id,current.guid)))     break;
+    BambooNode node=FNIT.nodes_by_id.get(result.guid);
+    if (node == null)     break;
+    ArcConnector conn=current.make_arc(node,false,Color.magenta);
+    layer.add(conn);
+    path_connectors.add(conn);
+    current=node;
+  }
+}

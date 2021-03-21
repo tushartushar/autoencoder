@@ -1,0 +1,16 @@
+/** 
+ * Start Bluetooth LE scan with default parameters and no filters. The scan results will be delivered through  {@code callback}. <p/> Requires  {@link android.Manifest.permission#BLUETOOTH_ADMIN} permission.
+ * @param callback Callback used to deliver scan results.
+ * @throws IllegalArgumentException If {@code callback} is null.
+ */
+public void startScan(final ScanCallback callback){
+  if (callback == null) {
+    throw new IllegalArgumentException("callback is null");
+  }
+  this.startScan(new ArrayList<ScanFilter>(),new ScanSettings.Builder().build(),callback);
+}
+/** 
+ * Starts a scan for Bluetooth LE devices, looking for device advertisements that match the given filters.  Attempts to start scans more than once with the same  {@link ScanCallback} instancewill fail and return  {@code false}. <p/> Due to the resource limitations in BLE chipset, an app cannot add more than N(real number TBD) filters. <p/> Once the controller storage reaches its limitation on scan filters, the framework will try to merge the existing scan filters and set the merged filters to chipset. The framework will need to keep a copy of the original scan filters to make sure each app gets only its desired results. <p/> The callback will be invoked when LE scan finds a matching BLE advertising packet. A BLE advertising record is considered matching the filters if it matches any of the BluetoothLeScanFilter in the list. <p/> Results of the scan are reported using the  {@link ScanCallback#onScanResult(int,ScanResult)} callback.<p/> Requires BLUETOOTH_ADMIN permission. <p/>
+ * @return true if the scan starts successfully, false otherwise.
+ */
+public abstract boolean startScan(List<ScanFilter> filters,ScanSettings settings,ScanCallback callback);

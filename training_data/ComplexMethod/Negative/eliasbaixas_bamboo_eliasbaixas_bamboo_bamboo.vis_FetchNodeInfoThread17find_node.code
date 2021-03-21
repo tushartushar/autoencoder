@@ -1,0 +1,12 @@
+public BambooNode find_node(String s){
+  BambooNode current_node;
+  Iterator IT=get_all_nodes();
+  s=s.trim();
+  while (IT.hasNext()) {
+    current_node=(BambooNode)IT.next();
+    if (s != null && (s.equals(current_node.hostname) || s.equals(current_node.ID) || s.equals("0x" + current_node.ID)|| s.equals(current_node.IP))) {
+      return current_node;
+    }
+  }
+  return null;
+}

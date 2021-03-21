@@ -1,0 +1,4 @@
+public RandomAlgorithm(long p,long t,long seed){
+  super(p,t);
+  rand=new Random(seed);
+}

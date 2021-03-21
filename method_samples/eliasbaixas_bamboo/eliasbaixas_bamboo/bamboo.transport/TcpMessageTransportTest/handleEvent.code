@@ -1,0 +1,3 @@
+public void handleEvent(QueueElementIF item){
+  BUG("unexpected event: " + item);
+}

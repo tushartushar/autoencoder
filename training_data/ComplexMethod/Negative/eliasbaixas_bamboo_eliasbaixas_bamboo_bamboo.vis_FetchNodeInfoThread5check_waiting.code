@@ -1,0 +1,14 @@
+protected void check_waiting(){
+  LinkedList<NodeInfo> todo=new LinkedList<NodeInfo>();
+synchronized (inflight) {
+    while ((!waiting.isEmpty()) && (inflight.size() < max_concurrent)) {
+      String url=waitlist.removeFirst();
+      NodeInfo ninfo=waiting.remove(url);
+      inflight.put(ninfo.url,ninfo);
+      todo.add(ninfo);
+    }
+  }
+  for (  NodeInfo ninfo : todo) {
+    acore.register_timer(0,curry(fetch_node_info,ninfo));
+  }
+}

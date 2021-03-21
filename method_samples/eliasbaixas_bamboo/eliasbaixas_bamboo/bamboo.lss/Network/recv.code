@@ -1,0 +1,36 @@
+public void recv(final Object o,final InetSocketAddress src,final InetSocketAddress l,final int tries,final long wait_ms,final long est_rtt_ms){
+  final Thunk2<QuickSerializable,InetSocketAddress> callback=(Thunk2<QuickSerializable,InetSocketAddress>)receivers.get(o.getClass());
+  if (callback != null) {
+    final QuickSerializable qs=(QuickSerializable)o;
+    if (udpcc_thread == null) {
+      callback.run(qs,src);
+    }
+ else {
+      Runnable r=new Runnable(){
+        public void run(){
+          callback.run(qs,src);
+        }
+      }
+;
+      acore.registerTimer(0,r);
+    }
+  }
+ else {
+    final NetworkMessage msg=(NetworkMessage)o;
+    msg.inbound=true;
+    msg.peer=NodeId.create(src);
+    msg.wait_ms=wait_ms;
+    msg.est_rtt_ms=est_rtt_ms;
+    if (udpcc_thread == null) {
+      try {
+        classifier.dispatch(msg);
+      }
+ catch (      SinkException e) {
+        BUG(e);
+      }
+    }
+ else {
+      classifier.dispatch_later(msg,0);
+    }
+  }
+}

@@ -1,0 +1,3 @@
+public String toString(){
+  return "(VLocateNodeMsg requestor=" + getRequestor() + " coord="+ _coordinate+ " vn="+ _version_number+ ")";
+}

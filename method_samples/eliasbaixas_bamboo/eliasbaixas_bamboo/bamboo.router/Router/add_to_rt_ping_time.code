@@ -1,0 +1,38 @@
+protected boolean add_to_rt_ping_time(NeighborInfo ni,double rtt_ms){
+  NeighborInfo r=rt.add(ni,rtt_ms,PNS,now_ms());
+  if (r == null)   return false;
+  BambooNeighborInfo[] removed=null;
+  if (r != my_neighbor_info) {
+    removed=new BambooNeighborInfo[1];
+    removed[0]=new BambooNeighborInfo(r.node_id,r.guid,rtt_ms(r));
+    dispatch(new RoutingNeighborAnnounce(r.node_id,my_guid,false));
+  }
+  dispatch(new RoutingNeighborAnnounce(ni.node_id,my_guid,true));
+  BambooNeighborInfo[] added={new BambooNeighborInfo(ni.node_id,ni.guid,rtt_ms)};
+  notify_routing_table_changed(added,removed);
+  if (logger.isInfoEnabled()) {
+    StringBuffer buf=null;
+    if (r == my_neighbor_info) {
+      buf=new StringBuffer(50);
+      buf.append("added ");
+      buf.append(ni.node_id.address().getHostAddress());
+      buf.append(":");
+      buf.append(ni.node_id.port());
+      buf.append(" to routing table");
+    }
+ else {
+      buf=new StringBuffer(80);
+      buf.append("replaced ");
+      buf.append(r.node_id.address().getHostAddress());
+      buf.append(":");
+      buf.append(r.node_id.port());
+      buf.append(" with ");
+      buf.append(ni.node_id.address().getHostAddress());
+      buf.append(":");
+      buf.append(ni.node_id.port());
+      buf.append(" in routing table");
+    }
+    logger.info(buf);
+  }
+  return true;
+}

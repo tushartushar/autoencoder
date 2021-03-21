@@ -1,0 +1,214 @@
+public void run(NetworkMessage msg,Long start_time,Thunk1<Boolean> cb,Boolean success){
+  if (!success.booleanValue()) {
+    if (msg instanceof Dht.GetRespMsg) {
+      Dht.GetRespMsg resp=(Dht.GetRespMsg)msg;
+      StringBuffer sbuf=new StringBuffer(200);
+      sbuf.append("failed to send get resp key=0x");
+      sbuf.append(GuidTools.guid_to_string(resp.key));
+      sbuf.append(" return addr=");
+      sbuf.append(msg.peer);
+      sbuf.append(" seq=");
+      sbuf.append(resp.seq);
+      sbuf.append(" to ");
+      sbuf.append(msg.peer);
+      sbuf.append(" directly in ");
+      sbuf.append(acore.timerMillis() - start_time.longValue());
+      sbuf.append(" ms");
+      logger.info(sbuf.toString());
+    }
+ else     if (logger.isInfoEnabled()) {
+      StringBuffer sbuf=new StringBuffer(100);
+      sbuf.append("can't reach client ");
+      addr_to_sbuf(msg.peer,sbuf);
+      logger.info(sbuf.toString());
+    }
+    fwdThruLeafSet.run(msg,router.leafSet().as_set(),cb);
+  }
+ else {
+    if (cb != null)     cb.run(new Boolean(true));
+    if (msg instanceof Dht.GetRespMsg) {
+      Dht.GetRespMsg resp=(Dht.GetRespMsg)msg;
+      StringBuffer sbuf=new StringBuffer(200);
+      sbuf.append("sent get resp key=0x");
+      sbuf.append(GuidTools.guid_to_string(resp.key));
+      sbuf.append(" return addr=");
+      sbuf.append(msg.peer);
+      sbuf.append(" seq=");
+      sbuf.append(resp.seq);
+      sbuf.append(" to ");
+      sbuf.append(msg.peer);
+      sbuf.append(" directly in ");
+      sbuf.append(acore.timerMillis() - start_time.longValue());
+      sbuf.append(" ms");
+      logger.info(sbuf.toString());
+    }
+  }
+}
+public void run(NetworkMessage msg,Set<NeighborInfo> rem,Thunk1<Boolean> cb){
+  LinkedList<NeighborInfo> ll=new LinkedList<NeighborInfo>();
+  Iterator<NeighborInfo> i=rem.iterator();
+  while (i.hasNext()) {
+    NeighborInfo n=i.next();
+    if (!router.leafSet().contains(n)) {
+      i.remove();
+    }
+ else     if (router.possiblyDown().contains(n)) {
+    }
+ else {
+      ll.addLast(n);
+    }
+  }
+  if (ll.isEmpty()) {
+    if (msg instanceof Dht.GetRespMsg) {
+      Dht.GetRespMsg resp=(Dht.GetRespMsg)msg;
+      StringBuffer sbuf=new StringBuffer(200);
+      sbuf.append("ran out of nodes to send get resp key=0x");
+      sbuf.append(GuidTools.guid_to_string(resp.key));
+      sbuf.append(" return addr=");
+      sbuf.append(msg.peer);
+      sbuf.append(" seq=");
+      sbuf.append(resp.seq);
+      sbuf.append(" through");
+      logger.info(sbuf.toString());
+    }
+ else     if (logger.isInfoEnabled()) {
+      StringBuffer sbuf=new StringBuffer(200);
+      sbuf.append("ran out of nodes to forward ");
+      sbuf.append(msg);
+      sbuf.append(" through");
+      logger.info(sbuf.toString());
+    }
+    if (cb != null)     cb.run(new Boolean(false));
+  }
+ else {
+    int which=rand.nextInt(ll.size());
+    NeighborInfo neighbor=null;
+    Iterator<NeighborInfo> j=ll.iterator();
+    while (which-- >= 0)     neighbor=j.next();
+    if (msg instanceof Dht.GetRespMsg) {
+      Dht.GetRespMsg resp=(Dht.GetRespMsg)msg;
+      StringBuffer sbuf=new StringBuffer(200);
+      sbuf.append("sending get resp key=0x");
+      sbuf.append(GuidTools.guid_to_string(resp.key));
+      sbuf.append(" return addr=");
+      sbuf.append(msg.peer);
+      sbuf.append(" seq=");
+      sbuf.append(resp.seq);
+      sbuf.append(" to ");
+      sbuf.append(msg.peer);
+      sbuf.append(" through ");
+      addr_to_sbuf(neighbor.node_id,sbuf);
+      logger.info(sbuf.toString());
+    }
+ else     if (logger.isInfoEnabled()) {
+      StringBuffer sbuf=new StringBuffer(200);
+      sbuf.append("forwarding ");
+      sbuf.append(msg);
+      sbuf.append(" to ");
+      addr_to_sbuf(msg.peer,sbuf);
+      sbuf.append(" through ");
+      addr_to_sbuf(neighbor.node_id,sbuf);
+      logger.info(sbuf.toString());
+    }
+    Long start_time=new Long(acore.timerMillis());
+    rpc.sendRequest(neighbor.node_id,new ForwardThroughLeafSetReq(msg),10,QSBool.class,curry(fwdThruLeafSetResp,msg,rem,neighbor,start_time,cb),curry(fwdThruLeafSetTimeout,msg,rem,neighbor,start_time,cb));
+  }
+}
+public void run(NetworkMessage msg,Set<NeighborInfo> rem,NeighborInfo peer,Long start_time,Thunk1<Boolean> cb,QSBool result){
+  router.removeFromPossiblyDown(peer);
+  if (msg instanceof Dht.GetRespMsg) {
+    Dht.GetRespMsg resp=(Dht.GetRespMsg)msg;
+    StringBuffer sbuf=new StringBuffer(200);
+    if (result.boolValue())     sbuf.append("sent get resp key=0x");
+ else     sbuf.append("failed to send get resp key=0x");
+    sbuf.append(GuidTools.guid_to_string(resp.key));
+    sbuf.append(" return addr=");
+    sbuf.append(msg.peer);
+    sbuf.append(" seq=");
+    sbuf.append(resp.seq);
+    sbuf.append(" to ");
+    sbuf.append(msg.peer);
+    sbuf.append(" through ");
+    addr_to_sbuf(peer.node_id,sbuf);
+    sbuf.append(" in ");
+    sbuf.append(acore.timerMillis() - start_time.longValue());
+    sbuf.append(" ms");
+    logger.info(sbuf.toString());
+  }
+  if (result.boolValue()) {
+    logger.debug("remote forward succeeded");
+    if (cb != null)     cb.run(new Boolean(true));
+  }
+ else {
+    logger.debug("remote forward failed");
+    fwdThruLeafSet.run(msg,rem,cb);
+  }
+}
+public void run(NetworkMessage msg,Set<NeighborInfo> rem,NeighborInfo peer,Long start_time,Thunk1<Boolean> cb){
+  logger.debug("forward timed out");
+  router.addToPossiblyDown(peer);
+  if (msg instanceof Dht.GetRespMsg) {
+    Dht.GetRespMsg resp=(Dht.GetRespMsg)msg;
+    StringBuffer sbuf=new StringBuffer(200);
+    sbuf.append("timed out sending get resp key=0x");
+    sbuf.append(GuidTools.guid_to_string(resp.key));
+    sbuf.append(" return addr=");
+    sbuf.append(msg.peer);
+    sbuf.append(" seq=");
+    sbuf.append(resp.seq);
+    sbuf.append(" to ");
+    sbuf.append(msg.peer);
+    sbuf.append(" through ");
+    addr_to_sbuf(peer.node_id,sbuf);
+    sbuf.append(" in ");
+    sbuf.append(acore.timerMillis() - start_time.longValue());
+    sbuf.append(" ms");
+    logger.info(sbuf.toString());
+  }
+  fwdThruLeafSet.run(msg,rem,cb);
+}
+public void run(InetSocketAddress src,ForwardThroughLeafSetReq req,final Object responseToken){
+  if (req.payload instanceof Dht.GetRespMsg) {
+    Dht.GetRespMsg resp=(Dht.GetRespMsg)req.payload;
+    StringBuffer sbuf=new StringBuffer(200);
+    sbuf.append("sending get resp key=0x");
+    sbuf.append(GuidTools.guid_to_string(resp.key));
+    sbuf.append(" return addr=");
+    sbuf.append(req.payload.peer);
+    sbuf.append(" seq=");
+    sbuf.append(resp.seq);
+    sbuf.append(" to ");
+    sbuf.append(req.payload.peer);
+    sbuf.append(" on behalf of ");
+    addr_to_sbuf(src,sbuf);
+    logger.info(sbuf.toString());
+  }
+ else {
+    logger.info("forwarding " + req.payload + " to "+ req.payload.peer+ " on behalf of "+ src);
+  }
+  network.send(req.payload,req.payload.peer,5,curry(fwdThruLSResult,responseToken,src,req,new Long(acore.timerMillis())));
+}
+public void run(Object responseToken,InetSocketAddress src,ForwardThroughLeafSetReq req,Long start_time,Boolean success){
+  if (success.booleanValue())   logger.debug("forward succeeded");
+ else   logger.debug("forward failed");
+  if (req.payload instanceof Dht.GetRespMsg) {
+    Dht.GetRespMsg resp=(Dht.GetRespMsg)req.payload;
+    StringBuffer sbuf=new StringBuffer(200);
+    if (success.booleanValue())     sbuf.append("sent get resp key=0x");
+ else     sbuf.append("failed to send get resp key=0x");
+    sbuf.append(GuidTools.guid_to_string(resp.key));
+    sbuf.append(" return addr=");
+    sbuf.append(req.payload.peer);
+    sbuf.append(" seq=");
+    sbuf.append(resp.seq);
+    sbuf.append(" to ");
+    sbuf.append(req.payload.peer);
+    sbuf.append(" on behalf of ");
+    addr_to_sbuf(src,sbuf);
+    sbuf.append(" in ");
+    sbuf.append(acore.timerMillis() - start_time.longValue());
+    sbuf.append(" ms");
+    logger.info(sbuf.toString());
+  }
+  rpc.sendResponse(new QSBool(success.booleanValue()),responseToken);
+}

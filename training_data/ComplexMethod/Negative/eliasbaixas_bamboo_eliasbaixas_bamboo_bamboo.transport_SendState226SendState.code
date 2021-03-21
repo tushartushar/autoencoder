@@ -1,0 +1,5 @@
+public SendState(QuickSerializable p,SendDoneCb c,Object u){
+  payload=p;
+  cb=c;
+  user_data=u;
+}

@@ -1,0 +1,6 @@
+public void timer_cb(Object user_data){
+  long now_ms=System.currentTimeMillis();
+  if (DEBUG_MIN)   logger.info(" ib=" + in_bytes + " ip="+ in_pkts+ " ob="+ out_bytes+ " op="+ out_pkts);
+  in_bytes=in_pkts=out_bytes=out_pkts=0;
+  if (!closed)   acore.register_timer(BW_STATS_PERIOD,this,null);
+}

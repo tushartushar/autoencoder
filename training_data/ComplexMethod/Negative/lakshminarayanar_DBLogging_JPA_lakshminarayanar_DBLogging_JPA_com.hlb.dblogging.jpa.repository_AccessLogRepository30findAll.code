@@ -1,0 +1,1 @@
+@Query("select al from AccessLog al where isDeleted = 0 order by id asc ") List<AccessLog> findAll();

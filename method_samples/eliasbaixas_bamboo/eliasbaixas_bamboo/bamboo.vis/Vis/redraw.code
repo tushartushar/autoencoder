@@ -1,0 +1,11 @@
+public void redraw(){
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  if (layer.contains(dot))   layer.remove(dot);
+  dot=new BasicEllipse(x_pos(),y_pos(),diameter(),diameter(),Color.blue);
+  dot.setUserObject(this);
+  dot.setInteractor(bamboo_node_interactor);
+  layer.add(dot);
+  redraw_leaf_set();
+  redraw_rt();
+  redraw_guid();
+}

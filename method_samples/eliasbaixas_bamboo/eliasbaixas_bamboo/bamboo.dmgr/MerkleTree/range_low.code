@@ -1,0 +1,6 @@
+/** 
+ * Returns the lowest timestamp covered by this node.
+ */
+public long range_low(){
+  return low;
+}

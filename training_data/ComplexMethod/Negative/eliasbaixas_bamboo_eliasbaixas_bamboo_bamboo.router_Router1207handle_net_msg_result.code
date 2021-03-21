@@ -1,0 +1,5 @@
+protected void handle_net_msg_result(NetworkMessageResult result){
+  NetMsgResultCB cb=(NetMsgResultCB)result.user_data;
+  if (result.success)   cb.success();
+ else   cb.failure();
+}

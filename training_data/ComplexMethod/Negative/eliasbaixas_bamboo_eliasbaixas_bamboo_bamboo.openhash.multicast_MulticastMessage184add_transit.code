@@ -1,0 +1,4 @@
+public void add_transit(long transit){
+  transit_times=transit_times + (transit - prev_time) + " ms; ";
+  prev_time=transit;
+}

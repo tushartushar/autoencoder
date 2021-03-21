@@ -1,0 +1,8 @@
+public Node(int level,long low){
+  this.level=level;
+  this.low=low;
+}
+public Node node(int level,long low){
+  if (level >= nodes.length)   return null;
+  return (Node)nodes[level].get(new Long(low));
+}

@@ -1,0 +1,12 @@
+private ScanFilter(String name,String deviceAddress,ParcelUuid uuid,ParcelUuid uuidMask,ParcelUuid serviceDataUuid,byte[] serviceData,byte[] serviceDataMask,int manufacturerId,byte[] manufacturerData,byte[] manufacturerDataMask){
+  mDeviceName=name;
+  mServiceUuid=uuid;
+  mServiceUuidMask=uuidMask;
+  mDeviceAddress=deviceAddress;
+  mServiceDataUuid=serviceDataUuid;
+  mServiceData=serviceData;
+  mServiceDataMask=serviceDataMask;
+  mManufacturerId=manufacturerId;
+  mManufacturerData=manufacturerData;
+  mManufacturerDataMask=manufacturerDataMask;
+}

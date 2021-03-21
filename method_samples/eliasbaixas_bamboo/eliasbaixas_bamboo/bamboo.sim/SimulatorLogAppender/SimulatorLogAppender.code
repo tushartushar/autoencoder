@@ -1,0 +1,9 @@
+public SimulatorLogAppender(){
+  event_queue=Simulator.instance().event_queue;
+  time_format=NumberFormat.getInstance();
+  time_format.setMinimumFractionDigits(3);
+  time_format.setMaximumFractionDigits(3);
+  time_format.setMaximumIntegerDigits(6);
+  time_format.setMinimumIntegerDigits(6);
+  time_format.setGroupingUsed(false);
+}

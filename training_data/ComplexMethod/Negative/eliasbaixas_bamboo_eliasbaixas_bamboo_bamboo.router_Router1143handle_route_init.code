@@ -1,0 +1,4 @@
+protected void handle_route_init(BambooRouteInit req){
+  if (req.iter)   BUG("iterative routing no longer supported");
+  routeInit(req.dest,req.app_id,req.intermediate_upcall,req.payload);
+}

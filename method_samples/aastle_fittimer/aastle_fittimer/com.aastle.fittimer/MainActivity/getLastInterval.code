@@ -1,0 +1,14 @@
+private int getLastInterval(Cursor cursor){
+  int lastInterval=0;
+  cursor.moveToFirst();
+  try {
+    lastInterval=cursor.getInt(cursor.getColumnIndex("interval"));
+  }
+ catch (  CursorIndexOutOfBoundsException ce) {
+    Log.e(TAG,"GetLastIntervalFromSqlite() CursorIndexOutOfBoundsException" + ce.getMessage());
+  }
+  if (lastInterval != 0) {
+    return lastInterval++;
+  }
+  return 0;
+}

@@ -1,0 +1,18 @@
+/** 
+ * Tests the watchdog.
+ */
+public static void main(String args[]) throws Exception {
+  PatternLayout pl=new PatternLayout("%d{ISO8601} %-5p %c: %m\n");
+  ConsoleAppender ca=new ConsoleAppender(pl);
+  Logger.getRoot().addAppender(ca);
+  Logger.getRoot().setLevel(Level.INFO);
+  final ASyncCoreImpl acore=new ASyncCoreImpl();
+  acore.registerTimer(acore.watchdogCheckPeriod * 3,new Runnable(){
+    public void run(){
+      acore.logger.info("starting infinite loop");
+      while (true)       ;
+    }
+  }
+);
+  acore.asyncMain();
+}

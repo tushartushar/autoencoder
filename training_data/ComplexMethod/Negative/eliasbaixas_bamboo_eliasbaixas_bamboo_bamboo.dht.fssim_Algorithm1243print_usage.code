@@ -1,0 +1,9 @@
+public void print_usage(){
+  System.out.print(sim.now_ms());
+  for (int i=0; i < client_count; ++i) {
+    Integer client=new Integer(i);
+    Long count=(Long)storage_by_client.get(client);
+    System.out.print(" " + (count == null ? 0 : count.longValue()));
+  }
+  System.out.println();
+}

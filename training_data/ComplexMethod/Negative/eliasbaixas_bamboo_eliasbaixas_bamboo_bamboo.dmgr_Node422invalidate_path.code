@@ -1,0 +1,16 @@
+/** 
+ * Invalidate all nodes between this one and the one which has (or would have) timestamp <code>time_usec</code> as its leaf.
+ */
+public void invalidate_path(long time_usec){
+  if (logger.isDebugEnabled())   logger.debug("invalidate_path " + this);
+  invalidate();
+  if (level > 0) {
+    for (Iter i=children(); i.hasNext(); ) {
+      Node child=i.next();
+      if ((child != null) && (time_usec >= child.range_low()) && (time_usec <= child.range_high())) {
+        child.invalidate_path(time_usec);
+        break;
+      }
+    }
+  }
+}

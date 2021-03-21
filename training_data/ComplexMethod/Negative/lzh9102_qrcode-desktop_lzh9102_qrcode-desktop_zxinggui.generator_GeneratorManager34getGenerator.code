@@ -1,0 +1,9 @@
+/** 
+ * Retrieve the n-th generator in the list.
+ * @param index the index of the generator starting from zero
+ * @return the n-th generator in the list
+ */
+public final GeneratorInterface getGenerator(int index){
+  if (index >= 0 && index < generators.size())   return generators.get(index);
+ else   return null;
+}

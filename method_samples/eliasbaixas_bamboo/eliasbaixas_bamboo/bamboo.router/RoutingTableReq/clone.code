@@ -1,0 +1,6 @@
+public Object clone() throws CloneNotSupportedException {
+  RoutingTableReq result=(RoutingTableReq)super.clone();
+  result.guid=guid;
+  result.level=level;
+  return result;
+}

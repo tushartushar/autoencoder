@@ -1,0 +1,17 @@
+protected void handle_ae_tree_ready(MerkleTree tree){
+  if (ae_state == null) {
+    if (logger.isDebugEnabled())     logger.debug("ae_state == null, must have timed out");
+    return;
+  }
+  if (logger.isDebugEnabled())   logger.debug(ae_state + " tree ready");
+  MerkleTree.Node node=tree.node(ae_state.current_level,ae_state.current_low_time);
+  if (node == null) {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " tree has changed");
+    goto_next_node();
+    return;
+  }
+  ae_state.fetch_node_seq=next_fetch_seq++;
+  ae_state.last_activity_ms=timer_ms();
+  FetchMerkleTreeNodeReq req=new FetchMerkleTreeNodeReq(ae_state.ni.node_id,my_guid,ae_state.low_guid,ae_state.high_guid,expansion,ae_state.current_level,ae_state.current_low_time,node.hash(),ae_state.fetch_node_seq);
+  dispatch(req);
+}

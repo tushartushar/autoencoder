@@ -1,0 +1,3 @@
+@Column(name="deleted",columnDefinition="NUMBER(1)") @Type(type="org.hibernate.type.NumericBooleanType") public boolean isDeleted(){
+  return deleted;
+}

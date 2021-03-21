@@ -1,0 +1,12 @@
+/** 
+ * Returns a unit vector in the direction towards the remote coordinate. If the coordinates are the same, null is returned since you cannot produce a unit vector.
+ * @param remote The remote coordinate.
+ * @return A unit vector in the direction towards the remote, or null if the coords are the same.
+ */
+protected double[] displacement(VirtualCoordinate remote){
+  double length=distance(remote);
+  if (length == 0)   return null;
+  double[] dir=new double[_coordinate.length];
+  for (int i=0; i < _coordinate.length; i++)   dir[i]=(remote._coordinate[i] - _coordinate[i]) / length;
+  return dir;
+}

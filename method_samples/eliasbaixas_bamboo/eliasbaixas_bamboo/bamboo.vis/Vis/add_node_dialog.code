@@ -1,0 +1,6 @@
+protected void add_node_dialog(){
+  String s=(String)JOptionPane.showInputDialog(frame,"Add node:","Add Node",JOptionPane.PLAIN_MESSAGE);
+  if ((s != null) && (s.length() > 0) && (FNIT != null)) {
+    FNIT.add_work(s,null);
+  }
+}

@@ -1,0 +1,26 @@
+/** 
+ * constuctor
+ * @param context
+ * @param databaseName
+ * @param cursorFactory
+ * @param version
+ */
+public DatabaseHelper(Context context,String databaseName,SQLiteDatabase.CursorFactory cursorFactory,int version){
+  super(context,databaseName,null,version);
+  DB_NAME=databaseName;
+  sb=new StringBuilder();
+  thisContext=context;
+  DB_PATH="/data/data/" + thisContext.getApplicationContext().getPackageName() + "/databases/";
+  boolean databaseExists=checkDataBase();
+  if (databaseExists) {
+    openDatabase();
+  }
+ else {
+    try {
+      createDatabase();
+      openDatabase();
+    }
+ catch (    Exception e) {
+    }
+  }
+}

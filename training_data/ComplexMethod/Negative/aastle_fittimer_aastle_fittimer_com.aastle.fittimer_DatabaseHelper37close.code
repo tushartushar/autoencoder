@@ -1,0 +1,4 @@
+@Override public synchronized void close(){
+  if (thisDataBase != null)   thisDataBase.close();
+  super.close();
+}

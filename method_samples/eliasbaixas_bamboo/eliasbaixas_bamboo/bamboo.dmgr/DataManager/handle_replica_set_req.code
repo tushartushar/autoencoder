@@ -1,0 +1,40 @@
+protected void handle_replica_set_req(ReplicaSetReq req){
+  NodeId[] result=null;
+  if (preds == null) {
+    NodeId[] x={my_node_id};
+    result=x;
+  }
+ else {
+    int unique_count=0;
+{
+      TreeSet s=new TreeSet();
+      for (int i=0; i < preds.length; ++i)       s.add(preds[i]);
+      for (int i=0; i < succs.length; ++i)       s.add(succs[i]);
+      unique_count=s.size();
+    }
+    int pred_max=0, succ_max=0;
+    if (unique_count == preds.length + succs.length) {
+      result=new NodeId[unique_count];
+      pred_max=preds.length - 1;
+      if (!in_range_mod(preds[0].guid,my_guid,req.guid))       --pred_max;
+      succ_max=succs.length - 1;
+      if (!in_range_mod(my_guid,succs[0].guid,req.guid))       --succ_max;
+    }
+ else {
+      result=new NodeId[unique_count + 1];
+      pred_max=(unique_count - 1) / 2;
+    }
+    int j=0;
+    for (int i=pred_max; i >= 0; --i) {
+      if (logger.isDebugEnabled())       logger.debug("j=" + j + " adding "+ preds[i]);
+      result[j++]=preds[i].node_id;
+    }
+    if (logger.isDebugEnabled())     logger.debug("j=" + j + " adding "+ my_neighbor_info);
+    result[j++]=my_node_id;
+    for (int i=0; j < result.length; ++i) {
+      if (logger.isDebugEnabled())       logger.debug("j=" + j + " adding "+ succs[i]);
+      result[j++]=succs[i].node_id;
+    }
+  }
+  dispatch(new ReplicaSetResp(req.return_address,req.nonce,result));
+}

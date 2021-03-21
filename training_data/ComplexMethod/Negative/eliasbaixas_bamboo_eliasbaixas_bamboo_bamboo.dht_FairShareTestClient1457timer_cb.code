@@ -1,0 +1,13 @@
+public void timer_cb(Object user_data){
+  bamboo_put_args put=new bamboo_put_args();
+  put.application="bamboo.dht.FairShareTestClient $Revision: 1.2 $";
+  put.value=new bamboo_value();
+  put.value.value=new byte[put_size];
+  put.key=new bamboo_key();
+  put.key.value=new byte[20];
+  rand.nextBytes(put.key.value);
+  put.ttl_sec=put_ttl_sec;
+  logger.info("sending put with key 0x" + ByteUtils.print_bytes(put.key.value,0,4));
+  client.put(put,put_done_cb,put.key.value);
+  next_op();
+}

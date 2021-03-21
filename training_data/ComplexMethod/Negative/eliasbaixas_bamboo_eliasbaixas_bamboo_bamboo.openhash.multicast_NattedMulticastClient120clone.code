@@ -1,0 +1,8 @@
+public Object clone(Object other) throws CloneNotSupportedException {
+  return super.clone();
+}
+public Object clone(Object other) throws CloneNotSupportedException {
+  Group result=(Group)super.clone();
+  result.group=group;
+  return result;
+}

@@ -1,0 +1,3 @@
+public int getW(){
+  return getX2() - getX1();
+}

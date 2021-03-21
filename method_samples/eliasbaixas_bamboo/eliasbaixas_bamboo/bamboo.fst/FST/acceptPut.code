@@ -1,0 +1,14 @@
+protected LinkedList<PutInfo> acceptPut(PutInfo pi){
+  LinkedList<PutInfo> ll=queues.get(pi.client);
+  ll.removeFirst();
+  if (ll.isEmpty()) {
+    queues.remove(pi.client);
+    queueSizes.remove(pi.client);
+  }
+ else {
+    queueSizes.put(pi.client,queueSizes.get(pi.client).longValue() - pi.size * pi.ttl);
+  }
+  virtualTime=max(virtualTime,pi.startTime);
+  pi.cb.run();
+  return ll;
+}

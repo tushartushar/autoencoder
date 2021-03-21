@@ -1,0 +1,6 @@
+public void track_duplicates(long period){
+  if ((track_duplicates_period == 0) && (period != 0)) {
+    acore.register_timer(period,dup_track_cb,null);
+  }
+  track_duplicates_period=period;
+}

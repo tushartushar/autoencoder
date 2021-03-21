@@ -1,0 +1,3 @@
+protected StandardStage(){
+  logger=Logger.getLogger(getClass().getName());
+}

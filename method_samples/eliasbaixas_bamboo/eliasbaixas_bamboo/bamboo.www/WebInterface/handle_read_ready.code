@@ -1,0 +1,163 @@
+protected void handle_read_ready(final SelectionKey skey,final ConnState state){
+  while (true) {
+    if (state.req.position() == state.req.limit()) {
+      close(state);
+      return;
+    }
+    int count=0;
+    try {
+      count=state.channel.read(state.req);
+    }
+ catch (    IOException e) {
+      close(state);
+      return;
+    }
+    if (count < 0) {
+      close(state);
+      return;
+    }
+    if (count == 0) {
+      break;
+    }
+  }
+  if (state.header.isEmpty() || (!state.header.getLast().equals(""))) {
+    boolean have_cr=false;
+    for (int j=state.req_idx; j <= state.req.position(); ++j) {
+      if (state.req.get(j) == CR) {
+        have_cr=true;
+      }
+ else       if (have_cr) {
+        if (state.req.get(j) == LF) {
+          String line=new String(state.req.array(),state.req.arrayOffset() + state.req_idx,j - state.req_idx - 1);
+          if (logger.isDebugEnabled())           logger.debug("read header line: \"" + line + "\"");
+          state.req_idx=j + 1;
+          if (line.equals("")) {
+            state.header.addLast(line);
+            break;
+          }
+ else {
+            state.header.addLast(line);
+          }
+        }
+ else {
+          have_cr=false;
+        }
+      }
+    }
+  }
+  if ((!state.header.isEmpty()) && (state.header.getLast().equals(""))) {
+    StringTokenizer tokens=new StringTokenizer(state.header.getFirst());
+    String method=tokens.nextToken();
+    if (method.equals("GET")) {
+      skey.interestOps(SelectionKey.OP_WRITE);
+      create_response(state);
+      return;
+    }
+ else     if (method.equals("POST")) {
+      int contentLength=-1;
+      String userAgent="XML: unknown";
+      for (      String line : state.header) {
+        String lineLower=line.toLowerCase();
+        if (lineLower.startsWith("content-length:")) {
+          contentLength=Integer.parseInt(line.substring(15).trim());
+        }
+        if (lineLower.startsWith("user-agent:")) {
+          userAgent="XML: " + line.substring(11).trim();
+        }
+      }
+      if (contentLength == -1) {
+        close(state);
+        return;
+      }
+      if ((state.req.position() - state.req_idx) < contentLength) {
+        return;
+      }
+      skey.interestOps(0);
+      MultipleByteBufferInputStream is=new MultipleByteBufferInputStream();
+      state.req.limit(state.req.position());
+      state.req.position(state.req_idx);
+      is.add_bb(state.req);
+      final MyReqProc requestProcessor=new MyReqProc();
+      final XmlRpcResponseProcessor responseProcessor=new XmlRpcResponseProcessor();
+      XmlRpcRequest request=null;
+      try {
+        request=requestProcessor.processRequest(is);
+      }
+ catch (      Exception e) {
+        close(state);
+        return;
+      }
+      Class[] argClasses=null;
+      Object[] argValues=null;
+      Vector params=request.getParameters();
+      if (params == null) {
+        argClasses=new Class[3];
+        argValues=new Object[3];
+      }
+ else {
+        argClasses=new Class[params.size() + 3];
+        argValues=new Object[params.size() + 3];
+        for (int i=0; i < params.size(); i++) {
+          argValues[i]=params.elementAt(i);
+          if (argValues[i] instanceof Integer)           argClasses[i]=Integer.TYPE;
+ else           if (argValues[i] instanceof Double)           argClasses[i]=Double.TYPE;
+ else           if (argValues[i] instanceof Boolean)           argClasses[i]=Boolean.TYPE;
+ else           argClasses[i]=argValues[i].getClass();
+        }
+      }
+      Thunk1<Object> result_cb=new Thunk1<Object>(){
+        public void run(        Object response){
+          state.outstandingReqs--;
+          byte[] resp=null;
+          if (response instanceof Exception) {
+            resp=responseProcessor.processException((Exception)response,requestProcessor.getEncoding());
+          }
+ else {
+            try {
+              resp=responseProcessor.processResponse(response,requestProcessor.getEncoding());
+            }
+ catch (            Exception e) {
+              resp=responseProcessor.processException(e,requestProcessor.getEncoding());
+            }
+          }
+          if (skey.isValid()) {
+            skey.interestOps(SelectionKey.OP_WRITE);
+            create_response(state,resp);
+          }
+        }
+      }
+;
+      InetSocketAddress remote=(InetSocketAddress)state.channel.socket().getRemoteSocketAddress();
+      argClasses[argClasses.length - 3]=String.class;
+      argValues[argValues.length - 3]=userAgent;
+      argClasses[argClasses.length - 2]=InetSocketAddress.class;
+      argValues[argValues.length - 2]=remote;
+      argClasses[argClasses.length - 1]=Thunk1.class;
+      argValues[argValues.length - 1]=result_cb;
+      Object invokeTarget=handlers.get(request.getMethodName());
+      String methodName=request.getMethodName();
+      Method fn=null;
+      int dot=methodName.lastIndexOf('.');
+      if (dot > -1 && dot + 1 < methodName.length())       methodName=methodName.substring(dot + 1);
+      try {
+        if (invokeTarget == null) {
+          throw new Exception("no such handler: " + request.getMethodName());
+        }
+        Class targetClass=invokeTarget.getClass();
+        fn=targetClass.getMethod(methodName,argClasses);
+        if (fn.getDeclaringClass() == Object.class) {
+          throw new Exception("Invoker can't call methods " + "defined in java.lang.Object");
+        }
+        state.outstandingReqs++;
+        fn.invoke(invokeTarget,argValues);
+      }
+ catch (      Exception e) {
+        logger.error("request caused exception",e);
+        byte[] resp=responseProcessor.processException(e,requestProcessor.getEncoding());
+        skey.interestOps(SelectionKey.OP_WRITE);
+        create_response(state,resp);
+        return;
+      }
+    }
+  }
+}

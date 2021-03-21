@@ -1,0 +1,21 @@
+public void recv(Object msg,InetSocketAddress src,InetSocketAddress local,int tries,long wait_ms,long est_rtt_ms){
+  if (msg instanceof I3Msg) {
+    I3Msg inb=(I3Msg)msg;
+    ByteBuffer pkt=ByteBuffer.wrap(inb.payload_bytes);
+    if (logger.isDebugEnabled()) {
+      logger.debug("got i3 message for 0x" + GuidTools.guid_to_string(inb.dest) + ":\n"+ ByteUtils.print_bytes(inb.payload_bytes));
+    }
+    send_pkt(pkt);
+  }
+ else   if (msg instanceof PredMsg) {
+    PredMsg inb=(PredMsg)msg;
+    if (logger.isDebugEnabled()) {
+      logger.debug("got pred message from 0x" + GuidTools.guid_to_string(inb.key));
+    }
+    pred_id=inb.key;
+    send_i3_range();
+  }
+ else {
+    logger.warn("got unknown msg type: " + msg.getClass().getName());
+  }
+}

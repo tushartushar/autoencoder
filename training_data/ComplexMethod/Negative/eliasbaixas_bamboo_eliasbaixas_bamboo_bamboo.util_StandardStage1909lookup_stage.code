@@ -1,0 +1,4 @@
+protected EventHandlerIF lookup_stage(ConfigDataIF config,String name) throws NoSuchStageException {
+  StageIF stage=config.getManager().getStage(name);
+  return stage.getWrapper().getEventHandler();
+}

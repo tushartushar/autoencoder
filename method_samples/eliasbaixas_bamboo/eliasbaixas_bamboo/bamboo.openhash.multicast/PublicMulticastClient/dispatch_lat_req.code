@@ -1,0 +1,6 @@
+public void dispatch_lat_req(NodeId peer,int level){
+  if (logger.isDebugEnabled())   logger.debug("peer=" + peer);
+  long rtt=network.estimatedRTTMillis(peer);
+  assert rtt != -1;
+  handle_lat_resp(peer,level,rtt);
+}

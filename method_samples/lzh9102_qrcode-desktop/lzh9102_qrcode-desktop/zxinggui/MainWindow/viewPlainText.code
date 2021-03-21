@@ -1,0 +1,3 @@
+private void viewPlainText(){
+  if (!prevText.isEmpty())   new ViewPlainTextWindow(this,prevText).setVisible(true);
+}

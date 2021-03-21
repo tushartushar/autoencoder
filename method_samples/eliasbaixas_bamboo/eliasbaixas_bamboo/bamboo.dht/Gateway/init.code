@@ -1,0 +1,40 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  md=MessageDigest.getInstance("SHA");
+  allow_unauth_rm=config_get_boolean(config,"allow_unauth_rm");
+  assert !allow_unauth_rm : "allow_unauth_rm no longer supported";
+  server_port=config.getInt("port");
+  if (sim_running) {
+    if (instances == null) {
+      instances=new HashMap();
+      simulator=Simulator.instance();
+      bbuf=ByteBuffer.allocate(16384);
+    }
+    NodeId gid=new NodeId(server_port,my_node_id.address());
+    instances.put(gid,this);
+    logger.info("gid=" + gid);
+  }
+ else {
+    ssock_channel=ServerSocketChannel.open();
+    ssock=ssock_channel.socket();
+    ssock.bind(new InetSocketAddress(server_port));
+    ssock_channel.configureBlocking(false);
+    acore.register_selectable(ssock_channel,OP_ACCEPT,accept_cb);
+  }
+  acore.register_timer(0,new Runnable(){
+    public void run(){
+      WebInterface www=WebInterface.instance(my_node_id);
+      if (www == null) {
+        logger.warn("no WebInterface stage; XML RPC disabled");
+      }
+ else {
+        www.register_xml_rpc_handler("put",new XmlRpcPutHandler());
+        www.register_xml_rpc_handler("get",new XmlRpcGetHandler());
+        www.register_xml_rpc_handler("put_removable",new XmlRpcPutRemovableHandler());
+        www.register_xml_rpc_handler("get_details",new XmlRpcGetHandler());
+        www.register_xml_rpc_handler("rm",new XmlRpcRmHandler());
+      }
+    }
+  }
+);
+}

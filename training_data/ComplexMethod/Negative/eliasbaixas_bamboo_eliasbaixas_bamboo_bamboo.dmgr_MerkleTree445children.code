@@ -1,0 +1,8 @@
+/** 
+ * Returns an iterator over this node's children.  Only valid for nodes above level 0.  
+ * @throws UnsupportedOperationException if this node is at level 0
+ */
+public Iter children(){
+  if (level == 0)   throw new UnsupportedOperationException();
+  return new Iter(low);
+}

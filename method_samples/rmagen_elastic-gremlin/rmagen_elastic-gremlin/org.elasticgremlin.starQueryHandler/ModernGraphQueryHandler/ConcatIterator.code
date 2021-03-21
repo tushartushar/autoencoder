@@ -1,0 +1,4 @@
+public ConcatIterator(Iterator<E> firstIterator,Iterator<E> secondIterator){
+  this.firstIterator=firstIterator;
+  this.secondIterator=secondIterator;
+}

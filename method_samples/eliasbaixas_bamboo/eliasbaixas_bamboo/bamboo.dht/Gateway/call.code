@@ -1,0 +1,9 @@
+public void call(Object not_used){
+  client.put_done(xact_id,0);
+}
+public void call(Object not_used){
+  client.rm_done(xact_id,0);
+}
+public void call(Object not_used){
+  client.get_done(xact_id,clone);
+}

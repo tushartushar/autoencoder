@@ -1,0 +1,15 @@
+/** 
+ * Sets the buffer containing encoded XDR data as well as the length of the encoded data.
+ * @param buffer Buffer containing encoded XDR data.
+ * @param encodedLength Length of encoded XDR data within the buffer.
+ * @throws IllegalArgumentException if <code>encodedLength</code> is nota multiple of four.
+ */
+public void setXdrData(ByteBuffer buffer,int encodedLength){
+  if ((encodedLength < 0) || (encodedLength & 3) != 0) {
+    throw (new IllegalArgumentException("length of encoded data must be a multiple of four and must not be negative"));
+  }
+  this.buffer=buffer;
+  this.encodedLength=encodedLength;
+  bufferIndex=0;
+  bufferHighmark=-4;
+}

@@ -1,0 +1,4 @@
+public static final Node incrementOffset(Node old,long inc){
+  assert old != null;
+  return new Node(old.left,old.right,old.offset + inc,old.value,old.low,old.high,old.height,old.valid);
+}

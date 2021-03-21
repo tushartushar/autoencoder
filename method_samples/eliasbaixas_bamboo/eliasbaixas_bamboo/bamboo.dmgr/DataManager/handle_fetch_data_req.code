@@ -1,0 +1,3 @@
+protected void handle_fetch_data_req(FetchDataReq req){
+  dispatch(new StorageManager.GetByKeyReq(req.key,my_sink,req));
+}

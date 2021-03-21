@@ -1,0 +1,3 @@
+public String toString(){
+  return "(LookupRespMsg super=" + super.toString() + " lookup_id=0x"+ GuidTools.guid_to_string(lookup_id)+ " owner_id=0x"+ GuidTools.guid_to_string(owner_id)+ ")";
+}

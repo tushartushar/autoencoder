@@ -1,0 +1,16 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  if ((secret_hash == null) || java.util.Arrays.equals(secret_hash,ZERO_HASH))   buffer.add(time_usec);
+ else   buffer.add(0x8000000000000000L | time_usec);
+  buffer.add(ttl_sec);
+  buffer.add(guid);
+  buffer.add(value.limit());
+  buffer.add(value.array(),value.arrayOffset(),value.limit());
+  buffer.add(put);
+  byte[] client_bytes=client_id.getAddress();
+  buffer.add(client_bytes.length);
+  buffer.add(client_bytes,0,client_bytes.length);
+  buffer.add(seq);
+  if (!put)   buffer.add(value_hash,0,20);
+  if ((secret_hash != null) && !java.util.Arrays.equals(secret_hash,ZERO_HASH))   buffer.add(secret_hash,0,20);
+}

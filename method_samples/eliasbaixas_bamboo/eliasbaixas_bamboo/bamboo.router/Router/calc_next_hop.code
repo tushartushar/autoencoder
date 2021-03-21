@@ -1,0 +1,37 @@
+protected NeighborInfo calc_next_hop(BigInteger guid,boolean use_lc){
+  Set<NeighborInfo> ignore=ignore_possibly_down ? (new LinkedHashSet<NeighborInfo>()) : possibly_down.keySet();
+  if (leaf_set.within_leaf_set(guid)) {
+    NeighborInfo result=leaf_set.closest_leaf(guid,ignore);
+    if (logger.isDebugEnabled())     logger.debug("dst is in our leaf set, closest to " + result);
+    return result;
+  }
+ else {
+    NeighborInfo next_hop=rt.next_hop(guid,ignore);
+    NeighborInfo lc_nh=use_lc ? location_cache.closest_node(guid) : null;
+    if (next_hop == null) {
+      next_hop=leaf_set.closest_leaf(guid,ignore);
+      if (lc_nh != null) {
+        BigInteger nhd=calc_dist(next_hop.guid,guid);
+        BigInteger lc_nhd=calc_dist(lc_nh.guid,guid);
+        if (lc_nhd.compareTo(nhd) < 0) {
+          if (logger.isDebugEnabled())           logger.debug("dst not in leaf set, and matches hole in " + " routing table; using " + lc_nh + " from location cache");
+          return lc_nh;
+        }
+      }
+      if (logger.isDebugEnabled())       logger.debug("dst not in leaf set, and matches hole in routing" + " table; using " + next_hop + " from leaf set");
+      return next_hop;
+    }
+ else {
+      if (lc_nh != null) {
+        BigInteger nhd=calc_dist(next_hop.guid,guid);
+        BigInteger lc_nhd=calc_dist(lc_nh.guid,guid);
+        if (lc_nhd.compareTo(nhd) < 0) {
+          if (logger.isDebugEnabled())           logger.debug("dst not in leaf set, using " + lc_nh + " from location cache");
+          return lc_nh;
+        }
+      }
+      if (logger.isDebugEnabled())       logger.debug("dst not in leaf set, using " + next_hop + " from routing table");
+      return next_hop;
+    }
+  }
+}

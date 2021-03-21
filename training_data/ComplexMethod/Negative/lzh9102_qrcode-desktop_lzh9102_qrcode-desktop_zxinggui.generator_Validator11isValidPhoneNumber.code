@@ -1,0 +1,3 @@
+public static boolean isValidPhoneNumber(String number){
+  return number.matches("^\\+?[0-9]+$");
+}

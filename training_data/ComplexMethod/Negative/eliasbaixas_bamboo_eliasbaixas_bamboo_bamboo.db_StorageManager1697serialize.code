@@ -1,0 +1,15 @@
+public void serialize(OutputBuffer buf){
+  this.serialize(buf,false);
+}
+public void serialize(OutputBuffer buf,boolean onDisk){
+  if (!onDisk && !Arrays.equals(secret_hash,ZERO_HASH))   buf.add(0x8000000000000000L | time_usec);
+ else   buf.add(time_usec);
+  buf.add(ttl_sec);
+  byte[] guid_bytes=new byte[20];
+  StorageManager.guid_to_bytes(guid,guid_bytes,0);
+  buf.add(guid_bytes,0,20);
+  if (onDisk || !Arrays.equals(secret_hash,ZERO_HASH))   buf.add(secret_hash,0,20);
+  buf.add(data_hash,0,20);
+  buf.add((byte)(put ? 1 : 0));
+  buf.add(client_id.getAddress(),0,4);
+}

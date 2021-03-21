@@ -1,0 +1,4 @@
+@Override public Set<AccessRights> findAllInSet(){
+  Set<AccessRights> resultSet=accessRightsRepository.findAllInSet();
+  return resultSet;
+}

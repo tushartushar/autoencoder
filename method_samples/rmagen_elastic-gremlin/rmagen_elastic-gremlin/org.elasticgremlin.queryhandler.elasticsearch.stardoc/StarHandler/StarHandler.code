@@ -1,0 +1,14 @@
+public StarHandler(ElasticGraph graph,Client client,ElasticMutations elasticMutations,String indexName,int scrollSize,boolean refresh,TimingAccessor timing,EdgeMapping... edgeMappings){
+  this(graph,client,elasticMutations,new String[]{indexName},scrollSize,refresh,timing,edgeMappings);
+}
+public StarHandler(ElasticGraph graph,Client client,ElasticMutations elasticMutations,String[] indices,int scrollSize,boolean refresh,TimingAccessor timing,EdgeMapping... edgeMappings){
+  this.graph=graph;
+  this.client=client;
+  this.elasticMutations=elasticMutations;
+  this.indices=indices;
+  this.scrollSize=scrollSize;
+  this.refresh=refresh;
+  this.timing=timing;
+  this.edgeMappings=edgeMappings;
+  this.lazyGetters=new HashMap<>();
+}

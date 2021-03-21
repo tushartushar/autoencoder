@@ -1,0 +1,36 @@
+void storage_changed(boolean added,InetAddress client_id,long size);
+protected void storage_changed(final boolean added,final Key fk,final int size,DbTxn xact){
+  assert xact != null;
+  if (logger.isDebugEnabled()) {
+    logger.debug("storage changed: " + (added ? "added" : "removed") + " key "+ fk+ " of "+ size+ " bytes");
+  }
+  Dbt key=new Dbt(fk.client_id.getAddress(),0,4);
+  Dbt old=new Dbt();
+  int retval=0;
+  try {
+    retval=client_counts.get(xact,key,old,0);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  long old_usage=0;
+  if (retval != Db.DB_NOTFOUND) {
+    ByteBuffer bb=ByteBuffer.wrap(old.getData(),old.getOffset(),old.getSize());
+    old_usage=bb.getLong();
+  }
+  byte[] new_bytes=new byte[8];
+  ByteBuffer bb=ByteBuffer.wrap(new_bytes);
+  if (added)   bb.putLong(old_usage + size + Key.SIZE);
+ else   bb.putLong(old_usage - size - Key.SIZE);
+  Dbt newval=new Dbt(new_bytes);
+  try {
+    retval=client_counts.put(xact,key,newval,0);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  Iterator si=storage_monitors.iterator();
+  while (si.hasNext()) {
+    notify_storage_changed((StorageMonitor)si.next(),added,fk.client_id,size + Key.SIZE);
+  }
+}

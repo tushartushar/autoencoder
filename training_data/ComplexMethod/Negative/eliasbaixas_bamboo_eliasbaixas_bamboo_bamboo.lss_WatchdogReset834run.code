@@ -1,0 +1,6 @@
+public void run(){
+synchronized (watchdogLock) {
+    watchdogFlag=false;
+  }
+  registerTimer(watchdogResetPeriod,this);
+}

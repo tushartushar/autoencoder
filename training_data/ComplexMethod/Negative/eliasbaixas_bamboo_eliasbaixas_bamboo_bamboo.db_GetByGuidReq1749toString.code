@@ -1,0 +1,6 @@
+public String toString(){
+  return "(GetByGuidReq guid=" + GuidTools.guid_to_string(guid) + " primary="+ primary+ " placemark="+ placemark+ " comp_q="+ comp_q+ ")";
+}
+public String toString(){
+  return "(GetByGuidReq guid=" + GuidTools.guid_to_string(guid) + " primary="+ primary+ " placemark="+ placemark+ " comp_q="+ comp_q+ ")";
+}

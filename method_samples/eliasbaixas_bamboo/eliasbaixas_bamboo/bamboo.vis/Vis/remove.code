@@ -1,0 +1,7 @@
+public void remove(){
+  hide_leaf_set();
+  hide_rt();
+  hide_guid();
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  layer.remove(dot);
+}

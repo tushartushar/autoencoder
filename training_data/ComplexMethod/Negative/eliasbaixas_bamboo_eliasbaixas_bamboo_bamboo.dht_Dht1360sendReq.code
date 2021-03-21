@@ -1,0 +1,14 @@
+protected void sendReq(NodeId n,Long predictedRTT,BigInteger id){
+  StringBuffer sbuf=new StringBuffer(200);
+  sbuf.append("sending iterative get req key=0x");
+  sbuf.append(GuidTools.guid_to_string(key));
+  sbuf.append(" return addr=").append(my_node_id);
+  sbuf.append(" seq=").append(seq);
+  sbuf.append(" to ").append(n);
+  if (id != null)   sbuf.append(", ").append(guid_to_string(id));
+  sbuf.append(" predicted RTT=").append(predictedRTT);
+  logger.info(sbuf.toString());
+  IterGetReq req=new IterGetReq(key,maxvals,placemark,seq,vivaldi.localCoordinates(),client);
+  Object token=rpc.sendRequest(n,req,5,IterGetResp.class,curry(iterGetResp,n,predictedRTT,new Long(timer_ms())),curry(iterGetTimeout,n));
+  outstanding.put(n,token);
+}

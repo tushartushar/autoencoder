@@ -1,0 +1,9 @@
+/** 
+ * Constructs the request.
+ * @param completion_queue The sink on which to publish the result.
+ * @param user_data A user-specified object to include in the result.
+ */
+public VivaldiRequestVC(SinkIF completion_queue,Object user_data){
+  comp_q=completion_queue;
+  this.user_data=user_data;
+}

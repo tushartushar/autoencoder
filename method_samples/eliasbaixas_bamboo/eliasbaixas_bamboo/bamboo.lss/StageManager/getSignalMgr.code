@@ -1,0 +1,6 @@
+/** 
+ * Returns a handle to the system signal interface.
+ */
+public SignalMgrIF getSignalMgr(){
+  throw new IllegalArgumentException();
+}

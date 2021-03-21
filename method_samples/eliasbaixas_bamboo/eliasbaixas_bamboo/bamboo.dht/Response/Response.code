@@ -1,0 +1,4 @@
+public Response(Object r,Object u){
+  response=r;
+  user_data=u;
+}

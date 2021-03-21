@@ -1,0 +1,11 @@
+public void nextBytes(byte[] output,int offset,int length){
+  try {
+    is.read(output,offset,length);
+  }
+ catch (  IOException e) {
+    error(e);
+  }
+}
+public void nextBytes(OutputBuffer buffer){
+  throw new NoSuchMethodError();
+}

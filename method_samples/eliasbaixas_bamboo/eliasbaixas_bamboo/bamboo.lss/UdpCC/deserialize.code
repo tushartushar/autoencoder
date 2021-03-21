@@ -1,0 +1,4 @@
+/** 
+ * Called to deserialize the given <code>buf</code> into the message it represents; the inverse of <code>serialize</code>.
+ */
+Object deserialize(ByteBuffer buf) throws Exception ;

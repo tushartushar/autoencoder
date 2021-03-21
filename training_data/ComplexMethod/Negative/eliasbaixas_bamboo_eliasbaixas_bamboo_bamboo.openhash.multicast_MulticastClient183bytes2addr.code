@@ -1,0 +1,15 @@
+public static InetSocketAddress bytes2addr(byte[] bytes){
+  byte[] addrb=new byte[4];
+  System.arraycopy(bytes,0,addrb,0,4);
+  InetAddress addr=null;
+  try {
+    addr=InetAddress.getByAddress(addrb);
+  }
+ catch (  UnknownHostException e) {
+    assert false : e;
+  }
+  ByteBuffer bb=ByteBuffer.wrap(bytes);
+  bb.position(4);
+  int port=bb.getShort();
+  return new InetSocketAddress(addr,port);
+}

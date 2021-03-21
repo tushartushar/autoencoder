@@ -1,0 +1,15 @@
+public void handleEvent(QueueElementIF item){
+  PutResp resp=(PutResp)item;
+  if (resp.inval_put_key != null)   logger.warn("inval_put_key=" + resp.inval_put_key);
+  if (resp.inval_rm_key != null)   logger.warn("inval_rm_key=" + resp.inval_rm_key);
+  --putsOutstanding;
+  ++loaded;
+  if (loaded % 1000 == 0) {
+    logger.info(loaded + " records loaded");
+  }
+  if (!readDone)   readNext();
+  if (readDone && putsOutstanding == 0) {
+    logger.info("databases loaded successfully");
+    System.exit(0);
+  }
+}

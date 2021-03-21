@@ -1,0 +1,26 @@
+public void handle_inb_pkt(InetSocketAddress src,ByteBuffer pkt){
+  if (logger.isDebugEnabled()) {
+    logger.debug("Got inbound packet " + ByteUtils.print_bytes(pkt.array(),pkt.arrayOffset(),pkt.limit()));
+  }
+  byte first_byte=pkt.get();
+  if (first_byte == 0x0) {
+    byte[] dest_bytes=new byte[20];
+    pkt.get(dest_bytes);
+    BigInteger dest=RedirClient.bytes2bi(dest_bytes);
+    int payload_len=pkt.getShort();
+    byte[] payload_bytes=new byte[payload_len];
+    pkt.get(payload_bytes);
+    if (logger.isDebugEnabled()) {
+      logger.debug("got msg to send to 0x" + GuidTools.guid_to_string(dest) + "; doing lookup");
+    }
+    client.lookup(dest,namespace,levels,APP,lookup_cb,payload_bytes);
+  }
+ else   if (first_byte == (byte)0xff) {
+    logger.debug("got i3 hullo");
+    i3_addr=src;
+    if (succ_id != null)     send_i3_range();
+  }
+ else {
+    assert false : first_byte;
+  }
+}

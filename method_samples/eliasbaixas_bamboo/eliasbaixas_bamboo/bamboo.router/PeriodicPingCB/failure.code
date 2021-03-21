@@ -1,0 +1,4 @@
+public void failure(){
+  periodic_pings.remove(ni);
+  generic_msg_failure(ni,null);
+}

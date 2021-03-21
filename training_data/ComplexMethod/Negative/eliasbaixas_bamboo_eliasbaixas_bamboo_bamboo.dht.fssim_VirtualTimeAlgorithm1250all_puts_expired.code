@@ -1,0 +1,3 @@
+protected void all_puts_expired(int client){
+  latest_finish_times.remove(new Integer(client));
+}

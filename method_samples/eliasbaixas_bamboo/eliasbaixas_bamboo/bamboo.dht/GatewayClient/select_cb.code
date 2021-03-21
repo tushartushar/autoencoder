@@ -1,0 +1,137 @@
+public void select_cb(SelectionKey skey,Object user_data){
+  logger.debug("select_cb");
+  if ((skey.readyOps() & skey.interestOps() & SelectionKey.OP_CONNECT) != 0) {
+    logger.debug("op_connect");
+    try {
+      if (channel.finishConnect()) {
+        if (waiting.isEmpty())         skey.interestOps(SelectionKey.OP_READ);
+ else         skey.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+      }
+    }
+ catch (    Exception e) {
+      try_next_gateway();
+      return;
+    }
+    if (!waiting.isEmpty())     skey.interestOps(skey.interestOps() | SelectionKey.OP_WRITE);
+  }
+  if ((skey.readyOps() & skey.interestOps() & SelectionKey.OP_WRITE) != 0) {
+    logger.debug("op_write");
+    while (true) {
+      if (write_buf.position() < write_buf.limit()) {
+        if (logger.isDebugEnabled()) {
+          logger.debug("sending:\n" + ostore.util.ByteUtils.print_bytes(write_buf.array(),write_buf.arrayOffset() + write_buf.position(),write_buf.limit() - write_buf.position()));
+        }
+        try {
+          channel.write(write_buf);
+        }
+ catch (        IOException e) {
+          try_next_gateway();
+          return;
+        }
+        if (write_buf.position() < write_buf.limit())         break;
+        if (logger.isDebugEnabled()) {
+          logger.debug((write_buf.limit() - write_buf.position()) + " bytes remaining");
+        }
+      }
+      if (waiting.isEmpty()) {
+        skey.interestOps(skey.interestOps() & ~SelectionKey.OP_WRITE);
+        break;
+      }
+      write_buf.clear();
+      write_buf.position(4);
+      int xact_id=next_xact_id++;
+      if (logger.isDebugEnabled())       logger.debug("req xact_id=" + Integer.toHexString(xact_id));
+      write_buf.putInt(xact_id);
+      write_buf.putInt(0);
+      write_buf.putInt(2);
+      write_buf.putInt(708655600);
+      Request req=(Request)waiting.removeFirst();
+      if (req.request instanceof XdrVoid) {
+        assert req.proc == 1;
+      }
+ else       set_client_library(req);
+      write_buf.putInt(req.vers);
+      write_buf.putInt(req.proc);
+      for (int i=0; i < 2; ++i) {
+        write_buf.putInt(0);
+        write_buf.putInt(0);
+      }
+      XdrByteBufferEncodingStream es=new XdrByteBufferEncodingStream(write_buf);
+      try {
+        if (req.request instanceof bamboo_put_args)         ((bamboo_put_args)req.request).xdrEncode(es);
+ else         if (req.request instanceof bamboo_put_arguments)         ((bamboo_put_arguments)req.request).xdrEncode(es);
+ else         if (req.request instanceof bamboo_get_args)         ((bamboo_get_args)req.request).xdrEncode(es);
+ else         if (req.request instanceof bamboo_rm_arguments)         ((bamboo_rm_arguments)req.request).xdrEncode(es);
+ else         assert false;
+      }
+ catch (      Exception e) {
+        assert false : e;
+      }
+      write_buf.flip();
+      write_buf.putInt(0x80000000 | (write_buf.limit() - 4));
+      write_buf.position(0);
+      logger.debug("size=" + write_buf.limit());
+      inflight.put(new Integer(xact_id),req);
+    }
+  }
+  if ((skey.readyOps() & skey.interestOps() & SelectionKey.OP_READ) != 0) {
+    logger.debug("op_read");
+    while (true) {
+      int count=0;
+      try {
+        count=channel.read(read_buf);
+      }
+ catch (      IOException e) {
+        try_next_gateway();
+        return;
+      }
+      if (count < 0) {
+        try_next_gateway();
+        return;
+      }
+      if (count > 0) {
+        read_buf.flip();
+        if (logger.isDebugEnabled()) {
+          logger.debug("received:\n" + ostore.util.ByteUtils.print_bytes(read_buf.array(),read_buf.arrayOffset() + read_buf.position(),read_buf.limit() - read_buf.position()));
+        }
+        ib.add_packet(read_buf);
+        read_buf=ByteBuffer.allocate(1500);
+      }
+      if (next_read_size == -1) {
+        if (ib.size() < 4)         break;
+        next_read_size=ib.nextInt() & 0x7fffffff;
+      }
+      if (ib.size() < next_read_size)       break;
+      if (logger.isDebugEnabled())       logger.debug("ib.size=" + ib.size());
+      int xact_id=ib.nextInt();
+      int rpc_reply=ib.nextInt();
+      int msg_accepted=ib.nextInt();
+      int auth_null=ib.nextInt();
+      int auth_len=ib.nextInt();
+      int success=ib.nextInt();
+      assert success == 0;
+      if (logger.isDebugEnabled())       logger.debug("resp xact_id=" + Integer.toHexString(xact_id));
+      Request req=(Request)inflight.remove(new Integer(xact_id));
+      assert req != null;
+      Object resp=null;
+      if ((req.request instanceof bamboo_put_args) || (req.request instanceof bamboo_put_arguments) || (req.request instanceof bamboo_rm_arguments)) {
+        resp=new Integer(ib.nextInt());
+      }
+ else {
+        assert req.request instanceof bamboo_get_args;
+        XdrInputBufferDecodingStream ds=new XdrInputBufferDecodingStream(ib,ib.size());
+        try {
+          ds.beginDecoding();
+          if (req.vers == 2)           resp=new bamboo_get_res(ds);
+ else           resp=new bamboo_get_result(ds);
+        }
+ catch (        Exception e) {
+          BUG(e);
+        }
+      }
+      if (req.completion_queue == null)       ((Thunk1)req.user_data).run(resp);
+ else       application_enqueue(req.completion_queue,new Response(resp,req.user_data));
+      next_read_size=-1;
+    }
+  }
+}

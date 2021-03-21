@@ -1,0 +1,21 @@
+public void timer_cb(Object user_data){
+  router=Router.instance(my_node_id);
+  try {
+    router.registerApplication(Router.applicationID(this.getClass()),null,null,null,null,null);
+  }
+ catch (  Router.DuplicateApplicationException e) {
+    BUG(e);
+  }
+  if (rand == null)   rand=new Random(router.id().hashCode() ^ (int)now_ms());
+  next_op();
+}
+public void timer_cb(Object user_data){
+  byte[] guid_bytes=new byte[21];
+  rand.nextBytes(guid_bytes);
+  guid_bytes[0]=0;
+  BigInteger guid=new BigInteger(guid_bytes);
+  logger.info("looking up 0x" + GuidTools.guid_to_string(guid) + ".");
+  Long start_time=new Long(timer_ms());
+  router.lookup(guid,lookup_cb,start_time);
+  next_op();
+}

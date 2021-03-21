@@ -1,0 +1,3 @@
+public void setViewEnabled(boolean viewEnabled){
+  this.viewEnabled=viewEnabled;
+}

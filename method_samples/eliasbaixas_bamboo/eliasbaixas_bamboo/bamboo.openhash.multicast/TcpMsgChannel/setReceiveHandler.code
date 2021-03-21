@@ -1,0 +1,12 @@
+public void setReceiveHandler(Thunk1<QuickSerializable> value){
+  if (recv != null)   throw new IllegalStateException();
+  recv=value;
+  if ((channel != null) && channel.isConnected()) {
+    try {
+      acore.registerSelectable(channel,OP_READ,read);
+    }
+ catch (    ClosedChannelException e) {
+      error();
+    }
+  }
+}

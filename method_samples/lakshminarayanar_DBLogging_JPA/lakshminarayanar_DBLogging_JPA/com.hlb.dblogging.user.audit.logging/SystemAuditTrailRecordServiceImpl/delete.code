@@ -1,0 +1,7 @@
+@Override @Transactional public SystemAuditTrail delete(int id) throws Exception {
+  SystemAuditTrail ss=systemAuditTrailRecordRepository.findOne(id);
+  if (ss == null)   throw new Exception();
+  ss.setDeleted(true);
+  systemAuditTrailRecordRepository.save(ss);
+  return ss;
+}

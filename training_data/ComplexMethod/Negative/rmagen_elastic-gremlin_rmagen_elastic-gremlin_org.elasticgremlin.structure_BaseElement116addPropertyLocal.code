@@ -1,0 +1,10 @@
+public Property addPropertyLocal(String key,Object value){
+  checkRemoved();
+  if (shouldAddProperty(key)) {
+    ElementHelper.validateProperty(key,value);
+    Property property=createProperty(key,value);
+    properties.put(key,property);
+    return property;
+  }
+  return null;
+}

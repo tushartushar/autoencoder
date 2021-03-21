@@ -1,0 +1,3 @@
+public int getH(){
+  return getY2() - getY1();
+}

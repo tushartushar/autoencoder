@@ -1,0 +1,3 @@
+public Node(NeighborInfo n){
+  ni=n;
+}

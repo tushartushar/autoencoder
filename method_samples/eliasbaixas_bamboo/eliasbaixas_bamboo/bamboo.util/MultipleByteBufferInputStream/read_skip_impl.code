@@ -1,0 +1,21 @@
+public int read_skip_impl(byte[] output,int offset,int length){
+  if (buffers.isEmpty())   return -1;
+  if (remaining == 0)   return -1;
+  if (length > size)   length=size;
+  size-=length;
+  if (remaining != -1)   if (length > remaining)   length=remaining;
+  remaining-=length;
+  int bytes_read=0;
+  while (length > 0) {
+    if (buffers.isEmpty())     throw new IllegalStateException();
+    ByteBuffer bb=(ByteBuffer)buffers.getFirst();
+    int toread=Math.min(length,bb.limit() - bb.position());
+    bytes_read+=toread;
+    if (output == null)     bb.position(bb.position() + toread);
+ else     bb.get(output,offset,toread);
+    offset+=toread;
+    length-=toread;
+    if (bb.limit() == bb.position())     buffers.removeFirst();
+  }
+  return bytes_read;
+}

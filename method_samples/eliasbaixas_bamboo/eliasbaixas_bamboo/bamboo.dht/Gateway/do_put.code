@@ -1,0 +1,14 @@
+public void do_put(final int xact_id,bamboo_put_args args,final NodeId client_id,final GatewayClient client){
+  final Dht.PutReq outb=put_args_to_put_req(args,client_id.address());
+  md.update(outb.value.array(),outb.value.arrayOffset(),outb.value.limit());
+  final byte[] value_hash=md.digest();
+  final long now=timer_ms();
+  outb.user_data=new Thunk1<Dht.PutResp>(){
+    public void run(    Dht.PutResp resp){
+      simulator_put_done(outb,resp,client,client_id,xact_id,now,value_hash);
+    }
+  }
+;
+  log_put_req(xact_id,outb,client.toString(),value_hash,"sim","sim");
+  dispatch(outb);
+}

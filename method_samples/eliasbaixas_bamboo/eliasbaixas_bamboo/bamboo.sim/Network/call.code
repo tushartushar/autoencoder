@@ -1,0 +1,19 @@
+public void call(Object user_data){
+  try {
+    sink.enqueue(item);
+  }
+ catch (  SinkException e) {
+    System.err.println("SinkException " + e);
+    e.printStackTrace();
+    System.exit(1);
+  }
+}
+public void call(Object notUsed){
+  recv_cb.run(qs,my_node_id);
+}
+public void call(Object notUsed){
+  callback.run(new Boolean(true));
+}
+public void call(Object notUsed){
+  callback.run(new Boolean(false));
+}

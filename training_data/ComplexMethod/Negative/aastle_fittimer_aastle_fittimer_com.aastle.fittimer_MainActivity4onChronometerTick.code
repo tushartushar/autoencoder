@@ -1,0 +1,5 @@
+@Override public void onChronometerTick(Chronometer chronometer){
+  if (throb) {
+    colorThrobber();
+  }
+}

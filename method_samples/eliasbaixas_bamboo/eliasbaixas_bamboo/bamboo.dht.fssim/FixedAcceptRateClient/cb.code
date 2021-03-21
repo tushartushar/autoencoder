@@ -1,0 +1,26 @@
+public void cb(Object not_used){
+  alg.enqueue_put(client,size,ttl_sec,new Algorithm.PutResultCb(){
+    public void cb(    boolean success,    boolean again){
+      if (!success) {
+        long retry_wait=Math.round(Math.ceil(random_gaussian(retry_period,retry_period * 0.1,rand)));
+        if (sim.now_ms() + retry_wait < next_new_put) {
+          alg.enqueue_put(client,size,ttl_sec,this,null);
+        }
+      }
+    }
+  }
+,null);
+  long next_wait=Math.round(Math.ceil(random_gaussian(period,period * 0.1,rand)));
+  next_new_put=sim.now_ms() + next_wait;
+  if (sim.now_ms() + next_wait < stop_time) {
+    sim.register_event(next_wait,this,null);
+  }
+}
+public void cb(boolean success,boolean again){
+  if (!success) {
+    long retry_wait=Math.round(Math.ceil(random_gaussian(retry_period,retry_period * 0.1,rand)));
+    if (sim.now_ms() + retry_wait < next_new_put) {
+      alg.enqueue_put(client,size,ttl_sec,this,null);
+    }
+  }
+}

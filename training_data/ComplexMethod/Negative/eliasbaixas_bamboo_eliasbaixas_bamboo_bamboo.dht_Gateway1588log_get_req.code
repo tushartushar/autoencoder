@@ -1,0 +1,22 @@
+protected void log_get_req(int xact_id,Dht.GetReq req,String client,String client_lib,String application){
+  if (logger.isInfoEnabled()) {
+    StringBuffer buf=new StringBuffer(200);
+    buf.append("get req client=");
+    buf.append(client);
+    buf.append(" client_library=\"");
+    buf.append(client_lib);
+    buf.append("\" application=\"");
+    buf.append(application);
+    buf.append("\" xact_id=0x");
+    buf.append(Integer.toHexString(xact_id));
+    buf.append(" key=0x");
+    buf.append(GuidTools.guid_to_string(req.key));
+    buf.append(" maxvals=");
+    buf.append(req.maxvals);
+    buf.append(" placemark=(");
+    if ((req.placemark == null) || req.placemark.equals(ZERO_KEY))     buf.append("NONE");
+ else     buf.append(req.placemark);
+    buf.append(")");
+    logger.info(buf);
+  }
+}

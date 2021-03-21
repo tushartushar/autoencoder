@@ -1,0 +1,37 @@
+protected void handle_iterate_by_guid_cont(IterateByGuidCont req){
+  if (req.comp_q != null) {
+    IBGCont cont=(IBGCont)req.continuation;
+    Dbc cursor=open_cursor(by_guid,null,"handle_iterate_by_guid_req");
+    int retval=0;
+    Dbt pkey=new Dbt();
+    Dbt data=new Dbt();
+    byte[] last_key=new byte[cont.key.getSize()];
+    System.arraycopy(cont.key.getData(),cont.key.getOffset(),last_key,0,cont.key.getSize());
+    try {
+      retval=cursor.get(cont.key,pkey,data,Db.DB_SET_RANGE);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    if (retval == 0) {
+      int cmp=arraycmp(cont.key.getData(),cont.key.getOffset(),last_key,0,cont.key.getSize());
+      assert cmp >= 0;
+      if (cmp == 0) {
+        try {
+          retval=cursor.get(cont.key,pkey,data,Db.DB_NEXT);
+        }
+ catch (        DbException e) {
+          BUG(e);
+        }
+      }
+    }
+    while (!finish_iterate_by_guid(cont,cursor,pkey,data,retval,req.comp_q,req.user_data)) {
+      try {
+        retval=cursor.get(cont.key,pkey,data,Db.DB_NEXT);
+      }
+ catch (      DbException e) {
+        BUG(e);
+      }
+    }
+  }
+}

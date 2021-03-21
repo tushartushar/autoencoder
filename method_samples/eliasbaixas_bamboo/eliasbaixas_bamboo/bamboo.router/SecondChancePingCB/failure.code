@@ -1,0 +1,3 @@
+public void failure(){
+  handle_monitor_node_down(ni);
+}

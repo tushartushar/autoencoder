@@ -1,0 +1,5 @@
+private void callbackCycleCompleted(){
+  for (  ScanClient client : callbacksMap.values()) {
+    client.callback.onScanCycleCompleted();
+  }
+}

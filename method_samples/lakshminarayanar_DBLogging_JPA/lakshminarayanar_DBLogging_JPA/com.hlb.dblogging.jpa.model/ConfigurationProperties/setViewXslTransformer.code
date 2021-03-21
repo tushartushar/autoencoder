@@ -1,0 +1,3 @@
+public void setViewXslTransformer(String viewXslTransformer){
+  this.viewXslTransformer=viewXslTransformer;
+}

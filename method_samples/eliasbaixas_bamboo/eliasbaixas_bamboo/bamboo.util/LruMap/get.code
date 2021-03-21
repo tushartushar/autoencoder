@@ -1,0 +1,12 @@
+public Object get(Object key){
+  Node n=null;
+  if (map.containsKey(key)) {
+    n=(Node)map.get(key);
+    rem_n(n);
+    add_n(n);
+    return n.value;
+  }
+ else {
+    return null;
+  }
+}

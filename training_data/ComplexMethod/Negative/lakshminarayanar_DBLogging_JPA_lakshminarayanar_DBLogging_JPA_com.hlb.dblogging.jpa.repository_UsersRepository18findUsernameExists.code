@@ -1,0 +1,1 @@
+@Query("select count(*) from Users where username=? and deleted=0") int findUsernameExists(String username);

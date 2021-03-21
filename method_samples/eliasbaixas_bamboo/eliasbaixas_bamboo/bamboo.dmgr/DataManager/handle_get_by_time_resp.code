@@ -1,0 +1,14 @@
+protected void handle_get_by_time_resp(StorageManager.GetByTimeResp resp){
+  if (resp.continuation != null) {
+    for (    StorageManager.Key k : resp.keys) {
+      if (!in_leaf_set_range(k.guid))       dispatch(new StorageManager.DiscardReq(k,true));
+    }
+  }
+  if (resp.user_data instanceof TreeState) {
+    TreeState ts=(TreeState)resp.user_data;
+    ts.handle_key(resp);
+  }
+ else {
+    handle_fetch_keys_get_resp(resp);
+  }
+}

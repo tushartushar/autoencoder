@@ -1,0 +1,27 @@
+/** 
+ * Construct a new UdpCC object with a UDP socket bound to <code>address<code> and start listening for messages.
+ */
+public UdpCC(ASyncCore core,InetSocketAddress address,Serializer slz,Sink snk){
+  logger=Logger.getLogger(getClass());
+  acore=core;
+  my_addr=address;
+  serializer=slz;
+  sink=snk;
+  next_msg_id=System.currentTimeMillis() >> 8;
+  if (next_msg_id < 0)   BUG("next_msg_id=" + next_msg_id);
+  try {
+    channel=DatagramChannel.open();
+    sock=channel.socket();
+    int rxsize=sock.getReceiveBufferSize();
+    logger.info("initial rcv sobuf = " + rxsize);
+    sock.bind(my_addr);
+    channel.configureBlocking(false);
+    skey=acore.register_selectable(channel,SelectionKey.OP_READ,new MySelectableCB(),null);
+  }
+ catch (  IOException e) {
+    logger.fatal("could not open " + my_addr,e);
+    System.exit(1);
+  }
+  acore.register_timer(BW_STATS_PERIOD,new BandwidthCB(),null);
+  acore.registerTimer(10 * 1000,printBytes);
+}

@@ -1,0 +1,18 @@
+protected void print_ls_table_row(StringBuffer r,int pos,BambooNeighborInfo ni,Long rtt_ms){
+  r.append("<tr><td align=\"center\">");
+  r.append(pos);
+  r.append("</td><td align=\"center\"><a href=\"http://");
+  r.append(ni.node_id.address().getHostAddress());
+  r.append(":");
+  r.append(ni.node_id.port() + 1);
+  r.append("/\">");
+  r.append(ni.node_id.address().getHostAddress());
+  r.append("</a></td><td align=\"center\">");
+  r.append(ni.node_id.port());
+  r.append("</td><td align=\"center\">0x");
+  r.append(GuidTools.guid_to_string(ni.guid));
+  r.append("</td><td align=\"center\">");
+  if (rtt_ms == null)   r.append("??");
+ else   r.append(rtt_ms);
+  r.append("</td></tr>\n");
+}

@@ -1,0 +1,7 @@
+/** 
+ * @return the current selected generator
+ */
+private GeneratorInterface currentGenerator(){
+  int index=cbSelectGenerator.getSelectedIndex();
+  return generators.getGenerator(index);
+}

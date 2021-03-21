@@ -1,0 +1,10 @@
+public Object clone() throws CloneNotSupportedException {
+  FetchKeysResp result=(FetchKeysResp)super.clone();
+  if (keys != null) {
+    result.keys=new LinkedList();
+    Iterator i=keys.iterator();
+    while (i.hasNext())     result.keys.addLast(i.next());
+  }
+  result.seq=seq;
+  return result;
+}

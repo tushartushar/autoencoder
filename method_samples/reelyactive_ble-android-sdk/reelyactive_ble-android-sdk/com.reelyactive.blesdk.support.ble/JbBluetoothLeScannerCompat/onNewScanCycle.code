@@ -1,0 +1,45 @@
+/** 
+ * The entry point blockingScanCycle executes a BLE Scan cycle and is called from the com.reelyactive.blesdk.support.ble.ScanWakefulService. When this method ends, the service will signal the ScanWakefulBroadcast receiver to release its wakelock and the phone will enter a sleep phase for the remainder of the BLE scan cycle. <p> This is called on the IntentService handler thread and hence is synchronized. <p> Suppresses the experimental 'wait not in loop' warning because we don't mind exiting early. Suppresses deprecation because this is the compatibility support.
+ */
+@SuppressWarnings({"WaitNotInLoop","deprecation"}) @Override protected synchronized void onNewScanCycle(){
+  Logger.logDebug("Starting BLE Active Scan Cycle.");
+  int activeMillis=getScanActiveMillis();
+  if (activeMillis > 0) {
+    try {
+      if (bluetoothAdapter != null) {
+        bluetoothAdapter.startLeScan(leScanCallback);
+      }
+    }
+ catch (    IllegalStateException e) {
+      Logger.logError("Failed to start the scan",e);
+    }
+    try {
+      wait(activeMillis);
+    }
+ catch (    InterruptedException e) {
+      Logger.logError("Exception in ScanCycle Sleep",e);
+    }
+ finally {
+      try {
+        if (bluetoothAdapter != null) {
+          bluetoothAdapter.stopLeScan(leScanCallback);
+        }
+      }
+ catch (      NullPointerException e) {
+        Logger.logDebug("NPE thrown in BlockingScanCycle");
+      }
+catch (      IllegalStateException e) {
+        Logger.logError("Failed to stop the scan",e);
+      }
+      new Handler(Looper.getMainLooper()).post(new Runnable(){
+        @Override public void run(){
+          onScanCycleComplete();
+          callbackCycleCompleted();
+        }
+      }
+);
+    }
+    updateRepeatingAlarm();
+  }
+  Logger.logDebug("Stopping BLE Active Scan Cycle.");
+}

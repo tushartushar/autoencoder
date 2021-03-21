@@ -1,0 +1,50 @@
+@Override public ScanFilter createFromParcel(Parcel in){
+  Builder builder=new Builder();
+  if (in.readInt() == 1) {
+    builder.setDeviceName(in.readString());
+  }
+  if (in.readInt() == 1) {
+    builder.setDeviceAddress(in.readString());
+  }
+  if (in.readInt() == 1) {
+    ParcelUuid uuid=in.readParcelable(ParcelUuid.class.getClassLoader());
+    builder.setServiceUuid(uuid);
+    if (in.readInt() == 1) {
+      ParcelUuid uuidMask=in.readParcelable(ParcelUuid.class.getClassLoader());
+      builder.setServiceUuid(uuid,uuidMask);
+    }
+  }
+  if (in.readInt() == 1) {
+    ParcelUuid serviceDataUuid=in.readParcelable(ParcelUuid.class.getClassLoader());
+    if (in.readInt() == 1) {
+      int serviceDataLength=in.readInt();
+      byte[] serviceData=new byte[serviceDataLength];
+      in.readByteArray(serviceData);
+      if (in.readInt() == 0) {
+        builder.setServiceData(serviceDataUuid,serviceData);
+      }
+ else {
+        int serviceDataMaskLength=in.readInt();
+        byte[] serviceDataMask=new byte[serviceDataMaskLength];
+        in.readByteArray(serviceDataMask);
+        builder.setServiceData(serviceDataUuid,serviceData,serviceDataMask);
+      }
+    }
+  }
+  int manufacturerId=in.readInt();
+  if (in.readInt() == 1) {
+    int manufacturerDataLength=in.readInt();
+    byte[] manufacturerData=new byte[manufacturerDataLength];
+    in.readByteArray(manufacturerData);
+    if (in.readInt() == 0) {
+      builder.setManufacturerData(manufacturerId,manufacturerData);
+    }
+ else {
+      int manufacturerDataMaskLength=in.readInt();
+      byte[] manufacturerDataMask=new byte[manufacturerDataMaskLength];
+      in.readByteArray(manufacturerDataMask);
+      builder.setManufacturerData(manufacturerId,manufacturerData,manufacturerDataMask);
+    }
+  }
+  return builder.build();
+}

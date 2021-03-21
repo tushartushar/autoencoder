@@ -1,0 +1,7 @@
+@Override public void mouseDragged(MouseEvent e){
+  int modifiers=e.getModifiers();
+  if ((modifiers & MouseEvent.BUTTON1_MASK) == MouseEvent.BUTTON1_MASK) {
+    rect.setXY2(e.getX(),e.getY());
+    this.repaint();
+  }
+}

@@ -1,0 +1,3 @@
+public List<ScanResult> getMatchingRecentResults(List<ScanFilter> filters){
+  return scanner.getMatchingRecords(filters);
+}

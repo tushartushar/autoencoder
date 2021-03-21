@@ -1,0 +1,6 @@
+private void handleNodeResponse(LocateNodeResp msg){
+  PingMsg reply=new PingMsg(msg.getLocatedId());
+  reply.user_data=new PingCB(msg.getLocatedCoordinate(),now_ms());
+  reply.comp_q=my_sink;
+  dispatch(reply);
+}

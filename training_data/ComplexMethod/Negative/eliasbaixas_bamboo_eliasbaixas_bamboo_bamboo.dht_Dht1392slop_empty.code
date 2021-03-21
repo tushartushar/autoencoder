@@ -1,0 +1,4 @@
+protected boolean slop_empty(int ttl_sec){
+  int i=ttl_to_vdisk(ttl_sec);
+  return slop_size[i] == 0;
+}

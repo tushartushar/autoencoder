@@ -1,0 +1,6 @@
+@Override public String getText() throws GeneratorException {
+  String uri=txtEmail.getText();
+  if (uri.isEmpty())   throw new GeneratorException("E-Mail cannot be empty.",txtEmail);
+  if (!Validator.isValidEmail(uri))   throw new GeneratorException("Incorrect E-Mail",txtEmail);
+  return "mailto:" + uri;
+}

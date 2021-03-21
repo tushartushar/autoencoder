@@ -1,0 +1,7 @@
+private long saveTime(String table,String date,String time,String appState,int interval,int session){
+  DatabaseHelper dbHelper=new DatabaseHelper(getBaseContext(),DATABASE_NAME,null,DATABASE_VERSION);
+  if (startOnCreate) {
+    appState="started";
+  }
+  return dbHelper.insertTime(table,date,time,appState,interval,session);
+}

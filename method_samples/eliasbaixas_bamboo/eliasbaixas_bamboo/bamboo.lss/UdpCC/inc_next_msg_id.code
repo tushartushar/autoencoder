@@ -1,0 +1,6 @@
+protected final long inc_next_msg_id(){
+  if (next_msg_id < 0)   BUG("next_msg_id=" + Long.toHexString(next_msg_id));
+  if (next_msg_id == (Long.MAX_VALUE >>> 8))   next_msg_id=0;
+ else   ++next_msg_id;
+  return next_msg_id;
+}

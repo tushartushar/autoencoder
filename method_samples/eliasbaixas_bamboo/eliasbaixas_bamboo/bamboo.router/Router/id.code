@@ -1,0 +1,6 @@
+/** 
+ * The identifier of this node.
+ */
+public BigInteger id(){
+  return my_guid;
+}

@@ -1,0 +1,3 @@
+public GatewayClient(){
+  write_buf.limit(0);
+}

@@ -1,0 +1,1 @@
+AccessRights delete(int id);

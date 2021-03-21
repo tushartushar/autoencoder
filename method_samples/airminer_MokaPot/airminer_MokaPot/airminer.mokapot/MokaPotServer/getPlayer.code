@@ -1,0 +1,6 @@
+@Override public Player getPlayer(String name){
+  throw new NotImplementedException();
+}
+@Override public Player getPlayer(UUID id){
+  throw new NotImplementedException();
+}

@@ -1,0 +1,3 @@
+@Column(name="viewEnabled",columnDefinition="NUMBER(1)") @Type(type="org.hibernate.type.NumericBooleanType") public boolean isViewEnabled(){
+  return viewEnabled;
+}

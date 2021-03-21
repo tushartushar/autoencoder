@@ -1,0 +1,3 @@
+public Set<NeighborInfo> possiblyDown(){
+  return possibly_down.keySet();
+}

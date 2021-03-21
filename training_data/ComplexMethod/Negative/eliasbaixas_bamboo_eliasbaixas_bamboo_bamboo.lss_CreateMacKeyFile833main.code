@@ -1,0 +1,8 @@
+public static void main(String[] args) throws Exception {
+  SecureRandom rand=SecureRandom.getInstance("SHA1PRNG");
+  byte[] keymat=new byte[20];
+  rand.nextBytes(keymat);
+  FileOutputStream os=new FileOutputStream(args[0]);
+  os.write(keymat);
+  os.close();
+}

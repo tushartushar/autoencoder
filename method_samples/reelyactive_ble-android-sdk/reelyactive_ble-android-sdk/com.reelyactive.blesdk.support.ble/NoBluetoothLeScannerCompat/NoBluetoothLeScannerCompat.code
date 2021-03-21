@@ -1,0 +1,3 @@
+public NoBluetoothLeScannerCompat(Context context,AlarmManager alarmManager){
+  super(new SystemClock(),alarmManager,PendingIntent.getBroadcast(context,0,new Intent(context,ScanWakefulBroadcastReceiver.class).putExtra(ScanWakefulService.EXTRA_USE_LOLLIPOP_API,false),0));
+}

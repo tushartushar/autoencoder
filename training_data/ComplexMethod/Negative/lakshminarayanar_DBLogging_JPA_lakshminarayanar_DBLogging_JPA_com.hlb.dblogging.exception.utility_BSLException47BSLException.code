@@ -1,0 +1,12 @@
+public BSLException(){
+  super();
+}
+public BSLException(String message,Throwable cause){
+  super(message,cause);
+}
+public BSLException(String message){
+  super(message);
+}
+public BSLException(Throwable cause){
+  super(cause);
+}

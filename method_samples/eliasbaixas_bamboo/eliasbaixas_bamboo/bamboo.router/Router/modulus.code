@@ -1,0 +1,6 @@
+/** 
+ * One larger than the largest identifier supported by the system.
+ */
+public BigInteger modulus(){
+  return MODULUS;
+}

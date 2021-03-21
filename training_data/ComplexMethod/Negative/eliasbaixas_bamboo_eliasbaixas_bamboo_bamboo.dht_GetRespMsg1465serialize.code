@@ -1,0 +1,22 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  boolean useGetValues=(!values.isEmpty()) && (values.getFirst() instanceof GetValue);
+  buffer.add(seq);
+  buffer.add(key);
+  if (useGetValues)   buffer.add(values.size() * -1);
+ else   buffer.add(values.size());
+  Iterator i=values.iterator();
+  while (i.hasNext()) {
+    if (useGetValues) {
+      GetValue value=(GetValue)i.next();
+      value.serialize(buffer);
+    }
+ else {
+      ByteBuffer bb=(ByteBuffer)i.next();
+      buffer.add(bb.limit());
+      buffer.add(bb.array(),bb.arrayOffset(),bb.limit());
+    }
+  }
+  orig_placemark.serialize(buffer);
+  new_placemark.serialize(buffer);
+}

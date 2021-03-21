@@ -1,0 +1,3 @@
+public void setEnqueuePredicate(EnqueuePredicateIF pred){
+  throw new NoSuchMethodError("not supported by DustDevilSink.");
+}

@@ -1,0 +1,10 @@
+/** 
+ * Add a label and a field to the panel.
+ * @param label
+ * @param field
+ */
+public void addField(JLabel label,Component field){
+  if (label == null || field == null)   return;
+  internalPanel.add(label);
+  internalPanel.add(field);
+}

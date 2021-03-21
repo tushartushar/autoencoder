@@ -1,0 +1,7 @@
+protected int nextType(){
+  if (shuffle.isEmpty()) {
+    shuffle=makeShuffle();
+    bogus=rand.nextBoolean();
+  }
+  return shuffle.removeFirst().intValue();
+}

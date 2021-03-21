@@ -1,0 +1,5 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  is=new FileInputStream(config_get_string(config,"input_file"));
+  acore.registerTimer(0,ready);
+}

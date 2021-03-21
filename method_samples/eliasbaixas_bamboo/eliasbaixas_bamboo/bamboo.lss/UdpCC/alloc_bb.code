@@ -1,0 +1,11 @@
+protected final ByteBuffer alloc_bb(int sz){
+  if (REUSE) {
+    reuse_buf.clear();
+    reuse_buf.limit(sz);
+    return reuse_buf;
+  }
+ else {
+    if (USE_DIRECT)     return ByteBuffer.allocateDirect(sz);
+ else     return ByteBuffer.allocate(sz);
+  }
+}

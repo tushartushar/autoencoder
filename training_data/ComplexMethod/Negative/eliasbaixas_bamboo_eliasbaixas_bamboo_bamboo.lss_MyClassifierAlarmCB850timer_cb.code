@@ -1,0 +1,9 @@
+public void timer_cb(Object user_data){
+  QueueElementIF item=(QueueElementIF)user_data;
+  try {
+    classifier.dispatch(item);
+  }
+ catch (  SinkFullException e) {
+    logger.error("could not dispatch later " + item,e);
+  }
+}

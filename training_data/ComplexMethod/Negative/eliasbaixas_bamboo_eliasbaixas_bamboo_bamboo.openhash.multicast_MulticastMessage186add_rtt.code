@@ -1,0 +1,3 @@
+public void add_rtt(long rtt){
+  rtt_times=rtt_times + rtt + " ms; ";
+}

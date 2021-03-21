@@ -1,0 +1,20 @@
+public void execute(){
+  if (executed)   return;
+  timing.start("lazyMultiGet");
+  MultiGetResponse multiGetItemResponses=client.multiGet(multiGetRequest).actionGet();
+  timing.stop("lazyMultiGet");
+  multiGetItemResponses.forEach(response -> {
+    if (response.isFailed() || !response.getResponse().isExists()) {
+      System.out.println(response.getFailure().getMessage());
+      return;
+    }
+    List<BaseVertex> vertices=idToVertices.get(response.getId());
+    if (vertices == null)     return;
+    vertices.forEach(vertex -> vertex.applyLazyFields(response));
+  }
+);
+  executed=true;
+  multiGetRequest=null;
+  idToVertices=null;
+  client=null;
+}

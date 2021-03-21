@@ -1,0 +1,8 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  secret=config.getInt("secret");
+  ssc=ServerSocketChannel.open();
+  ssc.socket().bind(new InetSocketAddress(config.getInt("port")));
+  ssc.configureBlocking(false);
+  acore.registerSelectable(ssc,OP_ACCEPT,accept);
+}

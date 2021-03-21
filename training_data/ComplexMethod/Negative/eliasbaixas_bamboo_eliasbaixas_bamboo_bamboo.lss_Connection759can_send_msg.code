@@ -1,0 +1,6 @@
+/** 
+ * Do we have a regular msg to send, and are we within the congestion window?
+ */
+public final boolean can_send_msg(){
+  return ((!send_q.isEmpty()) && (inf.size() < (int)cwnd));
+}

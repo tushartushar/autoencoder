@@ -1,0 +1,5 @@
+protected boolean config_get_boolean(ConfigDataIF config,String name){
+  boolean result=config.getBoolean(name);
+  logger.info("config." + name + "="+ result);
+  return result;
+}

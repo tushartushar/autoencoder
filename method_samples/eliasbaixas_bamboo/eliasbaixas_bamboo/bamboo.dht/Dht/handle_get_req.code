@@ -1,0 +1,17 @@
+protected void handle_get_req(GetReq req){
+  req.maxvals&=MAXVALS_MASK;
+  req.maxvals|=QUORUM_SYNC | SCALED_PRS_FD | RECURSIVE| NEW_RECUR_MASK;
+  StorageManager.Key placemark=req.placemark;
+  if (placemark == null)   placemark=StorageManager.ZERO_KEY;
+  Long seq=new Long(next_get_seq());
+  if ((req.maxvals & ITERATIVE_MASK) == ITERATIVE) {
+    int parallelism=((req.maxvals & ITERATIVE_PARALLELISM_MASK) >> ITERATIVE_PARALLELISM_SHIFT) + 1;
+    IterGetState state=new IterGetState(req.key,req.maxvals,placemark,seq,parallelism,curry(sendIterGetResp,req.completion_queue,req.user_data),req.client);
+    state.startIterGetReq();
+  }
+ else   if ((req.maxvals & ITERATIVE_MASK) == RECURSIVE) {
+    active_gets.put(seq,new Pair<GetReq,IterGetState>(req,null));
+    sendGetReq(req,seq);
+  }
+ else   assert false;
+}

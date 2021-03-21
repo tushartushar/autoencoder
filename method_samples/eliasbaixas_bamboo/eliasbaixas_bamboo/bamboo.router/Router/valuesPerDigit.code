@@ -1,0 +1,6 @@
+/** 
+ * The number of values per digit in each identifier being used by this router.
+ */
+public int valuesPerDigit(){
+  return DIGIT_VALUES;
+}

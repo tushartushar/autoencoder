@@ -1,0 +1,3 @@
+public CheckRunning(){
+  event_types=new Class[]{NetworkMessageResult.class};
+}

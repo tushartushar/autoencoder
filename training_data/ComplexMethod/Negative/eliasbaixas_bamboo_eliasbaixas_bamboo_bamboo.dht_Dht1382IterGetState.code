@@ -1,0 +1,9 @@
+public IterGetState(BigInteger k,int m,Key p,long s,int a,Thunk2<LinkedList<GetValue>,Key> d,NodeId c){
+  key=k;
+  maxvals=m;
+  placemark=p;
+  seq=s;
+  done=d;
+  parallelism=a;
+  client=c;
+}

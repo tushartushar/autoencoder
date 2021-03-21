@@ -1,0 +1,24 @@
+/** 
+ * Adds an object with the given priority.
+ */
+public final boolean add(Object o,long p){
+  if (heap_size >= capacity - 1) {
+    int new_capacity=capacity << 1;
+    Object[] new_heap=new Object[new_capacity];
+    long[] new_prio=new long[new_capacity];
+    System.arraycopy(heap,0,new_heap,0,capacity);
+    System.arraycopy(prio,0,new_prio,0,capacity);
+    heap=new_heap;
+    prio=new_prio;
+    capacity=new_capacity;
+  }
+  int i=++heap_size;
+  while (i > 1 && prio[i / 2] > p) {
+    heap[i]=heap[i / 2];
+    prio[i]=prio[i / 2];
+    i=i / 2;
+  }
+  heap[i]=o;
+  prio[i]=p;
+  return true;
+}

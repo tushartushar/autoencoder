@@ -1,0 +1,5 @@
+public String toString(){
+  String result="(PriorityQueue";
+  for (int i=1; i <= heap_size; ++i)   result+="\n  (" + prio.elementAt(i) + ", "+ heap.elementAt(i)+ ")";
+  return result + ")";
+}

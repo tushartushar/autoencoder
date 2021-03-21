@@ -1,0 +1,32 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  instances.put(my_node_id,this);
+  DEBUG=config.getBoolean("debug");
+  String vc_type=config_get_string(config,"vc_type");
+  if ((vc_type == null) || vc_type.equals("5d")) {
+    _my_coordinate=new FiveDVC();
+    logger.info("Using 5D virtual coordinates");
+  }
+ else   if (vc_type.equals("3d")) {
+    _my_coordinate=new VirtualCoordinate();
+    logger.info("Using 3D virtual coordinates");
+  }
+ else   if (vc_type.equals("2.5d")) {
+    _my_coordinate=new SpecialVC();
+    logger.info("Using 2.5D virtual coordinates");
+  }
+ else {
+    logger.error("Invalid vc type given: " + vc_type + ".  Defaulting to 5D");
+    _my_coordinate=new FiveDVC();
+  }
+  _use_reverse_ping=config_get_boolean(config,"use_reverse_ping");
+  _generate_pings=config_get_boolean(config,"generate_pings");
+  _eavesdrop_pings=config_get_boolean(config,"eavesdrop_pings");
+  if (config_get_int(config,"ping_period") > 0)   _ping_period=config.getInt("ping_period");
+  if (_generate_pings && (_ping_period <= 0))   logger.error("Generate pings set but no ping period");
+  if (config_get_int(config,"status_period") > 0)   _status_period=config.getInt("status_period");
+  if (config_get_int(config,"seed") > 0)   _prng=new Random(config.getInt("seed"));
+  _update_start=config_get_int(config,"update_start");
+  _track_initial=config_get_int(config,"track_initial");
+  _version_number=config_get_int(config,"version");
+}

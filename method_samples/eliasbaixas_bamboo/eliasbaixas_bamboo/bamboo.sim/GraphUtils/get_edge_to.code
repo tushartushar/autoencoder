@@ -1,0 +1,5 @@
+public final Edge get_edge_to(Node tail){
+  Edge walker=edges;
+  while ((walker != null) && (!walker.tail.equals(tail)))   walker=walker.next;
+  return walker;
+}

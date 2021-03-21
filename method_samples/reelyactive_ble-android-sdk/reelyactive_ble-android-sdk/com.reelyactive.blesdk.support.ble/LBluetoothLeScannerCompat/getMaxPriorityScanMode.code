@@ -1,0 +1,10 @@
+protected int getMaxPriorityScanMode(){
+  int maxPriority=-1;
+  for (  ScanClient scanClient : callbacksMap.values()) {
+    ScanSettings settings=scanClient.settings;
+    if (maxPriority == -1 || getScanModePriority(settings.getScanMode()) > getScanModePriority(maxPriority)) {
+      maxPriority=settings.getScanMode();
+    }
+  }
+  return maxPriority;
+}

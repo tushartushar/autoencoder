@@ -1,0 +1,52 @@
+protected void advanceIterGetReq(){
+  if (done == null)   return;
+  if (replicas.isEmpty()) {
+    VirtualCoordinate myVC=vivaldi.localCoordinates();
+    while ((!nodes.isEmpty()) && (outstanding.size() < parallelism)) {
+      LinkedHashMap<NeighborInfo,Long> n=new LinkedHashMap<NeighborInfo,Long>();
+      for (      NeighborInfo ni : nodes.keySet()) {
+        VirtualCoordinate vc=nodes.get(ni);
+        long lat=((vc == null) ? Long.MAX_VALUE : round(ceil(myVC.distance(vc))));
+        n.put(ni,new Long(lat));
+      }
+      NeighborInfo result=calcNextHop(key,maxvals,n);
+      if (result.equals(my_neighbor_info)) {
+        nodes.clear();
+      }
+ else {
+        nodes.remove(result);
+      }
+      sendReq(result.node_id,n.get(result),result.guid);
+    }
+  }
+ else {
+    if (responses.size() >= needed || outstanding.isEmpty()) {
+      StringBuffer sbuf=new StringBuffer(200);
+      sbuf.append(" iterative get req key=0x");
+      sbuf.append(GuidTools.guid_to_string(key));
+      sbuf.append(" return addr=").append(my_node_id);
+      sbuf.append(" seq=").append(seq);
+      sbuf.append(" done");
+      logger.info(sbuf.toString());
+      Pair<LinkedList<GetValue>,Key> p=compileResponse(maxvals,responses,allRead);
+      done.run(p.first,p.second);
+      done=null;
+      for (      Object token : outstanding.values()) {
+        if (token != null)         rpc.cancelSend(token);
+      }
+      outstanding.clear();
+    }
+ else {
+      StringBuffer sbuf=new StringBuffer(200);
+      sbuf.append("iterative get req key=0x");
+      sbuf.append(GuidTools.guid_to_string(key));
+      sbuf.append(" return addr=").append(my_node_id);
+      sbuf.append(" seq=").append(seq);
+      sbuf.append(" replicas=").append(replicas.size());
+      sbuf.append(" responses=").append(responses.size());
+      sbuf.append(" needed=").append(needed);
+      sbuf.append(" outstanding=").append(outstanding.size());
+      logger.info(sbuf.toString());
+    }
+  }
+}

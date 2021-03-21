@@ -1,0 +1,13 @@
+public LeafSetChanged(NodeId dest,BigInteger g,LinkedList l){
+  super(dest,false);
+  guid=g;
+  leaf_set=l;
+}
+public LeafSetChanged(InputBuffer buffer) throws QSException {
+  super(buffer);
+  guid=buffer.nextBigInteger();
+  int leaf_set_size=buffer.nextInt();
+  leaf_set=new LinkedList();
+  for (int i=0; i < leaf_set_size; ++i)   leaf_set.addLast(new NeighborInfo(buffer));
+  want_reply=buffer.nextBoolean();
+}

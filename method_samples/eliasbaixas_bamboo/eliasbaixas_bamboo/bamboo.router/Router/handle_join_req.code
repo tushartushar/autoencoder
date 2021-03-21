@@ -1,0 +1,39 @@
+protected void handle_join_req(JoinReq req){
+  if (req.path.contains(my_neighbor_info)) {
+    logger.warn("loop in join path: " + req);
+    return;
+  }
+  NeighborInfo joiner=new NeighborInfo(req.node_id,req.guid);
+  NeighborInfo next_hop=calc_next_hop(req.guid,false);
+  int hops_to_go=est_hops_to_go(req.guid,false);
+  if ((hops_to_go == req.rev_ttl) || (next_hop == my_neighbor_info) || next_hop.node_id.equals(req.node_id)) {
+    if (next_hop.node_id.equals(req.node_id) && logger.isDebugEnabled())     logger.debug("next hop for " + req + " is joining node!");
+    LinkedList<NeighborInfo> path=new LinkedList<NeighborInfo>();
+    for (    NeighborInfo n : req.path)     path.addLast(n);
+    path.addLast(my_neighbor_info);
+    dispatch(new JoinResp(req.node_id,path,leaf_set.as_set()));
+    add_to_rt(joiner);
+    add_to_ls(joiner);
+  }
+ else {
+    final JoinReq orig=req;
+    try {
+      req=(JoinReq)req.clone();
+    }
+ catch (    CloneNotSupportedException e) {
+      BUG(e);
+    }
+    req.path.addLast(my_neighbor_info);
+    req.peer=next_hop.node_id;
+    req.inbound=false;
+    req.comp_q=my_sink;
+    req.user_data=new RecursiveRouteCB(next_hop,new Runnable(){
+      public void run(){
+        handleEvent(orig);
+      }
+    }
+);
+    req.timeout_sec=5;
+    dispatch(req);
+  }
+}

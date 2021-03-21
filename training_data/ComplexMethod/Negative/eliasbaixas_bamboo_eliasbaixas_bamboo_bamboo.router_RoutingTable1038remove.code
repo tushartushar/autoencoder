@@ -1,0 +1,23 @@
+/** 
+ * Returns the level of the routing table from which the node was removed, or -1 if the node was not in the routing table.
+ */
+public int remove(NeighborInfo ni){
+  int[] dest_digits=guid_to_digits(ni.guid);
+  int fd=calc_first_diff(dest_digits);
+  if (fd == GUID_DIGITS)   return -1;
+  if ((primary(fd,dest_digits[fd]) != null) && (primary(fd,dest_digits[fd]).equals(ni))) {
+    table[fd][dest_digits[fd]]=null;
+    --size;
+    if (fd == highest_level) {
+      int i;
+      done:       for (i=fd; i >= 0; --i) {
+        for (int j=0; j < DIGIT_VALUES; ++j) {
+          if ((table[i][j] != null) && (table[i][j] != my_routing_entry))           break done;
+        }
+      }
+      highest_level=i;
+    }
+    return fd;
+  }
+  return -1;
+}

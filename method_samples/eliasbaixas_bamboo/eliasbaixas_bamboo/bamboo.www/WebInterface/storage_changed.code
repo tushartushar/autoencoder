@@ -1,0 +1,4 @@
+public void storage_changed(boolean added,InetAddress client_id,long size){
+  if (added)   total_storage+=size;
+ else   total_storage-=size;
+}

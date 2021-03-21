@@ -1,0 +1,13 @@
+protected void simulator_get_done(Dht.GetReq req,Dht.GetResp resp,final GatewayClient client,NodeId client_id,final int xact_id,final long start_ms){
+  log_get_resp.run(xact_id,req,resp,client_id.toString(),start_ms,"sim","sim");
+  bamboo_get_res res=get_resp_to_get_res(resp);
+  final bamboo_get_res clone=(bamboo_get_res)XdrClone.xdr_clone(res,bbuf);
+  int size=bbuf.position();
+  long lat=Network.msg_latency_us(my_node_id,client_id,size) / 1000;
+  simulator.event_queue.register_timer(client_id,lat,new EventQueue.Callback(){
+    public void call(    Object not_used){
+      client.get_done(xact_id,clone);
+    }
+  }
+,null);
+}

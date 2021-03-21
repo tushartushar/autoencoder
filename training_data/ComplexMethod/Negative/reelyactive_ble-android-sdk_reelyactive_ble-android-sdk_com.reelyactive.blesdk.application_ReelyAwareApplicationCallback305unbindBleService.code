@@ -1,0 +1,6 @@
+protected void unbindBleService(){
+  if (isBound()) {
+    service.unregisterClient(this);
+    context.unbindService(serviceConnection);
+  }
+}

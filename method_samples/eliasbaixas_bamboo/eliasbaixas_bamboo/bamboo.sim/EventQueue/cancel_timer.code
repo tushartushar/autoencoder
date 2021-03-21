@@ -1,0 +1,6 @@
+public void cancel_timer(Object token){
+  if (token != null) {
+    if (!(token instanceof TimerInfo))     throw new IllegalArgumentException();
+    cancelled_timers.add((TimerInfo)token);
+  }
+}

@@ -1,0 +1,7 @@
+public void undraw_guid(){
+  if (guid_label != null) {
+    FigureLayer layer=graphicsPane.getForegroundLayer();
+    layer.remove(guid_label);
+  }
+  guid_label=null;
+}

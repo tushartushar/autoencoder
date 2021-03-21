@@ -1,0 +1,28 @@
+public void serialize(OutputBuffer buffer){
+  if (neighbors != null) {
+    buffer.add(neighbors.size());
+    for (    Pair<NeighborInfo,VirtualCoordinate> p : neighbors) {
+      p.first.serialize(buffer);
+      if (p.second == null)       buffer.add(false);
+ else {
+        buffer.add(true);
+        p.second.serialize(buffer);
+      }
+    }
+  }
+ else {
+    buffer.add(-1 * replicas.size());
+    for (    NodeId n : replicas)     n.serialize(buffer);
+    buffer.add(synced.size());
+    for (    NodeId n : synced)     n.serialize(buffer);
+    buffer.add(values.size());
+    for (    Pair<Key,ByteBuffer> p : values) {
+      p.first.serialize(buffer);
+      buffer.add(p.second.limit() - p.second.position());
+      buffer.add(p.second.array(),p.second.arrayOffset() + p.second.position(),p.second.limit() - p.second.position());
+    }
+    buffer.add(allRead);
+  }
+  buffer.add(maxvals);
+  client.serialize(buffer);
+}

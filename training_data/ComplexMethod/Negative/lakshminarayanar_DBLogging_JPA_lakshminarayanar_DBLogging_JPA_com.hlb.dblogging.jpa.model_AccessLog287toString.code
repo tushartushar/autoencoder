@@ -1,0 +1,3 @@
+public String toString(){
+  return "Agents [accessLogId=" + accessLogId + ", actionDate="+ actionDate+ ", level="+ level+ ", activity="+ activity+ ", description="+ description+ ", actorUserId="+ actorUserId+ ", actorUsername="+ actorUsername+ ","+ "]";
+}

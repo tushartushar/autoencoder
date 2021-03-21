@@ -1,0 +1,61 @@
+protected final void handle_inb_msg(ByteBuffer bb,InetSocketAddress src){
+  long ack=bb.getLong();
+  Long seq=new Long(bb.getLong());
+  long wait_ms=-1L;
+  long est_rtt_ms=-1L;
+  if (bb.limit() - bb.position() >= 8) {
+    wait_ms=bb.getInt();
+    est_rtt_ms=bb.getInt();
+  }
+  int size=bb.limit() - bb.position();
+  if (ack != -1L)   handle_ack(new Long(ack));
+  long now_ms=System.currentTimeMillis();
+  Connection conn=(Connection)conns.get(src);
+  if (conn == null) {
+    conn=new Connection(src,now_ms);
+    conns.put(src,conn);
+  }
+  int tries=-1;
+  if (seq.longValue() != -1L) {
+    conn.ack_q.addLast(seq);
+    tries=attempt(seq.longValue());
+  }
+  if (conn.writable())   add_to_rr(conn);
+  if ((seq.longValue() != -1L) && recently_seen(src,msg_id(seq.longValue()))) {
+    if (DEBUG)     debugln("received duplicate for msg_id=0x" + Long.toHexString(msg_id(seq.longValue())));
+  }
+ else {
+    Object msg=null;
+    try {
+      msg=serializer.deserialize(bb);
+    }
+ catch (    Exception e) {
+      if (DEBUG_MIN) {
+        logger.debug("caught " + e + " deserializing a message from "+ src,e);
+      }
+      return;
+    }
+catch (    OutOfMemoryError e) {
+      System.gc();
+      StringBuffer bytes=new StringBuffer(bb.position() * 3);
+      bb.position(0);
+      int col=0;
+      while (bb.position() < bb.limit()) {
+        String bs=Integer.toHexString(bb.get() & 0xff);
+        if (bs.length() == 1)         bs="0" + bs;
+        bytes.append(bs);
+        if (++col == 24) {
+          bytes.append("\n");
+          col=0;
+        }
+ else         if ((col > 0) && (col % 4 == 0))         bytes.append(" ");
+      }
+      logger.error("out of memory error deserializing bytes:\n" + bytes);
+    }
+    if (DEBUG && (seq.longValue() != -1L)) {
+      if (DEBUG_MIN)       debugln("received " + msg + " seq=0x"+ Long.toHexString(seq.longValue())+ " from "+ src);
+    }
+    if (!conn.addr.equals(my_addr))     countBytes(msg,size);
+    sink.recv(msg,src,my_addr,tries,wait_ms,est_rtt_ms);
+  }
+}

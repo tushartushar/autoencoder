@@ -1,0 +1,33 @@
+public double GoogleFitApi(String token) throws URISyntaxException {
+  try {
+    CloseableHttpClient httpClient=HttpClientBuilder.create().build();
+    httpClient=HttpClients.custom().setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
+    URIBuilder builder=new URIBuilder().setScheme("https").setHost("www.googleapis.com").setPath("/fitness/v1/users/me/dataSources/derived:com.google.speed:com.google.android.gms:motorola:XT1034:516693f8:/datasets/1427023121000000000-1427087921000000000");
+    HttpGet request=new HttpGet(builder.build());
+    System.out.println(request);
+    request.addHeader("content-type","application/json");
+    request.addHeader("Authorization","Bearer " + "ya29.RgF62UYwGbg_7Rl2oL299IyhMOUKA29SXOWzXNbEiOM6y8AcGxbNdIQvkfNmd5ySmOnUvtvGOn4DEQ");
+    HttpResponse result=httpClient.execute(request);
+    System.out.println(result);
+    String json=EntityUtils.toString(result.getEntity(),"UTF-8");
+    StringReader reader=new StringReader(json);
+    JsonReader jsonReader=Json.createReader(reader);
+    JsonObject wholeObject=jsonReader.readObject();
+    JsonArray points=(JsonArray)wholeObject.get("point");
+    for (    JsonValue point : points) {
+      JsonObject eachrow=(JsonObject)point;
+      JsonArray pt=eachrow.getJsonArray("value");
+      for (      JsonValue p : pt) {
+        JsonObject checknow=(JsonObject)p;
+        String check=checknow.get("fpVal").toString();
+        if (Double.parseDouble(check) < 1.0) {
+          speed=Double.parseDouble(check);
+        }
+      }
+    }
+  }
+ catch (  Exception ex) {
+    System.out.println(ex.getMessage());
+  }
+  return speed;
+}

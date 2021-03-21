@@ -1,0 +1,43 @@
+@Override public void writeToParcel(Parcel dest,int flags){
+  dest.writeInt(mDeviceName == null ? 0 : 1);
+  if (mDeviceName != null) {
+    dest.writeString(mDeviceName);
+  }
+  dest.writeInt(mDeviceAddress == null ? 0 : 1);
+  if (mDeviceAddress != null) {
+    dest.writeString(mDeviceAddress);
+  }
+  dest.writeInt(mServiceUuid == null ? 0 : 1);
+  if (mServiceUuid != null) {
+    dest.writeParcelable(mServiceUuid,flags);
+    dest.writeInt(mServiceUuidMask == null ? 0 : 1);
+    if (mServiceUuidMask != null) {
+      dest.writeParcelable(mServiceUuidMask,flags);
+    }
+  }
+  dest.writeInt(mServiceDataUuid == null ? 0 : 1);
+  if (mServiceDataUuid != null) {
+    dest.writeParcelable(mServiceDataUuid,flags);
+    dest.writeInt(mServiceData == null ? 0 : 1);
+    if (mServiceData != null) {
+      dest.writeInt(mServiceData.length);
+      dest.writeByteArray(mServiceData);
+      dest.writeInt(mServiceDataMask == null ? 0 : 1);
+      if (mServiceDataMask != null) {
+        dest.writeInt(mServiceDataMask.length);
+        dest.writeByteArray(mServiceDataMask);
+      }
+    }
+  }
+  dest.writeInt(mManufacturerId);
+  dest.writeInt(mManufacturerData == null ? 0 : 1);
+  if (mManufacturerData != null) {
+    dest.writeInt(mManufacturerData.length);
+    dest.writeByteArray(mManufacturerData);
+    dest.writeInt(mManufacturerDataMask == null ? 0 : 1);
+    if (mManufacturerDataMask != null) {
+      dest.writeInt(mManufacturerDataMask.length);
+      dest.writeByteArray(mManufacturerDataMask);
+    }
+  }
+}

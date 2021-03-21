@@ -1,0 +1,15 @@
+public void redraw_leaf_set(){
+  undraw_leaf_set();
+  if (!show_leaf_set)   return;
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  Iterator j=leaf_set.as_list().iterator();
+  while (j.hasNext()) {
+    ExtendedNeighborInfo other_ni=(ExtendedNeighborInfo)j.next();
+    BigInteger other_g=other_ni.guid;
+    BambooNode other=FNIT.nodes_by_id.get(other_g);
+    if (other == null)     continue;
+    ArcConnector conn=make_arc(other,true,Color.green);
+    layer.add(conn);
+    ls_connectors.add(conn);
+  }
+}

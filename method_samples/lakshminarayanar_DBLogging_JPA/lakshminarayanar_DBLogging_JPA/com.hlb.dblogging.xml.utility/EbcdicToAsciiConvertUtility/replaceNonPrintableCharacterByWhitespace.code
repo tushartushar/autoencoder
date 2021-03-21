@@ -1,0 +1,8 @@
+private int replaceNonPrintableCharacterByWhitespace(int character){
+  for (  char nonPrintableChar : NON_PRINTABLE_EBCDIC_CHARS) {
+    if (nonPrintableChar == (char)character) {
+      return WS;
+    }
+  }
+  return character;
+}

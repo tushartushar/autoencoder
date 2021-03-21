@@ -1,0 +1,21 @@
+/** 
+ * Returns the number of messages waiting to be sent or currently in flight to this peer.
+ */
+public int queued_msgs(InetSocketAddress peer){
+  Connection conn=(Connection)conns.get(peer);
+  if (conn == null)   return 0;
+ else   return conn.retry_q.size() + conn.send_q.size() + conn.probe_q.size()+ conn.inf.size();
+}
+/** 
+ * Returns the number of messages waiting to be sent or currently in flight to all peers.
+ */
+public int queued_msgs(){
+  int result=0;
+  Iterator i=conns.keySet().iterator();
+  while (i.hasNext()) {
+    InetSocketAddress peer=(InetSocketAddress)i.next();
+    Connection conn=(Connection)conns.get(peer);
+    result+=conn.retry_q.size() + conn.send_q.size() + conn.probe_q.size()+ conn.inf.size();
+  }
+  return result;
+}

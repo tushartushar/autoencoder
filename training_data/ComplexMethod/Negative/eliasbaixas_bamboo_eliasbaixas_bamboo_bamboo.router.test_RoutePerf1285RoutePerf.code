@@ -1,0 +1,4 @@
+public RoutePerf() throws Exception {
+  ostore.util.TypeTable.register_type(Payload.class);
+  event_types=new Class[]{seda.sandStorm.api.StagesInitializedSignal.class,Alarm.class};
+}

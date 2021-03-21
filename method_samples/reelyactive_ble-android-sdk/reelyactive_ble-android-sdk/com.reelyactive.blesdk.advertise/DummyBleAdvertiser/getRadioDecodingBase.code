@@ -1,0 +1,9 @@
+private JSONObject getRadioDecodingBase(){
+  try {
+    return new JSONObject("            {" + "                \"rssi\":0," + "                \"identifier\":{"+ "                    \"type\": \"EUI-64\","+ "                    \"value\": \"<ID_DU_BEACON>\""+ "                }"+ "            }");
+  }
+ catch (  JSONException e) {
+    e.printStackTrace();
+  }
+  return null;
+}

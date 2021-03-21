@@ -1,0 +1,17 @@
+private boolean shouldContainEdge(Vertex vertex,Direction direction,String edgeLabel,Object[] edgeProperties){
+  if (!StarVertex.class.isAssignableFrom(vertex.getClass())) {
+    return false;
+  }
+  StarVertex starVertex=(StarVertex)vertex;
+  EdgeMapping[] mappings=starVertex.getEdgeMappings();
+  for (int i=0; i < mappings.length; i++) {
+    EdgeMapping mapping=mappings[i];
+    if (i >= edgeMappings.length || !equals(mapping,edgeMappings[i])) {
+      return false;
+    }
+    if (mapping.getDirection().equals(direction) && mapping.getLabel().equals(edgeLabel)) {
+      return true;
+    }
+  }
+  return false;
+}

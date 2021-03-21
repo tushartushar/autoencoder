@@ -1,0 +1,19 @@
+/** 
+ * Encodes (aka "serializes") a XDR opaque value, which is represented by a vector of byte values, and starts at <code>offset</code> with a length of <code>length</code>. Only the opaque value is encoded, but no length indication is preceeding the opaque value, so the receiver has to know how long the opaque value will be. The encoded data is always padded to be a multiple of four. If the given length is not a multiple of four, zero bytes will be used for padding.
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public void xdrEncodeOpaque(byte[] value,int offset,int length) throws OncRpcException, IOException {
+  int padding=(4 - (length & 3)) & 3;
+  if (bufferIndex <= bufferHighmark - (length + padding)) {
+    buffer.put(value,offset,length);
+    bufferIndex+=length;
+    if (padding != 0) {
+      buffer.put(paddingZeros,0,padding);
+      bufferIndex+=padding;
+    }
+  }
+ else {
+    throw (new OncRpcException(OncRpcException.RPC_BUFFEROVERFLOW));
+  }
+}

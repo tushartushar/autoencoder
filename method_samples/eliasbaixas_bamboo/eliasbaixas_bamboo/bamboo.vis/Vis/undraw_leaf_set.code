@@ -1,0 +1,7 @@
+protected void undraw_leaf_set(){
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  while (!ls_connectors.isEmpty()) {
+    Figure conn=(Figure)ls_connectors.removeFirst();
+    layer.remove(conn);
+  }
+}

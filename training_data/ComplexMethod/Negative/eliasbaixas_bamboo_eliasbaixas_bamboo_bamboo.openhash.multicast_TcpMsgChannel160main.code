@@ -1,0 +1,37 @@
+public static void main(String args[]) throws Exception {
+  ostore.util.TypeTable.register_type(QSInt.class);
+  final ASyncCore acore=new bamboo.lss.ASyncCoreImpl();
+  InetAddress addr=InetAddress.getByName(args[0]);
+  int port=Integer.parseInt(args[1]);
+  InetSocketAddress peer=new InetSocketAddress(addr,port);
+  Runnable fail=new Runnable(){
+    public void run(){
+      System.err.println("connection failed");
+      System.exit(1);
+    }
+  }
+;
+  Thunk1<QuickSerializable> recv=new Thunk1<QuickSerializable>(){
+    public void run(    QuickSerializable qs){
+      System.out.println("received: " + qs);
+    }
+  }
+;
+  final TcpMsgChannel c=new TcpMsgChannel(acore,peer);
+  c.setReceiveHandler(recv);
+  c.setFailureHandler(fail);
+  c.send(new QSInt(-1));
+  Thunk1<Integer> periodic=new Thunk1<Integer>(){
+    public void run(    Integer i){
+      if (i.intValue() == 10) {
+        c.close();
+        return;
+      }
+      c.send(new QSInt(i.intValue()));
+      acore.registerTimer(1000,curry(this,new Integer(i.intValue() + 1)));
+    }
+  }
+;
+  acore.registerTimer(0,curry(periodic,new Integer(0)));
+  acore.asyncMain();
+}

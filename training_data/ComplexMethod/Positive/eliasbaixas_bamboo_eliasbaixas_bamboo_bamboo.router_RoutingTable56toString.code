@@ -1,0 +1,54 @@
+public String toString(){
+  return "(RoutingEntry " + ni + ", "+ rtt_ms+ " ms)";
+}
+public String toString(){
+  if (GRAPHVIZ) {
+    java.text.NumberFormat n=java.text.NumberFormat.getInstance();
+    n.setMinimumFractionDigits(1);
+    StringBuffer result=new StringBuffer(50 + size * 50);
+    result.append(GuidTools.guid_to_string(my_routing_entry.ni.guid));
+    result.append(" RT START\n");
+    for (int digit=0; digit < GUID_DIGITS; ++digit) {
+      boolean first=true;
+      for (int value=0; value < DIGIT_VALUES; ++value) {
+        if ((table[digit][value] != null) && (table[digit][value] != my_routing_entry)) {
+          result.append(GuidTools.guid_to_string(my_routing_entry.ni.guid));
+          result.append(" -> ");
+          result.append(GuidTools.guid_to_string(table[digit][value].ni.guid));
+          result.append(" [ label = \"L");
+          result.append(digit);
+          result.append(", ");
+          result.append(n.format(table[digit][value].rtt_ms));
+          result.append(" ms\" ];\n");
+        }
+      }
+    }
+    result.append(GuidTools.guid_to_string(my_routing_entry.ni.guid));
+    result.append(" RT END\n");
+    return result.toString();
+  }
+ else {
+    java.text.NumberFormat n=java.text.NumberFormat.getInstance();
+    n.setMinimumFractionDigits(3);
+    StringBuffer result=new StringBuffer(500);
+    for (int digit=0; digit < GUID_DIGITS; ++digit) {
+      boolean first=true;
+      for (int value=0; value < DIGIT_VALUES; ++value) {
+        if ((table[digit][value] != null) && (table[digit][value] != my_routing_entry)) {
+          if (first) {
+            first=false;
+            result.append("  Level ");
+            result.append(digit);
+            result.append(":\n");
+          }
+          result.append("    ");
+          result.append(table[digit][value].ni);
+          result.append(" at ");
+          result.append(n.format(table[digit][value].rtt_ms));
+          result.append(" ms\n");
+        }
+      }
+    }
+    return result.toString();
+  }
+}

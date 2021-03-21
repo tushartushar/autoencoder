@@ -1,0 +1,16 @@
+public void add(byte[] value,int offset,int length){
+  try {
+    os.write(value,offset,length);
+  }
+ catch (  IOException e) {
+    error(e);
+  }
+}
+public void add(byte value){
+  try {
+    os.write(value);
+  }
+ catch (  IOException e) {
+    error(e);
+  }
+}

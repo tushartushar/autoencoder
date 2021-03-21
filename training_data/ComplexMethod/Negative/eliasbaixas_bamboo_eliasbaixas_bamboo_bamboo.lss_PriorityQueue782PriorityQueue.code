@@ -1,0 +1,9 @@
+/** 
+ * Creates a new priority queue with the give initial capacity.
+ */
+public PriorityQueue(int initial_capacity){
+  capacity=initial_capacity + 1;
+  heap=new Object[capacity];
+  prio=new long[capacity];
+  heap_size=0;
+}

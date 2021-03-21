@@ -1,0 +1,4 @@
+@Override public <V>Property<V> property(final String key){
+  checkRemoved();
+  return this.properties.containsKey(key) ? this.properties.get(key) : Property.<V>empty();
+}

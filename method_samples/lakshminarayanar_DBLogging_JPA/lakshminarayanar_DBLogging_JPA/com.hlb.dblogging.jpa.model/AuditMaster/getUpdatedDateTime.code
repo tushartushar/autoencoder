@@ -1,0 +1,3 @@
+@Column(name="UPDATEDDATETIME",nullable=false) @Temporal(TemporalType.TIMESTAMP) public Date getUpdatedDateTime(){
+  return UpdatedDateTime;
+}

@@ -1,0 +1,12 @@
+public Object clone() throws CloneNotSupportedException {
+  PutOrRemoveMsg result=(PutOrRemoveMsg)super.clone();
+  result.time_usec=time_usec;
+  result.ttl_sec=ttl_sec;
+  result.guid=guid;
+  result.value=value;
+  result.put=put;
+  result.client_id=client_id;
+  result.seq=seq;
+  result.value_hash=value_hash;
+  return result;
+}

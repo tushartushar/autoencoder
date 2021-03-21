@@ -1,0 +1,20 @@
+public String toString(){
+  StringBuffer result=new StringBuffer(100);
+  result.append("(PutOrRemoveMsg super=");
+  result.append(super.toString());
+  result.append(" time_usec=");
+  result.append(time_usec);
+  result.append(" ttl=");
+  result.append(ttl_sec);
+  result.append(" guid=");
+  result.append(GuidTools.guid_to_string(guid));
+  result.append(" value=<>");
+  result.append(" put=");
+  result.append(put);
+  result.append(" client_id=");
+  result.append(client_id.getHostAddress());
+  result.append(" seq=");
+  result.append(seq);
+  result.append(")");
+  return result.toString();
+}

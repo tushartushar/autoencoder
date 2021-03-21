@@ -1,0 +1,8 @@
+public void handleEvent(QueueElementIF item){
+  if (item instanceof NetworkMessage) {
+    handle_outbound_msg((NetworkMessage)item);
+  }
+ else {
+    handle_net_lat_req((NetworkLatencyReq)item);
+  }
+}

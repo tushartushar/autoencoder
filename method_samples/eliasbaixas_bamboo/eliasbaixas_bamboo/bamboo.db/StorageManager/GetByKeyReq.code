@@ -1,0 +1,5 @@
+public GetByKeyReq(Key k,SinkIF s,Object ud){
+  key=k;
+  comp_q=s;
+  user_data=ud;
+}

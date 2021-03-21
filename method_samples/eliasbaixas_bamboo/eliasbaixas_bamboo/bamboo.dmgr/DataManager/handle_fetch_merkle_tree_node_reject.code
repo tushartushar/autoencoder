@@ -1,0 +1,20 @@
+protected void handle_fetch_merkle_tree_node_reject(FetchMerkleTreeNodeReject reject){
+  if (ae_state == null) {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " unexpected " + reject);
+    return;
+  }
+  ae_state.last_activity_ms=timer_ms();
+  if (reject.reason == FetchMerkleTreeNodeReject.BAD_GUID_RANGE) {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " bad range");
+    unsynced(ae_state.guid_range,ae_state.ni.node_id);
+    ae_state=null;
+  }
+ else   if (reject.reason == FetchMerkleTreeNodeReject.NO_SUCH_NODE) {
+    goto_next_node();
+  }
+ else {
+    logger.warn("got unexpected reject reason " + reject.reason + " from "+ ae_state.ni);
+    unsynced(ae_state.guid_range,ae_state.ni.node_id);
+    ae_state=null;
+  }
+}

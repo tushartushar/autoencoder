@@ -1,0 +1,3 @@
+public Predicates getPredicates(){
+  return predicates;
+}

@@ -1,0 +1,9 @@
+protected void application_enqueue(SinkIF sink,QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("application enqueue " + item);
+  try {
+    sink.enqueue(item);
+  }
+ catch (  SinkException e) {
+    logger.warn("Could not enqueue " + item + " b/c of "+ e);
+  }
+}

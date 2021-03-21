@@ -1,0 +1,8 @@
+@Override public void clear(final Graph g,final Configuration configuration) throws Exception {
+  if (g != null) {
+    String indexName=configuration.getString("elasticsearch.index.name");
+    ElasticHelper.clearIndex(client,indexName);
+    g.close();
+  }
+  if (g instanceof ElasticGraph)   ((ElasticGraph)g).getQueryHandler().printStats();
+}

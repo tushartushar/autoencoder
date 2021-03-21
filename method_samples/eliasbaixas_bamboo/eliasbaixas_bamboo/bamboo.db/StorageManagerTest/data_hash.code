@@ -1,0 +1,5 @@
+protected byte[] data_hash(ByteBuffer data){
+  byte[] bytes=data.array();
+  md.update(data.array(),data.arrayOffset(),data.limit());
+  return md.digest();
+}

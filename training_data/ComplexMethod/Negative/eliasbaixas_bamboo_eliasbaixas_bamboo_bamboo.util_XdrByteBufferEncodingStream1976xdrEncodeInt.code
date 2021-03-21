@@ -1,0 +1,14 @@
+/** 
+ * Encodes (aka "serializes") a "XDR int" value and writes it down a XDR stream. A XDR int is 32 bits wide -- the same width Java's "int" data type has. This method is one of the basic methods all other methods can rely on.
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public void xdrEncodeInt(int value) throws OncRpcException, IOException {
+  if (bufferIndex <= bufferHighmark) {
+    buffer.putInt(value);
+    bufferIndex+=4;
+  }
+ else {
+    throw (new OncRpcException(OncRpcException.RPC_BUFFEROVERFLOW));
+  }
+}

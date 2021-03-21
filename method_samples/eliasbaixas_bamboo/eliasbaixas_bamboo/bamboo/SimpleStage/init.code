@@ -1,0 +1,9 @@
+/** 
+ * Initialize our stage. We get the parsed Config data  from sandstorm and may extract our own config options  beside the global ones. <br>
+ */
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  String mode=config_get_string(config,"mode");
+  if (mode != null && mode.equals("sender"))   sender=true;
+ else   sender=false;
+}

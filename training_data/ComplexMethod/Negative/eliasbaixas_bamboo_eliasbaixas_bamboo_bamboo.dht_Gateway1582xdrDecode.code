@@ -1,0 +1,3 @@
+public void xdrDecode(XdrDecodingStream xdr){
+  throw new NoSuchMethodError();
+}

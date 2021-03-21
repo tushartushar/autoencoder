@@ -1,0 +1,3 @@
+protected boolean have_rtt_ms(NeighborInfo ni){
+  return latency_map.containsKey(ni);
+}

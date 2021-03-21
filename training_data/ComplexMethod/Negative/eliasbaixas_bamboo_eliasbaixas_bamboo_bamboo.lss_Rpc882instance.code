@@ -1,0 +1,3 @@
+public static Rpc instance(InetSocketAddress addr){
+  return instances.get(addr);
+}

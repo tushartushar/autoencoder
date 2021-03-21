@@ -1,0 +1,6 @@
+public String toString(){
+  return "(GetByKeyResp key=" + key + " data="+ (data == null ? "null" : "<data>")+ ")";
+}
+public String toString(){
+  return "(GetByKeyResp key=" + key + " data="+ (data == null ? "null" : "<data>")+ ")";
+}

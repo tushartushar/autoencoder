@@ -1,0 +1,10 @@
+public RoutingTableReq(NodeId dest,BigInteger g,int l){
+  super(dest,false);
+  guid=g;
+  level=l;
+}
+public RoutingTableReq(InputBuffer buffer) throws QSException {
+  super(buffer);
+  guid=buffer.nextBigInteger();
+  level=buffer.nextInt();
+}

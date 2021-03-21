@@ -1,0 +1,3 @@
+@Override public BaseVertex vertex(Object vertexId,String vertexLabel,Edge edge,Direction direction){
+  return new StarVertex(vertexId,vertexLabel,null,graph,getLazyGetter(direction),elasticMutations,getDefaultIndex(),edgeMappings);
+}

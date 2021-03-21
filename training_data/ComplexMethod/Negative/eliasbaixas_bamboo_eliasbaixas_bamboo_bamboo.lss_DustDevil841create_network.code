@@ -1,0 +1,3 @@
+public EventHandlerIF create_network(InetSocketAddress addr) throws IOException {
+  return new Network(addr,acore);
+}

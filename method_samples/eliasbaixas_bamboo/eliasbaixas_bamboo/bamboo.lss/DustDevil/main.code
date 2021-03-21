@@ -1,0 +1,120 @@
+public StageManager main(Reader reader) throws Exception {
+  SandstormConfig cfg=null;
+  try {
+    cfg=new SandstormConfig(reader);
+  }
+ catch (  IOException e) {
+    logger.fatal("Error with config file from reader.  " + "Caught exception " + e + " during parse",e);
+    System.exit(1);
+  }
+  return main(cfg);
+}
+public StageManager main(String cfg_filename) throws Exception {
+  SandstormConfig cfg=null;
+  try {
+    cfg=new SandstormConfig(cfg_filename);
+  }
+ catch (  IOException e) {
+    logger.fatal("Error with config file from reader.  " + "Caught exception " + e + " during parse",e);
+    System.exit(1);
+  }
+  return main(cfg);
+}
+public StageManager main(SandstormConfig cfg) throws Exception {
+  logger.info("DustDevil version 0.1");
+  LinkedList classifiers=new LinkedList();
+  StageManager mgr=new StageManager(cfg);
+  Enumeration iter=cfg.getStages();
+  while (iter.hasMoreElements()) {
+    stageDescr descr=(stageDescr)iter.nextElement();
+    if (descr.stageName.indexOf("YANetwork") != -1) {
+      ConfigData config_data=new ConfigData(mgr,descr.initargs);
+      int cnt=config_data.getInt("node_id_count");
+      for (int i=0; i < cnt; ++i) {
+        String nidstr=config_data.getString("node_id_" + i);
+        java.util.Hashtable initargs=new java.util.Hashtable();
+        initargs.put("node_id",nidstr);
+        initargs.put("debug_level","0");
+        ConfigData config_data_tmp=new ConfigData(mgr,initargs);
+        create_network_stage("Network-" + i,nidstr,mgr,config_data_tmp,classifiers);
+      }
+    }
+ else     if (descr.stageName.indexOf("Network") != -1) {
+      ConfigData config_data=new ConfigData(mgr,descr.initargs);
+      String nidstr=config_data.getString("node_id");
+      if (nidstr == null) {
+        logger.fatal("Network stage must have node_id");
+        System.exit(1);
+      }
+      create_network_stage(descr.stageName,nidstr,mgr,config_data,classifiers);
+    }
+  }
+  if (classifiers.isEmpty()) {
+    String nidstr=cfg.getString("global.initargs.node_id");
+    NodeId node_id=null;
+    try {
+      node_id=new NodeId(nidstr);
+    }
+ catch (    ostore.util.NodeId.BadFormat e) {
+      logger.fatal("node_id must be an IP:port tuple");
+      System.exit(1);
+    }
+catch (    UnknownHostException e) {
+      logger.fatal("unknown host: " + nidstr);
+      System.exit(1);
+    }
+    Classifier classifier=Classifier.getClassifier(node_id);
+    classifier.set_timer_cb(create_timer_cb(classifier));
+    classifiers.addLast(classifier);
+  }
+  init_nodes(cfg,mgr);
+  while (!classifiers.isEmpty()) {
+    Classifier classifier=(Classifier)classifiers.removeFirst();
+    try {
+      classifier.enqueue(new StagesInitializedSignal());
+    }
+ catch (    SinkException e) {
+      logger.fatal("got exception on init: " + e,e);
+      System.exit(1);
+    }
+  }
+  System.out.println("Sandstorm: Ready");
+  return mgr;
+}
+public static void main(String[] args) throws Exception {
+  String cfgfile=null;
+  if (args.length == 3) {
+    if (!args[0].equals("-l"))     usage();
+    String logfile=args[1];
+    cfgfile=args[2];
+    PropertyConfigurator pc=new PropertyConfigurator();
+    pc.configureAndWatch(logfile,10 * 1000);
+  }
+ else   if (args.length == 1) {
+    cfgfile=args[0];
+  }
+ else   usage();
+  Logger l=Logger.getLogger(DustDevil.class);
+  try {
+    set_acore_instance(new ASyncCoreImpl());
+  }
+ catch (  IOException e) {
+    l.fatal("could not open selector",e);
+    System.exit(1);
+  }
+  DustDevil dd=new DustDevil();
+  dd.main(cfgfile);
+  try {
+    acore_instance().async_main();
+  }
+ catch (  OutOfMemoryError e) {
+    DustDevilSink.reserve=null;
+    System.gc();
+    l.fatal("uncaught error",e);
+    System.exit(1);
+  }
+catch (  Throwable e) {
+    l.fatal("uncaught exception",e);
+    System.exit(1);
+  }
+}

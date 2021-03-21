@@ -1,0 +1,6 @@
+private final double theta(BigInteger guid){
+  return 2 * Math.PI * ((decimal(guid)) + 0.75);
+}
+private final double theta(){
+  return 2 * Math.PI * ((decimal()) + 0.75);
+}

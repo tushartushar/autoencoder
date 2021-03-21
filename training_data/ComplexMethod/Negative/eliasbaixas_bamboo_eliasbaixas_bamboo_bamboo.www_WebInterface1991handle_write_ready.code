@@ -1,0 +1,15 @@
+protected void handle_write_ready(SelectionKey skey,ConnState state){
+  int count=1;
+  while ((count > 0) && (state.resp.position() != state.resp.limit())) {
+    try {
+      count=state.channel.write(state.resp);
+    }
+ catch (    IOException e) {
+      close(state);
+      return;
+    }
+  }
+  if (state.resp.position() == state.resp.limit()) {
+    close(state);
+  }
+}

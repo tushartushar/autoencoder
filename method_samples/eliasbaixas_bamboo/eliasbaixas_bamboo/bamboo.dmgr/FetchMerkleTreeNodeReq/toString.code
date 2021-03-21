@@ -1,0 +1,23 @@
+public String toString(){
+  StringBuffer result=new StringBuffer(100);
+  result.append("(FetchMerkleTreeNodeReq super=");
+  result.append(super.toString());
+  result.append(" peer_guid=");
+  result.append(GuidTools.guid_to_string(peer_guid));
+  result.append(" low_guid=");
+  result.append(GuidTools.guid_to_string(low_guid));
+  result.append(" high_guid=");
+  result.append(GuidTools.guid_to_string(high_guid));
+  result.append(" expansion=");
+  result.append(expansion);
+  result.append(" level=");
+  result.append(level);
+  result.append(" low_time=");
+  result.append(Long.toHexString(low_time));
+  result.append(" expected_hash=");
+  result.append(ostore.util.ByteUtils.print_bytes(expected_hash));
+  result.append(" seq=");
+  result.append(seq);
+  result.append(")");
+  return result.toString();
+}

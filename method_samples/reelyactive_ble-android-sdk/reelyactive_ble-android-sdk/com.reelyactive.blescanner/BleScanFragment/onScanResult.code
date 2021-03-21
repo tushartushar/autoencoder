@@ -1,0 +1,8 @@
+@Override public void onScanResult(int callbackType,ScanResult result){
+  if (callbackType == ScanSettings.CALLBACK_TYPE_FIRST_MATCH) {
+    adapter.addItem(result);
+  }
+ else {
+    adapter.removeItem(result);
+  }
+}

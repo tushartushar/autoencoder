@@ -1,0 +1,5 @@
+public TimerInfo(NodeId n,Callback c,Object u){
+  node_id=n;
+  cb=c;
+  user_data=u;
+}

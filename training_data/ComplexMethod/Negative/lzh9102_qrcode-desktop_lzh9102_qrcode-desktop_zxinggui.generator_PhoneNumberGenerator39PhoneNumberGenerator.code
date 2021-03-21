@@ -1,0 +1,12 @@
+public PhoneNumberGenerator(){
+  SpringLayout layout=new SpringLayout();
+  JLabel label=new JLabel("Phone Number: ");
+  panel.setLayout(layout);
+  panel.add(label);
+  panel.add(txtPhoneNumber);
+  layout.putConstraint(SpringLayout.WEST,label,5,SpringLayout.WEST,panel);
+  layout.putConstraint(SpringLayout.NORTH,label,5,SpringLayout.NORTH,panel);
+  layout.putConstraint(SpringLayout.WEST,txtPhoneNumber,5,SpringLayout.EAST,label);
+  layout.putConstraint(SpringLayout.NORTH,txtPhoneNumber,5,SpringLayout.NORTH,panel);
+  layout.putConstraint(SpringLayout.EAST,panel,5,SpringLayout.EAST,txtPhoneNumber);
+}

@@ -1,0 +1,15 @@
+/** 
+ * Register to receive network messages of a particular type.  There can be only one receiver per type, and all types must be subtypes of <code>ostore.util.QuickSerializable</code>.
+ * @param type the class of the messages to be received
+ * @param callback the function to call when a message of class<code>type</code> is received.  The arguments are the message itself  adn the remote node's IP and port.
+ */
+public <T extends QuickSerializable>void registerReceiver(Class<T> type,Thunk2<T,InetSocketAddress> callback) throws DuplicateTypeException {
+  if (receivers.containsKey(type))   throw new DuplicateTypeException(type);
+  try {
+    ostore.util.TypeTable.register_type(type);
+  }
+ catch (  Exception e) {
+    BUG(e);
+  }
+  receivers.put(type,callback);
+}

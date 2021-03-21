@@ -1,0 +1,3 @@
+public StageIF getStage(){
+  return null;
+}

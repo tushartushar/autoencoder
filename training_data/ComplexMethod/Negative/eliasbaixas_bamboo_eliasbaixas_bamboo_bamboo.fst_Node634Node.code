@@ -1,0 +1,10 @@
+private Node(Node left,Node right,long offset,long value,long low,long high,int height,boolean valid){
+  this.left=left;
+  this.right=right;
+  this.offset=offset;
+  this.value=value;
+  this.low=low;
+  this.high=high;
+  this.height=height;
+  this.valid=valid;
+}

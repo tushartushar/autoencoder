@@ -1,0 +1,15 @@
+public void lookup_cb(BigInteger key,InetSocketAddress succ_addr,BigInteger succ_hash,int gets,Object user_data){
+  long lat_ms=timer_ms() - ((Long)user_data).longValue();
+  BigInteger expected_succ=null;
+  if (sim_running) {
+    expected_succ=(BigInteger)instances.tailMap(key).firstKey();
+    assert (expected_succ == null) || (expected_succ.compareTo(key) != 0);
+    if ((expected_succ == null) || (expected_succ.compareTo(key) < 0))     expected_succ=(BigInteger)instances.firstKey();
+  }
+  if ((!sim_running) || succ_hash.equals(expected_succ)) {
+    logger.info("for key 0x" + GuidTools.guid_to_string(key) + " found successor 0x"+ GuidTools.guid_to_string(succ_hash)+ ", "+ succ_addr.getAddress().getHostAddress()+ ":"+ succ_addr.getPort()+ " using "+ +gets+ " gets, lat="+ lat_ms+ " ms");
+  }
+ else {
+    logger.info("for key 0x" + GuidTools.guid_to_string(key) + " found wrong successor 0x"+ GuidTools.guid_to_string(succ_hash)+ ", "+ succ_addr.getAddress().getHostAddress()+ ":"+ succ_addr.getPort()+ ": should be 0x"+ GuidTools.guid_to_string(expected_succ));
+  }
+}

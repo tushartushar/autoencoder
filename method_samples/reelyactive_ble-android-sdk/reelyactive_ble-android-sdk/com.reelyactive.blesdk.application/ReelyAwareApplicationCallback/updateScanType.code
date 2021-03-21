@@ -1,0 +1,8 @@
+/** 
+ * This method sets the scan type of the  {@link BleService}.
+ * @param scanType The {@link BleService.ScanType scan type}
+ */
+protected void updateScanType(BleService.ScanType scanType){
+  Logger.logInfo("Updating scan type to " + scanType);
+  getBleService().setScanType(scanType);
+}

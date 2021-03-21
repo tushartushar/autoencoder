@@ -1,0 +1,15 @@
+public void nextBytes(byte[] output,int offset,int length){
+  bb.get(output,offset,length);
+}
+public void nextBytes(OutputBuffer buffer){
+  if (buffer instanceof NioOutputBuffer) {
+    ((NioOutputBuffer)buffer).bb.put(bb);
+  }
+ else   if (buffer instanceof ByteArrayOutputBuffer) {
+    ByteArrayOutputBuffer ob=(ByteArrayOutputBuffer)buffer;
+    bb.get(ob.data(),ob.offset(),bb.remaining());
+  }
+ else {
+    while (bb.hasRemaining())     buffer.add(bb.get());
+  }
+}

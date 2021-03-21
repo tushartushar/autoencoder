@@ -1,0 +1,3 @@
+public String toString(){
+  return "(IterRouteReq " + super.toString() + " src="+ bamboo.util.GuidTools.guid_to_string(src)+ " dest="+ bamboo.util.GuidTools.guid_to_string(dest)+ " app_id="+ app_id+ " intermediate_upcall="+ intermediate_upcall+ " payload="+ payload+ ")";
+}

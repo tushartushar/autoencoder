@@ -1,0 +1,8 @@
+public NeighborInfo(NodeId n,BigInteger g){
+  node_id=n;
+  guid=g;
+}
+public NeighborInfo(InputBuffer buffer) throws QSException {
+  node_id=new NodeId(buffer);
+  guid=buffer.nextBigInteger();
+}

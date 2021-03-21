@@ -1,0 +1,3 @@
+public Object deserialize(ByteBuffer buf) throws Exception {
+  return buf;
+}

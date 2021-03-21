@@ -1,0 +1,6 @@
+protected void getValues(BigInteger key,Key placemark,int maxvals,Thunk2<LinkedList<Pair<Key,ByteBuffer>>,Boolean> done){
+  maxvals&=MAXVALS_MASK;
+  GetValuesState state=new GetValuesState(maxvals,done);
+  GetByGuidReq outb=new GetByGuidReq(key,true,placemark,my_sink,state);
+  dispatch(outb);
+}

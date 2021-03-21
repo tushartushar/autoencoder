@@ -1,0 +1,6 @@
+public AddMonitor(StorageMonitor m){
+  monitor=m;
+}
+public AddMonitor(StorageMonitor m){
+  monitor=m;
+}

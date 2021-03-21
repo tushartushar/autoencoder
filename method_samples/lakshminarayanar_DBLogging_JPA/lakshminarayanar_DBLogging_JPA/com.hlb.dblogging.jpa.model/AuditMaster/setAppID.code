@@ -1,0 +1,3 @@
+public void setAppID(String appID){
+  AppID=appID;
+}

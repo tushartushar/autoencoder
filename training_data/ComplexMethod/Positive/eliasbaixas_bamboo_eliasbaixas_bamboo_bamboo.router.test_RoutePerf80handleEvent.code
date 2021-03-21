@@ -1,0 +1,38 @@
+public void handleEvent(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("got " + item);
+  if (item instanceof seda.sandStorm.api.StagesInitializedSignal) {
+    dispatch(new BambooRouterAppRegReq(app_id,false,false,false,my_sink));
+  }
+ else   if (item instanceof BambooRouterAppRegResp) {
+    BambooRouterAppRegResp resp=(BambooRouterAppRegResp)item;
+    if (dest != null)     classifier.dispatch_later(new Alarm(),period);
+  }
+ else   if (item instanceof BambooRouteDeliver) {
+    long now_ms=now_ms();
+    BambooRouteDeliver deliver=(BambooRouteDeliver)item;
+    Payload payload=(Payload)deliver.payload;
+    Integer seq=new Integer(payload.seq);
+    Pair p=(Pair)deliveries.get(seq);
+    if (p == null) {
+      p=new Pair(null,null);
+      deliveries.put(seq,p);
+    }
+    if (payload.first)     p.first=new Long(now_ms);
+ else     p.second=new Long(now_ms);
+    if (p.first != null && p.second != null) {
+      deliveries.remove(seq);
+      logger.info("seq=" + seq + " inter packet time="+ (((Long)p.second).longValue() - ((Long)p.first).longValue())+ " ms");
+    }
+  }
+ else   if (item instanceof Alarm) {
+    BambooRouteInit init1=new BambooRouteInit(dest,app_id,false,false,new Payload(seq,true));
+    BambooRouteInit init2=new BambooRouteInit(dest,app_id,false,false,new Payload(seq,false));
+    dispatch(init1);
+    dispatch(init2);
+    ++seq;
+    classifier.dispatch_later(new Alarm(),period);
+  }
+ else {
+    BUG(item.toString());
+  }
+}

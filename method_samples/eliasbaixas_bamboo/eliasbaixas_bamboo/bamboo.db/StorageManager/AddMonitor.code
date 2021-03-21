@@ -1,0 +1,3 @@
+public AddMonitor(StorageMonitor m){
+  monitor=m;
+}

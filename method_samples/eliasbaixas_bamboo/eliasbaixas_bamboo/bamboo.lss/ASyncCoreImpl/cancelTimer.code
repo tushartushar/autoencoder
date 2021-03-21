@@ -1,0 +1,6 @@
+public void cancelTimer(Object token){
+  if (!(token instanceof TimerInfo))   throw new IllegalArgumentException();
+synchronized (timers) {
+    cancelled_timers.add((TimerInfo)token);
+  }
+}

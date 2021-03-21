@@ -1,0 +1,23 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  int port=config_get_int(config,"port");
+  String host_file=config_get_string(config,"host_file");
+  BufferedReader in=new BufferedReader(new FileReader(host_file));
+  String line=null;
+  while ((line=in.readLine()) != null) {
+    InetAddress addr=null;
+    try {
+      addr=InetAddress.getByName(line);
+    }
+ catch (    UnknownHostException e) {
+      logger.fatal("could not create address from " + line);
+      assert false;
+    }
+    NodeId node_id=new NodeId(5850,addr);
+    hosts.addLast(node_id);
+  }
+  String log_file=config_get_string(config,"log_file");
+  log=new PrintWriter(new BufferedWriter(new FileWriter(log_file,true)));
+  int concurrent=config_get_int(config,"concurrent");
+  for (int i=0; i < concurrent; ++i)   acore.register_timer(0,ping_cb,null);
+}

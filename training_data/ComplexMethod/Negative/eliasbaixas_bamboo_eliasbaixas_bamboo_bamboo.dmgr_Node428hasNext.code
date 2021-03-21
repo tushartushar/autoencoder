@@ -1,0 +1,3 @@
+public boolean hasNext(){
+  return where(position + 1) < range_high();
+}

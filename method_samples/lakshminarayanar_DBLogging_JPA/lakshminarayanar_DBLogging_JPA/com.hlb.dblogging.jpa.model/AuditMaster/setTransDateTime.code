@@ -1,0 +1,3 @@
+public void setTransDateTime(Date transDateTime){
+  TransDateTime=transDateTime;
+}

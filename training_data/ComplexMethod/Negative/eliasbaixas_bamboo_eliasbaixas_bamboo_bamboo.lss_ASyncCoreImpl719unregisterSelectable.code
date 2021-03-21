@@ -1,0 +1,16 @@
+public void unregisterSelectable(SelectableChannel channel,int interest_ops) throws ClosedChannelException {
+  if (logger.isDebugEnabled())   logger.debug("ASyncCore.register_selectable");
+  SelectionKey skey=channel.keyFor(selector);
+  skey.interestOps(skey.interestOps() & ~interest_ops);
+  SelectableInfo si=(SelectableInfo)selectable_info.get(channel);
+  if ((interest_ops & SelectionKey.OP_ACCEPT) != 0)   si.accept_cb=null;
+  if ((interest_ops & SelectionKey.OP_CONNECT) != 0)   si.connect_cb=null;
+  if ((interest_ops & SelectionKey.OP_READ) != 0)   si.read_cb=null;
+  if ((interest_ops & SelectionKey.OP_WRITE) != 0)   si.write_cb=null;
+  if (skey.interestOps() == 0)   selectable_info.remove(channel);
+}
+public void unregisterSelectable(SelectableChannel channel){
+  SelectionKey skey=channel.keyFor(selector);
+  if (skey.isValid())   skey.interestOps(0);
+  selectable_info.remove(channel);
+}

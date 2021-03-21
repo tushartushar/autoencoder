@@ -1,0 +1,24 @@
+@Test public void geoPointPolygonsIntersectionTest() throws IOException {
+  List<Point> firstPolygonPoints=new ArrayList<Point>();
+  firstPolygonPoints.add(new PointImpl(10,10,SpatialContext.GEO));
+  firstPolygonPoints.add(new PointImpl(8,10,SpatialContext.GEO));
+  firstPolygonPoints.add(new PointImpl(8,8,SpatialContext.GEO));
+  firstPolygonPoints.add(new PointImpl(10,8,SpatialContext.GEO));
+  firstPolygonPoints.add(new PointImpl(10,10,SpatialContext.GEO));
+  Map<String,Object> firstPolygon=buildGeoJsonPolygon(firstPolygonPoints);
+  List<Point> secondPolygonPoints=new ArrayList<Point>();
+  secondPolygonPoints.add(new PointImpl(14,10,SpatialContext.GEO));
+  secondPolygonPoints.add(new PointImpl(12,10,SpatialContext.GEO));
+  secondPolygonPoints.add(new PointImpl(12,8,SpatialContext.GEO));
+  secondPolygonPoints.add(new PointImpl(14,8,SpatialContext.GEO));
+  secondPolygonPoints.add(new PointImpl(14,10,SpatialContext.GEO));
+  Map<String,Object> secondPolygon=buildGeoJsonPolygon(secondPolygonPoints);
+  graph.addVertex(T.label,DOCUMENT_TYPE,T.id,"1","location",firstPolygon);
+  graph.addVertex(T.label,DOCUMENT_TYPE,T.id,"2","location",secondPolygon);
+  GraphTraversalSource g=graph.traversal();
+  String geoJsonPoint="{ \"type\": \"Point\",\"coordinates\": [9, 9]}";
+  long intersectionCounter=g.V().has("location",Geo.intersercts(geoJsonPoint)).count().next();
+  assertEquals(1l,intersectionCounter);
+  Element location=g.V().has("location",Geo.intersercts(geoJsonPoint)).next();
+  assertEquals("1",location.id().toString());
+}

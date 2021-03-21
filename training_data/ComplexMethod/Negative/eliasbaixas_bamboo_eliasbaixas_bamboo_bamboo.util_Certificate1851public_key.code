@@ -1,0 +1,4 @@
+public PublicKey public_key() throws InvalidException {
+  if (!checked)   check();
+  return public_key;
+}

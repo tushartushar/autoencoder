@@ -1,0 +1,9 @@
+private void notifyEvent(Event event,Parcelable... data){
+  ScanResult result=null;
+  if (data != null && data.length == 1) {
+    result=(ScanResult)data[0];
+  }
+  for (int i=mClients.size() - 1; i >= 0; i--) {
+    mClients.get(i).onBleEvent(event,result);
+  }
+}

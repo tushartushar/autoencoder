@@ -1,0 +1,5 @@
+public GetByTimeCont(Object c,SinkIF s,Object ud){
+  continuation=c;
+  comp_q=s;
+  user_data=ud;
+}

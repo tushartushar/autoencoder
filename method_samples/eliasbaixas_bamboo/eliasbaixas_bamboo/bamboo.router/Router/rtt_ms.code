@@ -1,0 +1,14 @@
+protected double rtt_ms(NeighborInfo ni){
+  Double result=latency_map.get(ni);
+  if (result == null) {
+    logger.fatal("No latency for " + ni);
+    Iterator i=latency_map.keySet().iterator();
+    while (i.hasNext()) {
+      NeighborInfo other=(NeighborInfo)i.next();
+      Double lat=latency_map.get(other);
+      logger.fatal("  " + other + ", "+ lat+ " ms");
+    }
+    throw new IllegalStateException("No latency for " + ni);
+  }
+  return result.doubleValue();
+}

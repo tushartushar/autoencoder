@@ -1,0 +1,7 @@
+/** 
+ * Override this in order to chose which scan filter is to be used before  {@link #startScan} is called when the service starts.
+ * @return The {@link ScanFilter} to be used in the current application state.
+ */
+protected ScanFilter getScanFilter(){
+  return new ScanFilter.Builder().setServiceUuid(ParcelUuid.fromString("7265656C-7941-6374-6976-652055554944")).build();
+}

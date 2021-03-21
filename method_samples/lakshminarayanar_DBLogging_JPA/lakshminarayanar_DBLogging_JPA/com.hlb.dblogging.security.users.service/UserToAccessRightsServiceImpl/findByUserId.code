@@ -1,0 +1,4 @@
+@Override public List<UserToAccessRights> findByUserId(int userId){
+  List<UserToAccessRights> userToAccessRightsList=userToAccessRightsRepository.findByUserId(userId);
+  return userToAccessRightsList;
+}

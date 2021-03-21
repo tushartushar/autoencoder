@@ -1,0 +1,3 @@
+public DuplicateApplicationException(String msg){
+  super(msg);
+}

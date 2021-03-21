@@ -1,0 +1,4 @@
+/** 
+ * Called to determine the size of the byte array needed to serialize the given <code>msg</code> into.
+ */
+int serialize_size(Object msg);

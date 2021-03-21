@@ -1,0 +1,8 @@
+public static void main(String[] args) throws IOException {
+  PatternLayout pl=new PatternLayout("%d{ISO8601} %-5p %c: %m\n");
+  ConsoleAppender ca=new ConsoleAppender(pl);
+  Logger.getRoot().addAppender(ca);
+  Logger.getRoot().setLevel(Level.INFO);
+  Vis vis=new Vis(BigInteger.valueOf(2).pow(160));
+  vis.run(args);
+}

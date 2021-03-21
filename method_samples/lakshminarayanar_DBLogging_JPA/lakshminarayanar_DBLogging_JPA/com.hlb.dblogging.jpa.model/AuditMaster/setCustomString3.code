@@ -1,0 +1,3 @@
+public void setCustomString3(String customString3){
+  CustomString3=customString3;
+}

@@ -1,0 +1,6 @@
+public static Node createNode(String clusterName,boolean client,int port){
+  Settings settings=NodeBuilder.nodeBuilder().settings().put("script.groovy.sandbox.enabled",true).put("script.disable_dynamic",false).put("transport.tcp.port",port).build();
+  Node node=NodeBuilder.nodeBuilder().client(client).data(!client).clusterName(clusterName).settings(settings).build();
+  node.start();
+  return node;
+}

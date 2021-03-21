@@ -1,0 +1,15 @@
+public RoutingTable(NeighborInfo ni,double scale,BigInteger mod,int guid_digits,int digit_values){
+  MODULUS=mod;
+  GUID_DIGITS=guid_digits;
+  DIGIT_VALUES=digit_values;
+  BITS_PER_DIGIT=0;
+  for (int i=1; i < DIGIT_VALUES; i<<=1)   ++BITS_PER_DIGIT;
+  SCALE=scale;
+  highest_level=-1;
+  my_neighbor_info=ni;
+  my_routing_entry=new RoutingEntry(ni,0.0);
+  table=new RoutingEntry[GUID_DIGITS][];
+  for (int i=0; i < GUID_DIGITS; ++i)   table[i]=new RoutingEntry[DIGIT_VALUES];
+  my_digits=guid_to_digits(my_neighbor_info.guid);
+  for (int i=0; i < GUID_DIGITS; ++i)   table[i][my_digits[i]]=my_routing_entry;
+}

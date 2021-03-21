@@ -1,0 +1,5 @@
+public static final Node makeParent(long offset,Node left,Node right){
+  assert left != null;
+  assert right != null;
+  return new Node(left,right,offset,Math.max(left.valid ? left.value + left.offset : 0,right.valid ? right.value + right.offset : 0),left.low,right.high,1 + Math.max(left.height,right.height),left.valid || right.valid);
+}

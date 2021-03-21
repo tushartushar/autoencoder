@@ -1,0 +1,12 @@
+/** 
+ * Set filter on device address.
+ * @param deviceAddress The device Bluetooth address for the filter. It needs to be in theformat of "01:02:03:AB:CD:EF". The device address can be validated using {@link android.bluetooth.BluetoothAdapter#checkBluetoothAddress}.
+ * @throws IllegalArgumentException If the {@code deviceAddress} is invalid.
+ */
+public Builder setDeviceAddress(String deviceAddress){
+  if (deviceAddress != null && !BluetoothAdapter.checkBluetoothAddress(deviceAddress)) {
+    throw new IllegalArgumentException("invalid device address " + deviceAddress);
+  }
+  mDeviceAddress=deviceAddress;
+  return this;
+}

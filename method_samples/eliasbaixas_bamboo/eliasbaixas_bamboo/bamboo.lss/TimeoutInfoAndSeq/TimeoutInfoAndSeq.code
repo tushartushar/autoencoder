@@ -1,0 +1,4 @@
+public TimeoutInfoAndSeq(TimeoutInfo t,Long s){
+  tinfo=t;
+  seq=s;
+}

@@ -1,0 +1,7 @@
+public Simulator(){
+  instance=this;
+  event_queue=new EventQueue();
+  acore=new SimulatedASyncCore(event_queue);
+  DustDevil.set_acore_instance(acore);
+  Clock.set_cb(new SimulatorClockCB(event_queue));
+}

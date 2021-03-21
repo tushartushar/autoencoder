@@ -1,0 +1,10 @@
+public ASyncCoreImpl() throws IOException {
+  selector=Selector.open();
+  if (Logger.getRoot().getAllAppenders() instanceof NullEnumeration) {
+    PatternLayout pl=new PatternLayout("%c: %m\n");
+    ConsoleAppender ca=new ConsoleAppender(pl);
+    Logger.getRoot().addAppender(ca);
+    Logger.getRoot().setLevel(Level.INFO);
+  }
+  logger=Logger.getLogger(getClass());
+}

@@ -1,0 +1,20 @@
+public Object register_timer(long time_us,Callback cb,Object user_data){
+  long call_time_us=now_us + time_us;
+  TimerInfo result=new TimerInfo(null,cb,user_data);
+  event_queue.add(result,call_time_us);
+  return result;
+}
+public Object register_timer(NodeId node_id,long time_us,Callback cb,Object user_data){
+  assert time_us >= 0 : "time_us=" + time_us;
+  long call_time_us=now_us + time_us;
+  NodeInfo ninfo=nodes_by_node_id.get(node_id);
+  assert ninfo != null : node_id;
+  if (logger.isDebugEnabled())   logger.debug("now_us=" + now_us + " call_time_us="+ call_time_us+ " fail_time="+ ninfo.failure_time_us);
+  assert call_time_us >= now_us : node_id + " registered an event in the past! time_us=" + time_us;
+  if (call_time_us < ninfo.failure_time_us) {
+    TimerInfo result=new TimerInfo(node_id,cb,user_data);
+    event_queue.add(result,call_time_us);
+    return result;
+  }
+ else   return null;
+}

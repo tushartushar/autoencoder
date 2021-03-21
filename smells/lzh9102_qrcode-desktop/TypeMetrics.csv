@@ -1,0 +1,21 @@
+Project Name,Package Name,Type Name,NOF,NOPF,NOM,NOPM,LOC,WMC,NC,DIT,LCOM,FANIN,FANOUT,File path
+lzh9102_qrcode-desktop,zxinggui,ViewPlainTextWindow,2,0,6,4,29,8,0,0,0.6666666666666666,1,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/ViewPlainTextWindow.java
+lzh9102_qrcode-desktop,zxinggui,ImageHelper,2,0,5,4,38,7,0,0,1.0,2,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/ImageHelper.java
+lzh9102_qrcode-desktop,zxinggui,BufferedImageLuminanceSource,3,0,8,8,69,11,0,0,0.375,2,1,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/BufferedImageLuminanceSource.java
+lzh9102_qrcode-desktop,zxinggui,ScreenCaptureListener,0,0,2,2,4,2,1,0,-1.0,1,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/ScreenCaptureListener.java
+lzh9102_qrcode-desktop,zxinggui,ScreenCaptureWindow,8,0,16,13,120,27,0,0,0.375,1,3,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/ScreenCaptureWindow.java
+lzh9102_qrcode-desktop,zxinggui,RectArea,4,0,13,12,59,15,0,0,0.0,1,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/ScreenCaptureWindow.java
+lzh9102_qrcode-desktop,zxinggui,Main,0,0,2,2,14,2,0,0,-1.0,0,1,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/Main.java
+lzh9102_qrcode-desktop,zxinggui,MainWindow,29,0,28,16,306,47,0,1,0.32142857142857145,1,5,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/MainWindow.java
+lzh9102_qrcode-desktop,zxinggui,ImageDisplay,1,0,3,3,31,6,0,0,0.6666666666666666,1,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/ImageDisplay.java
+lzh9102_qrcode-desktop,zxinggui.generator,FormPanel,6,0,2,2,23,3,0,0,0.0,1,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/generator/FormPanel.java
+lzh9102_qrcode-desktop,zxinggui.generator,UrlGenerator,2,0,7,7,44,12,0,1,0.42857142857142855,1,2,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/generator/UrlGenerator.java
+lzh9102_qrcode-desktop,zxinggui.generator,EmailGenerator,2,0,7,7,42,12,0,1,0.42857142857142855,1,2,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/generator/EmailGenerator.java
+lzh9102_qrcode-desktop,zxinggui.generator,Validator,2,0,5,4,18,5,0,0,1.0,5,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/generator/Validator.java
+lzh9102_qrcode-desktop,zxinggui.generator,ContactGenerator,19,0,31,10,313,109,0,1,0.12903225806451613,1,3,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/generator/ContactGenerator.java
+lzh9102_qrcode-desktop,zxinggui.generator,PhoneNumberGenerator,2,0,7,7,42,12,0,1,0.42857142857142855,1,2,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/generator/PhoneNumberGenerator.java
+lzh9102_qrcode-desktop,zxinggui.generator,GeneratorManager,1,0,6,5,48,9,0,0,0.0,0,7,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/generator/GeneratorManager.java
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,7,0,9,7,71,15,0,1,0.3333333333333333,1,2,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/generator/SmsGenerator.java
+lzh9102_qrcode-desktop,zxinggui.generator,GeneratorException,1,0,2,2,13,2,0,0,0.0,6,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/generator/GeneratorException.java
+lzh9102_qrcode-desktop,zxinggui.generator,GeneratorInterface,0,0,6,0,29,6,6,0,-1.0,1,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/generator/GeneratorInterface.java
+lzh9102_qrcode-desktop,zxinggui.generator,PlainTextGenerator,6,0,7,7,45,10,0,1,0.42857142857142855,1,1,/Users/Tushar/Documents/Workspace/autoencoder/repos/lzh9102_qrcode-desktop/src/main/java/zxinggui/generator/PlainTextGenerator.java

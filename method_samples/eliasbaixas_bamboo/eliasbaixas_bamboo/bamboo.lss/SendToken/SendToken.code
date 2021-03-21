@@ -1,0 +1,5 @@
+public SendToken(Long x,Object t,Object n){
+  xact_id=x;
+  timerToken=t;
+  networkToken=n;
+}

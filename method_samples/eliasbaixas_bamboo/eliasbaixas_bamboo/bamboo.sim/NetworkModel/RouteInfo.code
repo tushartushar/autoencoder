@@ -1,0 +1,4 @@
+public RouteInfo(long l,double b){
+  latency_us=l;
+  inv_bw_us_per_byte=b;
+}

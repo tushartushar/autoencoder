@@ -1,0 +1,6 @@
+protected void handle_put_or_remove_resp(PutOrRemoveResp ack){
+  BambooRouteDeliver msg=(BambooRouteDeliver)ack.user_data;
+  PutReqPayload payload=(PutReqPayload)msg.payload;
+  PutRespMsg outb=new PutRespMsg(payload.return_addr,payload.seq,bamboo_stat.BAMBOO_OK);
+  returnToClient.returnToClient(outb,null);
+}

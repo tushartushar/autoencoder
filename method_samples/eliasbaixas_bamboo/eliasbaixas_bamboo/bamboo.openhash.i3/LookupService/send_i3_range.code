@@ -1,0 +1,13 @@
+protected void send_i3_range(){
+  if (i3_addr == null)   return;
+  BigInteger high=my_id.subtract(BigInteger.ONE);
+  if (logger.isDebugEnabled()) {
+    logger.debug("sending range to i3: [" + pred_id.toString(16) + ", "+ high.toString(16)+ "]");
+  }
+  ByteBuffer pkt=ByteBuffer.allocate(41);
+  pkt.put((byte)0x02);
+  pkt.put(RedirClient.bi2bytes(pred_id));
+  pkt.put(RedirClient.bi2bytes(high));
+  pkt.flip();
+  send_pkt(pkt);
+}

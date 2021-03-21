@@ -1,0 +1,4 @@
+protected long queue_size(Integer client){
+  Long result=queue_size.get(client);
+  return (result == null) ? 0 : result.longValue();
+}

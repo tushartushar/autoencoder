@@ -1,0 +1,3 @@
+@Column(name="SERVICEID",nullable=true,length=6) public String getServiceID(){
+  return ServiceID;
+}

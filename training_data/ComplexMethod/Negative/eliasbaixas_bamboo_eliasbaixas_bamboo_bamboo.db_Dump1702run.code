@@ -1,0 +1,4 @@
+public void run(){
+  logger.info("starting dump");
+  dispatch(new GetByTimeReq(0,Long.MAX_VALUE,my_sink,null));
+}

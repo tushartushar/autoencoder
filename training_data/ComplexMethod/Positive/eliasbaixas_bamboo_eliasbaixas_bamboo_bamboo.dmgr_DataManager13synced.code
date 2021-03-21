@@ -1,0 +1,44 @@
+public boolean synced(BigInteger key,InetSocketAddress neighbor){
+  assert preds != null;
+  for (  GuidRange range : synced_ranges.keySet()) {
+    if ((key.compareTo(range.low) >= 0) && (key.compareTo(range.high) <= 0)) {
+      return synced_ranges.get(range).containsKey(neighbor);
+    }
+  }
+  return false;
+}
+public boolean synced(BigInteger key){
+  if (preds == null)   return true;
+  for (  GuidRange range : synced_ranges.keySet()) {
+    if ((key.compareTo(range.low) >= 0) && (key.compareTo(range.high) <= 0)) {
+      LinkedHashMap<InetSocketAddress,Long> m=synced_ranges.get(range);
+      if (m.size() > preds.length) {
+        if (logger.isDebugEnabled())         logger.debug("synced with " + synced_ranges.get(range).size() + " neighbors for key 0x"+ guid_to_string(key));
+        return true;
+      }
+ else {
+        String list="";
+        for (        InetSocketAddress n : m.keySet()) {
+          list+=n.getAddress().getHostAddress() + ":" + n.getPort()+ " ";
+        }
+        if (logger.isDebugEnabled())         logger.debug("only synced with " + list + "for key 0x"+ guid_to_string(key));
+        return false;
+      }
+    }
+  }
+  if (logger.isDebugEnabled())   logger.debug("not responsible for 0x" + guid_to_string(key));
+  return false;
+}
+protected void synced(GuidRange range,InetSocketAddress neighbor){
+  LinkedHashMap<InetSocketAddress,Long> s=synced_ranges.get(range);
+  if (s == null) {
+    s=new LinkedHashMap<InetSocketAddress,Long>();
+    synced_ranges.put(range,s);
+  }
+  assert preds != null;
+  long n=4 * preds.length * preds.length* ae_period;
+  long timeout=round(ceil(n * log(n) / log(2)));
+  if (logger.isDebugEnabled())   logger.debug((s.containsKey(neighbor) ? "re" : "") + "synced with " + addrToString(neighbor)+ " over "+ range+ " for "+ (timeout / 1000)+ " seconds");
+  s.put(neighbor,new Long(timer_ms() + timeout));
+  acore.registerTimer(timeout,curry(syncTimeout,range,neighbor));
+}

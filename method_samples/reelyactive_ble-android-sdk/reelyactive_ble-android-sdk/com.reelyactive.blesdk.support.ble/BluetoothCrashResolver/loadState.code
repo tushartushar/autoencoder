@@ -1,0 +1,48 @@
+private void loadState(){
+  FileInputStream inputStream=null;
+  BufferedReader reader=null;
+  try {
+    inputStream=context.openFileInput(DISTINCT_BLUETOOTH_ADDRESSES_FILE);
+    reader=new BufferedReader(new InputStreamReader(inputStream));
+    String line;
+    line=reader.readLine();
+    if (line != null) {
+      lastBluetoothCrashDetectionTime=Long.parseLong(line);
+    }
+    line=reader.readLine();
+    if (line != null) {
+      detectedCrashCount=Integer.parseInt(line);
+    }
+    line=reader.readLine();
+    if (line != null) {
+      recoveryAttemptCount=Integer.parseInt(line);
+    }
+    line=reader.readLine();
+    if (line != null) {
+      lastRecoverySucceeded=false;
+      if (line.equals("1")) {
+        lastRecoverySucceeded=true;
+      }
+    }
+    String mac;
+    while ((mac=reader.readLine()) != null) {
+      distinctBluetoothAddresses.add(mac);
+    }
+  }
+ catch (  IOException e) {
+    Log.w(TAG,"Can't read macs from " + DISTINCT_BLUETOOTH_ADDRESSES_FILE);
+  }
+catch (  NumberFormatException e) {
+    Log.w(TAG,"Can't parse file " + DISTINCT_BLUETOOTH_ADDRESSES_FILE);
+  }
+ finally {
+    if (reader != null) {
+      try {
+        reader.close();
+      }
+ catch (      IOException e1) {
+      }
+    }
+  }
+  if (isDebugEnabled())   Log.d(TAG,"Read " + distinctBluetoothAddresses.size() + " bluetooth addresses");
+}

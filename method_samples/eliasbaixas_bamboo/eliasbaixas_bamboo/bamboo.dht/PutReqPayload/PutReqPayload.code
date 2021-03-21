@@ -1,0 +1,47 @@
+public PutReqPayload(long t,BigInteger k,ByteBuffer v,boolean p,NodeId r,long s,int tt,InetAddress c,byte[] vh,byte[] sh){
+  time_usec=t;
+  key=k;
+  value=v;
+  put=p;
+  return_addr=r;
+  seq=s;
+  ttl_sec=tt;
+  client_id=c;
+  value_hash=vh;
+  secret_hash=sh;
+}
+public PutReqPayload(InputBuffer buffer) throws QSException {
+  time_usec=buffer.nextLong();
+  key=buffer.nextBigInteger();
+  int len=buffer.nextInt();
+  if (len > MAX_SIZE)   throw new QSException("len=" + len);
+  byte[] tmp=new byte[len];
+  buffer.nextBytes(tmp,0,len);
+  value=ByteBuffer.wrap(tmp);
+  put=buffer.nextBoolean();
+  return_addr=new NodeId(buffer);
+  seq=buffer.nextLong();
+  ttl_sec=buffer.nextInt();
+  int client_id_len=buffer.nextInt();
+  byte[] client_bytes=new byte[client_id_len];
+  buffer.nextBytes(client_bytes,0,client_id_len);
+  try {
+    client_id=InetAddress.getByAddress(client_bytes);
+  }
+ catch (  UnknownHostException ex) {
+    assert false;
+  }
+  retried=buffer.nextBoolean();
+  if (!put) {
+    value_hash=new byte[20];
+    buffer.nextBytes(value_hash,0,20);
+  }
+  if ((time_usec & 0x8000000000000000L) != 0) {
+    secret_hash=new byte[20];
+    buffer.nextBytes(secret_hash,0,20);
+    time_usec&=0x7fffffffffffffffL;
+  }
+ else {
+    secret_hash=null;
+  }
+}

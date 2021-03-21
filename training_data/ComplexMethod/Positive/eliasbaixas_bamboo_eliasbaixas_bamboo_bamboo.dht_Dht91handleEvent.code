@@ -1,0 +1,56 @@
+public void handleEvent(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("got " + item);
+  if (item instanceof BambooRouterAppRegResp) {
+    BambooRouterAppRegResp resp=(BambooRouterAppRegResp)item;
+    initialized=true;
+    my_guid=resp.node_guid;
+    my_neighbor_info=new NeighborInfo(my_node_id,my_guid);
+    MODULUS=resp.modulus;
+    MAX_GUID=resp.modulus.subtract(BigInteger.ONE);
+    next_put_seq=rand.nextLong() & 0x7fffffffffffffffL;
+    next_get_seq=rand.nextLong() & 0x7fffffffffffffffL;
+    acore.registerTimer(rand.nextInt(4000) + 2000,swap_disk_sizes_cb);
+    while (!wait_q.isEmpty())     handleEvent((QueueElementIF)wait_q.removeFirst());
+  }
+ else   if (!initialized) {
+    wait_q.addLast(item);
+  }
+ else {
+    if (item instanceof BambooLeafSetChanged) {
+      handle_leaf_set_changed((BambooLeafSetChanged)item);
+    }
+ else     if (item instanceof PutReq) {
+      handle_put_req((PutReq)item);
+    }
+ else     if (item instanceof PutRespMsg) {
+      handle_put_resp_msg((PutRespMsg)item);
+    }
+ else     if (item instanceof GetReq) {
+      handle_get_req((GetReq)item);
+    }
+ else     if (item instanceof GetRespMsg) {
+      handle_get_resp_msg((GetRespMsg)item);
+    }
+ else     if (item instanceof BambooRouteDeliver) {
+      BambooRouteDeliver msg=(BambooRouteDeliver)item;
+      if (msg.payload instanceof PutReqPayload) {
+        handle_put_req_payload(msg,(PutReqPayload)msg.payload);
+      }
+ else {
+        logger.info("got unexpected deliver: " + item.getClass().getName() + ".");
+      }
+    }
+ else     if (item instanceof BambooRouteUpcall) {
+      logger.info("got unexpected upcall: " + item.getClass().getName() + ".");
+    }
+ else     if (item instanceof PutOrRemoveResp) {
+      handle_put_or_remove_resp((PutOrRemoveResp)item);
+    }
+ else     if (item instanceof StorageManager.GetByGuidResp) {
+      handle_get_by_guid_resp((StorageManager.GetByGuidResp)item);
+    }
+ else {
+      throw new IllegalArgumentException("got event of unexpected type: " + item.getClass().getName() + ".");
+    }
+  }
+}

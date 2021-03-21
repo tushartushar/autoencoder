@@ -1,0 +1,10 @@
+@Override public void onUpgrade(SQLiteDatabase db,int oldVersion,int newVersion){
+switch (oldVersion) {
+case 1:
+    db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN "+ COL_INTERVAL+ " INTEGER NULL");
+  break;
+case 2:
+db.execSQL("ALTER TABLE " + TABLE_NAME + " ADD COLUMN "+ COL_SESSION+ " INTEGER NULL");
+break;
+}
+}

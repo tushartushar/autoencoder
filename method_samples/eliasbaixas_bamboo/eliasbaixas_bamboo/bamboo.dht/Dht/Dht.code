@@ -1,0 +1,9 @@
+public Dht() throws Exception {
+  ostore.util.TypeTable.register_type(GetValue.class);
+  ostore.util.TypeTable.register_type(PutReqPayload.class);
+  ostore.util.TypeTable.register_type(RpcGetResp.class);
+  ostore.util.TypeTable.register_type(IterGetReq.class);
+  ostore.util.TypeTable.register_type(IterGetResp.class);
+  event_types=new Class[]{PutReq.class,GetReq.class};
+  inb_msg_types=new Class[]{PutRespMsg.class,GetRespMsg.class};
+}

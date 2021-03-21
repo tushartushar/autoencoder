@@ -1,0 +1,13 @@
+public void process_pending_puts(LinkedList puts){
+  if (!puts.isEmpty()) {
+    int which=rand.nextInt(puts.size());
+    PutInfo accepted=null;
+    while (!puts.isEmpty()) {
+      PutInfo pi=(PutInfo)puts.removeFirst();
+      if (which == 0)       accepted=pi;
+      pi.cb.cb(which == 0,false);
+      which--;
+    }
+    accept_put(accepted);
+  }
+}

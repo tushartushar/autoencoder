@@ -1,0 +1,4 @@
+protected void next_op(){
+  long wait_ms=Math.round(random_exponential(mean_wait_ms,rand));
+  acore.register_timer(wait_ms,do_put_cb,null);
+}

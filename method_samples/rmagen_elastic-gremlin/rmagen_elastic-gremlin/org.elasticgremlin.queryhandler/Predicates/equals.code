@@ -1,0 +1,9 @@
+@Override public boolean equals(Object o){
+  if (this == o)   return true;
+  if (o == null || getClass() != o.getClass())   return false;
+  Predicates that=(Predicates)o;
+  if (limitLow != that.limitLow)   return false;
+  if (limitHigh != that.limitHigh)   return false;
+  if (hasContainers != null ? !hasContainers.equals(that.hasContainers) : that.hasContainers != null)   return false;
+  return !(labels != null ? !labels.equals(that.labels) : that.labels != null);
+}

@@ -1,0 +1,24 @@
+protected static Node add_put(Node n,long now,long rate,long ttl,long size){
+  if (n == null) {
+    Node a=new Node(size,now);
+    Node b=new Node(size + rate * (ttl - 1),now + ttl - 1);
+    Node c=new Node(0,a,b);
+    Node d=new Node(rate * ttl,now + ttl);
+    Node e=new Node(0,c,d);
+    return e;
+  }
+  n=create_point(n,rate,now);
+  n=create_point(n,rate,now + ttl - 1);
+  n=create_point(n,rate,now + ttl);
+  return increment_range(n,now,now + ttl - 1,size);
+}
+public boolean add_put(long ttl,long size){
+  Node new_root=add_put(root,now,rate,ttl,size);
+  if (new_root.value + new_root.offset <= capacity) {
+    root=new_root;
+    return true;
+  }
+ else {
+    return false;
+  }
+}

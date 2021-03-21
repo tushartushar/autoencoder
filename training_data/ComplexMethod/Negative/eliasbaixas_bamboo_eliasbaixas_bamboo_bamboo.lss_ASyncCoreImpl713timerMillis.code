@@ -1,0 +1,4 @@
+public long timerMillis(){
+  if (GetTimeOfDayCC.available())   return GetTimeOfDayCC.currentTimeMillis();
+  return nowMillis();
+}

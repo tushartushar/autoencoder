@@ -1,0 +1,31 @@
+/** 
+ * Calls cb when it's safe to accept the given put; returns false if the client already has a full queue.
+ */
+public boolean addPut(int sizeBytes,int ttlMillis,Client client,Runnable cb){
+  long commitment=(long)sizeBytes * ttlMillis;
+  Long currentSize=queueSizes.get(client);
+  if ((currentSize != null) && (currentSize.longValue() + commitment > maxQueueSize)) {
+    return false;
+  }
+ else {
+    long newSize=commitment;
+    LinkedList<PutInfo> queue=null;
+    if (currentSize == null) {
+      queue=new LinkedList<PutInfo>();
+      queues.put(client,queue);
+    }
+ else {
+      queue=queues.get(client);
+      newSize+=currentSize.longValue();
+    }
+    long startTime=max(latestFinishTime(client),virtualTime - burstyAdvantage);
+    latestFinishTimes.put(client,new Long(startTime + commitment));
+    queue.addLast(new PutInfo(sizeBytes,ttlMillis,startTime,client,cb));
+    queueSizes.put(client,new Long(newSize));
+    if ((nextAcceptPutInfo == null) || (startTime < nextAcceptPutInfo.startTime)) {
+      nextAcceptPutInfo=null;
+      processQueues();
+    }
+    return true;
+  }
+}

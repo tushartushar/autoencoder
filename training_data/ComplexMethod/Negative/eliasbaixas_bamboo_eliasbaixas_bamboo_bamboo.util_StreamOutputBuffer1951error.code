@@ -1,0 +1,4 @@
+protected void error(IOException e){
+  if (errors == null)   errors=new LinkedList();
+  errors.addLast(e);
+}

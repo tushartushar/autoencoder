@@ -1,0 +1,20 @@
+protected void handle_iterate_by_guid_cont(IterateByGuidCont req){
+  IBGCont cont=(IBGCont)req.continuation;
+  if (req.comp_q == null) {
+    close_cursor(cont.cursor);
+  }
+ else {
+    int retval=0;
+    Dbt pkey=new Dbt();
+    Dbt data=new Dbt();
+    do {
+      try {
+        retval=cont.cursor.get(cont.key,pkey,data,Db.DB_NEXT);
+      }
+ catch (      DbException e) {
+        BUG(e);
+      }
+    }
+ while (!finish_iterate_by_guid(cont,pkey,data,retval,req.comp_q,req.user_data));
+  }
+}

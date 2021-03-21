@@ -1,0 +1,4 @@
+public void set_hash(byte[] value){
+  if (value == null)   throw new IllegalArgumentException("null");
+  hash=value;
+}

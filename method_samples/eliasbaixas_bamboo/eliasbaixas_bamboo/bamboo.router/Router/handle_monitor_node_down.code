@@ -1,0 +1,25 @@
+protected void handle_monitor_node_down(NeighborInfo ni){
+  if (logger.isDebugEnabled())   logger.debug(ni + " is down.");
+  add_to_down_nodes(ni.node_id);
+  if (latency_map.containsKey(ni))   latency_map.remove(ni);
+  boolean removed_ls=remove_from_ls(ni);
+  boolean removed_rt=remove_from_rt(ni);
+  if (logger.isInfoEnabled() && (removed_ls || removed_rt)) {
+    StringBuffer buf=new StringBuffer(95);
+    buf.append("neighbor ");
+    buf.append(ni.node_id.address().getHostAddress());
+    buf.append(":");
+    buf.append(ni.node_id.port());
+    buf.append(" unreachable; removed it from");
+    if (removed_ls)     buf.append(" leaf set");
+    if (removed_rt) {
+      if (removed_ls)       buf.append(" and routing table");
+ else       buf.append(" routing table");
+    }
+    logger.info(buf);
+  }
+  boolean removed_rrt=remove_from_rrt(ni);
+  if (logger.isDebugEnabled() && (!(removed_ls || removed_rt || removed_rrt))) {
+    logger.debug(ni + " is down; but is no " + "longer in our leaf set, or routing table, or reverse rt.");
+  }
+}

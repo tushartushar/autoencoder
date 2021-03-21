@@ -1,0 +1,11 @@
+private static ShapeBuilder GetShapeBuilder(Object object){
+  try {
+    String geoJson=(String)object;
+    XContentParser parser=JsonXContent.jsonXContent.createParser(geoJson);
+    parser.nextToken();
+    return ShapeBuilder.parse(parser);
+  }
+ catch (  Exception e) {
+    return null;
+  }
+}

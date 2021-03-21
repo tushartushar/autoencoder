@@ -1,0 +1,31 @@
+protected FillHolesState fill_holes_have_children(FillHolesState state,long now_ms){
+  if (logger.isDebugEnabled())   logger.debug("checking children");
+  if (logger.isDebugEnabled())   logger.debug("state=" + state);
+  int leaves_below=0;
+  long earliest_expiry_usec=Long.MAX_VALUE;
+  MessageDigest md=new_digest();
+  for (Iter i=children(); i.hasNext(); ) {
+    Node child=i.next();
+    if (!child.valid(now_ms)) {
+      FillHolesState result=child.fill_holes(state,now_ms);
+      if (result != null)       return result;
+    }
+    md.update(child.hash());
+    leaves_below+=child.leaves_below();
+    if (child.earliest_expiry_usec() < earliest_expiry_usec)     earliest_expiry_usec=child.earliest_expiry_usec();
+  }
+  if (leaves_below <= max()) {
+    for (Iter i=children(); i.hasNext(); ) {
+      i.next();
+      i.remove();
+    }
+    return fill_holes_no_children(state,now_ms);
+  }
+ else {
+    set_hash(md.digest());
+    set_earliest_expiry_usec(earliest_expiry_usec);
+    set_leaves_below(leaves_below);
+    assert valid(now_ms) : "not valid at end of fill_holes_have_children";
+    return null;
+  }
+}

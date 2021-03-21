@@ -1,0 +1,528 @@
+public void run(){
+  SocketChannel sc=null;
+  try {
+    sc=ssock_channel.accept();
+  }
+ catch (  IOException e) {
+    BUG(e);
+  }
+  if (sc == null)   return;
+  if (logger.isInfoEnabled()) {
+    Socket s=sc.socket();
+    StringBuffer buf=new StringBuffer(45);
+    buf.append("got connection from ");
+    buf.append(s.getInetAddress().getHostAddress());
+    buf.append(":");
+    buf.append(s.getPort());
+    logger.info(buf);
+  }
+  try {
+    sc.configureBlocking(false);
+  }
+ catch (  IOException e) {
+    BUG(e);
+  }
+  MyConnState conn=new MyConnState(sc);
+  try {
+    acore.register_selectable(sc,OP_READ,conn.read_cb);
+  }
+ catch (  ClosedChannelException e) {
+    BUG(e);
+  }
+}
+public void run(){
+  if (sc.isOpen()) {
+    long now_ms=timer_ms();
+    if (reqs_outstanding == 0 && now_ms - last_activity_ms > CONN_TIMEOUT)     error_close_connection("timeout");
+ else     acore.register_timer(CONN_TIMEOUT,timeout_cb);
+  }
+}
+public void run(){
+  int count=0;
+  while (true) {
+    ByteBuffer read_buf=ByteBuffer.allocate(1500);
+    try {
+      count=sc.read(read_buf);
+    }
+ catch (    IOException e) {
+      conn_closed();
+      return;
+    }
+    if (count < 0) {
+      conn_closed();
+      return;
+    }
+    if (count == 0)     break;
+    if (logger.isDebugEnabled())     logger.debug("read packet of " + count + " bytes");
+    read_buf.flip();
+    ib.add_packet(read_buf);
+  }
+  while (true) {
+    ib.unlimit();
+    if (next_read_size == -1) {
+      if (ib.size() < 4) {
+        logger.debug("less than 4 bytes available");
+        break;
+      }
+      next_read_size=ib.nextInt() & 0x7fffffff;
+    }
+    if (ib.size() < next_read_size) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("need " + next_read_size + " bytes, but only "+ ib.size()+ " bytes available");
+      }
+      break;
+    }
+    if (logger.isDebugEnabled())     logger.debug("req is " + next_read_size + " bytes");
+    int this_req_size=next_read_size;
+    if (this_req_size < 4) {
+      error_close_connection("size < 4");
+      break;
+    }
+    next_read_size=-1;
+    ib.limit(this_req_size);
+    int xact_id=ib.nextInt();
+    try {
+      int msg_type=ib.nextInt();
+      int rpcvers=ib.nextInt();
+      int prog=ib.nextInt();
+      if (prog != 708655600) {
+        try {
+          acore.unregister_selectable(sc,OP_READ);
+        }
+ catch (        ClosedChannelException e) {
+          conn_closed();
+        }
+        send_resp(error_cb(xact_id,1,"PROG_UNAVAIL"));
+        break;
+      }
+      int vers=ib.nextInt();
+      if ((vers >= handlers.length) || (handlers[vers] == null)) {
+        logger.warn("unknown version " + vers);
+        try {
+          acore.unregister_selectable(sc,OP_READ);
+        }
+ catch (        ClosedChannelException e) {
+          conn_closed();
+        }
+        send_resp(mismatch_cb(xact_id));
+        break;
+      }
+      int proc=ib.nextInt();
+      if ((proc >= handlers[vers].length) || (handlers[vers][proc] == null)) {
+        logger.warn("unknown proc " + proc + ", version "+ vers);
+        try {
+          acore.unregister_selectable(sc,OP_READ);
+        }
+ catch (        ClosedChannelException e) {
+          conn_closed();
+        }
+        send_resp(error_cb(xact_id,3,"PROC_UNAVAIL"));
+        break;
+      }
+      for (int i=0; i < 2; ++i) {
+        int flavor=ib.nextInt();
+        int len=ib.nextInt();
+        for (int j=0; j < len; ++j)         ib.nextByte();
+      }
+      XdrInputBufferDecodingStream ds=new XdrInputBufferDecodingStream(ib,ib.limit_remaining());
+      ds.beginDecoding();
+      XdrAble xdr=(XdrAble)handlers[vers][proc].constructor.newInstance(new Object[]{});
+      xdr.xdrDecode(ds);
+      handlers[vers][proc].handler.run(new Integer(xact_id),xdr);
+    }
+ catch (    Error garbage) {
+      garbage.printStackTrace();
+      try {
+        acore.unregister_selectable(sc,OP_READ);
+      }
+ catch (      ClosedChannelException e) {
+        conn_closed();
+      }
+      send_resp(error_cb(xact_id,4,"GARBAGE_ARGS"));
+      break;
+    }
+catch (    Exception garbage) {
+      garbage.printStackTrace();
+      try {
+        acore.unregister_selectable(sc,OP_READ);
+      }
+ catch (      ClosedChannelException e) {
+        conn_closed();
+      }
+      send_resp(error_cb(xact_id,4,"GARBAGE_ARGS"));
+      break;
+    }
+  }
+}
+public void run(){
+  while (!to_write.isEmpty()) {
+    Function0<Boolean> cb=to_write.getFirst();
+    if (cb.run().booleanValue())     to_write.removeFirst();
+ else     break;
+  }
+  if (to_write.isEmpty() && sc.isOpen()) {
+    try {
+      acore.unregister_selectable(sc,OP_WRITE);
+    }
+ catch (    ClosedChannelException e) {
+      conn_closed();
+    }
+  }
+}
+public void run(String msg){
+  error_close_connection(msg);
+}
+public Boolean run(Integer xact_id,Integer code,XdrAble resp,Runnable done_cb){
+  if (write_buf.limit() == 0) {
+    write_buf.clear();
+    write_buf.position(4);
+    write_buf.putInt(xact_id.intValue());
+    write_buf.putInt(1);
+    write_buf.putInt(0);
+    write_buf.putInt(0);
+    write_buf.putInt(0);
+    write_buf.putInt(code.intValue());
+    XdrByteBufferEncodingStream es=new XdrByteBufferEncodingStream(write_buf);
+    try {
+      resp.xdrEncode(es);
+    }
+ catch (    Exception e) {
+      assert false : e;
+    }
+    write_buf.flip();
+    write_buf.putInt((write_buf.limit() - 4) | 0x80000000);
+    write_buf.position(0);
+  }
+  int n=0;
+  try {
+    n=sc.write(write_buf);
+  }
+ catch (  IOException e) {
+    conn_closed();
+    return new Boolean(false);
+  }
+  if (write_buf.position() == write_buf.limit()) {
+    write_buf.limit(0);
+    done_cb.run();
+    return new Boolean(true);
+  }
+ else {
+    return new Boolean(false);
+  }
+}
+public void run(Integer xact_id,XdrAble xdr){
+  last_activity_ms=timer_ms();
+  Runnable log_fn=new Runnable(){
+    public void run(){
+    }
+  }
+;
+  send_resp(curry(normal_resp_cb,xact_id,new Integer(0),new XdrVoid(),log_fn));
+}
+public void run(){
+}
+public void run(final Integer xact_id,XdrAble xdr){
+  last_activity_ms=timer_ms();
+  bamboo_put_args put_args=(bamboo_put_args)xdr;
+  final String client_lib=armor_string(put_args.client_library);
+  final String application=armor_string(put_args.application);
+  final Dht.PutReq outb=put_args_to_put_req(put_args,addr);
+  md.update(outb.value.array(),outb.value.arrayOffset(),outb.value.limit());
+  final byte[] value_hash=md.digest();
+  final long now=timer_ms();
+  outb.user_data=new Thunk1<Dht.PutResp>(){
+    public void run(    Dht.PutResp resp){
+      rpc_put_done(outb,resp,xact_id,now,value_hash,client_lib,application);
+    }
+  }
+;
+  log_put_req(xact_id,outb,client_string,value_hash,client_lib,application);
+  dispatch(outb);
+  reqs_outstanding++;
+}
+public void run(Dht.PutResp resp){
+  rpc_put_done(outb,resp,xact_id,now,value_hash,client_lib,application);
+}
+public void run(final Integer xact_id,XdrAble xdr){
+  last_activity_ms=timer_ms();
+  bamboo_get_args get_args=(bamboo_get_args)xdr;
+  final String client_lib=armor_string(get_args.client_library);
+  final String application=armor_string(get_args.application);
+  if ((get_args.placemark.value.length > 0) && (get_args.placemark.value.length != StorageManager.Key.SIZE)) {
+    assert !sim_running;
+    error_close_connection("bad placemark size: " + get_args.placemark.value.length);
+    return;
+  }
+  NodeId client=new NodeId(sc.socket().getPort(),addr);
+  final Dht.GetReq outb=get_args_to_get_req(get_args,client);
+  final long now=timer_ms();
+  outb.user_data=new Thunk1<Dht.GetResp>(){
+    public void run(    Dht.GetResp resp){
+      rpc_get_done_2(outb,resp,xact_id,now,client_lib,application);
+    }
+  }
+;
+  log_get_req(xact_id,outb,client_string,client_lib,application);
+  dispatch(outb);
+  reqs_outstanding++;
+}
+public void run(Dht.GetResp resp){
+  rpc_get_done_2(outb,resp,xact_id,now,client_lib,application);
+}
+public void run(final Integer xact_id,XdrAble xdr){
+  last_activity_ms=timer_ms();
+  bamboo_put_arguments put_args=(bamboo_put_arguments)xdr;
+  final String client_lib=armor_string(put_args.client_library);
+  final String application=armor_string(put_args.application);
+  final Dht.PutReq outb=put_args_to_put_req(put_args,addr);
+  md.update(outb.value.array(),outb.value.arrayOffset(),outb.value.limit());
+  final byte[] value_hash=md.digest();
+  final long now=timer_ms();
+  outb.user_data=new Thunk1<Dht.PutResp>(){
+    public void run(    Dht.PutResp resp){
+      rpc_put_done(outb,resp,xact_id,now,value_hash,client_lib,application);
+    }
+  }
+;
+  log_put_req(xact_id,outb,client_string,value_hash,client_lib,application);
+  dispatch(outb);
+  reqs_outstanding++;
+}
+public void run(Dht.PutResp resp){
+  rpc_put_done(outb,resp,xact_id,now,value_hash,client_lib,application);
+}
+public void run(final Integer xact_id,XdrAble xdr){
+  last_activity_ms=timer_ms();
+  bamboo_get_args get_args=(bamboo_get_args)xdr;
+  final String client_lib=armor_string(get_args.client_library);
+  final String application=armor_string(get_args.application);
+  if ((get_args.placemark.value.length > 0) && (get_args.placemark.value.length != StorageManager.Key.SIZE)) {
+    assert !sim_running;
+    error_close_connection("bad placemark size: " + get_args.placemark.value.length);
+    return;
+  }
+  NodeId client=new NodeId(sc.socket().getPort(),addr);
+  final Dht.GetReq outb=get_args_to_get_req(get_args,client);
+  final long now=timer_ms();
+  outb.user_data=new Thunk1<Dht.GetResp>(){
+    public void run(    Dht.GetResp resp){
+      rpc_get_done_3(outb,resp,xact_id,now,client_lib,application);
+    }
+  }
+;
+  log_get_req(xact_id,outb,client_string,client_lib,application);
+  dispatch(outb);
+  reqs_outstanding++;
+}
+public void run(Dht.GetResp resp){
+  rpc_get_done_3(outb,resp,xact_id,now,client_lib,application);
+}
+public void run(final Integer xact_id,XdrAble xdr){
+  last_activity_ms=timer_ms();
+  bamboo_rm_arguments rm_args=(bamboo_rm_arguments)xdr;
+  final String client_lib=armor_string(rm_args.client_library);
+  final String application=armor_string(rm_args.application);
+  final Dht.PutReq outb=rm_args_to_put_req(rm_args,addr);
+  final long now=timer_ms();
+  outb.user_data=new Thunk1<Dht.PutResp>(){
+    public void run(    Dht.PutResp resp){
+      rpc_rm_done(outb,resp,xact_id,now,client_lib,application);
+    }
+  }
+;
+  log_rm_req(xact_id.intValue(),outb,client_string,client_lib,application);
+  dispatch(outb);
+  reqs_outstanding++;
+}
+public void run(Dht.PutResp resp){
+  rpc_rm_done(outb,resp,xact_id,now,client_lib,application);
+}
+public void run(){
+  WebInterface www=WebInterface.instance(my_node_id);
+  if (www == null) {
+    logger.warn("no WebInterface stage; XML RPC disabled");
+  }
+ else {
+    www.register_xml_rpc_handler("put",new XmlRpcPutHandler());
+    www.register_xml_rpc_handler("get",new XmlRpcGetHandler());
+    www.register_xml_rpc_handler("put_removable",new XmlRpcPutRemovableHandler());
+    www.register_xml_rpc_handler("get_details",new XmlRpcGetHandler());
+    www.register_xml_rpc_handler("rm",new XmlRpcRmHandler());
+  }
+}
+public void run(Thunk1<Object> result_cb,Dht.PutReq req,String client,Long start_ms,byte[] value_hash,String client_lib,String application,Dht.PutResp resp){
+  log_put_resp.run(new Integer(-1),req,resp,client,start_ms,value_hash,client_lib,application);
+  result_cb.run(new Integer(resp.result));
+}
+public void run(Thunk1<Object> result_cb,Dht.PutReq req,String client,Long start_ms,String client_lib,String application,Dht.PutResp resp){
+  log_rm_resp.run(new Integer(-1),req,resp,client,start_ms,client_lib,application);
+  result_cb.run(new Integer(resp.result));
+}
+public void run(Thunk1<Object> result_cb,Dht.GetReq req,String client,Long start_ms,String client_lib,String application,Boolean details,Dht.GetResp resp){
+  log_get_resp.run(new Integer(-1),req,resp,client,start_ms,client_lib,application);
+  Vector result=new Vector(2);
+  Vector values=new Vector(resp.values.size());
+  if (details.booleanValue()) {
+    for (    Object object : resp.values) {
+      GetValue gv=(GetValue)object;
+      assert gv.value.position() == 0;
+      assert gv.value.hasArray();
+      assert gv.value.arrayOffset() == 0;
+      assert gv.value.array().length == gv.value.limit();
+      if (details) {
+        Vector value=new Vector(4);
+        value.add(gv.value.array());
+        value.add(gv.ttlRemaining);
+        value.add(gv.hashAlgorithm);
+        value.add(gv.secretHash);
+        values.add(value);
+      }
+ else {
+        values.add(gv.value.array());
+      }
+    }
+  }
+ else {
+    for (    Object object : resp.values) {
+      ByteBuffer buf=((GetValue)object).value;
+      assert buf.position() == 0;
+      assert buf.hasArray();
+      assert buf.arrayOffset() == 0;
+      assert buf.array().length == buf.limit();
+      values.add(buf.array());
+    }
+  }
+  result.add(values);
+  byte[] placemark_bytes=null;
+  if (resp.placemark.equals(StorageManager.ZERO_KEY)) {
+    placemark_bytes=new byte[0];
+  }
+ else {
+    placemark_bytes=new byte[StorageManager.Key.SIZE];
+    resp.placemark.to_byte_buffer(ByteBuffer.wrap(placemark_bytes));
+  }
+  result.add(placemark_bytes);
+  result_cb.run(result);
+}
+public void run(Integer xact_id,Dht.PutReq req,Dht.PutResp resp,String client,Long start_ms,byte[] value_hash,String client_lib,String application){
+  if (logger.isInfoEnabled()) {
+    StringBuffer buf=new StringBuffer(200);
+    buf.append("put resp client=");
+    buf.append(client);
+    buf.append(" client_library=\"");
+    buf.append(client_lib);
+    buf.append("\" application=\"");
+    buf.append(application);
+    buf.append("\" xact_id=0x");
+    buf.append(Integer.toHexString(xact_id));
+    buf.append(" key=0x");
+    buf.append(GuidTools.guid_to_string(req.key));
+    buf.append(" value hash=0x");
+    if (req.secret_hash == null)     bytes_to_sbuf(StorageManager.ZERO_HASH,0,4,false,buf);
+ else     bytes_to_sbuf(req.secret_hash,0,min(req.secret_hash.length,4),false,buf);
+    buf.append(" value hash=0x");
+    bytes_to_sbuf(value_hash,0,min(value_hash.length,4),false,buf);
+    buf.append(" size=");
+    buf.append(req.value.limit());
+    buf.append(" ttl=");
+    buf.append(req.ttl_sec);
+    buf.append(" stat=");
+    buf.append(resp.result);
+    buf.append(" lat=");
+    buf.append(timer_ms() - start_ms.longValue());
+    buf.append(" ms");
+    logger.info(buf);
+  }
+}
+public void run(Integer xact_id,Dht.PutReq req,Dht.PutResp resp,String client,Long start_ms,String client_lib,String application){
+  if (logger.isInfoEnabled()) {
+    StringBuffer buf=new StringBuffer(200);
+    buf.append("rm resp client=");
+    buf.append(client);
+    buf.append(" client_library=\"");
+    buf.append(client_lib);
+    buf.append("\" application=\"");
+    buf.append(application);
+    buf.append("\" xact_id=0x");
+    buf.append(Integer.toHexString(xact_id));
+    buf.append(" key=0x");
+    buf.append(GuidTools.guid_to_string(req.key));
+    buf.append(" secret_hash=0x");
+    if (req.secret_hash == null)     bytes_to_sbuf(StorageManager.ZERO_HASH,0,4,false,buf);
+ else     bytes_to_sbuf(req.secret_hash,0,min(req.secret_hash.length,4),false,buf);
+    buf.append(" value_hash=0x");
+    bytes_to_sbuf(req.value_hash,0,min(req.value_hash.length,4),false,buf);
+    buf.append(" secret=0x");
+    assert req.value.hasArray();
+    bytes_to_sbuf(req.value.array(),req.value.arrayOffset() + req.value.position(),req.value.limit() - req.value.position(),false,buf);
+    buf.append(" ttl=");
+    buf.append(req.ttl_sec);
+    buf.append(" stat=");
+    buf.append(resp.result);
+    buf.append(" lat=");
+    buf.append(timer_ms() - start_ms.longValue());
+    buf.append(" ms");
+    logger.info(buf);
+  }
+}
+public void run(Integer xact_id,Dht.GetReq req,Dht.GetResp resp,String client,Long start_ms,String client_lib,String application){
+  if (logger.isInfoEnabled()) {
+    StringBuffer buf=new StringBuffer(400);
+    buf.append("get resp client=");
+    buf.append(client);
+    buf.append(" client_library=\"");
+    buf.append(client_lib);
+    buf.append("\" application=\"");
+    buf.append(application);
+    buf.append("\" xact_id=0x");
+    buf.append(Integer.toHexString(xact_id.intValue()));
+    buf.append(" key=0x");
+    buf.append(GuidTools.guid_to_string(req.key));
+    buf.append(" maxvals=");
+    buf.append(req.maxvals);
+    buf.append(" req placemark=(");
+    if ((req.placemark == null) || req.placemark.equals(ZERO_KEY))     buf.append("NONE");
+ else     buf.append(req.placemark);
+    buf.append(") values=[");
+    Iterator i=resp.values.iterator();
+    while (i.hasNext()) {
+      Object obj=i.next();
+      GetValue gv=null;
+      if (obj instanceof GetValue)       gv=(GetValue)obj;
+ else {
+        ByteBuffer value=(ByteBuffer)obj;
+        gv=new GetValue(value,-1,new byte[0]);
+      }
+      md.update(gv.value.array(),gv.value.arrayOffset(),gv.value.limit());
+      byte[] value_hash=md.digest();
+      buf.append("(");
+      buf.append(gv.value.limit());
+      if (gv.secretHash.length > 0) {
+        buf.append(", ");
+        buf.append(gv.hashAlgorithm);
+        buf.append(" 0x");
+        bytes_to_sbuf(gv.secretHash,0,min(gv.secretHash.length,4),false,buf);
+      }
+ else       buf.append(", NONE");
+      buf.append(", 0x");
+      bytes_to_sbuf(value_hash,0,min(value_hash.length,4),false,buf);
+      buf.append(", ");
+      buf.append(gv.ttlRemaining);
+      buf.append(")");
+      if (i.hasNext())       buf.append(", ");
+    }
+    buf.append("] resp placemark=(");
+    if ((resp.placemark == null) || resp.placemark.equals(ZERO_KEY))     buf.append("NONE");
+ else     buf.append(resp.placemark);
+    buf.append(") lat=");
+    buf.append(timer_ms() - start_ms.longValue());
+    buf.append(" ms");
+    logger.info(buf);
+  }
+}
+public void run(Dht.PutResp resp){
+  simulator_put_done(outb,resp,client,client_id,xact_id,now,value_hash);
+}
+public void run(Dht.GetResp resp){
+  simulator_get_done(outb,resp,client,client_id,xact_id,now);
+}

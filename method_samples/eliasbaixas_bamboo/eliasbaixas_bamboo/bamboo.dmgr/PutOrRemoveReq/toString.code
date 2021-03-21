@@ -1,0 +1,3 @@
+public String toString(){
+  return "(PutOrRemoveReq time_usec=" + time_usec + " guid="+ GuidTools.guid_to_string(guid)+ " value=<> put="+ put+ " user_data="+ user_data+ ")";
+}

@@ -1,0 +1,12 @@
+private Date getDateWithoutTime(Date date){
+  DateFormat formatter=new SimpleDateFormat("dd-MMM-yyyy");
+  Date todayWithZeroTime=null;
+  try {
+    todayWithZeroTime=formatter.parse(formatter.format(date));
+    return todayWithZeroTime;
+  }
+ catch (  ParseException e) {
+    ApplLogger.getLogger().info("Error while removing time from date in Search Message ",e);
+  }
+  return new Date();
+}

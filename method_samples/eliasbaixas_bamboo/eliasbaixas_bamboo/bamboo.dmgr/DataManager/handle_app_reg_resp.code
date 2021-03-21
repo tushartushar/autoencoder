@@ -1,0 +1,12 @@
+protected void handle_app_reg_resp(BambooRouterAppRegResp resp){
+  my_guid=resp.node_guid;
+  MODULUS=resp.modulus;
+  MAX_GUID=MODULUS.subtract(BigInteger.ONE);
+  my_neighbor_info=new BambooNeighborInfo(my_node_id,my_guid,0.0);
+  rand=new Random(my_guid.longValue());
+  initialized=true;
+  while (!wait_q.isEmpty())   handleEvent((QueueElementIF)wait_q.removeFirst());
+  classifier.dispatch_later(new AntiEntropyAlarm(),ae_period + rand.nextInt(ae_period));
+  classifier.dispatch_later(new DiscardAlarm(true),5000 + rand.nextInt(5000));
+  next_check_put_or_remove_acks();
+}

@@ -1,0 +1,4 @@
+public void serialize(OutputBuffer buffer){
+  buffer.add(srcID);
+  srcCoords.serialize(buffer);
+}

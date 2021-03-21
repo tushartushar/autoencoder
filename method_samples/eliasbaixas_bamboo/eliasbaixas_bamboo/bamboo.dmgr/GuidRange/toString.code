@@ -1,0 +1,3 @@
+public String toString(){
+  return "[" + GuidTools.guid_to_string(low) + ", "+ GuidTools.guid_to_string(high)+ "]";
+}

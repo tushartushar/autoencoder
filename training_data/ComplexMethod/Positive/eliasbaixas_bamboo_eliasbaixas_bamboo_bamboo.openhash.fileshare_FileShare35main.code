@@ -1,0 +1,119 @@
+public static void main(String[] args) throws Exception {
+  PatternLayout pl=new PatternLayout("%d{ISO8601} %-5p %c: %m\n");
+  ConsoleAppender ca=new ConsoleAppender(pl);
+  Logger.getRoot().addAppender(ca);
+  Logger.getRoot().setLevel(Level.INFO);
+  Options options=new Options();
+  options.addOption("r","read",false,"read a file from the DHT");
+  options.addOption("w","write",false,"write a file to the DHT");
+  options.addOption("g","gateway",true,"the gateway IP:port");
+  options.addOption("k","key",true,"the key to read a file from");
+  options.addOption("f","file",true,"the file to read or write");
+  options.addOption("s","secret",true,"the secret used to hide data");
+  options.addOption("t","ttl",true,"how long in seconds data should persist");
+  CommandLineParser parser=new PosixParser();
+  CommandLine cmd=parser.parse(options,args);
+  String gw=null;
+  String mode=null;
+  String secret=null;
+  String ttl=null;
+  String key=null;
+  String file=null;
+  if (cmd.hasOption("r")) {
+    mode="read";
+  }
+  if (cmd.hasOption("w")) {
+    mode="write";
+  }
+  if (cmd.hasOption("g")) {
+    gw=cmd.getOptionValue("g");
+  }
+  if (cmd.hasOption("k")) {
+    key=cmd.getOptionValue("k");
+  }
+  if (cmd.hasOption("f")) {
+    file=cmd.getOptionValue("f");
+  }
+  if (cmd.hasOption("s")) {
+    secret=cmd.getOptionValue("s");
+  }
+  if (cmd.hasOption("t")) {
+    ttl=cmd.getOptionValue("t");
+  }
+  if (mode == null) {
+    System.err.println("ERROR: either --read or --write is required");
+    HelpFormatter formatter=new HelpFormatter();
+    formatter.printHelp("fileshare",options);
+    System.exit(1);
+  }
+  if (gw == null) {
+    System.err.println("ERROR: --gateway is required");
+    HelpFormatter formatter=new HelpFormatter();
+    formatter.printHelp("fileshare",options);
+    System.exit(1);
+  }
+  if (file == null) {
+    System.err.println("ERROR: --file is required");
+    HelpFormatter formatter=new HelpFormatter();
+    formatter.printHelp("fileshare",options);
+    System.exit(1);
+  }
+  if (secret == null) {
+    System.err.println("ERROR: --secret is required");
+    HelpFormatter formatter=new HelpFormatter();
+    formatter.printHelp("fileshare",options);
+    System.exit(1);
+  }
+  StringBuffer sbuf=new StringBuffer(1000);
+  sbuf.append("<sandstorm>\n");
+  sbuf.append("<global>\n");
+  sbuf.append("<initargs>\n");
+  sbuf.append("node_id localhost:3630\n");
+  sbuf.append("</initargs>\n");
+  sbuf.append("</global>\n");
+  sbuf.append("<stages>\n");
+  sbuf.append("<GatewayClient>\n");
+  sbuf.append("class bamboo.dht.GatewayClient\n");
+  sbuf.append("<initargs>\n");
+  sbuf.append("debug_level 0\n");
+  sbuf.append("gateway " + gw + "\n");
+  sbuf.append("</initargs>\n");
+  sbuf.append("</GatewayClient>\n");
+  sbuf.append("\n");
+  sbuf.append("<FileShare>\n");
+  sbuf.append("class bamboo.openhash.fileshare.FileShare\n");
+  sbuf.append("<initargs>\n");
+  sbuf.append("debug_level 0\n");
+  sbuf.append("secret " + secret + "\n");
+  sbuf.append("mode " + mode + "\n");
+  if (mode.equals("write")) {
+    if (ttl == null) {
+      System.err.println("ERROR: --ttl is required for write mode");
+      HelpFormatter formatter=new HelpFormatter();
+      formatter.printHelp("fileshare",options);
+      System.exit(1);
+    }
+    sbuf.append("ttl " + ttl + "\n");
+    sbuf.append("file " + file + "\n");
+  }
+ else {
+    if (key == null) {
+      System.err.println("ERROR: --key is required for write mode");
+      HelpFormatter formatter=new HelpFormatter();
+      formatter.printHelp("fileshare",options);
+      System.exit(1);
+    }
+    sbuf.append("key " + key + "\n");
+    sbuf.append("file " + file + "\n");
+  }
+  sbuf.append("client_stage_name GatewayClient\n");
+  sbuf.append("</initargs>\n");
+  sbuf.append("</FileShare>\n");
+  sbuf.append("</stages>\n");
+  sbuf.append("</sandstorm>\n");
+  ASyncCore acore=new bamboo.lss.ASyncCoreImpl();
+  DustDevil dd=new DustDevil();
+  dd.set_acore_instance(acore);
+  dd.main(new CharArrayReader(sbuf.toString().toCharArray()));
+  acore.async_main();
+}

@@ -1,0 +1,3 @@
+protected boolean bindBleService(){
+  return context.bindService(new Intent(context,BleService.class),serviceConnection,Context.BIND_AUTO_CREATE);
+}

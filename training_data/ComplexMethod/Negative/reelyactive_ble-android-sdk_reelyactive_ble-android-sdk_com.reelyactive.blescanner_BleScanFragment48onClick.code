@@ -1,0 +1,18 @@
+@Override public void onClick(View v){
+  if (scanner != null) {
+    if (isScanning) {
+      scanner.stopScan(scanCallback);
+      scanButton.setText(R.string.start_ble_scan);
+      isScanning=false;
+    }
+ else {
+      adapter.clear();
+      scanner.startScan(Arrays.asList(new ScanFilter.Builder().setServiceUuid(ParcelUuid.fromString("7265656c-7941-6374-6976-652055554944")).build()),new ScanSettings.Builder().setCallbackType(ScanSettings.CALLBACK_TYPE_FIRST_MATCH | ScanSettings.CALLBACK_TYPE_MATCH_LOST).setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).setScanResultType(ScanSettings.SCAN_RESULT_TYPE_FULL).build(),scanCallback);
+      scanButton.setText(R.string.stop_ble_scan);
+      isScanning=true;
+    }
+  }
+}
+@Override public void onClick(View v){
+  requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},REQUEST_CODE_LOCATION);
+}

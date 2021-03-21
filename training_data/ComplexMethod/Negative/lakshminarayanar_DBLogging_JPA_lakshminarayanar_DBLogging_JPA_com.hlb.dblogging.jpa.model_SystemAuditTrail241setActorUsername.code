@@ -1,0 +1,3 @@
+public void setActorUsername(String actorUsername){
+  this.actorUsername=actorUsername;
+}

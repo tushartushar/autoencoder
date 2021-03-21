@@ -1,0 +1,3 @@
+public String toString(){
+  return "(Dht.GetReq key=" + GuidTools.guid_to_string(key) + " maxvals="+ maxvals+ " all="+ all+ " placemark="+ placemark+ ")";
+}

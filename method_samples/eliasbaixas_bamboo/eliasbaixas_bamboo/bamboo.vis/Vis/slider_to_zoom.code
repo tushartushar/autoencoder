@@ -1,0 +1,3 @@
+protected double slider_to_zoom(int slider){
+  return Math.pow(10.0,zoom_slider.getValue() / 100.0);
+}

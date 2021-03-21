@@ -1,0 +1,5 @@
+private void callbackCycleCompleted(){
+  for (  ScanClient client : serialClients.values()) {
+    client.callback.onScanCycleCompleted();
+  }
+}

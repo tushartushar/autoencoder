@@ -1,0 +1,3 @@
+@Column(name="actorUsername",nullable=false) public String getActorUsername(){
+  return actorUsername;
+}

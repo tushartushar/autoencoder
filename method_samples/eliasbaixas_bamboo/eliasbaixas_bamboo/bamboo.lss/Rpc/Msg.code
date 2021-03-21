@@ -1,0 +1,10 @@
+public Msg(boolean r,long x,QuickSerializable p){
+  req=r;
+  xact_id=x;
+  payload=p;
+}
+public Msg(InputBuffer buffer) throws QSException {
+  req=buffer.nextBoolean();
+  xact_id=buffer.nextLong();
+  payload=buffer.nextObject();
+}

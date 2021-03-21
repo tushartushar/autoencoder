@@ -1,0 +1,30 @@
+public String convert(String ebcdicInputString){
+  Reader reader=null;
+  StringBuffer convertedOutputString=new StringBuffer();
+  try {
+    reader=new BufferedReader(new InputStreamReader(new ByteArrayInputStream(ebcdicInputString.getBytes("windows-1252")),"Cp1047"));
+    int[] ebcdicInput=loadContent(reader);
+    return convert(ebcdicInput,convertedOutputString);
+  }
+ catch (  Exception e) {
+    ApplLogger.getLogger().error("Error caught while converting to ASCII",e);
+  }
+  return convertedOutputString.toString();
+}
+private String convert(int[] ebcdicInput,StringBuffer convertedOutputWriter) throws IOException {
+  for (int index=0; index < ebcdicInput.length; index++) {
+    int character=ebcdicInput[index];
+    if (fixedLength != -1 && index > 0 && index % fixedLength == 0) {
+      convertedOutputWriter.append((char)LF);
+    }
+    if (fixedLength == -1 && character == NEL) {
+      convertedChar=LF;
+    }
+ else {
+      convertedChar=replaceNonPrintableCharacterByWhitespace(character);
+    }
+    convertedOutputWriter.append((char)convertedChar);
+  }
+  ApplLogger.getLogger().info("Output ASCII data is : " + convertedOutputWriter);
+  return convertedOutputWriter.toString();
+}

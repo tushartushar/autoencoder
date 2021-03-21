@@ -1,0 +1,9 @@
+private void handleNodeMessage(LocateNodeMsg msg){
+  if (msg.getVersion() != _version_number)   return;
+  LocateNodeResp reply=new LocateNodeResp(msg.getRequestor(),my_node_id,_my_coordinate);
+  if (_use_reverse_ping) {
+    reply.user_data=new PingCB(msg.getRequestorCoord(),now_ms());
+    reply.comp_q=my_sink;
+  }
+  dispatch(reply);
+}

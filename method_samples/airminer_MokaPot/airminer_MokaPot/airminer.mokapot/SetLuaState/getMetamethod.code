@@ -1,0 +1,8 @@
+@Override public JavaFunction getMetamethod(Metamethod metamethod){
+switch (metamethod) {
+case CALL:
+    return this;
+default :
+  return null;
+}
+}

@@ -1,0 +1,21 @@
+@Override public void apply(Traversal.Admin<?,?> traversal){
+  if (traversal.getEngine().isComputer())   return;
+  Graph graph=traversal.getGraph().get();
+  if (!(graph instanceof ElasticGraph))   return;
+  ElasticGraph elasticGraph=(ElasticGraph)graph;
+  TraversalHelper.getStepsOfClass(GraphStep.class,traversal).forEach(graphStep -> {
+    if (graphStep.getIds().length == 0) {
+      Predicates predicates=getPredicates(graphStep,traversal);
+      final ElasticGraphStep<?> elasticGraphStep=new ElasticGraphStep<>(graphStep,predicates,elasticGraph.getQueryHandler());
+      TraversalHelper.replaceStep(graphStep,(Step)elasticGraphStep,traversal);
+    }
+  }
+);
+  TraversalHelper.getStepsOfClass(VertexStep.class,traversal).forEach(vertexStep -> {
+    boolean returnVertex=vertexStep.getReturnClass().equals(Vertex.class);
+    Predicates predicates=returnVertex ? new Predicates() : getPredicates(vertexStep,traversal);
+    ElasticVertexStep elasticVertexStep=new ElasticVertexStep(vertexStep,predicates);
+    TraversalHelper.replaceStep(vertexStep,elasticVertexStep,traversal);
+  }
+);
+}

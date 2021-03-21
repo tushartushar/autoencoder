@@ -1,0 +1,19 @@
+public void put(Object key,Object value){
+  if (capacity == 0)   return;
+  Node n=null;
+  if (map.containsKey(key)) {
+    n=(Node)map.get(key);
+    rem_n(n);
+    n.value=value;
+  }
+ else {
+    if (map.size() >= capacity) {
+      if (map.remove(last.key) == null)       BUG("in ll but not in ts");
+      last=last.pred;
+      last.succ=null;
+    }
+    n=new Node(key,value);
+    map.put(key,n);
+  }
+  add_n(n);
+}

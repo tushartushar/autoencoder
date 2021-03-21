@@ -1,0 +1,28 @@
+protected boolean remove_from_ls(NeighborInfo ni){
+  int result=leaf_set.remove_node(ni);
+  if (result != LeafSet.REMOVED_NONE) {
+    if (logger.isInfoEnabled()) {
+      StringBuffer buf=new StringBuffer(50);
+      buf.append("removed ");
+      buf.append(ni.node_id.address().getHostAddress());
+      buf.append(":");
+      buf.append(ni.node_id.port());
+      buf.append(" from leaf set");
+      logger.info(buf);
+    }
+    boolean more_added=false;
+    if (leaf_set.as_set().isEmpty()) {
+      for (int level=0; level < GUID_DIGITS; ++level) {
+        for (int digit=0; digit < DIGIT_VALUES; ++digit) {
+          NeighborInfo primary=rt.primary(level,digit);
+          if ((primary != null) && (primary != my_neighbor_info) && (!primary.equals(ni))) {
+            more_added=add_to_ls_ping_time(primary,rtt_ms(primary)) || more_added;
+          }
+        }
+      }
+    }
+    if (!more_added)     notify_leaf_set_changed();
+    return true;
+  }
+  return false;
+}

@@ -1,0 +1,3 @@
+@Override public String toString(){
+  return "SearchBean [uniqueProcessId=" + uniqueProcessId + ", applicationName="+ applicationName+ ", transactionType="+ transactionType+ ", transactionStartDateTime="+ transactionStartDateTime+ ", transactionEndDateTime="+ transactionEndDateTime+ ", Segment="+ Segment+ "]";
+}

@@ -1,0 +1,10 @@
+private void captureScreen(){
+  setVisible(false);
+  try {
+    Thread.sleep(500);
+  }
+ catch (  InterruptedException e) {
+  }
+  ScreenCaptureWindow scw=new ScreenCaptureWindow(this);
+  scw.captureScreen();
+}

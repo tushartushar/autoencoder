@@ -1,0 +1,4 @@
+public BambooAddToLocationCache(NodeId n,BigInteger g){
+  guid=g;
+  node_id=n;
+}

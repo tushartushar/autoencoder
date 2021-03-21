@@ -1,0 +1,5 @@
+private void checkBulk(){
+  if (vertices.size() >= VERTEX_BULK) {
+    vertices=new ArrayList<>();
+  }
+}

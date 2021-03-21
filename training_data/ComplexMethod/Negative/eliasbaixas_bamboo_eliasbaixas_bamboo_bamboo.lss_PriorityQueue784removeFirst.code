@@ -1,0 +1,26 @@
+public final Object removeFirst(){
+  if (heap_size < 1)   throw new NoSuchElementException();
+  Object result=heap[1];
+  heap[1]=heap[heap_size];
+  heap[heap_size]=null;
+  prio[1]=prio[heap_size];
+  --heap_size;
+  int l, r, smallest, parent=1;
+  while (true) {
+    l=parent * 2;
+    r=parent * 2 + 1;
+    if (l <= heap_size && prio[l] < prio[parent])     smallest=l;
+ else     smallest=parent;
+    if (r <= heap_size && prio[r] < prio[smallest])     smallest=r;
+    if (smallest == parent)     break;
+    Object temp_o=heap[parent];
+    long temp_p=prio[parent];
+    ;
+    heap[parent]=heap[smallest];
+    prio[parent]=prio[smallest];
+    heap[smallest]=temp_o;
+    prio[smallest]=temp_p;
+    parent=smallest;
+  }
+  return result;
+}

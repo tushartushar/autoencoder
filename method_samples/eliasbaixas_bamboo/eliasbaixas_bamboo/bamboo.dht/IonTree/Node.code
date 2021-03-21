@@ -1,0 +1,29 @@
+public Node(long o,long t){
+  left=null;
+  right=null;
+  height=1;
+  offset=o;
+  value=0;
+  low=high=t;
+}
+public Node(long o,Node l,Node r){
+  assert l != null;
+  assert r != null;
+  left=l;
+  right=r;
+  offset=o;
+  value=Math.max(l.value + l.offset,r.value + r.offset);
+  low=l.low;
+  high=r.high;
+  height=1 + Math.max(l.height,r.height);
+}
+public Node(Node old,long inc){
+  assert old != null;
+  left=old.left;
+  right=old.right;
+  offset=old.offset + inc;
+  value=old.value;
+  low=old.low;
+  high=old.high;
+  height=old.height;
+}

@@ -1,0 +1,8 @@
+protected void log_put(PutInfo pi,PrintWriter out){
+  out.print(bytes2bi(pi.key).toString(16));
+  out.print(" ");
+  out.print(pi.expiry_time_ms);
+  out.print(" ");
+  out.println(pi.size);
+  out.flush();
+}

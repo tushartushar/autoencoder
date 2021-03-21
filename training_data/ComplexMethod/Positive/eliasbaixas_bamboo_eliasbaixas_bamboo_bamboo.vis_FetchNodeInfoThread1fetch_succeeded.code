@@ -1,0 +1,68 @@
+protected void fetch_succeeded(final NodeInfo ninfo){
+  final FetchNodeInfoThread FNIT=this;
+  logger.debug("fetch_succeeded " + ninfo.url);
+synchronized (inflight) {
+    inflight.remove(ninfo.url);
+  }
+  java.awt.EventQueue.invokeLater(new Runnable(){
+    public void run(){
+      assert ninfo.id != null;
+      BambooNode node=nodes_by_id.get(ninfo.id);
+      if (node == null) {
+        node=stub_vis.return_new_node(ninfo.id,ninfo.addr,ninfo.coordinates);
+        nodes_by_id.put(ninfo.id,node);
+      }
+      node.set_coordinates(ninfo.coordinates);
+      node.last_check_ms=System.currentTimeMillis();
+      node.uptime_number=ninfo.uptime_number;
+      node.uptime_string=ninfo.uptime_string;
+      node.current_storage=ninfo.currentStorage;
+      node.ID=ninfo.ID;
+      node.IP=ninfo.IP;
+      node.build=ninfo.build;
+      node.estimate=ninfo.estimate;
+      node.port=ninfo.port;
+      node.hostname=ninfo.hostname;
+      node.ninfo=ninfo;
+      node.FNIT=FNIT;
+      ExtendedNeighborInfo ni=new ExtendedNeighborInfo(ninfo.addr,ninfo.id);
+      node.leaf_set=new LeafSet(ni,Math.max(ninfo.preds.size(),ninfo.succs.size()),MODULUS);
+      node.ls_lat=new HashMap<ExtendedNeighborInfo,Long>();
+      Iterator i=ninfo.preds.iterator();
+      while (i.hasNext()) {
+        ExtendedNeighborInfo n=(ExtendedNeighborInfo)i.next();
+        node.leaf_set.add_node(n);
+        node.ls_lat.put(n,new Long(n.rtt_ms));
+        String nurl=nid2url(n.node_id);
+        if ((!nodes_by_id.containsKey(n.guid)) && (!outstanding(nurl))) {
+          add_work(nurl,n.guid);
+        }
+      }
+      i=ninfo.succs.iterator();
+      while (i.hasNext()) {
+        ExtendedNeighborInfo n=(ExtendedNeighborInfo)i.next();
+        node.leaf_set.add_node(n);
+        node.ls_lat.put(n,new Long(n.rtt_ms));
+        String nurl=nid2url(n.node_id);
+        if ((!nodes_by_id.containsKey(n.guid)) && (!outstanding(nurl))) {
+          add_work(nurl,n.guid);
+        }
+      }
+      i=ninfo.rt.iterator();
+      node.routing_table=new RoutingTable(ni,1.0,MODULUS,160,2);
+      int j=0;
+      while (i.hasNext()) {
+        ExtendedNeighborInfo n=(ExtendedNeighborInfo)i.next();
+        node.routing_table.force_add(new ExtendedNeighborInfo(n.node_id,n.guid),n.rtt_ms);
+        String nurl=nid2url(n.node_id);
+        if ((!nodes_by_id.containsKey(n.guid)) && (!outstanding(nurl))) {
+          add_work(nurl,n.guid);
+        }
+      }
+      if (fetch_succeed != null) {
+        acore.register_timer(0,curry(fetch_succeed,node));
+      }
+    }
+  }
+);
+}

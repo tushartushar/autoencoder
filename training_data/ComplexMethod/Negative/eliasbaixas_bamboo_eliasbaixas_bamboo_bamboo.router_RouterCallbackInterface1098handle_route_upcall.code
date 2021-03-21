@@ -1,0 +1,4 @@
+protected void handle_route_upcall(BambooRouteUpcall msg){
+  Application app=(Application)apps.get(new Long(msg.app_id));
+  app.upcall_cb.route_upcall(msg.src,msg.dest,msg.immediate_src,msg.app_id,msg.iter,msg.payload,app.upcall_ud);
+}

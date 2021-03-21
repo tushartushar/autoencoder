@@ -1,0 +1,15 @@
+public int secondaryKeyCreate(Db secdb,Dbt key,Dbt data,Dbt result){
+  byte[] buf=new byte[key.getSize()];
+  System.arraycopy(key.getData(),key.getOffset(),buf,0,buf.length);
+  primary_key_to_recycling_key(buf);
+  result.setData(buf);
+  result.setOffset(0);
+  result.setSize(buf.length);
+  return 0;
+}
+public int secondaryKeyCreate(Db secdb,Dbt key,Dbt data,Dbt result){
+  result.setData(key.getData());
+  result.setOffset(key.getOffset() + 12);
+  result.setSize(40);
+  return 0;
+}

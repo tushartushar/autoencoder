@@ -1,0 +1,6 @@
+/** 
+ * Returns the highest timestamp covered by this node.
+ */
+public long range_high(){
+  return low + (1L << (level * expansion));
+}

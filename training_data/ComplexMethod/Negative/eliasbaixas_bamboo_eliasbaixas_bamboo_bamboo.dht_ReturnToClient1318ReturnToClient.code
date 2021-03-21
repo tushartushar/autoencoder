@@ -1,0 +1,32 @@
+public ReturnToClient(Logger l,Network n,Rpc r,ASyncCore a,Router t,Random d){
+  logger=l;
+  network=n;
+  rpc=r;
+  acore=a;
+  router=t;
+  rand=d;
+  try {
+    rpc.registerRequestHandler(ForwardThroughLeafSetReq.class,fwdThruLSReq);
+  }
+ catch (  DuplicateTypeException e) {
+    assert false;
+  }
+}
+public void returnToClient(final NetworkMessage msg,Thunk1<Boolean> cb){
+  long start_time=acore.timerMillis();
+  if (msg instanceof Dht.GetRespMsg) {
+    Dht.GetRespMsg resp=(Dht.GetRespMsg)msg;
+    StringBuffer sbuf=new StringBuffer(200);
+    sbuf.append("sending get resp key=0x");
+    sbuf.append(GuidTools.guid_to_string(resp.key));
+    sbuf.append(" return addr=");
+    sbuf.append(msg.peer);
+    sbuf.append(" seq=");
+    sbuf.append(resp.seq);
+    sbuf.append(" to ");
+    sbuf.append(msg.peer);
+    sbuf.append(" directly");
+    logger.info(sbuf.toString());
+  }
+  network.send(msg,msg.peer,5,curry(returnToClientResult,msg,new Long(start_time),cb));
+}

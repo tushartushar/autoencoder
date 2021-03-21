@@ -1,0 +1,5 @@
+public PrintLeafSets() throws Exception {
+  ostore.util.TypeTable.register_type(NeighborInfo.class);
+  event_types=new Class[]{StagesInitializedSignal.class};
+  inb_msg_types=new Class[]{LeafSetChanged.class};
+}

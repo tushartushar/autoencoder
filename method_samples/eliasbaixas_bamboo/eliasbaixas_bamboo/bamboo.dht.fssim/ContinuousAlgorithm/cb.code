@@ -1,0 +1,26 @@
+public void cb(Object not_used){
+  long now_ms=sim.now_ms();
+  if ((waiting_put != null) && (now_ms >= waiting_ms)) {
+    if (DEBUG)     System.err.println(sim.now_ms() + ": accepting waiting put from client " + waiting_put.client);
+    storage_tree.shiftTime(now_ms);
+    long ttl_ms=waiting_put.ttl_sec * params.TTL_MULT;
+    boolean r=storage_tree.addPut(ttl_ms,waiting_put.size);
+    assert r;
+    accept_put(waiting_put);
+    Integer client=new Integer(waiting_put.client);
+    LinkedList<MyPutInfo> ll=queue.get(client);
+    ll.removeFirst();
+    if (ll.isEmpty())     queue.remove(client);
+    waiting_put=null;
+    if (!queue.isEmpty())     process_queue();
+  }
+}
+public void cb(Object not_used){
+  simulation_finished();
+}
+public void cb(Object not_used){
+  if (print_usages && (sim.now_ms() < stop_time)) {
+    print_usage();
+    sim.register_event(10000,this,null);
+  }
+}

@@ -1,0 +1,3 @@
+@Column(name="LASTMODIFIEDBY",nullable=true) public String getLastModifiedBy(){
+  return lastModifiedBy;
+}

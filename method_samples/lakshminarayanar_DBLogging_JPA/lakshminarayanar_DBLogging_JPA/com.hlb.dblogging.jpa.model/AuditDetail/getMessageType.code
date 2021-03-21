@@ -1,0 +1,3 @@
+@Column(name="MESSAGETYPE",nullable=true,length=15) public String getMessageType(){
+  return MessageType;
+}

@@ -1,0 +1,18 @@
+public RmTest() throws Exception {
+  SecureRandom rand=new SecureRandom();
+  putArgs=new bamboo_put_arguments();
+  putArgs.application=APP;
+  putArgs.key=new bamboo_key();
+  putArgs.key.value=new byte[20];
+  rand.nextBytes(putArgs.key.value);
+  putArgs.value=new bamboo_value();
+  putArgs.value.value=new byte[20];
+  rand.nextBytes(putArgs.value.value);
+  secret=new byte[20];
+  rand.nextBytes(secret);
+  md=MessageDigest.getInstance("SHA");
+  putArgs.secret_hash=new bamboo_hash();
+  putArgs.secret_hash.algorithm="SHA";
+  putArgs.secret_hash.hash=md.digest(secret);
+  putArgs.ttl_sec=3600;
+}

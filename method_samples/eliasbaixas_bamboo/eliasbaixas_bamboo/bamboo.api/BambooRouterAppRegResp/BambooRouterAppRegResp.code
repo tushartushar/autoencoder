@@ -1,0 +1,13 @@
+public BambooRouterAppRegResp(long a,boolean s,BigInteger mod,int g,int d,BigInteger ng){
+  app_id=a;
+  success=s;
+  modulus=mod;
+  guid_digits=g;
+  digit_values=d;
+  node_guid=ng;
+}
+public BambooRouterAppRegResp(long a,boolean s,String m){
+  app_id=a;
+  success=s;
+  msg=m;
+}

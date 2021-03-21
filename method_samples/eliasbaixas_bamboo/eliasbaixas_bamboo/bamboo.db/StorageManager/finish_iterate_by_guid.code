@@ -1,0 +1,29 @@
+protected boolean finish_iterate_by_guid(IBGCont cont,Dbc cursor,Dbt pkey,Dbt data,int retval,SinkIF comp_q,Object user_data){
+  if (retval == Db.DB_NOTFOUND) {
+    if (logger.isDebugEnabled())     logger.debug("DB_NOTFOUND");
+    IterateByGuidResp resp=new IterateByGuidResp(null,null,null,user_data);
+    close_cursor(cursor);
+    application_enqueue(comp_q,resp);
+    return true;
+  }
+  Key k=new Key(pkey);
+  assert k.guid.compareTo(cont.low) >= 0 : GuidTools.guid_to_string(k.guid) + " " + GuidTools.guid_to_string(cont.low);
+  if (key_expired(k)) {
+    if (logger.isDebugEnabled())     logger.debug("dropping in do_iterate_by_guid k=" + k);
+    the_real_handle_event(new DiscardReq(k,false));
+    return false;
+  }
+  if (k.guid.compareTo(cont.high) > 0) {
+    if (logger.isDebugEnabled())     logger.debug("iterate_by_guid is done. high guid=" + GuidTools.guid_to_string(cont.high) + ", which is less than last guid="+ GuidTools.guid_to_string(k.guid));
+    IterateByGuidResp resp=new IterateByGuidResp(null,null,null,user_data);
+    close_cursor(cursor);
+    application_enqueue(comp_q,resp);
+  }
+ else {
+    ByteBuffer bb=ByteBuffer.wrap(data.getData(),data.getOffset(),data.getSize());
+    IterateByGuidResp resp=new IterateByGuidResp(k,bb,cont,user_data);
+    close_cursor(cursor);
+    application_enqueue(comp_q,resp);
+  }
+  return true;
+}

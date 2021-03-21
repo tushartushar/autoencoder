@@ -1,0 +1,5 @@
+public DocEdge(final Object id,final String label,Object[] keyValues,Vertex outV,Vertex inV,final ElasticGraph graph,ElasticMutations elasticMutations,String indexName){
+  super(id,label,keyValues,outV,inV,graph);
+  this.elasticMutations=elasticMutations;
+  this.indexName=indexName;
+}

@@ -1,0 +1,12 @@
+public void notify_storage_changed(final StorageMonitor sm,final boolean added,final InetAddress client_id,final long size){
+  acore.register_timer(0,new ASyncCore.TimerCB(){
+    StorageMonitor mon=sm;
+    boolean a=added;
+    InetAddress c=client_id;
+    long sz=size;
+    public void timer_cb(    Object ud){
+      mon.storage_changed(a,c,sz);
+    }
+  }
+,null);
+}

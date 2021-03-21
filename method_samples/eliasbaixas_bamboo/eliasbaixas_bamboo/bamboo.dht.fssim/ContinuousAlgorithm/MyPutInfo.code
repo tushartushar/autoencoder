@@ -1,0 +1,4 @@
+public MyPutInfo(int c,int sz,int t,PutResultCb r,Object u,long st){
+  super(c,sz,t,r,u);
+  start_time=st;
+}

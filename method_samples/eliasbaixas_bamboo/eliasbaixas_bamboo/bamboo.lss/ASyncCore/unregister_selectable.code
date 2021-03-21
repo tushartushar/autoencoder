@@ -1,0 +1,7 @@
+public abstract void unregister_selectable(SelectionKey skey);
+public void unregister_selectable(SelectableChannel channel,int interestOps) throws ClosedChannelException {
+  unregisterSelectable(channel,interestOps);
+}
+public void unregister_selectable(SelectableChannel channel){
+  unregisterSelectable(channel);
+}

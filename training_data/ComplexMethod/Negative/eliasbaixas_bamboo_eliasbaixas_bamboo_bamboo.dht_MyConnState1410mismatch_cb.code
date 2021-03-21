@@ -1,0 +1,13 @@
+protected Function0<Boolean> mismatch_cb(int xact_id){
+  XdrAble resp=new XdrAble(){
+    public void xdrDecode(    XdrDecodingStream xdr){
+      throw new NoSuchMethodError();
+    }
+    public void xdrEncode(    XdrEncodingStream xdr) throws OncRpcException, java.io.IOException {
+      xdr.xdrEncodeInt(2);
+      xdr.xdrEncodeInt(2);
+    }
+  }
+;
+  return curry(normal_resp_cb,new Integer(xact_id),new Integer(2),resp,curry(close_cb,"PROC_MISMATCH"));
+}

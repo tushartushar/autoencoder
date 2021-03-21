@@ -1,0 +1,35 @@
+/** 
+ * Calculates the next hop using scaled Proximity Route Selection (PRS). I.e.  make monotonic progress towards the root, but otherwise go to the neighbor that makes the most progress / network latency.  If my_neighbor_info is returned, we're the root.
+ */
+public NeighborInfo calcNextHopScaledPRS(BigInteger key,Function2<BigInteger,BigInteger,Long> scalingFunc){
+  return calcNextHopScaledPRS(key,scalingFunc,allNeighbors());
+}
+/** 
+ * Calculates the next hop using scaled Proximity Route Selection (PRS). I.e.  make monotonic progress towards the root, but otherwise go to the neighbor that makes the most progress / network latency.  If my_neighbor_info is returned, we're the root.
+ */
+public NeighborInfo calcNextHopScaledPRS(BigInteger key,Function2<BigInteger,BigInteger,Long> scalingFunc,Map<NeighborInfo,Long> allNeighbors){
+  NeighborInfo result=null;
+  BigInteger current=calc_dist(my_guid,key);
+  BigInteger max=BigInteger.ZERO;
+  for (  NeighborInfo ni : allNeighbors.keySet()) {
+    if (!possibly_down.containsKey(ni)) {
+      BigInteger dist=current.subtract(calc_dist(ni.guid,key));
+      if ((dist.compareTo(BigInteger.ZERO) > 0) || ((dist.compareTo(BigInteger.ZERO) == 0) && in_range_mod(my_guid,ni.guid,key) && (!in_range_mod(ni.guid,my_guid,key)))) {
+        long lat=allNeighbors.get(ni).longValue();
+        BigInteger scaled=scalingFunc.run(dist,new Long(lat));
+        if (result == null || scaled.compareTo(max) > 0) {
+          result=ni;
+          max=scaled;
+        }
+      }
+    }
+  }
+  if (result == null)   result=my_neighbor_info;
+  return result;
+}
+public NeighborInfo calcNextHopScaledPRS(BigInteger key){
+  return calcNextHopScaledPRS(key,allNeighbors());
+}
+public NeighborInfo calcNextHopScaledPRS(BigInteger key,Map<NeighborInfo,Long> allNeighbors){
+  return calcNextHopScaledPRS(key,prsScaling,allNeighbors);
+}

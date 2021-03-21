@@ -1,0 +1,3 @@
+public DiscardAlarm(boolean p){
+  periodic=p;
+}

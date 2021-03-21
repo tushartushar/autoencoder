@@ -1,0 +1,5 @@
+@Override public void onReceive(Context context,Intent intent){
+  Logger.logDebug("Alarm triggered");
+  Intent intentService=new Intent(context,ScanWakefulService.class).putExtra(ScanWakefulService.EXTRA_USE_LOLLIPOP_API,intent.getBooleanExtra(ScanWakefulService.EXTRA_USE_LOLLIPOP_API,true));
+  startWakefulService(context,intentService);
+}

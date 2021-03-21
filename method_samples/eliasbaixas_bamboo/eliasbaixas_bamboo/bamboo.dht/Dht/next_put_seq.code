@@ -1,0 +1,6 @@
+protected long next_put_seq(){
+  long result=next_put_seq;
+  if (next_put_seq == Long.MAX_VALUE)   next_put_seq=0;
+ else   next_put_seq+=1;
+  return result;
+}

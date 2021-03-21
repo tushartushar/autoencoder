@@ -1,0 +1,16 @@
+public void handleEvent(QueueElementIF item){
+  if (item instanceof NetworkMessageResult) {
+    NetworkMessageResult result=(NetworkMessageResult)item;
+    if (result.success) {
+      logger.info("got NetworkMessageResult success");
+      System.exit(0);
+    }
+ else {
+      logger.info("got NetworkMessageResult failure");
+      System.exit(1);
+    }
+  }
+ else {
+    assert false : item.getClass().getName();
+  }
+}

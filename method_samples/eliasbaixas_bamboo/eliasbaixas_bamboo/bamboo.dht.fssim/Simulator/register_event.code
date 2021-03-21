@@ -1,0 +1,3 @@
+public void register_event(long delay_ms,EventCb cb,Object user_data){
+  pq.add(new Object[]{cb,user_data},now_ms + delay_ms);
+}

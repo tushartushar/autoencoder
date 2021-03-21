@@ -1,0 +1,10 @@
+public boolean enqueue_lossy(QueueElementIF event){
+  check_thread();
+  try {
+    enqueue(event);
+    return true;
+  }
+ catch (  SinkException e) {
+    return false;
+  }
+}

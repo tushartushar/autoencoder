@@ -1,0 +1,291 @@
+public void run(){
+  if (ls_disk_sizes[0].size() > 0) {
+    int which=rand.nextInt(ls_disk_sizes[0].size());
+    Iterator i=ls_disk_sizes[0].keySet().iterator();
+    while (which-- > 0)     i.next();
+    sendDiskSizeMsg((NodeId)i.next(),true);
+  }
+  acore.registerTimer(rand.nextInt(4000) + 2000,this);
+}
+public void run(DiskSizeMsg msg,InetSocketAddress peer){
+  boolean changed=false;
+  for (int i=0; i < ttl_sec_ranges.length; ++i) {
+    if (i < msg.ttls.length && (msg.ttls[i] == ttl_sec_ranges[i])) {
+      Double old_size=(Double)ls_disk_sizes[i].get(peer);
+      if (old_size == null) {
+        if (msg.reply)         sendDiskSizeMsg(peer,false);
+      }
+ else {
+        if (old_size.doubleValue() != msg.sizes[i]) {
+          if (logger.isInfoEnabled()) {
+            StringBuffer sbuf=new StringBuffer(100);
+            sbuf.append("disk size for ls peer ");
+            sbuf.append(peer);
+            sbuf.append(" changed to ");
+            StringUtil.byte_cnt_to_sbuf(Math.round(msg.sizes[i]),sbuf);
+            logger.info(sbuf);
+          }
+          ls_disk_sizes[i].put(peer,new Double(msg.sizes[i]));
+          changed=true;
+        }
+      }
+    }
+  }
+  if (changed)   compute_rates();
+}
+public void run(){
+  network=Network.instance(my_node_id);
+  rpc=Rpc.instance(my_node_id);
+  dmgr=DataManager.instance(my_node_id);
+  router=Router.instance(my_node_id);
+  vivaldi=Vivaldi.instance(my_node_id);
+  rand=new Random(my_node_id.hashCode() ^ now_ms());
+  returnToClient=new ReturnToClient(logger,network,rpc,acore,router,rand);
+  try {
+    network.registerReceiver(DiskSizeMsg.class,handleDiskSizeMsg);
+    network.registerReceiver(RecurGetReq.class,handleRecurGetReq);
+    network.registerReceiver(RecurGetResp.class,handleRecurGetResp);
+    rpc.registerRequestHandler(IterGetReq.class,iterGetReqHandler);
+  }
+ catch (  DuplicateTypeException e) {
+    BUG(e);
+  }
+  dispatch(new BambooRouterAppRegReq(app_id,true,false,false,my_sink));
+}
+public void run(Long seq){
+  Pair<GetReq,IterGetState> pair=active_gets.get(seq);
+  if (pair != null) {
+    logger.info("resending get, key=0x" + GuidTools.guid_to_string(pair.first.key));
+    sendGetReq(pair.first,seq);
+  }
+}
+public void run(SinkIF sink,Object userData,LinkedList<GetValue> values,Key placemark){
+  enqueue(sink,new GetResp(values,userData,placemark));
+}
+public BigInteger run(BigInteger dist,Long lat){
+  try {
+    long latency=min(lat.longValue(),10 * 1000);
+    double denom=1 + exp((latency - 100) / (8.616 * 2));
+    BigDecimal num=new BigDecimal(dist);
+    BigDecimal bdenom=new BigDecimal(denom);
+    BigDecimal quot=num.divide(bdenom,0,BigDecimal.ROUND_UP);
+    return quot.toBigInteger();
+  }
+ catch (  Exception e) {
+    logger.fatal("Caught " + e + "; dist="+ dist+ " lat="+ lat);
+    System.exit(1);
+    return null;
+  }
+}
+public void run(final RecurGetReq req,final InetSocketAddress peer){
+  int needed=dmgr.desiredReplicas();
+  Set<NeighborInfo> replicas=router.leafSet().replicas(req.key,needed);
+  final NeighborInfo nextHop=calcNextHop(req.key,req.maxvals);
+  if ((router.leafSet().overlap() || (replicas.size() == needed)) || nextHop.equals(my_neighbor_info)) {
+    startNewStyleRecurGet(req.seq,req.key,req.placemark,req.maxvals,req.client,req.return_addr,replicas);
+  }
+ else {
+    network.send(req,nextHop.node_id,5,new Thunk1<Boolean>(){
+      public void run(      Boolean success){
+        if (success.booleanValue()) {
+          router.removeFromPossiblyDown(nextHop);
+        }
+ else {
+          router.addToPossiblyDown(nextHop);
+          handleRecurGetReq.run(req,peer);
+        }
+      }
+    }
+);
+  }
+}
+public void run(Boolean success){
+  if (success.booleanValue()) {
+    router.removeFromPossiblyDown(nextHop);
+  }
+ else {
+    router.addToPossiblyDown(nextHop);
+    handleRecurGetReq.run(req,peer);
+  }
+}
+public void run(RecurGetResp msg,InetSocketAddress peer){
+  Pair<GetReq,IterGetState> pair=active_gets.remove(new Long(msg.seq));
+  if (pair == null) {
+    if (logger.isDebugEnabled())     logger.debug("Got unexpected " + msg);
+    return;
+  }
+  GetReq req=pair.first;
+  IterGetState state=pair.second;
+  if (state == null) {
+    int parallelism=((msg.maxvals & ITERATIVE_PARALLELISM_MASK) >> ITERATIVE_PARALLELISM_SHIFT) + 1;
+    StorageManager.Key placemark=req.placemark;
+    if (placemark == null)     placemark=StorageManager.ZERO_KEY;
+    state=new IterGetState(req.key,msg.maxvals,placemark,msg.seq,parallelism,curry(sendIterGetResp,req.completion_queue,req.user_data),req.client);
+  }
+  if (state.done == null)   return;
+  NodeId n=msg.thisReplica;
+  StringBuffer sbuf=new StringBuffer(200);
+  sbuf.append("got new recur get resp key=0x");
+  sbuf.append(GuidTools.guid_to_string(req.key));
+  sbuf.append(" return addr=").append(my_node_id);
+  sbuf.append(" seq=").append(msg.seq);
+  sbuf.append(" from ").append(n);
+  sbuf.append(" replicas=").append(msg.replicas);
+  sbuf.append(" synced=").append(msg.synced);
+  logger.info(sbuf.toString());
+  state.tried.add(n);
+  if (state.replicas.isEmpty()) {
+    state.replicas=msg.replicas;
+    state.needed=min(state.replicas.size(),state.replicas.size() / 2 + 1);
+  }
+  state.responses.put(n,msg.values);
+  for (  NodeId m : msg.synced) {
+    if (!state.responses.containsKey(m)) {
+      state.responses.put(m,new LinkedList<Pair<Key,ByteBuffer>>());
+    }
+  }
+  if (!msg.allRead)   state.allRead=false;
+  if (state.responses.size() < state.needed) {
+    for (    NodeId m : state.replicas) {
+      if (!state.outstanding.containsKey(m) && !state.tried.contains(m)) {
+        state.sendReq(m,null,null);
+      }
+    }
+  }
+  state.advanceIterGetReq();
+}
+public void run(NodeId dest,Long seq,Set<NodeId> replicas,Set<NodeId> synced,Integer maxvals,NodeId client,final Pair p,LinkedList<Pair<Key,ByteBuffer>> values,Boolean allRead){
+  StringBuffer sbuf=new StringBuffer(200);
+  sbuf.append("local read done for new style recur get req seq=");
+  sbuf.append(seq);
+  logger.info(sbuf.toString());
+  RecurGetResp outb=new RecurGetResp(dest,seq.longValue(),replicas,synced,values,allRead.booleanValue(),my_node_id,maxvals.intValue(),client);
+  returnToClient.returnToClient(outb,new Thunk1<Boolean>(){
+    public void run(    Boolean notUsed){
+      if (p != null) {
+        boolean result=getsBeingProcessed.remove(p);
+        assert result;
+      }
+    }
+  }
+);
+}
+public void run(Boolean notUsed){
+  if (p != null) {
+    boolean result=getsBeingProcessed.remove(p);
+    assert result;
+  }
+}
+public void run(NodeId n,Long predictedRTT,Long startTimeMillis,IterGetResp resp){
+  if (done == null)   return;
+  outstanding.remove(n);
+  tried.add(n);
+  if (resp.replicas != null) {
+    StringBuffer sbuf=new StringBuffer(200);
+    sbuf.append("got iterative get resp key=0x");
+    sbuf.append(GuidTools.guid_to_string(key));
+    sbuf.append(" return addr=").append(my_node_id);
+    sbuf.append(" seq=").append(seq);
+    sbuf.append(" from ").append(n);
+    sbuf.append(" replicas=").append(resp.replicas);
+    sbuf.append(" synced=").append(resp.synced);
+    sbuf.append(" predicted RTT=").append(predictedRTT);
+    sbuf.append(" actual RTT=");
+    sbuf.append(timer_ms() - startTimeMillis.longValue());
+    logger.info(sbuf.toString());
+    if (replicas.isEmpty()) {
+      replicas=resp.replicas;
+      needed=min(replicas.size(),replicas.size() / 2 + 1);
+    }
+    responses.put(n,resp.values);
+    for (    NodeId m : resp.synced) {
+      if (!responses.containsKey(m)) {
+        responses.put(m,new LinkedList<Pair<Key,ByteBuffer>>());
+      }
+    }
+    if (!resp.allRead)     allRead=false;
+    Iterator<NodeId> i=outstanding.keySet().iterator();
+    while (i.hasNext()) {
+      NodeId m=i.next();
+      if (!replicas.contains(m)) {
+        Object token=outstanding.get(m);
+        if (token != null)         rpc.cancelSend(token);
+        i.remove();
+      }
+    }
+    if (responses.size() < needed) {
+      for (      NodeId m : replicas) {
+        if (!outstanding.containsKey(m) && !tried.contains(m)) {
+          sendReq(m,null,null);
+        }
+      }
+    }
+  }
+ else {
+    StringBuffer sbuf=new StringBuffer(200);
+    sbuf.append("got iterative get resp key=0x");
+    sbuf.append(GuidTools.guid_to_string(key));
+    sbuf.append(" return addr=").append(my_node_id);
+    sbuf.append(" seq=").append(seq);
+    sbuf.append(" from ").append(n);
+    sbuf.append(" neighbors=[");
+    Iterator<Pair<NeighborInfo,VirtualCoordinate>> i=resp.neighbors.iterator();
+    while (i.hasNext()) {
+      Pair<NeighborInfo,VirtualCoordinate> p=i.next();
+      sbuf.append(p.first);
+      if (i.hasNext())       sbuf.append(", ");
+      if (!nodes.containsKey(p.first) && !outstanding.containsKey(p.first.node_id) && !tried.contains(p.first.node_id)) {
+        nodes.put(p.first,p.second);
+      }
+    }
+    sbuf.append("]");
+    sbuf.append(" predicted RTT=").append(predictedRTT);
+    sbuf.append(" actual RTT=");
+    sbuf.append(timer_ms() - startTimeMillis.longValue());
+    logger.info(sbuf.toString());
+  }
+  advanceIterGetReq();
+}
+public void run(NodeId n){
+  outstanding.remove(n);
+  tried.add(n);
+  advanceIterGetReq();
+}
+public void run(InetSocketAddress peer,IterGetReq req,Object token){
+  int needed=dmgr.desiredReplicas();
+  Set<NeighborInfo> replicas=router.leafSet().replicas(req.key,needed);
+  if (router.leafSet().overlap() || (replicas.size() == needed)) {
+    Set<NodeId> r=new LinkedHashSet<NodeId>();
+    for (    NeighborInfo ni : replicas)     r.add(ni.node_id);
+    getValues(req.key,req.placemark,req.maxvals,curry(iterGetDone,req,r,token));
+  }
+ else {
+    LinkedHashMap<NeighborInfo,Long> n=new LinkedHashMap<NeighborInfo,Long>();
+    for (    NeighborInfo ni : router.leafSet().as_set()) {
+      VirtualCoordinate vc=router.coordinate(ni);
+      long lat=((vc == null) ? Long.MAX_VALUE : round(ceil(req.vc.distance(vc))));
+      n.put(ni,new Long(lat));
+    }
+    for (    NeighborInfo ni : router.routingTable().as_list()) {
+      VirtualCoordinate vc=router.coordinate(ni);
+      long lat=((vc == null) ? Long.MAX_VALUE : round(ceil(req.vc.distance(vc))));
+      n.put(ni,new Long(lat));
+    }
+    LinkedList<Pair<NeighborInfo,VirtualCoordinate>> list=new LinkedList<Pair<NeighborInfo,VirtualCoordinate>>();
+    Set<NeighborInfo> nodes=new HashSet<NeighborInfo>();
+    for (int i=0; !n.isEmpty() && i < 3; ++i) {
+      NeighborInfo result=calcNextHop(req.key,req.maxvals,n);
+      n.remove(result);
+      VirtualCoordinate vc=router.coordinate(result);
+      list.addLast(Pair.create(result,vc));
+    }
+    rpc.sendResponse(new IterGetResp(list,null,null,null,false,req.maxvals,req.client),token);
+  }
+}
+public void run(IterGetReq req,Set<NodeId> replicas,Object token,LinkedList<Pair<Key,ByteBuffer>> values,Boolean allRead){
+  Set<NodeId> synced=new LinkedHashSet<NodeId>();
+  for (  NodeId n : replicas) {
+    if (!n.equals(my_node_id) && dmgr.synced(req.key,n))     synced.add(n);
+  }
+  rpc.sendResponse(new IterGetResp(null,replicas,synced,values,allRead,req.maxvals,req.client),token);
+}

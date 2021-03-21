@@ -1,0 +1,6 @@
+public RemoveMonitor(StorageMonitor m){
+  monitor=m;
+}
+public RemoveMonitor(StorageMonitor m){
+  monitor=m;
+}

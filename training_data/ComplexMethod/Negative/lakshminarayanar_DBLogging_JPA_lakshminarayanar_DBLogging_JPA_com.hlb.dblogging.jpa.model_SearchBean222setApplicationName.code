@@ -1,0 +1,3 @@
+public void setApplicationName(String applicationName){
+  this.applicationName=applicationName;
+}

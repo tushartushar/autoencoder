@@ -1,0 +1,15 @@
+public FetchDataResp(NodeId dest,StorageManager.Key k,ByteBuffer d){
+  super(dest,false);
+  key=k;
+  data=d;
+}
+public FetchDataResp(InputBuffer buffer) throws QSException {
+  super(buffer);
+  key=new StorageManager.Key(buffer);
+  int len=buffer.nextInt();
+  if (len > 0) {
+    byte[] dbuf=new byte[len];
+    buffer.nextBytes(dbuf,0,len);
+    data=ByteBuffer.wrap(dbuf);
+  }
+}

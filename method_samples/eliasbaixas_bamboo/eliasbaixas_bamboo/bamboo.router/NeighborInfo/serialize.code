@@ -1,0 +1,4 @@
+public void serialize(OutputBuffer buffer){
+  node_id.serialize(buffer);
+  buffer.add(guid);
+}

@@ -1,0 +1,18 @@
+@Override public void onRequestPermissionsResult(int requestCode,String[] permissions,int[] grantResults){
+switch (requestCode) {
+case REQUEST_CODE_LOCATION:
+    permissionChecked=true;
+  if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION)) {
+    Snackbar.make((View)list.getParent(),R.string.location_permission,Snackbar.LENGTH_INDEFINITE).setAction(R.string.ok,new View.OnClickListener(){
+      @Override public void onClick(      View v){
+        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},REQUEST_CODE_LOCATION);
+      }
+    }
+).show();
+  }
+break;
+default :
+super.onRequestPermissionsResult(requestCode,permissions,grantResults);
+break;
+}
+}

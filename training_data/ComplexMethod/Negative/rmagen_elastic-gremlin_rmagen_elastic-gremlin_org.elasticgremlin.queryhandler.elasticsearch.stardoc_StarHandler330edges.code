@@ -1,0 +1,47 @@
+@Override public Iterator<Edge> edges(){
+  return edges(new Predicates());
+}
+@Override public Iterator<Edge> edges(Object[] edgeIds){
+  Predicates predicates=new Predicates();
+  predicates.hasContainers.add(new HasContainer(T.id.getAccessor(),P.within(edgeIds)));
+  return edges(predicates);
+}
+@Override public Iterator<Edge> edges(Predicates predicates){
+  Iterator<? extends Vertex> vertices=vertices();
+  List<Edge> edges=new ArrayList<>();
+  vertices.forEachRemaining(vertex -> {
+    ((BaseVertex)vertex).edges(Direction.IN,new String[0],predicates).forEachRemaining(edges::add);
+    ((BaseVertex)vertex).edges(Direction.OUT,new String[0],predicates).forEachRemaining(edges::add);
+    ((BaseVertex)vertex).edges(Direction.BOTH,new String[0],predicates).forEachRemaining(edges::add);
+  }
+);
+  return edges.iterator();
+}
+@Override public Map<Object,Set<Edge>> edges(Iterator<BaseVertex> vertices,Direction direction,String[] edgeLabels,Predicates predicates){
+  List<Object> vertexIds=new ArrayList<>();
+  vertices.forEachRemaining(singleVertex -> vertexIds.add(singleVertex.id()));
+  BoolFilterBuilder boolFilter=ElasticHelper.createFilterBuilder(predicates.hasContainers);
+  OrFilterBuilder mappingFilter=FilterBuilders.orFilter();
+  boolean empty=true;
+  for (  EdgeMapping mapping : edgeMappings) {
+    if (edgeLabels != null && edgeLabels.length > 0 && !contains(edgeLabels,mapping.getLabel()))     continue;
+    mappingFilter.add(FilterBuilders.termsFilter(mapping.getExternalVertexField(),vertexIds.toArray()));
+    empty=false;
+  }
+  if (!empty) {
+    boolFilter.must(mappingFilter);
+  }
+  QueryIterator<Vertex> vertexSearchQuery=new QueryIterator<>(boolFilter,0,scrollSize,predicates.limitHigh - predicates.limitLow,client,this::createVertex,refresh,timing,indices);
+  Map<Object,Set<Edge>> results=new HashMap<>();
+  vertexSearchQuery.forEachRemaining(otherVertex -> otherVertex.edges(direction,edgeLabels).forEachRemaining(edge -> {
+    Vertex vertex=BaseVertex.vertexToVertex(otherVertex,edge,direction);
+    Set<Edge> resultEdges=results.get(vertex.id());
+    if (resultEdges == null) {
+      resultEdges=new HashSet<>();
+      results.put(vertex.id(),resultEdges);
+    }
+    resultEdges.add(edge);
+  }
+));
+  return results;
+}

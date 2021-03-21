@@ -1,0 +1,17 @@
+protected void handle_leaf_set_changed(LeafSetChanged msg){
+  NeighborInfo sender=new NeighborInfo(msg.peer,msg.guid);
+  location_cache.add_node(sender);
+  for (Iterator i=msg.leaf_set.iterator(); i.hasNext(); ) {
+    NeighborInfo other=(NeighborInfo)i.next();
+    if (leaf_set.promising(other)) {
+      add_to_ls(other);
+    }
+ else     if (logger.isDebugEnabled())     logger.debug(other + " isn't promising.");
+  }
+  if (leaf_set.promising(sender))   add_to_ls(sender);
+  if (msg.want_reply) {
+    LeafSetChanged outb=new LeafSetChanged(sender.node_id,my_guid,leaf_set.as_list());
+    use_as_periodic_ping(sender,outb);
+    dispatch(outb);
+  }
+}

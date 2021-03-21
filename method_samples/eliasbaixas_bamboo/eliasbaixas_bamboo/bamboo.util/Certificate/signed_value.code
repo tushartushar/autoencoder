@@ -1,0 +1,4 @@
+public QuickSerializable signed_value() throws InvalidException {
+  if (!checked)   check();
+  return signed_value;
+}

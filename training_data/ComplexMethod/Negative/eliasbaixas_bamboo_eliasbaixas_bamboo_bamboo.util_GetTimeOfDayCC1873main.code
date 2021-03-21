@@ -1,0 +1,12 @@
+public static void main(String[] args) throws Exception {
+  PatternLayout pl=new PatternLayout("%d{ISO8601} %-5p %c: %m\n");
+  ConsoleAppender ca=new ConsoleAppender(pl);
+  Logger.getRoot().addAppender(ca);
+  Logger.getRoot().setLevel(Level.INFO);
+  if (available()) {
+    long now=currentTimeMillis();
+    Thread.currentThread().sleep(1000);
+    long delay=currentTimeMillis() - now;
+    logger.info("delay=" + delay);
+  }
+}

@@ -1,0 +1,32 @@
+public void run(){
+  try {
+    while (true) {
+      QueueElementIF head=null;
+      int sz=0;
+synchronized (to_bdb_thread) {
+        while (to_bdb_thread.isEmpty()) {
+          try {
+            to_bdb_thread.wait();
+          }
+ catch (          InterruptedException e) {
+          }
+        }
+        head=(QueueElementIF)to_bdb_thread.removeFirst();
+        sz=to_bdb_thread.size();
+        last_dequeue_ms=timer_ms();
+      }
+      if (logger.isDebugEnabled())       logger.debug("to_bdb_thread.size()=" + sz);
+      the_real_handle_event(head);
+    }
+  }
+ catch (  OutOfMemoryError e) {
+    bamboo.lss.DustDevilSink.reserve=null;
+    System.gc();
+    logger.fatal("uncaught error",e);
+    System.exit(1);
+  }
+catch (  Throwable e) {
+    logger.fatal("uncaught exception",e);
+    System.exit(1);
+  }
+}

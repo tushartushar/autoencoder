@@ -1,0 +1,4 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  buffer.add(_sender_coord);
+}

@@ -1,0 +1,10 @@
+protected void close_cursor(Dbc cursor){
+  Object removed=open_cursors.remove(cursor);
+  assert removed != null;
+  try {
+    cursor.close();
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+}

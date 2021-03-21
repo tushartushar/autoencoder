@@ -1,0 +1,5 @@
+public ViewPlainTextWindow(JFrame p,String s){
+  parent=p;
+  textarea=new JTextArea(s);
+  init_widgets();
+}

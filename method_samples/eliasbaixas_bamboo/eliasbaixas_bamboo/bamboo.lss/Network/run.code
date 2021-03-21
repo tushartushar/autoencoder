@@ -1,0 +1,45 @@
+public void run(Boolean notUsed){
+}
+public void run(){
+  udpcc.send(msg,dst,timeoutSeconds,new Thunk1<Boolean>(){
+    public void run(    final Boolean success){
+      acore.registerTimer(0,new Runnable(){
+        public void run(){
+          callback.run(success);
+        }
+      }
+);
+    }
+  }
+);
+}
+public void run(final Boolean success){
+  acore.registerTimer(0,new Runnable(){
+    public void run(){
+      callback.run(success);
+    }
+  }
+);
+}
+public void run(){
+  callback.run(success);
+}
+public void run(){
+  callback.run(qs,src);
+}
+public void run(){
+  try {
+    udpcc_thread.async_main();
+  }
+ catch (  Throwable e) {
+    logger.fatal("uncaught exception",e);
+    System.exit(1);
+  }
+}
+public void run(){
+  udpcc.send_nocc(msg,dst);
+}
+public void run(Boolean success){
+  NetworkMessageResult outb=new NetworkMessageResult(user_data,success);
+  enqueue_to_main_thread(comp_q,outb);
+}

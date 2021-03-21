@@ -1,0 +1,3 @@
+@Override public Object id(){
+  return (long)(this.key.hashCode() + this.value.hashCode() + this.vertex.id().hashCode());
+}

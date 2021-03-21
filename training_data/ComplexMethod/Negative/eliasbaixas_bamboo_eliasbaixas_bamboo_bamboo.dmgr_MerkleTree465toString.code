@@ -1,0 +1,6 @@
+public String toString(){
+  return "(FillHolesState digest=" + digest + ", range=["+ Long.toHexString(range_low)+ ", "+ Long.toHexString(range_high)+ "), "+ ", leaves_below="+ leaves_below+ ", max_leaves_below="+ max_leaves_below+ ")";
+}
+public String toString(){
+  return "(Node level=" + level + ", range=["+ Long.toHexString(range_low())+ ", "+ Long.toHexString(range_high())+ "), "+ (hash == null ? "invalid" : ("hash=" + ostore.util.ByteUtils.print_bytes(hash,0,3)))+ ", leaves_below="+ leaves_below+ ")";
+}

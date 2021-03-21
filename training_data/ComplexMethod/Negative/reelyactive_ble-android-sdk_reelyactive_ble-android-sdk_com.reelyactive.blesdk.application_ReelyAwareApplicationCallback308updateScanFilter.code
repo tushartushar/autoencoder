@@ -1,0 +1,7 @@
+/** 
+ * This method sets the scan filter of the  {@link BleService}.
+ * @param scanFilter The {@link ScanFilter scan filter}
+ */
+protected void updateScanFilter(ScanFilter scanFilter){
+  getBleService().setScanFilter(scanFilter);
+}

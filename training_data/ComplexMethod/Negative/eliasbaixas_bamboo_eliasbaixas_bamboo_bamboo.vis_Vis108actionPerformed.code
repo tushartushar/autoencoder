@@ -1,0 +1,131 @@
+public void actionPerformed(ActionEvent e){
+  dumpLeafSetRTTsDialog();
+}
+public void actionPerformed(ActionEvent e){
+  add_node_dialog();
+}
+public void actionPerformed(ActionEvent e){
+  set_check_period_dialog();
+}
+public void actionPerformed(ActionEvent e){
+  fit_in_window();
+}
+public void actionPerformed(ActionEvent e){
+  ring_mode=!ring_mode;
+  redraw_all();
+  fit_in_window();
+  update_transform();
+  resize_scrollbars();
+}
+public void actionPerformed(ActionEvent e){
+  change_dot_radius_dialog();
+}
+public void actionPerformed(ActionEvent e){
+  find_node_dialog();
+}
+public void actionPerformed(ActionEvent e){
+  find_nodes_dialog();
+}
+public void actionPerformed(ActionEvent e){
+  reset_node_colors();
+}
+public void actionPerformed(ActionEvent e){
+  show_path_dialog();
+}
+public void actionPerformed(ActionEvent e){
+  for_all_nodes(new ForNodeFn(){
+    public void for_node(    BambooNode node){
+      node.hide_path();
+    }
+  }
+);
+}
+public void actionPerformed(ActionEvent e){
+  for_all_nodes(new ForNodeFn(){
+    public void for_node(    BambooNode node){
+      node.show_guid();
+    }
+  }
+);
+}
+public void actionPerformed(ActionEvent e){
+  for_all_nodes(new ForNodeFn(){
+    public void for_node(    BambooNode node){
+      node.hide_guid();
+    }
+  }
+);
+}
+public void actionPerformed(ActionEvent e){
+  for_all_nodes(new ForNodeFn(){
+    public void for_node(    BambooNode node){
+      node.show_leaf_set();
+    }
+  }
+);
+}
+public void actionPerformed(ActionEvent e){
+  for_all_nodes(new ForNodeFn(){
+    public void for_node(    BambooNode node){
+      node.hide_leaf_set();
+    }
+  }
+);
+}
+public void actionPerformed(ActionEvent e){
+  for_all_nodes(new ForNodeFn(){
+    public void for_node(    BambooNode node){
+      node.show_rt();
+    }
+  }
+);
+}
+public void actionPerformed(ActionEvent e){
+  for_all_nodes(new ForNodeFn(){
+    public void for_node(    BambooNode node){
+      node.hide_rt();
+    }
+  }
+);
+}
+public void actionPerformed(ActionEvent e){
+  Iterator i=FNIT.get_all_nodes();
+  show_color_storage=true;
+  show_color_uptime=false;
+  while (i.hasNext()) {
+    ((BambooNode)i.next()).show_color_storage();
+  }
+}
+public void actionPerformed(ActionEvent e){
+  Iterator i=FNIT.get_all_nodes();
+  show_color_storage=false;
+  show_color_uptime=false;
+  while (i.hasNext()) {
+    ((BambooNode)i.next()).hide_color_storage();
+  }
+}
+public void actionPerformed(ActionEvent e){
+  Iterator i=FNIT.get_all_nodes();
+  show_color_storage=false;
+  show_color_uptime=true;
+  while (i.hasNext()) {
+    ((BambooNode)i.next()).show_color_uptime();
+  }
+}
+public void actionPerformed(ActionEvent e){
+  Iterator i=FNIT.get_all_nodes();
+  show_color_storage=false;
+  show_color_uptime=false;
+  while (i.hasNext()) {
+    ((BambooNode)i.next()).hide_color_uptime();
+  }
+}
+public void actionPerformed(ActionEvent e){
+  show_help_find_node();
+}
+public void actionPerformed(ActionEvent e){
+  show_help_find_nodes();
+}
+public void actionPerformed(ActionEvent e){
+  show_help_storage();
+}

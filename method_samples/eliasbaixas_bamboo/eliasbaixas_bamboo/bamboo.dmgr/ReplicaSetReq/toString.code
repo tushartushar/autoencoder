@@ -1,0 +1,3 @@
+public String toString(){
+  return "(ReplicaSetReq return_address=" + return_address + " guid="+ GuidTools.guid_to_string(guid)+ " nonce="+ nonce+ ")";
+}

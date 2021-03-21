@@ -1,0 +1,3 @@
+public void serialize(OutputBuffer buffer){
+  coords.serialize(buffer);
+}

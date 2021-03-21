@@ -1,0 +1,351 @@
+void run(A1 a1);
+void run(A1 a1,A2 a2);
+void run(A1 a1,A2 a2,A3 a3);
+void run(A1 a1,A2 a2,A3 a3,A4 a4);
+void run(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5);
+void run(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5,A6 a6);
+void run(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7);
+void run(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8);
+void run(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9);
+void run(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9,A10 a10);
+R run();
+R run(A1 a1);
+R run(A1 a1,A2 a2);
+R run(A1 a1,A2 a2,A3 a3);
+R run(A1 a1,A2 a2,A3 a3,A4 a4);
+R run(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5);
+R run(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5,A6 a6);
+R run(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7);
+R run(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8);
+R run(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9);
+R run(A1 a1,A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9,A10 a10);
+public void run(){
+  f.run(a1);
+}
+public void run(){
+  f.run(a1,a2);
+}
+public void run(A2 a2){
+  f.run(a1,a2);
+}
+public void run(){
+  f.run(a1,a2,a3);
+}
+public void run(A3 a3){
+  f.run(a1,a2,a3);
+}
+public void run(A2 a2,A3 a3){
+  f.run(a1,a2,a3);
+}
+public void run(){
+  f.run(a1,a2,a3,a4);
+}
+public void run(A4 a4){
+  f.run(a1,a2,a3,a4);
+}
+public void run(A3 a3,A4 a4){
+  f.run(a1,a2,a3,a4);
+}
+public void run(A2 a2,A3 a3,A4 a4){
+  f.run(a1,a2,a3,a4);
+}
+public void run(){
+  f.run(a1,a2,a3,a4,a5);
+}
+public void run(A5 a5){
+  f.run(a1,a2,a3,a4,a5);
+}
+public void run(A4 a4,A5 a5){
+  f.run(a1,a2,a3,a4,a5);
+}
+public void run(A3 a3,A4 a4,A5 a5){
+  f.run(a1,a2,a3,a4,a5);
+}
+public void run(A2 a2,A3 a3,A4 a4,A5 a5){
+  f.run(a1,a2,a3,a4,a5);
+}
+public void run(){
+  f.run(a1,a2,a3,a4,a5,a6);
+}
+public void run(A6 a6){
+  f.run(a1,a2,a3,a4,a5,a6);
+}
+public void run(A5 a5,A6 a6){
+  f.run(a1,a2,a3,a4,a5,a6);
+}
+public void run(A4 a4,A5 a5,A6 a6){
+  f.run(a1,a2,a3,a4,a5,a6);
+}
+public void run(A3 a3,A4 a4,A5 a5,A6 a6){
+  f.run(a1,a2,a3,a4,a5,a6);
+}
+public void run(A2 a2,A3 a3,A4 a4,A5 a5,A6 a6){
+  f.run(a1,a2,a3,a4,a5,a6);
+}
+public void run(){
+  f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public void run(A7 a7){
+  f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public void run(A6 a6,A7 a7){
+  f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public void run(A5 a5,A6 a6,A7 a7){
+  f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public void run(A4 a4,A5 a5,A6 a6,A7 a7){
+  f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public void run(A3 a3,A4 a4,A5 a5,A6 a6,A7 a7){
+  f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public void run(A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7){
+  f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public void run(){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public void run(A8 a8){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public void run(A7 a7,A8 a8){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public void run(A6 a6,A7 a7,A8 a8){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public void run(A5 a5,A6 a6,A7 a7,A8 a8){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public void run(A4 a4,A5 a5,A6 a6,A7 a7,A8 a8){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public void run(A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public void run(A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public void run(){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public void run(A9 a9){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public void run(A8 a8,A9 a9){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public void run(A7 a7,A8 a8,A9 a9){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public void run(A6 a6,A7 a7,A8 a8,A9 a9){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public void run(A5 a5,A6 a6,A7 a7,A8 a8,A9 a9){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public void run(A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public void run(A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public void run(A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public void run(){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public void run(A10 a10){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public void run(A9 a9,A10 a10){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public void run(A8 a8,A9 a9,A10 a10){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public void run(A7 a7,A8 a8,A9 a9,A10 a10){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public void run(A6 a6,A7 a7,A8 a8,A9 a9,A10 a10){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public void run(A5 a5,A6 a6,A7 a7,A8 a8,A9 a9,A10 a10){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public void run(A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9,A10 a10){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public void run(A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9,A10 a10){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public void run(A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9,A10 a10){
+  f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public R run(){
+  return f.run(a1);
+}
+public R run(){
+  return f.run(a1,a2);
+}
+public R run(A2 a2){
+  return f.run(a1,a2);
+}
+public R run(){
+  return f.run(a1,a2,a3);
+}
+public R run(A3 a3){
+  return f.run(a1,a2,a3);
+}
+public R run(A2 a2,A3 a3){
+  return f.run(a1,a2,a3);
+}
+public R run(){
+  return f.run(a1,a2,a3,a4);
+}
+public R run(A4 a4){
+  return f.run(a1,a2,a3,a4);
+}
+public R run(A3 a3,A4 a4){
+  return f.run(a1,a2,a3,a4);
+}
+public R run(A2 a2,A3 a3,A4 a4){
+  return f.run(a1,a2,a3,a4);
+}
+public R run(){
+  return f.run(a1,a2,a3,a4,a5);
+}
+public R run(A5 a5){
+  return f.run(a1,a2,a3,a4,a5);
+}
+public R run(A4 a4,A5 a5){
+  return f.run(a1,a2,a3,a4,a5);
+}
+public R run(A3 a3,A4 a4,A5 a5){
+  return f.run(a1,a2,a3,a4,a5);
+}
+public R run(A2 a2,A3 a3,A4 a4,A5 a5){
+  return f.run(a1,a2,a3,a4,a5);
+}
+public R run(){
+  return f.run(a1,a2,a3,a4,a5,a6);
+}
+public R run(A6 a6){
+  return f.run(a1,a2,a3,a4,a5,a6);
+}
+public R run(A5 a5,A6 a6){
+  return f.run(a1,a2,a3,a4,a5,a6);
+}
+public R run(A4 a4,A5 a5,A6 a6){
+  return f.run(a1,a2,a3,a4,a5,a6);
+}
+public R run(A3 a3,A4 a4,A5 a5,A6 a6){
+  return f.run(a1,a2,a3,a4,a5,a6);
+}
+public R run(A2 a2,A3 a3,A4 a4,A5 a5,A6 a6){
+  return f.run(a1,a2,a3,a4,a5,a6);
+}
+public R run(){
+  return f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public R run(A7 a7){
+  return f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public R run(A6 a6,A7 a7){
+  return f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public R run(A5 a5,A6 a6,A7 a7){
+  return f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public R run(A4 a4,A5 a5,A6 a6,A7 a7){
+  return f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public R run(A3 a3,A4 a4,A5 a5,A6 a6,A7 a7){
+  return f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public R run(A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7){
+  return f.run(a1,a2,a3,a4,a5,a6,a7);
+}
+public R run(){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public R run(A8 a8){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public R run(A7 a7,A8 a8){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public R run(A6 a6,A7 a7,A8 a8){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public R run(A5 a5,A6 a6,A7 a7,A8 a8){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public R run(A4 a4,A5 a5,A6 a6,A7 a7,A8 a8){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public R run(A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public R run(A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8);
+}
+public R run(){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public R run(A9 a9){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public R run(A8 a8,A9 a9){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public R run(A7 a7,A8 a8,A9 a9){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public R run(A6 a6,A7 a7,A8 a8,A9 a9){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public R run(A5 a5,A6 a6,A7 a7,A8 a8,A9 a9){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public R run(A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public R run(A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public R run(A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9);
+}
+public R run(){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public R run(A10 a10){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public R run(A9 a9,A10 a10){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public R run(A8 a8,A9 a9,A10 a10){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public R run(A7 a7,A8 a8,A9 a9,A10 a10){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public R run(A6 a6,A7 a7,A8 a8,A9 a9,A10 a10){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public R run(A5 a5,A6 a6,A7 a7,A8 a8,A9 a9,A10 a10){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public R run(A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9,A10 a10){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public R run(A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9,A10 a10){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}
+public R run(A2 a2,A3 a3,A4 a4,A5 a5,A6 a6,A7 a7,A8 a8,A9 a9,A10 a10){
+  return f.run(a1,a2,a3,a4,a5,a6,a7,a8,a9,a10);
+}

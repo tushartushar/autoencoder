@@ -1,0 +1,3 @@
+protected boolean in_leaf_set_range(BigInteger q){
+  return (resp_low == null) || in_range_mod(resp_low,my_guid,q) || in_range_mod(my_guid,resp_high,q);
+}

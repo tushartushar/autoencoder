@@ -1,0 +1,8 @@
+public PutOrRemoveAck(NodeId dest,long s){
+  super(dest,false);
+  seq=s;
+}
+public PutOrRemoveAck(InputBuffer buffer) throws QSException {
+  super(buffer);
+  seq=buffer.nextLong();
+}

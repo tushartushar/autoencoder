@@ -1,0 +1,12 @@
+public IterateByGuidReq(BigInteger l,BigInteger h,SinkIF s,Object ud){
+  low=l;
+  high=h;
+  comp_q=s;
+  user_data=ud;
+}
+public IterateByGuidReq(BigInteger l,BigInteger h,SinkIF s,Object ud){
+  low=l;
+  high=h;
+  comp_q=s;
+  user_data=ud;
+}

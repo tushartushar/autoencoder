@@ -1,0 +1,12 @@
+private void launchImagePicker(){
+  Intent intent=new Intent(ACTION_PICK,Media.INTERNAL_CONTENT_URI);
+  intent.setType("image/*");
+  intent.putExtra("crop","true");
+  intent.putExtra("scale",true);
+  intent.putExtra("outputX",PHOTO_WIDTH);
+  intent.putExtra("outputY",PHOTO_HEIGHT);
+  intent.putExtra("aspectX",1);
+  intent.putExtra("aspectY",1);
+  intent.putExtra("return-data",true);
+  startActivityForResult(intent,1);
+}

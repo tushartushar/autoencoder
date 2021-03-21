@@ -1,0 +1,48 @@
+public void handleEvent(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("got " + item);
+  if (item instanceof StagesInitializedSignal) {
+    System.out.println("Tapestry: ready");
+    pending.add(gateway);
+    System.out.println("Asking " + gateway + " for leaf set");
+    dispatch(new LeafSetReq(gateway));
+  }
+ else   if (item instanceof LeafSetChanged) {
+    LeafSetChanged resp=(LeafSetChanged)item;
+    System.out.println("Got leaf set from " + resp.peer);
+    done.put(resp.peer,resp.leaf_set);
+    pending.remove(resp.peer);
+    for (Iterator i=resp.leaf_set.iterator(); i.hasNext(); ) {
+      NeighborInfo ni=(NeighborInfo)i.next();
+      info.put(ni.node_id,ni);
+      if ((!pending.contains(ni.node_id)) && (!done.containsKey(ni.node_id))) {
+        pending.add(ni.node_id);
+        System.out.println("Asking " + ni.node_id + " for leaf set");
+        dispatch(new LeafSetReq(ni.node_id));
+      }
+    }
+    if (pending.isEmpty()) {
+      for (Iterator i=done.keySet().iterator(); i.hasNext(); ) {
+        NodeId n=(NodeId)i.next();
+        LinkedList leaf_set=(LinkedList)done.get(n);
+        System.out.println("Leaf set for node " + n);
+        int k=0 - leaf_set.size() / 2;
+        for (Iterator j=leaf_set.iterator(); j.hasNext(); ) {
+          if (k == 0) {
+            System.out.println("  " + k++ + "\t"+ info.get(n));
+          }
+          System.out.println("  " + k++ + "\t"+ j.next());
+        }
+        System.out.println("");
+      }
+      System.exit(0);
+    }
+ else {
+      Iterator i=pending.iterator();
+      NodeId n=(NodeId)i.next();
+      System.out.println("Still need leaf set from " + n);
+    }
+  }
+ else {
+    throw new IllegalArgumentException(item.getClass().getName());
+  }
+}

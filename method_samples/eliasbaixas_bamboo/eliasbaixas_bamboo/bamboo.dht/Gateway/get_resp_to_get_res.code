@@ -1,0 +1,28 @@
+protected bamboo_get_res get_resp_to_get_res(Dht.GetResp resp){
+  bamboo_get_res gresp=new bamboo_get_res();
+  gresp.values=new bamboo_value[resp.values.size()];
+  int j=0;
+  Iterator i=resp.values.iterator();
+  while (i.hasNext()) {
+    Object obj=i.next();
+    ByteBuffer buf=null;
+    if (obj instanceof GetValue)     buf=((GetValue)obj).value;
+ else     buf=(ByteBuffer)obj;
+    assert buf.position() == 0;
+    assert buf.hasArray();
+    assert buf.arrayOffset() == 0;
+    assert buf.array().length == buf.limit();
+    gresp.values[j]=new bamboo_value();
+    gresp.values[j].value=buf.array();
+    ++j;
+  }
+  gresp.placemark=new bamboo_placemark();
+  if (resp.placemark.equals(StorageManager.ZERO_KEY)) {
+    gresp.placemark.value=new byte[0];
+  }
+ else {
+    gresp.placemark.value=new byte[StorageManager.Key.SIZE];
+    resp.placemark.to_byte_buffer(ByteBuffer.wrap(gresp.placemark.value));
+  }
+  return gresp;
+}

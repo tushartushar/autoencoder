@@ -1,0 +1,31 @@
+public void compute_min_free(){
+  if (low + 1 == high)   return;
+  boolean was_valid=valid;
+  valid=true;
+  int invalid_index=0;
+  for (int index=0; index < branching; ++index) {
+    Node child=children[index];
+    if (((index < branching - 1) && (child.low > children[index + 1].low)) || (!child.valid)) {
+      valid=false;
+      invalid_index=index;
+    }
+  }
+  if (valid) {
+    low=children[0].low;
+    high=children[branching - 1].high;
+    long to_assign=(high - low) / branching * rate;
+    min_free=Long.MAX_VALUE;
+    for (int index=0; index < branching; ++index) {
+      Node child=children[index];
+      long this_child_min=child.min_free - child.offset + to_assign * (branching - index - 1);
+      min_free=Math.min(this_child_min,min_free);
+    }
+  }
+ else   if (was_valid) {
+    for (int index=invalid_index + 1; index < branching; ++index) {
+      Node child=children[index];
+      child.offset+=offset;
+    }
+    offset=0;
+  }
+}

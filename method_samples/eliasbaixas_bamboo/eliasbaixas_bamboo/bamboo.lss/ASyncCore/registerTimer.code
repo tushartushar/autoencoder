@@ -1,0 +1,4 @@
+/** 
+ * Register a function to be called sometime later than <code>delayMillis</code> milliseconds from now.  This function is safe to call from any thread.  The return value may be used as an argument to cancelTimer, but is otherwise opaque to the user.
+ */
+public abstract Object registerTimer(long delayMillis,Runnable cb);

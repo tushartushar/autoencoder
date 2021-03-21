@@ -1,0 +1,5 @@
+public LoggerOutputStream(Logger logger,Level level){
+  super();
+  this.logger=logger;
+  this.level=level;
+}

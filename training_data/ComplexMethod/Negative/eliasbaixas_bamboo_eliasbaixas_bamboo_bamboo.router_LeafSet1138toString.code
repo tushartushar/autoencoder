@@ -1,0 +1,23 @@
+public String toString(){
+  StringBuffer result=new StringBuffer(500);
+  for (int i=leaf_pred_count - 1; i >= 0; --i) {
+    result.append("  ");
+    result.append(0 - i - 1);
+    result.append('\t');
+    result.append(leaf_preds[i]);
+    result.append('\n');
+  }
+  result.append("  ");
+  result.append(0);
+  result.append('\t');
+  result.append(my_neighbor_info);
+  result.append('\n');
+  for (int i=0; i < leaf_succ_count; ++i) {
+    result.append("  ");
+    result.append(i + 1);
+    result.append('\t');
+    result.append(leaf_succs[i]);
+    result.append('\n');
+  }
+  return result.toString();
+}

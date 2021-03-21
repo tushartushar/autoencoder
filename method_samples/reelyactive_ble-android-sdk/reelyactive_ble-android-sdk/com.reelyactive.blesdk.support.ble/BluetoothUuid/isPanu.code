@@ -1,0 +1,3 @@
+public static boolean isPanu(ParcelUuid uuid){
+  return uuid.equals(PANU);
+}

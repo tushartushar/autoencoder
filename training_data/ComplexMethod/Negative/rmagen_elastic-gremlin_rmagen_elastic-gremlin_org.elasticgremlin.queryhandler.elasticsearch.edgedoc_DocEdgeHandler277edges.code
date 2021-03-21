@@ -1,0 +1,42 @@
+@Override public Iterator<Edge> edges(){
+  return new QueryIterator<>(FilterBuilders.existsFilter(DocEdge.InId),0,scrollSize,Integer.MAX_VALUE,client,this::createEdge,refresh,timing,indexName);
+}
+@Override public Iterator<Edge> edges(Object[] ids){
+  MultiGetRequest request=new MultiGetRequest().refresh(refresh);
+  for (  Object id : ids)   request.add(indexName,null,id.toString());
+  MultiGetResponse responses=client.multiGet(request).actionGet();
+  ArrayList<Edge> elements=new ArrayList<>(ids.length);
+  for (  MultiGetItemResponse getResponse : responses) {
+    GetResponse response=getResponse.getResponse();
+    if (!response.isExists())     throw Graph.Exceptions.elementNotFound(Edge.class,response.getId());
+    elements.add(createEdge(response));
+  }
+  return elements.iterator();
+}
+@Override public Iterator<Edge> edges(Predicates predicates){
+  BoolFilterBuilder boolFilter=ElasticHelper.createFilterBuilder(predicates.hasContainers);
+  boolFilter.must(FilterBuilders.existsFilter(DocEdge.InId));
+  return new QueryIterator<>(boolFilter,0,scrollSize,predicates.limitHigh - predicates.limitLow,client,this::createEdge,refresh,timing,indexName);
+}
+@Override public Map<Object,Set<Edge>> edges(Iterator<BaseVertex> vertices,Direction direction,String[] edgeLabels,Predicates predicates){
+  Map<Object,Vertex> idToVertex=new HashMap<>();
+  vertices.forEachRemaining(singleVertex -> idToVertex.put(singleVertex.id(),singleVertex));
+  if (edgeLabels != null && edgeLabels.length > 0)   predicates.hasContainers.add(new HasContainer(T.label.getAccessor(),P.within(edgeLabels)));
+  Object[] vertexIds=idToVertex.keySet().toArray();
+  BoolFilterBuilder boolFilter=ElasticHelper.createFilterBuilder(predicates.hasContainers);
+  if (direction == Direction.IN)   boolFilter.must(FilterBuilders.termsFilter(DocEdge.InId,vertexIds));
+ else   if (direction == Direction.OUT)   boolFilter.must(FilterBuilders.termsFilter(DocEdge.OutId,vertexIds));
+ else   if (direction == Direction.BOTH)   boolFilter.must(FilterBuilders.orFilter(FilterBuilders.termsFilter(DocEdge.InId,vertexIds),FilterBuilders.termsFilter(DocEdge.OutId,vertexIds)));
+  QueryIterator<Edge> edgeQueryIterator=new QueryIterator<>(boolFilter,0,scrollSize,predicates.limitHigh - predicates.limitLow,client,this::createEdge,refresh,timing,indexName);
+  Map<Object,Set<Edge>> results=new HashMap<>();
+  edgeQueryIterator.forEachRemaining(edge -> edge.vertices(direction).forEachRemaining(vertex -> {
+    Set<Edge> resultEdges=results.get(vertex.id());
+    if (resultEdges == null) {
+      resultEdges=new HashSet<>();
+      results.put(vertex.id(),resultEdges);
+    }
+    resultEdges.add(edge);
+  }
+));
+  return results;
+}

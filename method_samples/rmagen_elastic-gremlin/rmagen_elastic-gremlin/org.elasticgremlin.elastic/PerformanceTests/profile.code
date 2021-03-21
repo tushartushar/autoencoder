@@ -1,0 +1,17 @@
+@Test public void profile(){
+  startWatch("add vertices");
+  int count=10000;
+  for (int i=0; i < count; i++)   graph.addVertex();
+  stopWatch("add vertices");
+  startWatch("vertex iterator");
+  Iterator<Vertex> vertexIterator=graph.vertices();
+  stopWatch("vertex iterator");
+  startWatch("add edges");
+  vertexIterator.forEachRemaining(v -> v.addEdge("bla",v));
+  stopWatch("add edges");
+  startWatch("edge iterator");
+  Iterator<Edge> edgeIterator=graph.edges();
+  stopWatch("edge iterator");
+  sw.print();
+  System.out.println("-----");
+}

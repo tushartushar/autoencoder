@@ -1,0 +1,3 @@
+public Rpc(){
+  next_xact_id=now_ms();
+}

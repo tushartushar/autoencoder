@@ -1,0 +1,32 @@
+/** 
+ * Returns all values whose keys are greater than the given placemark, if any.  Returns a placemark equal to the largest key of the values returned, or all zeros if no values are returned.  All zeros is appropriate as a lower open limit on placemarks since time_usec cannot be zero in any real key. <p> Using the standard StorageManager.Key.compareTo function, instead of a Comparator that compares guids first, works here because all values for a given get have the same guid.
+ */
+protected void handle_get_by_guid_resp(StorageManager.GetByGuidResp resp){
+  GetValuesState state=(GetValuesState)resp.user_data;
+  boolean allRead=false;
+  if (resp.continuation != null) {
+    if (resp.key.put == false) {
+      StorageManager.GetByGuidCont outb=new StorageManager.GetByGuidCont(resp.continuation,my_sink,state);
+      dispatch(outb);
+      return;
+    }
+    GetValue gv=new GetValue(resp.data,resp.key.ttlRemaining(now_ms()),resp.key.secret_hash);
+    CountBuffer cb=new CountBuffer();
+    gv.serialize(cb);
+    if ((state.size + cb.size() <= MAX_GET_RESP_SIZE) && (state.values.size() < state.maxvals)) {
+      state.size+=cb.size();
+      state.values.addLast(Pair.create(resp.key,resp.data));
+      StorageManager.GetByGuidCont outb=new StorageManager.GetByGuidCont(resp.continuation,my_sink,state);
+      dispatch(outb);
+      return;
+    }
+ else {
+      StorageManager.GetByGuidCont outb=new StorageManager.GetByGuidCont(resp.continuation,null,null);
+      dispatch(outb);
+    }
+  }
+ else {
+    allRead=true;
+  }
+  state.done.run(state.values,new Boolean(allRead));
+}

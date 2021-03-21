@@ -1,0 +1,7 @@
+@Override protected Iterator<E> flatMap(Traverser.Admin<Vertex> traverser){
+  Vertex vertex=traverser.get();
+  if (!(vertex instanceof BaseVertex))   return super.flatMap(traverser);
+  BaseVertex baseVertex=(BaseVertex)vertex;
+  if (Vertex.class.isAssignableFrom(this.getReturnClass()))   return (Iterator<E>)baseVertex.vertices(this.getDirection(),this.getEdgeLabels(),predicates);
+  return (Iterator<E>)baseVertex.edges(this.getDirection(),this.getEdgeLabels(),predicates);
+}

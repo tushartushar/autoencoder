@@ -1,0 +1,36 @@
+public static void main(String[] args){
+  Random rand=new Random(1);
+  for (int round=1; round <= 2; ++round) {
+    System.out.println("round " + round);
+    long start, delta;
+    int size=Integer.parseInt(args[0]);
+    StorageTree tree=new StorageTree(0,size,1);
+    int put_ttls_len=0;
+    for (int i=1; i <= size; i*=2)     put_ttls_len++;
+    int[] put_ttls=new int[put_ttls_len];
+    for (int i=1, j=0; i <= size; i*=2) {
+      put_ttls[j++]=i;
+    }
+    for (int step=0; step < size; ++step) {
+      if ((round == 1) && (step >= 500))       break;
+      System.gc();
+      for (int i=put_ttls_len - 1; i >= 0; --i) {
+        int ttl=rand.nextInt(put_ttls[i]) + 1;
+        start=USecTimer.currentTimeMicros();
+        boolean accept=tree.root.accept_put(step,step + ttl);
+        delta=USecTimer.currentTimeMicros() - start;
+        if (round == 2)         System.out.println("accept " + delta);
+        if (accept) {
+          start=USecTimer.currentTimeMicros();
+          tree.root.add_put(step,step + ttl);
+          delta=USecTimer.currentTimeMicros() - start;
+          if (round == 2)           System.out.println("add " + delta);
+        }
+      }
+      start=USecTimer.currentTimeMicros();
+      tree.root.shift_time(step + 1);
+      delta=USecTimer.currentTimeMicros() - start;
+      if (round == 2)       System.out.println("shift " + delta);
+    }
+  }
+}

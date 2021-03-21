@@ -1,0 +1,9 @@
+protected void handle_put_req(PutReq req){
+  long now_us=now_ms() * 1000;
+  Long seq=new Long(next_put_seq());
+  PutReqPayload payload=new PutReqPayload(now_us,req.key,req.value,req.put,my_node_id,seq.longValue(),req.ttl_sec,req.client_id,req.value_hash,req.secret_hash);
+  active_puts.put(seq,new Object[]{req,payload});
+  BambooRouteInit outb=new BambooRouteInit(req.key,app_id,false,iterative_routing,payload);
+  dispatch(outb);
+  acore.register_timer(PUT_TIMEOUT,put_retry_cb,seq);
+}

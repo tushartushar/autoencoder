@@ -1,0 +1,31 @@
+public void run(){
+  if (!natted) {
+    network=Network.instance(my_node_id);
+    try {
+      network.registerReceiver(MulticastMessage.class,receive);
+    }
+ catch (    Exception e) {
+      assert false : e;
+    }
+  }
+}
+public void run(MulticastMessage msg,InetSocketAddress peer){
+  assert !natted;
+  Thunk1<MulticastMessage> cb=receivers.get(msg.payload.getClass());
+  if (cb != null)   cb.run(msg);
+  PublicMulticastClient c=publicClients.get(msg.group);
+  if (c != null)   c.receive(msg,peer);
+  parent.sendMsg(msg);
+}
+public void run(MulticastMessage msg){
+  assert natted;
+  Thunk1<MulticastMessage> cb=receivers.get(msg.payload.getClass());
+  if (cb != null)   cb.run(msg);
+}
+public void run(MulticastMessage msg){
+  assert !natted;
+  msg.sender_id=my_node_id;
+  Thunk1<MulticastMessage> cb=receivers.get(msg.payload.getClass());
+  if (cb != null)   cb.run(msg);
+  publicClients.get(msg.group).sendMsg(msg.payload);
+}

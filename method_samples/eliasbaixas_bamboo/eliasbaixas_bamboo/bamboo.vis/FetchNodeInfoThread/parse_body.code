@@ -1,0 +1,141 @@
+public static NodeInfo parse_body(InputStream is) throws IOException {
+  NodeInfo result=new NodeInfo();
+  InetAddress result_addr=null;
+  int result_port=-1;
+  String result_hostname=null;
+  BufferedReader reader=new BufferedReader(new InputStreamReader(is));
+  String line=null;
+  int total_rtt_ms=0;
+  int total_neighbors=0;
+  String result_uptime=null;
+  boolean result_addr_set=false;
+  while ((line=reader.readLine()) != null) {
+    Matcher m=null;
+    m=hostname.matcher(line);
+    if (m.matches()) {
+      result_hostname=m.group(1);
+      result.hostname=m.group(1);
+    }
+    m=ip_addr.matcher(line);
+    if (m.matches()) {
+      result_addr=InetAddress.getByName(m.group(1));
+      result_addr_set=true;
+      result.IP=m.group(1);
+    }
+    m=port.matcher(line);
+    if (m.matches()) {
+      result_port=Integer.parseInt(m.group(1));
+      result.port=result_port;
+    }
+    m=id.matcher(line);
+    if (m.matches()) {
+      result.id=new BigInteger(m.group(1),16).multiply(mult);
+      result.ID=m.group(1);
+    }
+    m=build.matcher(line);
+    if (m.matches()) {
+      result.build=Integer.parseInt(m.group(1));
+    }
+    m=estimate.matcher(line);
+    if (m.matches()) {
+      result.estimate=Integer.parseInt(m.group(1));
+    }
+    m=uptime.matcher(line);
+    if (m.matches()) {
+      String week_string="week";
+      String day_string="day";
+      String hour_string="hour";
+      String minute_string="minute";
+      String second_string="second";
+      int weeks=0;
+      int days=0;
+      int hours=0;
+      int minutes=0;
+      int seconds=0;
+      result.uptime_string="";
+      int index=1;
+      while (index < m.groupCount()) {
+        if (m.group(index + 1) == null) {
+          break;
+        }
+ else         if (week_string.regionMatches(0,m.group(index + 1),0,week_string.length())) {
+          weeks=Integer.parseInt(m.group(index));
+        }
+ else         if (day_string.regionMatches(0,m.group(index + 1),0,day_string.length())) {
+          days=Integer.parseInt(m.group(index));
+        }
+ else         if (hour_string.regionMatches(0,m.group(index + 1),0,hour_string.length())) {
+          hours=Integer.parseInt(m.group(index));
+        }
+ else         if (minute_string.regionMatches(0,m.group(index + 1),0,minute_string.length())) {
+          minutes=Integer.parseInt(m.group(index));
+        }
+ else         if (second_string.regionMatches(0,m.group(index + 1),0,second_string.length())) {
+          seconds=Integer.parseInt(m.group(index));
+        }
+ else {
+          break;
+        }
+        result.uptime_string=result.uptime_string + m.group(index) + " "+ m.group(index + 1)+ " ";
+        index+=2;
+      }
+      result.uptime_number=weeks * 604800 + days * 86400 + hours * 3600 + minutes * 60 + seconds;
+      if (result.uptime_number > biggestUptimeFound) {
+        biggestUptimeFound=result.uptime_number;
+      }
+      result_uptime=result.uptime_string;
+    }
+    m=coord.matcher(line);
+    if (m.matches()) {
+      result.coordinates=new double[3];
+      result.coordinates[0]=Double.parseDouble(m.group(1));
+      result.coordinates[1]=Double.parseDouble(m.group(2));
+      result.coordinates[2]=Double.parseDouble(m.group(3));
+    }
+    m=currentStorage.matcher(line);
+    if (m.matches()) {
+      result.currentStorage=Float.parseFloat(m.group(1));
+      if (result.currentStorage > biggestStorageFound) {
+        biggestStorageFound=result.currentStorage;
+      }
+    }
+    m=ls_neighbor.matcher(line);
+    if (m.matches()) {
+      int position=Integer.parseInt(m.group(1));
+      InetAddress addr=InetAddress.getByName(m.group(2));
+      int port=Integer.parseInt(m.group(3));
+      BigInteger id=new BigInteger(m.group(4),16).multiply(mult);
+      int rtt_ms=Integer.parseInt(m.group(5));
+      NodeId n=new NodeId(port,addr);
+      ExtendedNeighborInfo neigh=new ExtendedNeighborInfo(n,id,rtt_ms);
+      if (position < 0)       result.preds.addFirst(neigh);
+ else       result.succs.addLast(neigh);
+      total_rtt_ms+=rtt_ms;
+      ++total_neighbors;
+    }
+    m=rt_neighbor.matcher(line);
+    if (m.matches()) {
+      int level=Integer.parseInt(m.group(1));
+      int digit=Integer.parseInt(m.group(2));
+      InetAddress addr=InetAddress.getByName(m.group(3));
+      int port=Integer.parseInt(m.group(4));
+      BigInteger id=new BigInteger(m.group(5),16).multiply(mult);
+      int rtt_ms=Integer.parseInt(m.group(6));
+      NodeId n=new NodeId(port,addr);
+      ExtendedNeighborInfo neigh=new ExtendedNeighborInfo(n,id,rtt_ms);
+      result.rt.addLast(neigh);
+      total_rtt_ms+=rtt_ms;
+      ++total_neighbors;
+    }
+  }
+  if (result_addr == null) {
+    return null;
+  }
+  result_addr=InetAddress.getByAddress(result_hostname,result_addr.getAddress());
+  result.addr=new NodeId(result_port,result_addr);
+  double avg_rtt_ms=(((double)total_rtt_ms) / total_neighbors);
+  if (avg_rtt_ms > 3000.0) {
+    logger.warn(result_hostname + " has average RTT of " + avg_rtt_ms+ " ms.  Uptime is "+ result_uptime);
+  }
+  return result;
+}

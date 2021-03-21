@@ -1,0 +1,12 @@
+/** 
+ * Creates an virtual coordinate at the origin of the space.
+ * @param dimensions The number of dimensions to have
+ */
+protected VirtualCoordinate(){
+  _coordinate=new double[getDimensions()];
+  for (int i=0; i < _coordinate.length; i++)   _coordinate[i]=0.0;
+}
+public VirtualCoordinate(InputBuffer buffer) throws QSException {
+  _coordinate=new double[getDimensions()];
+  for (int i=0; i < _coordinate.length; i++)   _coordinate[i]=buffer.nextDouble();
+}

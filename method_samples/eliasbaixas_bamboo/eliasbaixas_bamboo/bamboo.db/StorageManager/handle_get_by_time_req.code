@@ -1,0 +1,28 @@
+protected void handle_get_by_time_req(GetByTimeReq req){
+  Key k=new Key(req.low,0,ZERO_GUID,ZERO_HASH,ZERO_HASH,false,ZERO_CLIENT);
+  byte[] kbuf=new byte[Key.SIZE];
+  ByteBuffer bb=ByteBuffer.wrap(kbuf);
+  k.to_byte_buffer(bb);
+  Dbt key=new Dbt(kbuf);
+  key.setSize(kbuf.length);
+  DbTxn xact=null;
+  try {
+    xact=env.txnBegin(null,Db.DB_TXN_NOSYNC);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  Dbc cursor=open_cursor(by_time,xact,"handle_get_by_time_req");
+  GBTCont cont=new GBTCont(key,req.low,req.high);
+  int retval=0;
+  Dbt data=new Dbt();
+  data.setFlags(Db.DB_DBT_PARTIAL);
+  data.setPartialLength(0);
+  try {
+    retval=cursor.get(key,data,Db.DB_SET_RANGE);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  finish_get_by_time(cont,xact,cursor,data,retval,req.comp_q,req.user_data);
+}

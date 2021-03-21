@@ -1,0 +1,8 @@
+public ContinuousAlgorithm(long st){
+  params=new Params();
+  init(st);
+}
+public ContinuousAlgorithm(long st,Params par){
+  params=par;
+  init(st);
+}

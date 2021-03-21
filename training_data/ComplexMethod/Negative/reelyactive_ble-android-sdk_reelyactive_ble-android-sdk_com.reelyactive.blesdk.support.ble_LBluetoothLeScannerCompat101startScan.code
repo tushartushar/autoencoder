@@ -1,0 +1,25 @@
+@Override public boolean startScan(List<ScanFilter> filters,ScanSettings settings,ScanCallback callback){
+  if (callbacksMap.containsKey(callback)) {
+    Logger.logInfo("StartScan(): BLE 'L' hardware scan already in progress...");
+    stopScan(callback);
+  }
+  android.bluetooth.le.ScanSettings osSettings=toOs(settings);
+  ScanClient osCallback=toOs(callback,settings);
+  List<android.bluetooth.le.ScanFilter> osFilters=toOs(filters);
+  callbacksMap.put(callback,osCallback);
+  try {
+    Logger.logInfo("Starting BLE 'L' hardware scan ");
+    for (    ScanFilter filter : filters) {
+      Logger.logInfo("\tFilter " + filter);
+    }
+    if (osScanner != null) {
+      osScanner.startScan(osFilters,osSettings,osCallback);
+    }
+    updateRepeatingAlarm();
+    return true;
+  }
+ catch (  Exception e) {
+    Logger.logError("Exception caught calling 'L' BluetoothLeScanner.startScan()",e);
+    return false;
+  }
+}

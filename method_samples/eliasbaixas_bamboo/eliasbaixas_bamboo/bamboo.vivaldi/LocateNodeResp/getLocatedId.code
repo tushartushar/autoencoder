@@ -1,0 +1,6 @@
+/** 
+ * Returns the node id of the discovered node.
+ */
+public NodeId getLocatedId(){
+  return _located_id;
+}

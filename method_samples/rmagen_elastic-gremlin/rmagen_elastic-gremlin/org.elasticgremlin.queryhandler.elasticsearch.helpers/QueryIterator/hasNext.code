@@ -1,0 +1,9 @@
+@Override public boolean hasNext(){
+  if (allowedRemaining <= 0)   return false;
+  if (hits.hasNext())   return true;
+  timing.start("scroll");
+  scrollResponse=client.prepareSearchScroll(scrollResponse.getScrollId()).setScroll(new TimeValue(600000)).execute().actionGet();
+  timing.stop("scroll");
+  hits=convertFunc.apply(scrollResponse.getHits().iterator());
+  return hits.hasNext();
+}

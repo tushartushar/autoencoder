@@ -1,0 +1,1 @@
+protected abstract Property createProperty(String key,Object value);

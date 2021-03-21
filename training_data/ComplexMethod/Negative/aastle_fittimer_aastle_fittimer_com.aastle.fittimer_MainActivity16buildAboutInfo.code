@@ -1,0 +1,27 @@
+private String buildAboutInfo(){
+  String packageName;
+  String versionName="";
+  Long time=System.currentTimeMillis();
+  Calendar calendar=Calendar.getInstance();
+  calendar.setTimeInMillis(time);
+  int year=calendar.get(Calendar.YEAR);
+  int versionCode=0;
+  try {
+    packageName=getPackageName();
+    versionCode=getPackageManager().getPackageInfo(packageName,0).versionCode;
+    versionName=getPackageManager().getPackageInfo(packageName,0).versionName;
+  }
+ catch (  Exception e) {
+    Log.e(TAG,"Package Name not Found :(");
+  }
+  StringBuilder stringBuilder=new StringBuilder();
+  stringBuilder.append("Trim Timer\n");
+  stringBuilder.append("Version: ");
+  stringBuilder.append(versionCode);
+  stringBuilder.append("\nBuild: ");
+  stringBuilder.append(versionName);
+  stringBuilder.append("\nCopyright ");
+  stringBuilder.append(year);
+  stringBuilder.append(" by Alan W. Astle");
+  return stringBuilder.toString();
+}

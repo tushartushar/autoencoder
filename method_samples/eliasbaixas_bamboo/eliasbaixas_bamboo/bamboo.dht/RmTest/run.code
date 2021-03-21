@@ -1,0 +1,53 @@
+public void run(){
+  client=GatewayClient.instance(my_node_id);
+  client.putSecret(putArgs,putDone);
+}
+public void run(Integer result){
+  if (result.intValue() != 0) {
+    logger.warn("trying put again");
+    acore.registerTimer(1000,ready);
+  }
+ else {
+    logger.info("put successful");
+    getArgs=new bamboo_get_args();
+    getArgs.application=APP;
+    getArgs.key=putArgs.key;
+    getArgs.maxvals=1;
+    getArgs.placemark=new bamboo_placemark();
+    getArgs.placemark.value=new byte[0];
+    client.getDetails(getArgs,checkThere);
+  }
+}
+public void run(bamboo_get_result getResults){
+  if (getResults.values.length <= 0) {
+    logger.fatal("not there");
+    System.exit(1);
+  }
+  logger.info("get successful");
+  bamboo_rm_arguments rmArgs=new bamboo_rm_arguments();
+  rmArgs.application=APP;
+  rmArgs.key=putArgs.key;
+  rmArgs.value_hash=new bamboo_hash();
+  rmArgs.value_hash.algorithm="SHA";
+  rmArgs.value_hash.hash=md.digest(putArgs.value.value);
+  rmArgs.secret_hash_alg="SHA";
+  rmArgs.secret=secret;
+  rmArgs.ttl_sec=3600;
+  client.remove(rmArgs,removeDone);
+}
+public void run(Integer result){
+  if (result.intValue() != 0) {
+    logger.fatal("remove failed");
+    System.exit(1);
+  }
+  logger.info("remove successful");
+  client.getDetails(getArgs,checkGone);
+}
+public void run(bamboo_get_result getResults){
+  if (getResults.values.length > 0) {
+    logger.fatal("still there");
+    System.exit(1);
+  }
+  logger.info("get successful");
+  System.exit(0);
+}

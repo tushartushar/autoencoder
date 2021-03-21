@@ -1,0 +1,6 @@
+/** 
+ * Returns the manufacturer id. -1 if the manufacturer filter is not set.
+ */
+public int getManufacturerId(){
+  return mManufacturerId;
+}

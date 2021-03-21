@@ -1,0 +1,4 @@
+protected final int attempt(long seq){
+  if (seq < 0)   throw new IllegalArgumentException("seq=" + Long.toHexString(seq) + " in make_seq");
+  return (int)(seq & 0x7fL);
+}

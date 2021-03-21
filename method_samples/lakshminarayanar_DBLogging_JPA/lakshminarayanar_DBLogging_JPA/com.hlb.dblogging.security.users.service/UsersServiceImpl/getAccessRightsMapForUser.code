@@ -1,0 +1,16 @@
+@Override public HashSet<String> getAccessRightsMapForUser(String userId){
+  HashSet<String> accessRightsSet=new HashSet<String>();
+  Users user=usersRepository.findByUsername(userId);
+  Set<Role> roleSet=user.getUserRoles();
+  Iterator<Role> roleIterator=roleSet.iterator();
+  while (roleIterator.hasNext()) {
+    Role currentRole=roleIterator.next();
+    Set<AccessRights> currentRoleAccessRightSet=currentRole.getAccessRights();
+    Iterator<AccessRights> currentRoleAccessRightIterator=currentRoleAccessRightSet.iterator();
+    while (currentRoleAccessRightIterator.hasNext()) {
+      AccessRights currentAccessRights=currentRoleAccessRightIterator.next();
+      accessRightsSet.add(currentAccessRights.getAccessRights());
+    }
+  }
+  return accessRightsSet;
+}

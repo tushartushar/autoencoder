@@ -1,0 +1,3 @@
+public void color_node_default(){
+  dot.setFillPaint(Color.blue);
+}

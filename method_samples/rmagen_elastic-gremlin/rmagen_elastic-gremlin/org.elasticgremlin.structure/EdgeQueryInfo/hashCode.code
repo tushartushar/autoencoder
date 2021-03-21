@@ -1,0 +1,7 @@
+@Override public int hashCode(){
+  int result=direction.hashCode();
+  result=31 * result + Arrays.hashCode(edgeLabels);
+  result=31 * result + predicates.hashCode();
+  result=31 * result + revision;
+  return result;
+}

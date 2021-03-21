@@ -1,0 +1,15 @@
+public ElasticGraph(Configuration configuration) throws InstantiationException {
+  try {
+    configuration.setProperty(Graph.GRAPH,ElasticGraph.class.getName());
+    this.configuration=configuration;
+    String queryHandlerName=configuration.getString("queryHandler");
+    if (queryHandlerName != null)     this.queryHandler=(QueryHandler)Class.forName(queryHandlerName).newInstance();
+ else     this.queryHandler=new SimpleQueryHandler();
+    this.getQueryHandler().init(this,configuration);
+  }
+ catch (  Exception ex) {
+    InstantiationException instantiationException=new InstantiationException();
+    instantiationException.addSuppressed(ex);
+    throw instantiationException;
+  }
+}

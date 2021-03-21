@@ -1,0 +1,5 @@
+private void handleMCastUp(MCastUp u){
+  MCastUpMsg um=new MCastUpMsg(my_node_id,u.dstguid,u.o);
+  if (DEBUG)   Debug.printtagln(tag,"D handleMCastUp will send " + um + "to guid "+ GuidTools.guid_to_string(u.dstguid)+ " payload "+ um.o);
+  dispatch(new BambooRouteInit(u.dstguid,app_id,false,false,um));
+}

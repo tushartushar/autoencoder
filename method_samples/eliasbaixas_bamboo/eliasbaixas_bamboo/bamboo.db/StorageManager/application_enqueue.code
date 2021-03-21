@@ -1,0 +1,4 @@
+protected void application_enqueue(SinkIF sink,QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("enqueuing " + item + " to "+ sink);
+  classifier.dispatch_later(new EnqueueEvent(sink,item),0);
+}

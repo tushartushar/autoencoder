@@ -1,0 +1,18 @@
+public BambooRouteContinue(BambooRouteUpcall upcall,QuickSerializable p){
+  src=upcall.src;
+  dest=upcall.dest;
+  immediate_src=upcall.immediate_src;
+  app_id=upcall.app_id;
+  intermediate_upcall=true;
+  iter=upcall.iter;
+  payload=p;
+}
+public BambooRouteContinue(BigInteger s,BigInteger d,NodeId i,long a,boolean u,boolean it,QuickSerializable p){
+  src=s;
+  dest=d;
+  immediate_src=i;
+  app_id=a;
+  intermediate_upcall=u;
+  iter=it;
+  payload=p;
+}

@@ -1,0 +1,12 @@
+public void cb(Object user_data,boolean success){
+  if (!success) {
+    logger.warn("PredMsg failed");
+  }
+}
+public void cb(Object user_data,boolean success){
+  if (!success) {
+    I3Msg msg=(I3Msg)user_data;
+    logger.info("send to key 0x" + GuidTools.guid_to_string(msg.dest) + " failed, trying lookup again");
+    client.lookup(msg.dest,namespace,levels,APP,lookup_cb,msg.payload_bytes);
+  }
+}

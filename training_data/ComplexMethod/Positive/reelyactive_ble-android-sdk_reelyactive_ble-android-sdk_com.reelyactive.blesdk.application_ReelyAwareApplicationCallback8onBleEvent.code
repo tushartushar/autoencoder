@@ -1,0 +1,34 @@
+/** 
+ * This method is called when a  {@link BleService.Event} is received.<br/>Its default behaviour is to notify the currently running  {@link ReelyAwareActivity} (if any).<br/>Override this and you can customize the behaviour of the application.
+ * @param event The {@link BleService.Event} received from the {@link BleService}.
+ * @return true if the event was processed, false otherwise;
+ */
+@Override public boolean onBleEvent(BleService.Event event,Object data){
+  boolean processed=isReelyAware(getCurrentActivity());
+switch (event) {
+case IN_REGION:
+    if (processed) {
+      ((ReelyAwareActivity)getCurrentActivity()).onEnterRegion((ScanResult)data);
+    }
+  break;
+case OUT_REGION:
+if (processed) {
+  ((ReelyAwareActivity)getCurrentActivity()).onLeaveRegion((ScanResult)data);
+}
+break;
+case SCAN_STARTED:
+if (processed) {
+((ReelyAwareActivity)getCurrentActivity()).onScanStarted();
+}
+break;
+case SCAN_STOPPED:
+if (processed) {
+((ReelyAwareActivity)getCurrentActivity()).onScanStopped();
+}
+break;
+default :
+processed=false;
+break;
+}
+return processed;
+}

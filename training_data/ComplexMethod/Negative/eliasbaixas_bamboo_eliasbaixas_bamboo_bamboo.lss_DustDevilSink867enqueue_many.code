@@ -1,0 +1,21 @@
+public void enqueue_many(QueueElementIF[] events) throws SinkException {
+  check_thread();
+  try {
+    handler.handleEvents(events);
+  }
+ catch (  EventHandlerException e) {
+    logger.fatal("caught EventHandlerException",e);
+    System.exit(1);
+  }
+catch (  OutOfMemoryError e) {
+    reserve=null;
+    System.gc();
+    logger.fatal("caught OutOfMemoryError on enqueue_many to " + handler.getClass().getName() + " events:");
+    for (int i=0; i < events.length; ++i)     logger.fatal(events[i].getClass().getName() + ": " + events[i]);
+    logger.fatal("freeMemory=" + Runtime.getRuntime().freeMemory());
+    logger.fatal("maxMemory=" + Runtime.getRuntime().maxMemory());
+    logger.fatal("totalMemory=" + Runtime.getRuntime().totalMemory());
+    Thread.currentThread().dumpStack();
+    System.exit(1);
+  }
+}

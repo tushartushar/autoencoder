@@ -1,0 +1,7 @@
+public Iterator get_all_nodes(){
+  LinkedList list=new LinkedList();
+  for (  BigInteger id : nodes_by_id.keySet()) {
+    list.add((BambooNode)nodes_by_id.get(id));
+  }
+  return list.iterator();
+}

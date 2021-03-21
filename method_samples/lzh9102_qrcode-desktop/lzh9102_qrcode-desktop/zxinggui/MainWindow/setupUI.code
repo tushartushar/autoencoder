@@ -1,0 +1,44 @@
+/** 
+ * Initialize GUI components.
+ */
+private void setupUI(){
+  panelMain.setLayout(new GridLayout());
+  panelLeft.setLayout(new BorderLayout());
+  panelRight.setLayout(new BorderLayout());
+  panelButtons.setLayout(new GridLayout());
+  menuImage_ViewPlainText.setMnemonic(KeyEvent.VK_V);
+  menuImage_ViewPlainText.addActionListener(this);
+  menuImage_SaveImage.setMnemonic(KeyEvent.VK_S);
+  menuImage_SaveImage.addActionListener(this);
+  menuBar_Image.setMnemonic(KeyEvent.VK_I);
+  menuBar_Image.add(menuImage_ViewPlainText);
+  menuBar_Image.add(menuImage_SaveImage);
+  menuBar_Image.addChangeListener(this);
+  menuBar.add(menuBar_Image);
+  menuBar_About.setMnemonic(KeyEvent.VK_A);
+  menuAbout_About.setMnemonic(KeyEvent.VK_A);
+  menuAbout_About.addActionListener(this);
+  menuBar_About.add(menuAbout_About);
+  menuBar.add(menuBar_About);
+  setJMenuBar(menuBar);
+  btnEncode.setText("Encode");
+  btnEncode.setToolTipText("Encode qr-code from the given information");
+  btnCapture.setText("Capture Screen");
+  btnCapture.setToolTipText("Decode qr-code from screenshot.");
+  panelGenerator.setLayout(new BorderLayout());
+  cbSelectGenerator.addActionListener(this);
+  btnEncode.addActionListener(this);
+  btnCapture.addActionListener(this);
+  add(panelMain);
+  panelMain.add(panelLeft);
+  panelMain.add(panelRight);
+  panelLeft.add(cbSelectGenerator,BorderLayout.PAGE_START);
+  panelLeft.add(panelGenerator,BorderLayout.CENTER);
+  panelLeft.add(panelButtons,BorderLayout.PAGE_END);
+  panelButtons.add(cbSelectSize);
+  panelButtons.add(new JLabel("Encoding: ",JLabel.RIGHT));
+  panelButtons.add(cbSelectEncoding);
+  panelButtons.add(btnEncode);
+  panelRight.add(imgDisplay);
+  panelRight.add(btnCapture,BorderLayout.SOUTH);
+}

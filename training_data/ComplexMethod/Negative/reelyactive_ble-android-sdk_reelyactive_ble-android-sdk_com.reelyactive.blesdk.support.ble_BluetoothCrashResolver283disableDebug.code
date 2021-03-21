@@ -1,0 +1,6 @@
+/** 
+ * Disable debug logging
+ */
+public void disableDebug(){
+  debugEnabled=false;
+}

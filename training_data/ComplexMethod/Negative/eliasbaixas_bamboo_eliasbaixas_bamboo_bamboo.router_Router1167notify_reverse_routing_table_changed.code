@@ -1,0 +1,5 @@
+protected void notify_reverse_routing_table_changed(BambooNeighborInfo[] added,BambooNeighborInfo[] removed){
+  for (  ApplicationInfo appInfo : apps.values()) {
+    if (appInfo.reverseRoutingTableChanged != null)     appInfo.reverseRoutingTableChanged.run(added,removed);
+  }
+}

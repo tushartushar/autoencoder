@@ -1,0 +1,4 @@
+public TimerInfo(Object c,Object u){
+  cb=c;
+  user_data=u;
+}

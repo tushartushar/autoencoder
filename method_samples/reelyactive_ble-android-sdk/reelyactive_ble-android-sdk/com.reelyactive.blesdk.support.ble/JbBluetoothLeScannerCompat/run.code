@@ -1,0 +1,7 @@
+@Override public void run(){
+  onScanCycleComplete();
+  callbackCycleCompleted();
+}
+@Override public void run(){
+  callbackLeScanClients(address,result);
+}

@@ -1,0 +1,26 @@
+protected void handle_pub_to_leaf_set_ack(PutOrRemoveAck msg){
+  if ((ds != null) && (msg.seq == ds.nonce)) {
+    if (logger.isInfoEnabled()) {
+      StringBuffer buf=new StringBuffer(200);
+      buf.append("discard success: gave ");
+      ds.key.toStringBuffer(buf);
+      buf.append(" to ");
+      addr_to_sbuf(msg.peer,buf);
+      logger.info(buf);
+    }
+    dispatch(new StorageManager.GetByGuidCont(ds.cont,true,null,null));
+    ds=null;
+    dispatch(new DiscardAlarm(false));
+    return;
+  }
+  PutOrRemoveState p=(PutOrRemoveState)put_or_remove_acks.get(new Long(msg.seq));
+  if (p == null) {
+    if (logger.isDebugEnabled())     logger.debug("unexpected " + msg + ".  Dropping it.");
+    return;
+  }
+  if (!p.unacked.remove(msg.peer)) {
+    if (logger.isDebugEnabled())     logger.debug("duplicate or unexpected " + msg + ".  Dropping it.");
+    return;
+  }
+  check_put_or_remove_done(new Long(msg.seq),p);
+}

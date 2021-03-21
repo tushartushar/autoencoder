@@ -1,0 +1,19 @@
+protected void handle_put_resp(StorageManager.PutResp resp){
+  if (resp.user_data instanceof PutOrRemoveMsg) {
+    PutOrRemoveMsg msg=(PutOrRemoveMsg)resp.user_data;
+    dispatch(new PutOrRemoveAck(msg.peer,msg.seq));
+  }
+ else   if (resp.user_data instanceof Long) {
+    Long seq=(Long)resp.user_data;
+    PutOrRemoveState p=(PutOrRemoveState)put_or_remove_acks.get(seq);
+    assert p != null;
+    p.stored=true;
+    check_put_or_remove_done(seq,p);
+  }
+ else   if (resp.user_data == null) {
+  }
+ else {
+    assert false : resp.user_data.getClass().getName();
+  }
+  update_merkle_trees(resp);
+}

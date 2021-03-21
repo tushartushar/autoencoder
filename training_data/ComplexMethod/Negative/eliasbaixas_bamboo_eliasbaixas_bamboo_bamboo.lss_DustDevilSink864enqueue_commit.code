@@ -1,0 +1,12 @@
+public void enqueue_commit(Object key){
+  check_thread();
+  QueueElementIF[] events=(QueueElementIF[])prepares.remove(key);
+  if (events == null)   throw new IllegalArgumentException("enqueue_commit called with unknown key: " + key);
+  try {
+    enqueue_many(events);
+  }
+ catch (  SinkException e) {
+    logger.fatal("caught SinkException",e);
+    System.exit(1);
+  }
+}

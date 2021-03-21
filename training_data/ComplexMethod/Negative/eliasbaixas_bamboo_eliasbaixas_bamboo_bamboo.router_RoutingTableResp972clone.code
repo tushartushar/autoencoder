@@ -1,0 +1,9 @@
+public Object clone() throws CloneNotSupportedException {
+  RoutingTableResp result=(RoutingTableResp)super.clone();
+  result.peer_guid=peer_guid;
+  if (neighbors != null) {
+    result.neighbors=new LinkedList();
+    for (Iterator i=neighbors.iterator(); i.hasNext(); )     result.neighbors.addLast((NeighborInfo)i.next());
+  }
+  return result;
+}

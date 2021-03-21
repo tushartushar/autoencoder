@@ -1,0 +1,1 @@
+public BaseVertex addVertex(Object id,String label,Object[] properties);

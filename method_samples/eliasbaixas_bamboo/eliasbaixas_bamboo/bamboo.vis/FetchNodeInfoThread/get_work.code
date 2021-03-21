@@ -1,0 +1,16 @@
+public Object[] get_work(){
+  Object[] pair=null;
+synchronized (work_queue) {
+    idle=true;
+    while (work_queue.isEmpty()) {
+      try {
+        work_queue.wait();
+      }
+ catch (      InterruptedException e) {
+      }
+    }
+    pair=(Object[])work_queue.removeFirst();
+    idle=false;
+  }
+  return pair;
+}

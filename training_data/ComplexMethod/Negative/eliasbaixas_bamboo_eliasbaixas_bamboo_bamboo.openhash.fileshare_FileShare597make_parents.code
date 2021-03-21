@@ -1,0 +1,34 @@
+/** 
+ * Transfer wblocks from the wblocks array to the ready queue.
+ */
+public void make_parents(boolean done){
+  for (int l=0; l < wblocks.size(); ++l) {
+    logger.debug("level " + l + " of "+ wblocks.size()+ " size="+ wblocks.elementAt(l).size()+ " done="+ done);
+    while ((wblocks.elementAt(l).size() >= BRANCHING) || (done && (wblocks.elementAt(l).size() > 1))) {
+      int count=min(BRANCHING,wblocks.elementAt(l).size());
+      logger.debug("count=" + count);
+      for (int i=0; i < count; ++i) {
+        ByteBuffer bb=wblocks.elementAt(l).removeFirst();
+        bb.flip();
+        md.update(secret);
+        md.update(bb.array(),0,bb.limit());
+        byte[] dig=md.digest();
+        ready.addLast(new Pair<byte[],ByteBuffer>(dig,bb));
+        if (l + 1 >= wblocks.size()) {
+          wblocks.setSize(max(wblocks.size(),l + 2));
+          wblocks.setElementAt(new LinkedList<ByteBuffer>(),l + 1);
+        }
+        LinkedList<ByteBuffer> next_level=wblocks.elementAt(l + 1);
+        if (next_level.isEmpty() || (next_level.getLast().position() == 1024)) {
+          logger.debug("adding a new block to level " + (l + 1));
+          next_level.addLast(ByteBuffer.wrap(new byte[1024]));
+          next_level.getLast().putInt(l + 1);
+        }
+        logger.debug("adding a digest to level " + (l + 1));
+        next_level.getLast().put(dig);
+      }
+      if (done)       break;
+    }
+  }
+  logger.debug("make_parents done");
+}

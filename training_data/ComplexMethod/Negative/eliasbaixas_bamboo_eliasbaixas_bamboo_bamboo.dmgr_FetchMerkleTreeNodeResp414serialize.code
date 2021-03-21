@@ -1,0 +1,16 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  buffer.add(hash.length);
+  buffer.add(hash);
+  buffer.add(leaf);
+  buffer.add(seq);
+  if (children == null)   buffer.add(0);
+ else {
+    buffer.add(children.size());
+    Iterator i=children.iterator();
+    while (i.hasNext()) {
+      byte[] child=(byte[])i.next();
+      buffer.add(child,0,hash.length);
+    }
+  }
+}

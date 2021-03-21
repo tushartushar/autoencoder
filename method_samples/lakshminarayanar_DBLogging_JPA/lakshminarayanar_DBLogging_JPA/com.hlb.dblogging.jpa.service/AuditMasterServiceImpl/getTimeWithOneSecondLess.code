@@ -1,0 +1,7 @@
+private Date getTimeWithOneSecondLess(Date transactionStartTime){
+  if (transactionStartTime == null)   return null;
+  Calendar cal=Calendar.getInstance();
+  cal.setTime(transactionStartTime);
+  cal.add(Calendar.SECOND,-1);
+  return cal.getTime();
+}

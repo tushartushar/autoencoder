@@ -1,0 +1,8 @@
+public final boolean contains(Object o){
+  for (int i=1; i <= size(); i++) {
+    if (getIndex(i).equals(o)) {
+      return true;
+    }
+  }
+  return false;
+}

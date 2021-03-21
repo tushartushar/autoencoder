@@ -1,0 +1,5 @@
+protected void scheduleNextPut(){
+  long s=Math.round(random_exponential(mean_put_period_ms,rand));
+  logger.info("Next put in " + s + " ms");
+  acore.registerTimer(s,nextPut);
+}

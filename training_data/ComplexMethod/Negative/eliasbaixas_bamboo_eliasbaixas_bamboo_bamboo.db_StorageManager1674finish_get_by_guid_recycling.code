@@ -1,0 +1,28 @@
+protected boolean finish_get_by_guid_recycling(GBGCont cont,DbTxn xact,Dbc cursor,Dbt data,int retval,SinkIF comp_q,Object user_data){
+  if (retval == Db.DB_NOTFOUND) {
+    if (logger.isDebugEnabled())     logger.debug("recycling DB_NOTFOUND");
+    GetByGuidResp resp=new GetByGuidResp(null,null,null,user_data);
+    application_enqueue(comp_q,resp);
+    return true;
+  }
+  byte[] kbuf=new byte[Key.SIZE];
+  System.arraycopy(cont.key.getData(),cont.key.getOffset() + 20,kbuf,0,8);
+  System.arraycopy(cont.key.getData(),cont.key.getOffset() + 28,kbuf,8,4);
+  System.arraycopy(cont.key.getData(),cont.key.getOffset() + 0,kbuf,12,20);
+  System.arraycopy(cont.key.getData(),cont.key.getOffset() + 32,kbuf,32,Key.SIZE - 32);
+  Key k=new Key(new Dbt(kbuf,0,kbuf.length));
+  if (key_expired(k)) {
+    if (logger.isDebugEnabled())     logger.debug("dropping in do_get_by_guid_recycling");
+    try {
+      cursor.delete(0);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    return false;
+  }
+  ByteBuffer bb=ByteBuffer.wrap(data.getData(),data.getOffset(),data.getSize());
+  GetByGuidResp resp=new GetByGuidResp(k,bb,cont,user_data);
+  application_enqueue(comp_q,resp);
+  return true;
+}

@@ -1,0 +1,17 @@
+public void create_children(){
+  for (int index=0; index < branching; ++index) {
+    Node child=children[index]=new Node();
+    long spacing=(high - low) / branching;
+    child.low=low + spacing * index;
+    child.high=child.low + spacing;
+    if (child.low + 1 == child.high) {
+      child.min_free=1;
+      child.valid=true;
+    }
+ else {
+      child.children=new Node[branching];
+      child.create_children();
+    }
+  }
+  compute_min_free();
+}

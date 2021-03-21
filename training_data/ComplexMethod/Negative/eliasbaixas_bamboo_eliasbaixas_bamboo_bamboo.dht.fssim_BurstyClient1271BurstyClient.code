@@ -1,0 +1,14 @@
+public BurstyClient(int client,long period,int size,int ttl_sec,long on_time,long off_time,long start,long stop_time,long seed){
+  this.period=period;
+  this.client=client;
+  this.size=size;
+  this.ttl_sec=ttl_sec;
+  this.on_time=on_time;
+  this.off_time=off_time;
+  this.stop_time=stop_time;
+  sim=Simulator.instance;
+  alg=Algorithm.instance;
+  rand=new Random(seed);
+  next_mode_switch=start + off_time;
+  sim.register_event(next_mode_switch - sim.now_ms(),on_cb,null);
+}

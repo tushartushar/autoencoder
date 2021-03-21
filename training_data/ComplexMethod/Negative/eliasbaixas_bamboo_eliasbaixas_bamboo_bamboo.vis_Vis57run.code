@@ -1,0 +1,29 @@
+public void run(BambooNode node){
+  node.redraw();
+  update_node_count();
+  node.redraw_leaf_set();
+  if (show_color_storage) {
+    Iterator IT=FNIT.get_all_nodes();
+    while (IT.hasNext()) {
+      ((BambooNode)IT.next()).show_color_storage();
+    }
+  }
+ else   if (show_color_uptime) {
+    Iterator IT=FNIT.get_all_nodes();
+    while (IT.hasNext()) {
+      ((BambooNode)IT.next()).show_color_uptime();
+    }
+  }
+  resize_scrollbars();
+}
+public void run(BambooNode node){
+  if (node != null) {
+    node.remove();
+    update_node_count();
+  }
+}
+public void run(String[] args) throws IOException {
+  fit_in_window();
+  redraw_all();
+  FNIT.run();
+}

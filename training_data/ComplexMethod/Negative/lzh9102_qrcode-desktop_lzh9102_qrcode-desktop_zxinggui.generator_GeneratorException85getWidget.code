@@ -1,0 +1,3 @@
+public JComponent getWidget(){
+  return widget;
+}

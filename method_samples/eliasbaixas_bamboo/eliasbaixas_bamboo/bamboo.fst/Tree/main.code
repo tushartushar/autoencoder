@@ -1,0 +1,80 @@
+public static void main(String[] args){
+  long ttl=4;
+  long put=1;
+  Tree t=new Tree(0,put,put * ttl);
+  System.out.println(nodeToString(t.root));
+  t.addPut(4,put);
+  System.out.println(nodeToString(t.root));
+  JFrame f=t.visualize();
+  try {
+    System.in.read();
+  }
+ catch (  Exception e) {
+  }
+  f.dispose();
+  t.addPut(2,put);
+  System.out.println(nodeToString(t.root));
+  f=t.visualize();
+  try {
+    System.in.read();
+  }
+ catch (  Exception e) {
+  }
+  f.dispose();
+  t.addPut(3,put);
+  System.out.println(nodeToString(t.root));
+  f=t.visualize();
+  try {
+    System.in.read();
+  }
+ catch (  Exception e) {
+  }
+  f.dispose();
+  t.addPut(1,put);
+  System.out.println(nodeToString(t.root));
+  f=t.visualize();
+  try {
+    System.in.read();
+  }
+ catch (  Exception e) {
+  }
+  f.dispose();
+  t.shiftTime(1);
+  System.out.println(nodeToString(t.root));
+  f=t.visualize();
+  try {
+    System.in.read();
+  }
+ catch (  Exception e) {
+  }
+  f.dispose();
+  t.addPut(4,put);
+  System.out.println(nodeToString(t.root));
+  f=t.visualize();
+  try {
+    System.in.read();
+  }
+ catch (  Exception e) {
+  }
+  f.dispose();
+  t.shiftTime(2);
+  System.out.println(nodeToString(t.root));
+  f=t.visualize();
+  try {
+    System.in.read();
+  }
+ catch (  Exception e) {
+  }
+  f.dispose();
+  t.addPut(4,put);
+  System.out.println(nodeToString(t.root));
+  f=t.visualize();
+  try {
+    System.in.read();
+  }
+ catch (  Exception e) {
+  }
+  f.dispose();
+  System.out.println("Exiting...");
+  System.exit(0);
+}

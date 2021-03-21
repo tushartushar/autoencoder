@@ -1,0 +1,5 @@
+public void timer_cb(Object user_data){
+  client.join(groupname,JOIN_TTL,APP,new JoinDoneCb(),null);
+  int random=rand.nextInt(21);
+  acore.register_timer((30 + random) * 1000,this,null);
+}

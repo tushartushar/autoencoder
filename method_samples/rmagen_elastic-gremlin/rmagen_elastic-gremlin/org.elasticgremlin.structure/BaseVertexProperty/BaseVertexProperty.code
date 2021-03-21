@@ -1,0 +1,5 @@
+public BaseVertexProperty(final BaseVertex vertex,final String key,final V value){
+  this.vertex=vertex;
+  this.key=key;
+  this.value=value;
+}

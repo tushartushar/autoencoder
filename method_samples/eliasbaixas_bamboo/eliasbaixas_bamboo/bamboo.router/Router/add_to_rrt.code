@@ -1,0 +1,7 @@
+protected void add_to_rrt(NeighborInfo ni){
+  if (!reverse_rt.contains(ni)) {
+    reverse_rt.add(ni);
+    BambooNeighborInfo[] added={new BambooNeighborInfo(ni.node_id,ni.guid)};
+    notify_reverse_routing_table_changed(added,null);
+  }
+}

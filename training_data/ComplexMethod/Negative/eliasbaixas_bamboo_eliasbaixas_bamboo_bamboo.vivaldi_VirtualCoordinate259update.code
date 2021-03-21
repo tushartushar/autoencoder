@@ -1,0 +1,13 @@
+/** 
+ * Update this coordinate's position with the given latency sample.
+ * @param remote_coord The node's coordinate used to get the latency sample.
+ * @param latency The measured network latency (one-way, in milliseconds) to the remote node.
+ */
+public void update(VirtualCoordinate remote_coord,double latency){
+  double[] dir=displacement(remote_coord);
+  if (dir == null)   dir=random_displacement();
+  double d=remote_coord.distance(this) - latency;
+  _delta-=.025;
+  if (_delta < .05)   _delta=.05;
+  for (int i=0; i < _coordinate.length; i++)   _coordinate[i]+=dir[i] * d * _delta;
+}

@@ -1,0 +1,5 @@
+public void serialize(OutputBuffer ob){
+  ob.add(dest);
+  ob.add(payload_bytes.length);
+  ob.add(payload_bytes);
+}

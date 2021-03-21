@@ -1,0 +1,11 @@
+public void lookup(BigInteger id,LookupCb cb,Object user_data){
+  PendingLookupInfo pl=pending_lookups.get(id);
+  if (pl == null) {
+    pl=new PendingLookupInfo(now_ms());
+    pending_lookups.put(id,pl);
+    BambooRouteInit outb=new BambooRouteInit(id,0,false,false,new LookupReqPayload(my_node_id));
+    classifier.dispatch_later(outb,0);
+    acore.registerTimer(60 * 1000,curry(lookupTimeout,id));
+  }
+  pl.cbs.addLast(new Pair<LookupCb,Object>(cb,user_data));
+}

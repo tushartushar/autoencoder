@@ -1,0 +1,11 @@
+/** 
+ * Process a single scan result, sending it directly to any active listeners who want to know.
+ */
+void onScanResult(final String address,final ScanResult result){
+  mainHandler.post(new Runnable(){
+    @Override public void run(){
+      callbackLeScanClients(address,result);
+    }
+  }
+);
+}

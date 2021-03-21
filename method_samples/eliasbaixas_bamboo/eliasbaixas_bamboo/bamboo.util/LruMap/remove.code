@@ -1,0 +1,11 @@
+public void remove(){
+  throw new UnsupportedOperationException();
+}
+public Object remove(Object key){
+  Node n=(Node)map.remove(key);
+  if (n == null)   return null;
+ else {
+    rem_n(n);
+    return n.value;
+  }
+}

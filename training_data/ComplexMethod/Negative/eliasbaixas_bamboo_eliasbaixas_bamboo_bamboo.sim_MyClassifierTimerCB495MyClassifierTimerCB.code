@@ -1,0 +1,4 @@
+public MyClassifierTimerCB(Classifier classifier,NodeId n){
+  classifier_alarm_cb=new MyClassifierAlarmCB(classifier);
+  node_id=n;
+}

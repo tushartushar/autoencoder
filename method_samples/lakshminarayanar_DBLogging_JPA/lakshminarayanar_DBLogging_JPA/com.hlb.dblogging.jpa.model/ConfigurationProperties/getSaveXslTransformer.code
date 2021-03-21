@@ -1,0 +1,3 @@
+@Column(name="SAVEXSLTRANSFORMER",nullable=true) public String getSaveXslTransformer(){
+  return saveXslTransformer;
+}

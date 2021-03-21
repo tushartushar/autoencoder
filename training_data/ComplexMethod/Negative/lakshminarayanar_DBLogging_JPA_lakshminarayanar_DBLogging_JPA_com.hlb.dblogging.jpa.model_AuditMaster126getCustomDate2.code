@@ -1,0 +1,3 @@
+@Column(name="CUSTOMDATE2",nullable=true) public Date getCustomDate2(){
+  return CustomDate2;
+}

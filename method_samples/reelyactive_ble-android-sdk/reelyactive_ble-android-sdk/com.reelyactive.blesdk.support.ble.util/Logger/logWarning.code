@@ -1,0 +1,5 @@
+public static void logWarning(String message){
+  if (Log.isLoggable(TAG,Log.WARN)) {
+    Log.w(TAG,message);
+  }
+}

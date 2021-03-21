@@ -1,0 +1,4 @@
+public void route_init(BigInteger dest,long app_id,boolean intermediate_upcall,boolean iter,QuickSerializable payload){
+  BambooRouteInit outb=new BambooRouteInit(dest,app_id,intermediate_upcall,iter,payload);
+  dispatch(outb);
+}

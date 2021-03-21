@@ -1,0 +1,8 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  acore.registerTimer(0,ready);
+  logger.info("key=0x" + bytes_to_str(putArgs.key.value));
+  logger.info("secret=0x" + bytes_to_str(secret));
+  logger.info("secret_hash=0x" + bytes_to_str(putArgs.secret_hash.hash));
+  logger.info("value_hash=0x" + bytes_to_str(md.digest(putArgs.value.value)));
+}

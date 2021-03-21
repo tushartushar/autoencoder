@@ -1,0 +1,55 @@
+protected void handle_routing_table_resp(RoutingTableResp resp){
+  NeighborInfo peer_ni=new NeighborInfo(resp.peer,resp.peer_guid);
+  location_cache.add_node(peer_ni);
+  LinkedList<NeighborInfo> new_nodes=null;
+  if (resp.neighbors != null) {
+    for (Iterator i=resp.neighbors.iterator(); i.hasNext(); ) {
+      NeighborInfo ni=(NeighborInfo)i.next();
+      if (ni.guid.compareTo(MODULUS) >= 0) {
+        if (logger.isDebugEnabled()) {
+          logger.debug("got a guid with too many digits " + "in a RoutingTableResp from " + resp.peer + ".  Offending guid was "+ ni.guid.toString(16));
+          logger.debug("msg was " + resp);
+        }
+        continue;
+      }
+      if (ni.node_id.equals(my_node_id)) {
+        if (logger.isDebugEnabled())         logger.debug(ni + " is me.");
+      }
+ else       if (leaf_set.contains(ni)) {
+        if (logger.isDebugEnabled())         logger.debug(ni + " is in my LS.");
+      }
+ else       if (rt.contains(ni)) {
+        if (logger.isDebugEnabled())         logger.debug(ni + " is in my RT.");
+      }
+ else {
+        if (new_nodes == null)         new_nodes=new LinkedList<NeighborInfo>();
+        new_nodes.addLast(ni);
+      }
+    }
+  }
+  if (new_nodes != null) {
+    Iterator<NeighborInfo> i=new_nodes.iterator();
+    while (i.hasNext()) {
+      NeighborInfo ni=i.next();
+      if (rt.fills_hole(ni)) {
+        if (logger.isDebugEnabled())         logger.debug(ni + " fills a hole.");
+        i.remove();
+        add_to_rt(ni);
+      }
+ else       if (logger.isDebugEnabled())       logger.debug(ni + " doesn't fill a hole.");
+    }
+    if (new_nodes.size() > 0) {
+      int which=rand.nextInt(new_nodes.size());
+      while (which-- > 0)       new_nodes.removeFirst();
+      NeighborInfo ni=new_nodes.getFirst();
+      add_to_rt(ni);
+      if ((!pastry_mode) && (!ni.node_id.equals(resp.peer))) {
+        LinkedList<NeighborInfo> only_me=new LinkedList<NeighborInfo>();
+        only_me.addLast(my_neighbor_info);
+        RoutingTableResp outb=new RoutingTableResp(ni.node_id,my_guid,only_me);
+        use_as_periodic_ping(ni,outb);
+        dispatch(outb);
+      }
+    }
+  }
+}

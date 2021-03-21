@@ -1,0 +1,3 @@
+@Column(name="ENABLED",columnDefinition="NUMBER(1)") @Type(type="org.hibernate.type.NumericBooleanType") public boolean isEnabled(){
+  return enabled;
+}

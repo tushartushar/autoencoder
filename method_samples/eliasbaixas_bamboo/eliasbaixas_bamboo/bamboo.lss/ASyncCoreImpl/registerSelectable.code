@@ -1,0 +1,15 @@
+public void registerSelectable(SelectableChannel channel,int interest_ops,Runnable cb) throws ClosedChannelException {
+  if (logger.isDebugEnabled())   logger.debug("ASyncCore.register_selectable");
+  SelectionKey skey=channel.keyFor(selector);
+  if (skey == null)   skey=channel.register(selector,interest_ops);
+ else   skey.interestOps(skey.interestOps() | interest_ops);
+  SelectableInfo si=(SelectableInfo)selectable_info.get(channel);
+  if (si == null) {
+    si=new SelectableInfo();
+    selectable_info.put(channel,si);
+  }
+  if ((interest_ops & SelectionKey.OP_ACCEPT) != 0)   si.accept_cb=cb;
+  if ((interest_ops & SelectionKey.OP_CONNECT) != 0)   si.connect_cb=cb;
+  if ((interest_ops & SelectionKey.OP_READ) != 0)   si.read_cb=cb;
+  if ((interest_ops & SelectionKey.OP_WRITE) != 0)   si.write_cb=cb;
+}

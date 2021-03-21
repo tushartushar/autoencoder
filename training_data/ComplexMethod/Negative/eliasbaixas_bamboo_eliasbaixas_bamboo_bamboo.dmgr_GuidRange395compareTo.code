@@ -1,0 +1,6 @@
+public int compareTo(Object rhs){
+  GuidRange other=(GuidRange)rhs;
+  int result=low.compareTo(other.low);
+  if (result != 0)   return result;
+ else   return high.compareTo(other.high);
+}

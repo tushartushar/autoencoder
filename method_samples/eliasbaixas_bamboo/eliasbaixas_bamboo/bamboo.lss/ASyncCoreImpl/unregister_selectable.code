@@ -1,0 +1,4 @@
+public void unregister_selectable(SelectionKey skey){
+  selectable_info.remove(skey.channel());
+  skey.cancel();
+}

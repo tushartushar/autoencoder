@@ -1,0 +1,40 @@
+/** 
+ * Send a congestion-controlled message to another host.  Use this function, and your communtication will be TCP-friendly, which is good. Once the message is sent, or when <code>tries</code> timeouts have occurred while trying to send it, the give callback will be called.
+ * @param msg             the message to send
+ * @param dst             the message's destination host and port
+ * @param tries           the number of attempts made to send the message
+ * @param callback        called when the message is sent, or when the number of tries is exhausted
+ * @return                a token than can be passed to cancelSend
+ */
+public Object send(Object msg,InetSocketAddress dst,long timeout_sec,Thunk1<Boolean> callback){
+  long now_ms=System.currentTimeMillis();
+  if (DEBUG)   debugln("got " + msg + " to send to "+ dst);
+  Connection conn=(Connection)conns.get(dst);
+  if (conn == null) {
+    conn=new Connection(dst,now_ms);
+    conns.put(dst,conn);
+  }
+  TimeoutInfo tinfo=new TimeoutInfo(conn,msg,now_ms,timeout_sec * 1000,inc_next_msg_id(),callback);
+  conn.send_q.addLast(tinfo);
+  if (DEBUG)   debugln("conn for " + dst + ": send_q.size="+ conn.send_q.size()+ ", retry_q.size="+ conn.retry_q.size()+ ", second_chance.size="+ second_chance.size());
+  if (conn.writable())   add_to_rr(conn);
+ else   if (DEBUG)   debugln("not yet writable");
+  return new Long(tinfo.msg_id);
+}
+/** 
+ * Send a congestion-controlled message to another host.  Use this function, and your communtication will be TCP-friendly, which is good. Once the message is sent, or when <code>tries</code> timeouts have occurred while trying to send it, the give callback will be called.
+ * @param msg             the message to send
+ * @param dst             the message's destination host and port
+ * @param tries           the number of attempts made to send the message
+ * @param cb              the callback to call when the message issent, or when the number of tries is exhausted
+ * @param user_data       the application-specific data to call thatcallback with
+ * @return                a token than can be passed to cancelSend
+ */
+public Object send(Object msg,InetSocketAddress dst,long timeout_sec,final SendCB cb,final Object user_data){
+  return send(msg,dst,timeout_sec,new Thunk1<Boolean>(){
+    public void run(    Boolean success){
+      cb.cb(user_data,success.booleanValue());
+    }
+  }
+);
+}

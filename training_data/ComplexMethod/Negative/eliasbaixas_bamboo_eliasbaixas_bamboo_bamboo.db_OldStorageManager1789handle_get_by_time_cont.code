@@ -1,0 +1,38 @@
+protected void handle_get_by_time_cont(GetByTimeCont req){
+  GBTCont cont=(GBTCont)req.continuation;
+  if (req.comp_q != null) {
+    DbTxn xact=null;
+    try {
+      xact=env.txnBegin(null,Db.DB_TXN_NOSYNC);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    Dbc cursor=open_cursor(by_time,xact,"handle_get_by_time_req");
+    int retval=0;
+    Dbt data=new Dbt();
+    data.setFlags(Db.DB_DBT_PARTIAL);
+    data.setPartialLength(0);
+    byte[] last_key=new byte[cont.key.getSize()];
+    System.arraycopy(cont.key.getData(),cont.key.getOffset(),last_key,0,cont.key.getSize());
+    try {
+      retval=cursor.get(cont.key,data,Db.DB_SET_RANGE);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    if (retval == 0) {
+      int cmp=arraycmp(cont.key.getData(),cont.key.getOffset(),last_key,0,cont.key.getSize());
+      assert cmp >= 0;
+      if (cmp == 0) {
+        try {
+          retval=cursor.get(cont.key,data,Db.DB_NEXT);
+        }
+ catch (        DbException e) {
+          BUG(e);
+        }
+      }
+    }
+    finish_get_by_time(cont,xact,cursor,data,retval,req.comp_q,req.user_data);
+  }
+}

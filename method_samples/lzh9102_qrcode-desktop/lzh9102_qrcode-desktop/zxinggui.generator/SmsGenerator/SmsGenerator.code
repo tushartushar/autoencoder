@@ -1,0 +1,24 @@
+public SmsGenerator(){
+  SpringLayout layout=new SpringLayout();
+  JLabel lblNumber=new JLabel("Phone Number: ");
+  JLabel lblMessage=new JLabel("Message: ");
+  JScrollPane scrollPane=new JScrollPane(txtMessage);
+  txtMessage.setLineWrap(true);
+  panel.setLayout(layout);
+  panel.add(lblNumber);
+  panel.add(txtPhoneNumber);
+  panel.add(lblMessage);
+  panel.add(scrollPane);
+  layout.putConstraint(WEST,lblNumber,5,WEST,panel);
+  layout.putConstraint(NORTH,lblNumber,5,NORTH,panel);
+  layout.putConstraint(WEST,txtPhoneNumber,5,EAST,lblNumber);
+  layout.putConstraint(NORTH,txtPhoneNumber,5,NORTH,panel);
+  layout.putConstraint(EAST,txtPhoneNumber,-5,EAST,panel);
+  layout.putConstraint(WEST,lblMessage,5,WEST,panel);
+  layout.putConstraint(NORTH,lblMessage,5,SOUTH,lblNumber);
+  layout.putConstraint(EAST,lblMessage,-5,EAST,panel);
+  layout.putConstraint(WEST,scrollPane,5,WEST,panel);
+  layout.putConstraint(NORTH,scrollPane,5,SOUTH,lblMessage);
+  layout.putConstraint(EAST,scrollPane,-5,EAST,panel);
+  layout.putConstraint(SOUTH,scrollPane,-5,SOUTH,panel);
+}

@@ -1,0 +1,4 @@
+public boolean equals(Object rhs){
+  SrcDst other=(SrcDst)rhs;
+  return (src == other.src) && (dst == other.dst);
+}

@@ -1,0 +1,26 @@
+protected void enqueue_to_main_thread(final SinkIF sink,final QueueElementIF item){
+  if (udpcc_thread == null) {
+    if (logger.isDebugEnabled())     logger.debug("enqueuing " + item);
+    try {
+      sink.enqueue(item);
+    }
+ catch (    SinkException e) {
+      BUG("could not enqueue " + item,e);
+    }
+  }
+ else {
+    ASyncCore.TimerCB cb=new ASyncCore.TimerCB(){
+      public void timer_cb(      Object user_data){
+        if (logger.isDebugEnabled())         logger.debug("enqueuing " + item);
+        try {
+          sink.enqueue(item);
+        }
+ catch (        SinkException e) {
+          BUG("could not enqueue " + item,e);
+        }
+      }
+    }
+;
+    main_acore.register_timer(0,cb,null);
+  }
+}

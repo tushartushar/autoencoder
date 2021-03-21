@@ -1,0 +1,8 @@
+public Payload(int s,boolean f){
+  seq=s;
+  first=f;
+}
+public Payload(InputBuffer b){
+  seq=b.nextInt();
+  first=b.nextBoolean();
+}

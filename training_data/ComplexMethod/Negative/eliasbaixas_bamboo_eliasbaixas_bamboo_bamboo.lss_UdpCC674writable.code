@@ -1,0 +1,6 @@
+public final boolean writable(){
+  if (!ack_q.isEmpty())   return true;
+  if (!probe_q.isEmpty())   return true;
+  if (retry_q.isEmpty() && send_q.isEmpty())   return false;
+  return inf.size() < (int)cwnd;
+}

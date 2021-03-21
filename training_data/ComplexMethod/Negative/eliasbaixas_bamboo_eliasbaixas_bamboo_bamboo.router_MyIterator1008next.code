@@ -1,0 +1,6 @@
+public Object next(){
+  if (current == null)   throw new NoSuchElementException();
+  NeighborInfo result=current.ni;
+  current=current.succ;
+  return result;
+}

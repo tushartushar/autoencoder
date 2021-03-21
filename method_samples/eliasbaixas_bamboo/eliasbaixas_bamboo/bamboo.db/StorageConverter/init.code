@@ -1,0 +1,4 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  acore.registerTimer(0,ready);
+}

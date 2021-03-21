@@ -1,0 +1,16 @@
+/** 
+ * Constructor of scan result.
+ * @param device Remote bluetooth device that is found.
+ * @param scanRecord Scan record including both advertising data and scan response data.
+ * @param rssi Received signal strength.
+ * @param timestampNanos Device timestamp when the scan result was observed.
+ */
+public ScanResult(BluetoothDevice device,ScanRecord scanRecord,int rssi,long timestampNanos){
+  mDevice=device;
+  mScanRecord=scanRecord;
+  mRssi=rssi;
+  mTimestampNanos=timestampNanos;
+}
+private ScanResult(Parcel in){
+  readFromParcel(in);
+}

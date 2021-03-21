@@ -1,0 +1,12 @@
+public IterateByGuidResp(StorageManager.Key k,ByteBuffer d,Object c,Object ud){
+  key=k;
+  data=d;
+  continuation=c;
+  user_data=ud;
+}
+public IterateByGuidResp(OldStorageManager.Key k,ByteBuffer d,Object c,Object ud){
+  key=k;
+  data=d;
+  continuation=c;
+  user_data=ud;
+}

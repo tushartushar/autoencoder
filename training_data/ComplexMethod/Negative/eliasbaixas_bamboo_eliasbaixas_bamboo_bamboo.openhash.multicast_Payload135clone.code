@@ -1,0 +1,6 @@
+public Object clone(Object other) throws CloneNotSupportedException {
+  Payload result=(Payload)super.clone();
+  result.source=source;
+  result.seq=seq;
+  return result;
+}

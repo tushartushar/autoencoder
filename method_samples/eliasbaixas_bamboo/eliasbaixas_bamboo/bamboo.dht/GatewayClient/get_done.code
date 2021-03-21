@@ -1,0 +1,4 @@
+public void get_done(int xact_id,bamboo_get_res res){
+  Request req=(Request)inflight.remove(new Integer(xact_id));
+  application_enqueue(req.completion_queue,new Response(res,req.user_data));
+}

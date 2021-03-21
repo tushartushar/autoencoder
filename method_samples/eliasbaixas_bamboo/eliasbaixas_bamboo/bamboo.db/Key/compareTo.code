@@ -1,0 +1,49 @@
+public int compareTo(Object rhs){
+  Key other=(Key)rhs;
+  if (time_usec < other.time_usec)   return -1;
+  if (time_usec > other.time_usec)   return 1;
+  if (ttl_sec < other.ttl_sec)   return -1;
+  if (ttl_sec > other.ttl_sec)   return 1;
+  int result;
+  if ((result=guid.compareTo(other.guid)) != 0)   return result;
+  for (int i=0; i < secret_hash.length; ++i) {
+    if ((result=secret_hash[i] - other.secret_hash[i]) != 0)     return result;
+  }
+  for (int i=0; i < data_hash.length; ++i) {
+    if ((result=data_hash[i] - other.data_hash[i]) != 0)     return result;
+  }
+  if ((!put) && other.put)   return -1;
+  if (put && (!other.put))   return 1;
+  byte[] a=client_id.getAddress();
+  byte[] b=other.client_id.getAddress();
+  assert a.length == b.length;
+  for (int i=0; i < a.length; ++i) {
+    int ai=((int)a[i]) & 0xff;
+    int bi=((int)b[i]) & 0xff;
+    if ((result=ai - bi) != 0)     return result;
+  }
+  return 0;
+}
+public int compareTo(Object rhs){
+  Key other=(Key)rhs;
+  if (time_usec < other.time_usec)   return -1;
+  if (time_usec > other.time_usec)   return 1;
+  if (ttl_sec < other.ttl_sec)   return -1;
+  if (ttl_sec > other.ttl_sec)   return 1;
+  int result;
+  if ((result=guid.compareTo(other.guid)) != 0)   return result;
+  for (int i=0; i < data_hash.length; ++i) {
+    if ((result=data_hash[i] - other.data_hash[i]) != 0)     return result;
+  }
+  if ((!put) && other.put)   return -1;
+  if (put && (!other.put))   return 1;
+  byte[] a=client_id.getAddress();
+  byte[] b=other.client_id.getAddress();
+  assert a.length == b.length;
+  for (int i=0; i < a.length; ++i) {
+    int ai=((int)a[i]) & 0xff;
+    int bi=((int)b[i]) & 0xff;
+    if ((result=ai - bi) != 0)     return result;
+  }
+  return 0;
+}

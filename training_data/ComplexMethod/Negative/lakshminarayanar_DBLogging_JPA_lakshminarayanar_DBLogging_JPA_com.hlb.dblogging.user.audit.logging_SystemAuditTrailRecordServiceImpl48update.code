@@ -1,0 +1,10 @@
+@Override public SystemAuditTrail update(SystemAuditTrail systemAuditTrail) throws Exception {
+  SystemAuditTrail systemAuditTrailRecord=systemAuditTrailRecordRepository.findOne(systemAuditTrail.getId());
+  if (systemAuditTrailRecord == null)   throw new Exception();
+  systemAuditTrailRecord.setDate(systemAuditTrail.getDate());
+  systemAuditTrailRecord.setActorUserId(systemAuditTrail.getActorUserId());
+  systemAuditTrailRecord.setDescription(systemAuditTrail.getDescription());
+  systemAuditTrailRecord.setDeleted(systemAuditTrail.isDeleted());
+  systemAuditTrailRecordRepository.save(systemAuditTrailRecord);
+  return systemAuditTrailRecord;
+}

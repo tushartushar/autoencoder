@@ -1,0 +1,7 @@
+public NeighborInfo random_member(Random rand){
+  if (leaf_pred_count + leaf_succ_count == 0)   return null;
+  int which=rand.nextInt(leaf_pred_count + leaf_succ_count);
+  if (which < leaf_pred_count)   return leaf_preds[which];
+  which-=leaf_pred_count;
+  return leaf_succs[which];
+}

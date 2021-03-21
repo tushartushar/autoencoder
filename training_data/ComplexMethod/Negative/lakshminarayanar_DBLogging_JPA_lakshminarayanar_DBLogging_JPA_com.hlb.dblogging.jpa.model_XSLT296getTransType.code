@@ -1,0 +1,3 @@
+@Column(name="TRANSTYPE",nullable=false) public String getTransType(){
+  return transType;
+}

@@ -1,0 +1,11 @@
+protected void send_resp(Function0<Boolean> cb){
+  if (sc.isOpen()) {
+    to_write.addLast(cb);
+    try {
+      acore.register_selectable(sc,OP_WRITE,write_cb);
+    }
+ catch (    ClosedChannelException e) {
+      conn_closed();
+    }
+  }
+}

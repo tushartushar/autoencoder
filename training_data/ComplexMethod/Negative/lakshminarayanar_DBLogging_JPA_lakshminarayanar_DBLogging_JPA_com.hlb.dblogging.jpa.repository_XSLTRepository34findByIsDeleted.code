@@ -1,0 +1,1 @@
+@Query("select r from XSLT r where deleted = ?") List<XSLT> findByIsDeleted(int x);

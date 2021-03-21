@@ -1,0 +1,41 @@
+public RecoverFatal(String homedir) throws Exception {
+  File directory=new File(homedir);
+  if (!directory.exists()) {
+    System.err.println("no such directory: " + homedir);
+    System.exit(1);
+  }
+  System.err.println("openning env");
+  env=new DbEnv(0);
+  env.setFlags(Db.DB_TXN_NOSYNC,true);
+  env.open(homedir,Db.DB_INIT_MPOOL | Db.DB_INIT_TXN | Db.DB_INIT_LOCK| Db.DB_RECOVER_FATAL| Db.DB_CREATE,0);
+  System.err.println("openning dbs");
+  DbTxn txn=env.txnBegin(null,Db.DB_TXN_SYNC);
+  client_counts=new Db(env,0);
+  client_counts.open(txn,"client_counts.db",null,Db.DB_BTREE,Db.DB_CREATE | Db.DB_DIRTY_READ,0);
+  txn.commit(Db.DB_TXN_SYNC);
+  txn=env.txnBegin(null,Db.DB_TXN_SYNC);
+  by_time=new Db(env,0);
+  by_time.open(txn,homedir + "/by_time.db",null,Db.DB_BTREE,Db.DB_CREATE | Db.DB_DIRTY_READ,0);
+  by_guid=new Db(env,0);
+  by_guid.setFlags(Db.DB_DUPSORT);
+  by_guid.open(txn,homedir + "/by_guid.db",null,Db.DB_BTREE,Db.DB_CREATE | Db.DB_DIRTY_READ,0);
+  by_time.associate(txn,by_guid,guid_key_creator,0);
+  by_guid_and_data_hash=new Db(env,0);
+  by_guid_and_data_hash.open(txn,homedir + "/by_guid_and_data_hash.db",null,Db.DB_BTREE,Db.DB_CREATE | Db.DB_DIRTY_READ,0);
+  by_time.associate(txn,by_guid_and_data_hash,guid_and_data_hash_key_creator,0);
+  txn.commit(Db.DB_TXN_SYNC);
+  txn=env.txnBegin(null,Db.DB_TXN_SYNC);
+  recycling=new Db(env,0);
+  recycling.open(txn,homedir + "/recycling.db",null,Db.DB_BTREE,Db.DB_CREATE | Db.DB_DIRTY_READ,0);
+  txn.commit(Db.DB_TXN_SYNC);
+  System.err.println("closing dbs");
+  txn=env.txnBegin(null,Db.DB_TXN_SYNC);
+  client_counts.close(0);
+  by_time.close(0);
+  by_guid.close(0);
+  by_guid_and_data_hash.close(0);
+  recycling.close(0);
+  txn.commit(Db.DB_TXN_SYNC);
+  System.err.println("closing env");
+  env.close(0);
+}

@@ -1,0 +1,12 @@
+@Override public List<AuditMaster> getResultByUniqueProcessId(String uniqueProcessId){
+  try {
+    if (uniqueProcessId == null) {
+      return new ArrayList<AuditMaster>();
+    }
+    return auditMasterRepo.findSearchListByUniqueProcessId(uniqueProcessId);
+  }
+ catch (  Exception e) {
+    ApplLogger.getLogger().error("Error while fetching data for uniqueprocessid : " + uniqueProcessId,e);
+    return new ArrayList<AuditMaster>();
+  }
+}

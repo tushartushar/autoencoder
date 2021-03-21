@@ -1,0 +1,22 @@
+public boolean checkWhetherContentIsXml(ByteArrayInputStream inputStream){
+  try {
+    DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
+    factory.setNamespaceAware(true);
+    DocumentBuilder builder;
+    Document doc=null;
+    builder=factory.newDocumentBuilder();
+    doc=builder.parse(inputStream);
+    ApplLogger.getLogger().info("Parsing the formatted XML and map with POJOs....");
+    XPathExpression xPathExpression=XPathFactory.newInstance().newXPath().compile("//MessageFormat");
+    NodeList nodes=(NodeList)xPathExpression.evaluate(doc,XPathConstants.NODESET);
+    Node node=nodes.item(0);
+    if (node != null && "XML".equalsIgnoreCase(node.getTextContent().trim())) {
+      ApplLogger.getLogger().info("Message Format is : " + node.getTextContent());
+      return true;
+    }
+  }
+ catch (  Exception e) {
+    ApplLogger.getLogger().error("Error while mapping the xml data : ",e);
+  }
+  return false;
+}

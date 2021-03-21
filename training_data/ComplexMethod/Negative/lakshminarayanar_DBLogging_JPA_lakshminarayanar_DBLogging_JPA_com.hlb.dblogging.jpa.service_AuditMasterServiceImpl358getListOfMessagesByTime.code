@@ -1,0 +1,17 @@
+@Override public List<AuditMaster> getListOfMessagesByTime(Date date){
+  List<AuditMaster> searchResultList=new ArrayList<>();
+  ApplLogger.getLogger().info("Date input passing is : " + date);
+  List<AuditMaster> tempList=auditMasterRepo.findFirst20ByTransDateTimeOrderByTransDateTimeDesc(getDateWithoutTime(date));
+  ApplLogger.getLogger().info("Size of the List with Today Transactions: " + tempList.size());
+  if (tempList.size() > 0)   searchResultList.addAll(tempList);
+  for (int i=0; i <= 10; i++) {
+    if (searchResultList.size() >= 20)     break;
+    date=decreaseOneDayFromDate(date);
+    ApplLogger.getLogger().info("Date input with one day less passing is : " + date);
+    tempList=auditMasterRepo.findFirst20ByTransDateTimeOrderByTransDateTimeDesc(getDateWithoutTime(date));
+    ApplLogger.getLogger().info("Size of the List with one day before Transactions: " + tempList.size());
+    if (tempList.size() > 0)     searchResultList.addAll(tempList);
+  }
+  ApplLogger.getLogger().info("Size of the List Total Transactions: " + searchResultList.size());
+  return searchResultList;
+}

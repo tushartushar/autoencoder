@@ -1,0 +1,39 @@
+public void handleEvent(QueueElementIF item){
+  if (item instanceof EnqueueEvent) {
+    EnqueueEvent ee=(EnqueueEvent)item;
+    try {
+      ee.sink.enqueue(ee.item);
+    }
+ catch (    SinkException e) {
+      BUG("couldn't enqueue " + e);
+    }
+  }
+ else {
+    if (logger.isDebugEnabled())     logger.debug("got " + item);
+    if (sim_running) {
+      the_real_handle_event(item);
+    }
+ else {
+      long now_ms=0;
+      long last_ms=0;
+      int count=0;
+synchronized (to_bdb_thread) {
+        to_bdb_thread.addLast(item);
+        to_bdb_thread.notifyAll();
+        count=to_bdb_thread.size();
+        now_ms=timer_ms();
+        if (count == 1)         last_dequeue_ms=now_ms;
+        last_ms=last_dequeue_ms;
+      }
+      if (count > 0) {
+        if (now_ms - last_ms > 180 * 1000) {
+          logger.fatal("BerkeleyDB thread blocked. " + " now_ms=" + now_ms + " last_dequeue_ms="+ last_ms+ ".  There are at least "+ count+ " outstanding requests.  "+ "Committing suicide.");
+          System.exit(1);
+        }
+        if (now_ms - last_ms > 60 * 1000) {
+          logger.warn("BerkeleyDB thread appears blocked. " + " now_ms=" + now_ms + " last_dequeue_ms="+ last_ms+ ".  There are at least "+ count+ " outstanding requests.");
+        }
+      }
+    }
+  }
+}

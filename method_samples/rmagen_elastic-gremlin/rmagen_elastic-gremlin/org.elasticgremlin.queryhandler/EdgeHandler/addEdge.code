@@ -1,0 +1,1 @@
+public Edge addEdge(Object edgeId,String label,Vertex outV,Vertex inV,Object[] properties);

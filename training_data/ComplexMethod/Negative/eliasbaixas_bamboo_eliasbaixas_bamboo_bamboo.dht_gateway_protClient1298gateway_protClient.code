@@ -1,0 +1,55 @@
+/** 
+ * Constructs a <code>gateway_protClient</code> client stub proxy object from which the BAMBOO_DHT_GATEWAY_PROGRAM remote program can be accessed.
+ * @param host Internet address of host where to contact the remote program.
+ * @param protocol {@link org.acplt.oncrpc.OncRpcProtocols Protocol} to beused for ONC/RPC calls.
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public gateway_protClient(InetAddress host,int protocol) throws OncRpcException, IOException {
+  super(host,gateway_prot.BAMBOO_DHT_GATEWAY_PROGRAM,3,0,protocol);
+}
+/** 
+ * Constructs a <code>gateway_protClient</code> client stub proxy object from which the BAMBOO_DHT_GATEWAY_PROGRAM remote program can be accessed.
+ * @param host Internet address of host where to contact the remote program.
+ * @param port Port number at host where the remote program can be reached.
+ * @param protocol {@link org.acplt.oncrpc.OncRpcProtocols Protocol} to beused for ONC/RPC calls.
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public gateway_protClient(InetAddress host,int port,int protocol) throws OncRpcException, IOException {
+  super(host,gateway_prot.BAMBOO_DHT_GATEWAY_PROGRAM,3,port,protocol);
+}
+/** 
+ * Constructs a <code>gateway_protClient</code> client stub proxy object from which the BAMBOO_DHT_GATEWAY_PROGRAM remote program can be accessed.
+ * @param client ONC/RPC client connection object implementing a particularprotocol.
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public gateway_protClient(OncRpcClient client) throws OncRpcException, IOException {
+  super(client);
+}
+/** 
+ * Constructs a <code>gateway_protClient</code> client stub proxy object from which the BAMBOO_DHT_GATEWAY_PROGRAM remote program can be accessed.
+ * @param host Internet address of host where to contact the remote program.
+ * @param program Remote program number.
+ * @param version Remote program version number.
+ * @param protocol {@link org.acplt.oncrpc.OncRpcProtocols Protocol} to beused for ONC/RPC calls.
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public gateway_protClient(InetAddress host,int program,int version,int protocol) throws OncRpcException, IOException {
+  super(host,program,version,0,protocol);
+}
+/** 
+ * Constructs a <code>gateway_protClient</code> client stub proxy object from which the BAMBOO_DHT_GATEWAY_PROGRAM remote program can be accessed.
+ * @param host Internet address of host where to contact the remote program.
+ * @param program Remote program number.
+ * @param version Remote program version number.
+ * @param port Port number at host where the remote program can be reached.
+ * @param protocol {@link org.acplt.oncrpc.OncRpcProtocols Protocol} to beused for ONC/RPC calls.
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public gateway_protClient(InetAddress host,int program,int version,int port,int protocol) throws OncRpcException, IOException {
+  super(host,program,version,port,protocol);
+}

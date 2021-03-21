@@ -1,0 +1,29 @@
+protected static Node create_point(Node n,long rate,long time){
+  Node result=null;
+  if (n.leaf()) {
+    if (n.time() == time) {
+      result=n;
+    }
+ else     if (time < n.time()) {
+      Node l=new Node(n.sum() - (n.time() - time) * rate,time);
+      result=new Node(0,l,n);
+    }
+ else {
+      Node r=new Node(n.sum() + (time - n.time()) * rate,time);
+      result=new Node(0,n,r);
+    }
+  }
+ else {
+    if (time <= n.left.high) {
+      Node left=balance(create_point(n.left,rate,time));
+      Node parent=new Node(n.offset,left,n.right);
+      result=balance(parent);
+    }
+ else {
+      Node right=balance(create_point(n.right,rate,time));
+      Node parent=new Node(n.offset,n.left,right);
+      result=balance(parent);
+    }
+  }
+  return result;
+}

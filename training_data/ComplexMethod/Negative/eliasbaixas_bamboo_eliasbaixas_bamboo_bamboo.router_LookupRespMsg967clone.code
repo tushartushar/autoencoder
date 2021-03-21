@@ -1,0 +1,6 @@
+public Object clone() throws CloneNotSupportedException {
+  LookupRespMsg result=(LookupRespMsg)super.clone();
+  result.lookup_id=lookup_id;
+  result.owner_id=owner_id;
+  return result;
+}

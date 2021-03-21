@@ -1,0 +1,1 @@
+void routing_table_changed(BambooNeighborInfo[] added,BambooNeighborInfo[] removed,Object user_data);

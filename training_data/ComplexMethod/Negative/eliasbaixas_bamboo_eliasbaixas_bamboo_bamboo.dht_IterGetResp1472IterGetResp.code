@@ -1,0 +1,42 @@
+public IterGetResp(LinkedList<Pair<NeighborInfo,VirtualCoordinate>> n,Set<NodeId> r,Set<NodeId> s,LinkedList<Pair<Key,ByteBuffer>> v,boolean a,int m,NodeId c){
+  assert (n == null && r != null && v != null && s != null) || (n != null && !n.isEmpty() && v == null && r == null && s == null);
+  neighbors=n;
+  replicas=r;
+  synced=s;
+  values=v;
+  allRead=a;
+  maxvals=m;
+  client=c;
+}
+public IterGetResp(InputBuffer buffer) throws QSException {
+  int cnt=buffer.nextInt();
+  if (cnt > 0) {
+    neighbors=new LinkedList<Pair<NeighborInfo,VirtualCoordinate>>();
+    while (cnt-- > 0) {
+      NeighborInfo ni=new NeighborInfo(buffer);
+      VirtualCoordinate vc=null;
+      if (buffer.nextBoolean())       vc=new VirtualCoordinate(buffer);
+      neighbors.addLast(Pair.create(ni,vc));
+    }
+  }
+ else {
+    cnt*=-1;
+    replicas=new LinkedHashSet<NodeId>();
+    while (cnt-- > 0)     replicas.add(new NodeId(buffer));
+    cnt=buffer.nextInt();
+    synced=new LinkedHashSet<NodeId>();
+    while (cnt-- > 0)     synced.add(new NodeId(buffer));
+    cnt=buffer.nextInt();
+    values=new LinkedList<Pair<Key,ByteBuffer>>();
+    while (cnt-- > 0) {
+      Key k=new Key(buffer);
+      int len=buffer.nextInt();
+      byte b[]=new byte[len];
+      buffer.nextBytes(b,0,len);
+      values.addLast(Pair.create(k,ByteBuffer.wrap(b)));
+    }
+    allRead=buffer.nextBoolean();
+  }
+  maxvals=buffer.nextInt();
+  client=new NodeId(buffer);
+}

@@ -1,0 +1,20 @@
+public void modifyManeuvarTime(maneuvar man,long modifiedTime){
+  maneuvar targetMan=null;
+  int i=0;
+  for (  maneuvar eachMan : maneuvars) {
+    if (eachMan.isEqual(man))     break;
+    i++;
+  }
+  modifyManeuvarTime(i,modifiedTime);
+}
+public void modifyManeuvarTime(int maneuvarIndex,long modifiedTime){
+  long delay=modifiedTime - this.maneuvars.get(maneuvarIndex).travelTime;
+  this.maneuvars.get(maneuvarIndex).travelTime+=delay;
+  for (int i=maneuvarIndex + 1; i < maneuvars.size(); i++) {
+    maneuvar thisManeuvar=this.maneuvars.get(i);
+    Calendar modifiedCalendar=DateToCalendar(thisManeuvar.time);
+    modifiedCalendar.add(Calendar.SECOND,(int)delay);
+    thisManeuvar.time=modifiedCalendar.getTime();
+  }
+  this.travelTime+=delay;
+}

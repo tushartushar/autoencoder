@@ -1,0 +1,8 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  buffer.add(low_guid);
+  buffer.add(high_guid);
+  buffer.add(low_time);
+  buffer.add(high_time);
+  buffer.add(seq);
+}

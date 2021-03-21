@@ -1,0 +1,8 @@
+public void notify_storage_changed(final StorageMonitor sm,final boolean added,final InetAddress client_id,final long size){
+  acore.registerTimer(0,new Runnable(){
+    public void run(){
+      sm.storage_changed(added,client_id,size);
+    }
+  }
+);
+}

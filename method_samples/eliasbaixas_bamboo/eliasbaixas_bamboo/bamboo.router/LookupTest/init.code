@@ -1,0 +1,10 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  int seed=config_get_int(config,"seed");
+  if (seed != -1)   rand=new Random(seed);
+  mean_period_ms=config_get_int(config,"mean_period_ms");
+  if (mean_period_ms == -1.0)   mean_period_ms=60 * 1000;
+  long start_delay_ms=config_get_int(config,"start_delay_ms");
+  if (start_delay_ms == -1)   start_delay_ms=0;
+  acore.register_timer(start_delay_ms,ready_cb,null);
+}

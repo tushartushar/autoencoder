@@ -1,0 +1,6 @@
+/** 
+ * Returns an iterator which walks through the set of items in the set, starting with the most recently added.
+ */
+public Iterator iterator(){
+  return new MyIterator(first);
+}

@@ -1,0 +1,6 @@
+@Override public void stopAdvertising(){
+  if (Looper.myLooper() != Looper.getMainLooper()) {
+    throw new RuntimeException("Do not try to run from outside the main thread !");
+  }
+  advertising=false;
+}

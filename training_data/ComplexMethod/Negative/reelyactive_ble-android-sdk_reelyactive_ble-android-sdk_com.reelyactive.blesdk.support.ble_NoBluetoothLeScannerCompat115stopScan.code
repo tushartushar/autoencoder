@@ -1,0 +1,4 @@
+@Override public void stopScan(ScanCallback callback){
+  callbacksMap.remove(callback);
+  updateRepeatingAlarm();
+}

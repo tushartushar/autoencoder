@@ -1,0 +1,32 @@
+/** 
+ * Returns a set of the nodes between us and the given node in our leaf set, or null if none exist.
+ */
+public Set<NeighborInfo> intermediates(BigInteger other){
+  Set<NeighborInfo> result=null;
+  int i;
+  for (i=0; i < leaf_pred_count; ++i) {
+    if (leaf_preds[i].guid.equals(other))     break;
+  }
+  if (i < leaf_pred_count) {
+    for (i=0; i < leaf_pred_count; ++i) {
+      if (leaf_preds[i].guid.equals(other))       break;
+      if (in_range_mod(other,my_guid,leaf_preds[i].guid)) {
+        if (result == null)         result=new LinkedHashSet<NeighborInfo>();
+        result.add(leaf_preds[i]);
+      }
+    }
+  }
+  for (i=0; i < leaf_succ_count; ++i) {
+    if (leaf_succs[i].guid.equals(other))     break;
+  }
+  if (i < leaf_succ_count) {
+    for (i=0; i < leaf_succ_count; ++i) {
+      if (leaf_succs[i].guid.equals(other))       break;
+      if (in_range_mod(my_guid,other,leaf_succs[i].guid)) {
+        if (result == null)         result=new LinkedHashSet<NeighborInfo>();
+        result.add(leaf_preds[i]);
+      }
+    }
+  }
+  return result;
+}

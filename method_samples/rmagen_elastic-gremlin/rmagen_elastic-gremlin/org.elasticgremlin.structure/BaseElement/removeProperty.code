@@ -1,0 +1,4 @@
+public void removeProperty(Property property){
+  properties.remove(property.key());
+  this.innerRemoveProperty(property);
+}

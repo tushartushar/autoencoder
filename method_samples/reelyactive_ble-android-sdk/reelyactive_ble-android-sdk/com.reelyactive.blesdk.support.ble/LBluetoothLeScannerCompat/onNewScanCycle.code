@@ -1,0 +1,31 @@
+@Override protected void onNewScanCycle(){
+  int activeMillis=getScanActiveMillis();
+  if (activeMillis > 0) {
+synchronized (this) {
+      try {
+        wait(activeMillis);
+      }
+ catch (      InterruptedException e) {
+        Logger.logError("Exception in ScanCycle Sleep",e);
+      }
+    }
+  }
+  long lostTimestampMillis=getLostTimestampMillis();
+  Iterator<Map.Entry<String,ScanResult>> iter=recentScanResults.entrySet().iterator();
+  while (iter.hasNext()) {
+    Map.Entry<String,ScanResult> entry=iter.next();
+    final String address=entry.getKey();
+    final ScanResult savedResult=entry.getValue();
+    if (TimeUnit.NANOSECONDS.toMillis(savedResult.getTimestampNanos()) < lostTimestampMillis) {
+      iter.remove();
+      new Handler(Looper.getMainLooper()).post(new Runnable(){
+        @Override public void run(){
+          callbackLostLeScanClients(address,savedResult);
+        }
+      }
+);
+    }
+  }
+  callbackCycleCompleted();
+  updateRepeatingAlarm();
+}

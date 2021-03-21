@@ -1,0 +1,11 @@
+@Override public boolean onOptionsItemSelected(MenuItem item){
+switch (item.getItemId()) {
+case R.id.action_settings:
+    startActivity(new Intent(this,SettingsActivity.class));
+  return true;
+case R.id.about:
+showDialogBox(buildAboutInfo());
+return true;
+}
+return super.onOptionsItemSelected(item);
+}

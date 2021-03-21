@@ -1,0 +1,10 @@
+public PingVCResp(PingMsg msg,VirtualCoordinate coord,int version_number){
+  super(msg.peer,false);
+  coordinate=coord;
+  this.version_number=version_number;
+}
+public PingVCResp(InputBuffer buffer) throws QSException {
+  super(buffer);
+  version_number=buffer.nextInt();
+  coordinate=(VirtualCoordinate)buffer.nextObject();
+}

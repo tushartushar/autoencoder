@@ -1,0 +1,6 @@
+public String toString(){
+  return "(GetByGuidCont continuation=" + continuation + " del="+ del+ " comp_q="+ comp_q+ ")";
+}
+public String toString(){
+  return "(GetByGuidCont continuation=" + continuation + " del="+ del+ " comp_q="+ comp_q+ ")";
+}

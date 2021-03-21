@@ -1,0 +1,5 @@
+protected void rpc_get_done_3(Dht.GetReq req,Dht.GetResp resp,Integer xact_id,long start_ms,String client_lib,String application){
+  reqs_outstanding--;
+  Runnable log_fn=curry(log_get_resp,xact_id,req,resp,client_string,new Long(start_ms),client_lib,application);
+  send_resp(curry(normal_resp_cb,xact_id,new Integer(0),get_resp_to_get_result(resp),log_fn));
+}

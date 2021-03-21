@@ -1,0 +1,8 @@
+/** 
+ * @param tableName
+ * @return Cursor
+ */
+public Cursor getCursorForTable(String tableName){
+  Cursor thisCursor=this.getReadableDatabase().rawQuery("select * from " + tableName,null);
+  return thisCursor;
+}

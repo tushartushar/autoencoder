@@ -1,0 +1,13 @@
+protected void lookup_no_successor(LookupState state){
+  if (state.current_level == 0) {
+    if (logger.isDebugEnabled()) {
+      if (state.min_addr == null)       logger.debug("namespace has no members");
+ else       logger.debug("wrapped around");
+    }
+    lookup_result(state,state.min_addr,state.min_hash);
+  }
+ else {
+    --state.current_level;
+    lookup_get(state);
+  }
+}

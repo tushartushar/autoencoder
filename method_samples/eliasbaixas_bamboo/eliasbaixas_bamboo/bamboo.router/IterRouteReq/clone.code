@@ -1,0 +1,9 @@
+public Object clone() throws CloneNotSupportedException {
+  IterRouteReq result=(IterRouteReq)super.clone();
+  result.src=src;
+  result.dest=dest;
+  result.app_id=app_id;
+  result.intermediate_upcall=intermediate_upcall;
+  result.payload=payload;
+  return result;
+}

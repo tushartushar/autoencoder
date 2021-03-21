@@ -1,0 +1,6 @@
+/** 
+ * Returns raw bytes of scan record.
+ */
+public byte[] getBytes(){
+  return mBytes;
+}

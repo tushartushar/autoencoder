@@ -1,0 +1,6 @@
+/** 
+ * Build  {@link ScanSettings}.
+ */
+public ScanSettings build(){
+  return new ScanSettings(mScanMode,mCallbackType,mScanResultType,mReportDelayMillis);
+}

@@ -1,0 +1,16 @@
+/** 
+ * Create a new MerkleTree with 2^<code>exp</code> children per node and using the algorithm of <code>md</code> to compute digests.  Note that a clone of <code>md</code> will be used rather than <code>md</code> itself.
+ */
+public MerkleTree(int exp,MessageDigest md){
+  logger=Logger.getLogger(getClass());
+  try {
+    dont_use=(MessageDigest)md.clone();
+  }
+ catch (  CloneNotSupportedException e) {
+    throw new IllegalArgumentException("md must support clone");
+  }
+  expansion=exp;
+  int levels=(62 / expansion) + 1;
+  nodes=new Map[levels];
+  for (int i=0; i < nodes.length; ++i)   nodes[i]=new HashMap();
+}

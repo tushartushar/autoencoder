@@ -1,0 +1,14 @@
+public void add_put(long now,long exp){
+  if (valid && (low >= now) && (high <= exp)) {
+    offset+=1;
+  }
+ else   if (valid && (low >= exp)) {
+  }
+ else {
+    for (int index=0; index < branching; ++index) {
+      Node child=children[index];
+      child.add_put(now,exp);
+    }
+  }
+  compute_min_free();
+}

@@ -1,0 +1,6 @@
+public void set_debug_level(int value){
+  DEBUG_MIN=((value & 0x1) != 0);
+  DEBUG_RTT=((value & 0x2) != 0);
+  DEBUG=((value & 0x4) != 0);
+  if (value > 0)   logger.setLevel(Level.DEBUG);
+}

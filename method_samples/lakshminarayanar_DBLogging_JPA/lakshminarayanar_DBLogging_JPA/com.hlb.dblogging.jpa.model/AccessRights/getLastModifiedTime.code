@@ -1,0 +1,3 @@
+@Column(name="lastModifiedTime",nullable=true) @Temporal(TemporalType.TIMESTAMP) public Date getLastModifiedTime(){
+  return lastModifiedTime;
+}

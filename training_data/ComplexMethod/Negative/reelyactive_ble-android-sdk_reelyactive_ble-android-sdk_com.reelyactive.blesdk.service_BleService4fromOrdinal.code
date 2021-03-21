@@ -1,0 +1,12 @@
+public static Event fromOrdinal(int n){
+  if (n >= 0 || n < UNKNOWN.ordinal()) {
+    return allValues[n];
+  }
+  return UNKNOWN;
+}
+public static ScanType fromOrdinal(int n) throws IllegalArgumentException {
+  if (n < 0 || n >= allValues.length) {
+    return LOW_POWER;
+  }
+  return allValues[n];
+}

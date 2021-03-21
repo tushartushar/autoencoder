@@ -1,0 +1,4 @@
+@Override public AccessRights findAccessRights(String accessRight){
+  AccessRights accessRights=accessRightsRepository.findByAccessRight(accessRight);
+  return accessRights;
+}

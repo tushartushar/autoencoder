@@ -1,0 +1,10 @@
+public void run(Boolean success){
+  if (msg.comp_q != null) {
+    try {
+      msg.comp_q.enqueue(new NetworkMessageResult(msg.user_data,success.booleanValue()));
+    }
+ catch (    SinkException e) {
+      assert false;
+    }
+  }
+}

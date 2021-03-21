@@ -1,0 +1,25 @@
+/** 
+ * Constructs a new <code>XdrBufferEncodingStream</code> with a buffer to encode data into of the given size.
+ * @param bufferSize Size of buffer to store encoded data in.
+ */
+public XdrByteBufferEncodingStream(int bufferSize){
+  if ((bufferSize < 0) || (bufferSize & 3) != 0) {
+    throw (new IllegalArgumentException("size of buffer must be a multiple of four and must not be negative"));
+  }
+  this.buffer=ByteBuffer.allocate(bufferSize);
+  bufferIndex=0;
+  bufferHighmark=bufferSize - 4;
+}
+/** 
+ * Constructs a new <code>XdrBufferEncodingStream</code> with a given buffer.
+ * @param buffer Buffer to store encoded information in.
+ * @throws IllegalArgumentException if <code>encodedLength</code> is nota multiple of four.
+ */
+public XdrByteBufferEncodingStream(ByteBuffer buffer){
+  if (((buffer.limit() - buffer.position()) & 3) != 0) {
+    throw (new IllegalArgumentException("size of buffer must be a multiple of four"));
+  }
+  this.buffer=buffer;
+  bufferIndex=0;
+  bufferHighmark=buffer.limit() - buffer.position() - 4;
+}

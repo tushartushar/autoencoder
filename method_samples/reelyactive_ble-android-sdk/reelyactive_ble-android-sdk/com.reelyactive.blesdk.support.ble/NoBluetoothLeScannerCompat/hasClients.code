@@ -1,0 +1,3 @@
+@Override protected boolean hasClients(){
+  return !callbacksMap.isEmpty();
+}

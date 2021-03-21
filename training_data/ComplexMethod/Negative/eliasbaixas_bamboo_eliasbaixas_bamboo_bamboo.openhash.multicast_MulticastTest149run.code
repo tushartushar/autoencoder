@@ -1,0 +1,4 @@
+public void run(MulticastMessage msg){
+  Payload p=(Payload)msg.payload;
+  logger.info("received msg " + p.seq + " from "+ p.source);
+}

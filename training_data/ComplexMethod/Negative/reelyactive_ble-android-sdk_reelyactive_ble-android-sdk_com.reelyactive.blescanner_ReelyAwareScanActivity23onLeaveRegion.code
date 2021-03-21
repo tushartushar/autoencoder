@@ -1,0 +1,3 @@
+@Override public void onLeaveRegion(ScanResult beacon){
+  adapter.removeItem(beacon);
+}

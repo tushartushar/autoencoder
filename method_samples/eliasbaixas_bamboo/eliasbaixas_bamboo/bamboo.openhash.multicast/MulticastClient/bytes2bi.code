@@ -1,0 +1,8 @@
+public static BigInteger bytes2bi(byte[] bytes){
+  if ((bytes[0] & 0x80) != 0) {
+    byte[] copy=new byte[bytes.length + 1];
+    System.arraycopy(bytes,0,copy,1,bytes.length);
+    bytes=copy;
+  }
+  return new BigInteger(bytes);
+}

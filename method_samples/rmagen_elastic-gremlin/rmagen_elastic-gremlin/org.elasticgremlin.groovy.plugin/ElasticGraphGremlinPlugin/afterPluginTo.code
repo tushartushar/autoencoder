@@ -1,0 +1,2 @@
+@Override public void afterPluginTo(final PluginAcceptor pluginAcceptor) throws IllegalEnvironmentException, PluginInitializationException {
+}

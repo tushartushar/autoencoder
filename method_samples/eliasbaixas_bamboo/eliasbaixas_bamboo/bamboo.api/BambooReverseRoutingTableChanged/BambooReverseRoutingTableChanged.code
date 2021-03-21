@@ -1,0 +1,4 @@
+public BambooReverseRoutingTableChanged(BambooNeighborInfo[] a,BambooNeighborInfo[] r){
+  added=a;
+  removed=r;
+}

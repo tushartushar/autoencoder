@@ -1,0 +1,3 @@
+@Override public String toString(){
+  return "com.reelyactive.blesdk.support.ble.ScanResult{" + "mDevice=" + mDevice + ", mScanRecord="+ Objects.toString(mScanRecord)+ ", mRssi="+ mRssi+ ", mTimestampNanos="+ mTimestampNanos+ '}';
+}

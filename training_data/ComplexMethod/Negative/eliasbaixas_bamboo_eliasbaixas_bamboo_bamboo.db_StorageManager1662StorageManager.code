@@ -1,0 +1,3 @@
+public StorageManager(){
+  event_types=new Class[]{Alarm.class,SyncAlarm.class,EnqueueEvent.class,PutReq.class,GetByKeyReq.class,GetByGuidReq.class,GetByGuidCont.class,GetByTimeReq.class,GetByTimeCont.class,IterateByGuidReq.class,IterateByGuidCont.class,DiscardReq.class};
+}

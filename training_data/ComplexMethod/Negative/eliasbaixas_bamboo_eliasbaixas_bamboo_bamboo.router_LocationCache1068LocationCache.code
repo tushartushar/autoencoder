@@ -1,0 +1,4 @@
+public LocationCache(int cap,BigInteger mod){
+  MODULUS=mod;
+  capacity=cap;
+}

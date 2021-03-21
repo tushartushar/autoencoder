@@ -1,0 +1,14 @@
+@Override @Transactional(rollbackFor=BSLException.class) public Role delete(int id){
+  try {
+    Role role=roleRepository.findOne(id);
+    if (role != null) {
+      role.setDeleted(true);
+      roleRepository.save(role);
+    }
+    return role;
+  }
+ catch (  Exception e) {
+    log.error("Error while deleting new Role :" + id,e);
+    throw new BSLException("err.role.delete",e);
+  }
+}

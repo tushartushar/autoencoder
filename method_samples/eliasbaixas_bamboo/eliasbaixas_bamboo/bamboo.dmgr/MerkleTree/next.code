@@ -1,0 +1,6 @@
+public Node next(){
+  ++position;
+  long where=where(position);
+  if (where >= range_high())   throw new NoSuchElementException();
+  return (Node)nodes[level - 1].get(new Long(where));
+}

@@ -1,0 +1,4 @@
+@Override public String label(){
+  if (this.label == null && lazyGetter != null)   lazyGetter.execute();
+  return super.label();
+}

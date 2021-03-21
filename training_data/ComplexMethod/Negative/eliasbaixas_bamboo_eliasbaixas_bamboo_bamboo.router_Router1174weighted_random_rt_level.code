@@ -1,0 +1,17 @@
+protected int weighted_random_rt_level(){
+  if (rt.size() == 0)   return 0;
+  int highest_level=rt.highest_level();
+  int[] choices=new int[highest_level + 1];
+  int sum=0;
+  for (int i=0; i < choices.length; ++i) {
+    sum+=choices[i]=choices.length - i;
+  }
+  int rval=rand.nextInt(sum) + 1;
+  int which=0;
+  while (true) {
+    rval-=choices[which];
+    if (rval <= 0)     break;
+    ++which;
+  }
+  return which;
+}

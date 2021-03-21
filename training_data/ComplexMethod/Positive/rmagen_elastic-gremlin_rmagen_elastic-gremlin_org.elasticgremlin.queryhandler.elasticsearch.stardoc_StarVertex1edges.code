@@ -1,0 +1,33 @@
+@Override public Iterator<Edge> edges(Direction direction,String[] edgeLabels,Predicates predicates){
+  ArrayList<Edge> edges=new ArrayList<>();
+  innerEdges.forEach(edge -> {
+    EdgeMapping mapping=edge.getMapping();
+    if (mapping.getDirection().equals(direction) && (edgeLabels.length == 0 || StarHandler.contains(edgeLabels,mapping.getLabel()))) {
+      boolean passed=true;
+      for (      HasContainer hasContainer : predicates.hasContainers) {
+        if (!hasContainer.test(edge)) {
+          passed=false;
+        }
+      }
+      if (passed) {
+        edges.add(edge);
+      }
+    }
+  }
+);
+  if (edges.size() > 0)   return edges.iterator();
+  ArrayList<String> externalEdgeLabels=new ArrayList<>();
+  for (  String label : edgeLabels) {
+    boolean internal=false;
+    for (    EdgeMapping mapping : edgeMappings) {
+      if (label.equals(mapping.getLabel())) {
+        internal=true;
+      }
+    }
+    if (!internal) {
+      externalEdgeLabels.add(label);
+    }
+  }
+  if (!externalEdgeLabels.isEmpty())   return super.edges(direction,externalEdgeLabels.toArray(new String[externalEdgeLabels.size()]),predicates);
+ else   return new ArrayList<Edge>(0).iterator();
+}

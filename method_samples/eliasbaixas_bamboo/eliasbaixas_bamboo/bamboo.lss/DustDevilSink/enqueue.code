@@ -1,0 +1,21 @@
+public void enqueue(QueueElementIF event) throws SinkException {
+  check_thread();
+  QueueElementIF[] events={event};
+  try {
+    handler.handleEvents(events);
+  }
+ catch (  EventHandlerException e) {
+    throw new SinkFullException("from EventHandlerException");
+  }
+catch (  OutOfMemoryError e) {
+    reserve=null;
+    System.gc();
+    logger.fatal("caught OutOfMemoryError on enqueue of " + event.getClass().getName() + " to "+ handler.getClass().getName());
+    logger.fatal("event=" + event);
+    logger.fatal("freeMemory=" + Runtime.getRuntime().freeMemory());
+    logger.fatal("maxMemory=" + Runtime.getRuntime().maxMemory());
+    logger.fatal("totalMemory=" + Runtime.getRuntime().totalMemory());
+    Thread.currentThread().dumpStack();
+    System.exit(1);
+  }
+}

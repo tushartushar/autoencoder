@@ -1,0 +1,4 @@
+@Override public List<AccessLog> findAll(){
+  List<AccessLog> resultList=(List<AccessLog>)accessLogRepository.findAll();
+  return resultList;
+}

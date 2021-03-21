@@ -1,0 +1,34 @@
+/** 
+ * Creates a  {@link BluetoothLeScannerCompat} that works with the version of Android being used.<p/> For Android versions between Jelly Bean MR2 and "L", a compatibility layer will be used to provide functionality that will be available in "L". For Android versions "L" and later, the native functionality will be used.
+ * @param context The Android context of the application.
+ * @return A {@link BluetoothLeScannerCompat} best fitting the version of Android. If no scannercan be found, null will be returned.
+ */
+@Nullable public static synchronized BluetoothLeScannerCompat getBluetoothLeScannerCompat(Context context){
+  return getBluetoothLeScannerCompat(context,true);
+}
+/** 
+ * Creates a  {@link BluetoothLeScannerCompat}, providing either a compatibility layer or access to native functionality available in "L". <p/>
+ * @param context         The Android context of the application.
+ * @param canUseNativeApi Whether or not to enable "L" hardware support, if available.
+ * @return A {@link BluetoothLeScannerCompat}. If no scanner can be found, null will be returned.
+ */
+@Nullable public static synchronized BluetoothLeScannerCompat getBluetoothLeScannerCompat(Context context,boolean canUseNativeApi){
+  if (scannerInstance == null) {
+    AlarmManager alarmManager=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      BluetoothManager bluetoothManager=(BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE);
+      if (bluetoothManager != null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && canUseNativeApi && areHardwareFeaturesSupported(bluetoothManager)) {
+          scannerInstance=new LBluetoothLeScannerCompat(context,bluetoothManager,alarmManager);
+        }
+ else         if (alarmManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+          scannerInstance=new JbBluetoothLeScannerCompat(context,bluetoothManager,alarmManager);
+        }
+      }
+    }
+    if (scannerInstance == null) {
+      scannerInstance=new NoBluetoothLeScannerCompat(context,alarmManager);
+    }
+  }
+  return scannerInstance;
+}

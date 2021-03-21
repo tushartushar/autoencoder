@@ -1,0 +1,28 @@
+/** 
+ * Calculates the next hop using Proximity Route Selection (PRS).  I.e. make monotonic progress towards the root, but otherwise go to the neighbor closest in network latency.  If my_neighbor_info is returned, we're the root.
+ */
+public NeighborInfo calcNextHopPRS(BigInteger key){
+  return calcNextHopPRS(key,allNeighbors());
+}
+/** 
+ * Calculates the next hop using Proximity Route Selection (PRS).  I.e. make monotonic progress towards the root, but otherwise go to the neighbor closest in network latency.  If my_neighbor_info is returned, we're the root.
+ */
+public NeighborInfo calcNextHopPRS(BigInteger key,Map<NeighborInfo,Long> allNeighbors){
+  NeighborInfo result=null;
+  BigInteger current=calc_dist(my_guid,key);
+  long min=Long.MAX_VALUE;
+  for (  NeighborInfo ni : allNeighbors.keySet()) {
+    if (!possibly_down.containsKey(ni)) {
+      BigInteger dist=calc_dist(ni.guid,key);
+      if ((dist.compareTo(current) < 0) || ((dist.compareTo(current) == 0) && in_range_mod(my_guid,ni.guid,key) && (!in_range_mod(ni.guid,my_guid,key)))) {
+        long lat=allNeighbors.get(ni).longValue();
+        if (result == null || lat < min) {
+          result=ni;
+          min=lat;
+        }
+      }
+    }
+  }
+  if (result == null)   result=my_neighbor_info;
+  return result;
+}

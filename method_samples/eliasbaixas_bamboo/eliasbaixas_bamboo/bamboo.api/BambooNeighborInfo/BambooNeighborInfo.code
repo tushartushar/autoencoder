@@ -1,0 +1,14 @@
+public BambooNeighborInfo(NodeId n,BigInteger g,double r){
+  node_id=n;
+  guid=g;
+  rtt_ms=r;
+}
+public BambooNeighborInfo(NodeId n,BigInteger g){
+  node_id=n;
+  guid=g;
+  rtt_ms=Double.MAX_VALUE;
+}
+public BambooNeighborInfo(InputBuffer buffer) throws QSException {
+  node_id=(NodeId)buffer.nextObject();
+  guid=buffer.nextBigInteger();
+}

@@ -1,0 +1,5 @@
+public void success(){
+  periodic_pings.remove(ni);
+  generic_msg_success(ni);
+  dispatch(new NetworkLatencyReq(ni.node_id,my_sink,ni));
+}

@@ -1,0 +1,5 @@
+public DomainId(int dom,int dnn,int snum){
+  this.dom=dom;
+  this.dnn=dnn;
+  this.snum=snum;
+}

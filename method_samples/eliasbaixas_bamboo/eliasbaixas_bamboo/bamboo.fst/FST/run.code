@@ -1,0 +1,37 @@
+public void run(){
+  long now_ms=acore.nowMillis();
+  if ((nextAcceptPutInfo != null) && (now_ms >= nextAcceptTime)) {
+    tree.shiftTime(now_ms);
+    boolean r=tree.addPut(nextAcceptPutInfo.ttl,nextAcceptPutInfo.size);
+    assert r;
+    acceptPut(nextAcceptPutInfo);
+    nextAcceptPutInfo=null;
+    if (!queues.isEmpty())     processQueues();
+  }
+}
+public void run(){
+  boolean result=fst.addPut(size,ttl_ms,id,curry(putDone,new Long(acore.nowMillis())));
+  if (!result)   ++rejects;
+  scheduleNextPut();
+}
+public void run(Long startTime){
+  bytesStored+=size;
+  commitmentsGranted+=size * ttl_sec;
+  totalWait+=acore.nowMillis() - startTime.longValue();
+  ++accepts;
+  acore.registerTimer(ttl_ms,putExpired);
+}
+public void run(){
+  bytesStored-=size;
+}
+public void run(){
+  System.out.print(acore.nowMillis() - startTime);
+  for (  TestClient c : clients) {
+    System.out.print(" " + c.commitmentsGranted + " "+ c.bytesStored+ " "+ +c.totalWait+ " "+ c.accepts+ " "+ c.rejects);
+    c.totalWait=0;
+    c.accepts=0;
+    c.rejects=0;
+  }
+  System.out.println();
+  acore.registerTimer(10 * 1000,this);
+}

@@ -1,0 +1,3 @@
+public void addGroup(BigInteger group){
+  if (!children.containsKey(group))   children.put(group,new LinkedHashSet<TcpMsgChannel>());
+}

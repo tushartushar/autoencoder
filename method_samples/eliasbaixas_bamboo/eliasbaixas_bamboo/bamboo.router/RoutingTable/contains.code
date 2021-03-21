@@ -1,0 +1,9 @@
+public boolean contains(NeighborInfo ni){
+  int[] dest_digits=guid_to_digits(ni.guid);
+  int fd=calc_first_diff(dest_digits);
+  if (fd == GUID_DIGITS)   return false;
+  if ((primary(fd,dest_digits[fd]) != null) && (primary(fd,dest_digits[fd]).equals(ni))) {
+    return true;
+  }
+  return false;
+}

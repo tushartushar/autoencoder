@@ -1,0 +1,6 @@
+/** 
+ * Returns the Router stage for a given Bamboo node.
+ */
+public static Router instance(NodeId nodeID){
+  return instances.get(nodeID);
+}

@@ -1,0 +1,6 @@
+private void cancelCapture(){
+  setVisible(false);
+  if (screen_capture_listener != null) {
+    screen_capture_listener.screenshotCanceled();
+  }
+}

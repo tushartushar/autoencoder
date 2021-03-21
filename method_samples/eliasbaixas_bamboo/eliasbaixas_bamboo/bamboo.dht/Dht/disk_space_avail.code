@@ -1,0 +1,24 @@
+protected boolean disk_space_avail(int size,int ttl_sec){
+  int i=ttl_to_vdisk(ttl_sec);
+  long now_ms=now_ms();
+  long ms_since_last_fill=now_ms - last_fill_time[i];
+  double tokens_to_add=Math.min(fill_rates[i] * ms_since_last_fill,max_tokens[i] - avail_tokens[i]);
+  avail_tokens[i]+=tokens_to_add;
+  if (logger.isDebugEnabled()) {
+    StringBuffer sbuf=new StringBuffer(30);
+    NumberFormat n=NumberFormat.getInstance();
+    n.setMaximumFractionDigits(3);
+    n.setGroupingUsed(false);
+    sbuf.append(n.format(ms_since_last_fill / 1000.0));
+    sbuf.append("s since last update, adding ");
+    sbuf.append(n.format(tokens_to_add));
+    sbuf.append(" bytes to bucket for ttl of ");
+    StringUtil.time_to_sbuf(ttl_sec_ranges[i],sbuf);
+    sbuf.append(", which now has ");
+    sbuf.append(n.format(avail_tokens[i]));
+    sbuf.append(" bytes in it");
+    logger.debug(sbuf.toString());
+  }
+  last_fill_time[i]=now_ms;
+  return size <= avail_tokens[i];
+}

@@ -1,0 +1,6 @@
+/** 
+ * Do we have a regular msg to retry, and are we within the congestion window?
+ */
+public final boolean can_send_retry(){
+  return ((!retry_q.isEmpty()) && (inf.size() < (int)cwnd));
+}

@@ -1,0 +1,3 @@
+public static boolean isBnep(ParcelUuid uuid){
+  return uuid.equals(BNEP);
+}

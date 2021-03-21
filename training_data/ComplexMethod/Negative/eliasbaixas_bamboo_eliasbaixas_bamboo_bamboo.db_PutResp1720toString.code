@@ -1,0 +1,6 @@
+public String toString(){
+  return "(PutResp inval_put_key=" + inval_put_key + " inval_put_data="+ inval_put_data+ " inval_rm_key="+ inval_rm_key+ " inval_rm_data="+ inval_rm_data+ " user_data="+ user_data+ ")";
+}
+public String toString(){
+  return "(PutResp inval_put_key=" + inval_put_key + " inval_put_data="+ inval_put_data+ " inval_rm_key="+ inval_rm_key+ " inval_rm_data="+ inval_rm_data+ " user_data="+ user_data+ ")";
+}

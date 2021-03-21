@@ -1,0 +1,3 @@
+Iterator<? extends Vertex> vertices();
+Iterator<? extends Vertex> vertices(Object[] vertexIds);
+public Iterator<? extends Vertex> vertices(Predicates predicates);

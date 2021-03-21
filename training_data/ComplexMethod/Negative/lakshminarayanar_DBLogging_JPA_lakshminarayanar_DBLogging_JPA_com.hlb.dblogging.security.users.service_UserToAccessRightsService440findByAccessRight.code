@@ -1,0 +1,1 @@
+UserToAccessRights findByAccessRight(UserToAccessRights userToAccessRights);

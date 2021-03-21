@@ -1,0 +1,7 @@
+/** 
+ * Returns the amount of encoded data in the buffer.
+ * @return length of data encoded in buffer.
+ */
+public int getXdrLength(){
+  return bufferIndex;
+}

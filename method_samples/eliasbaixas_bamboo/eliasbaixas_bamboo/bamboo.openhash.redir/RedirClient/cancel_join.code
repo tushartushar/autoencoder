@@ -1,0 +1,13 @@
+public void cancel_join(Object join_token){
+  JoinState state=(JoinState)join_token;
+  if (state.cancelled)   return;
+  if (state.retry_timer != null) {
+    acore.cancel_timer(state.retry_timer);
+    state.retry_timer=null;
+  }
+  if (state.rejoin_timer != null) {
+    acore.cancel_timer(state.rejoin_timer);
+    state.rejoin_timer=null;
+  }
+  state.cancelled=true;
+}

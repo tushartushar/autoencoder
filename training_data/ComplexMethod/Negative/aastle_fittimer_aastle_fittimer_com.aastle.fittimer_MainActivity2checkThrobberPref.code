@@ -1,0 +1,4 @@
+private boolean checkThrobberPref(){
+  SharedPreferences myPref=PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+  return myPref.getBoolean("preference_throb",true);
+}

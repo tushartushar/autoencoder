@@ -1,0 +1,3 @@
+public BleService getService(){
+  return BleService.this;
+}

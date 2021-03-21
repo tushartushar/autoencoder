@@ -1,0 +1,7 @@
+@Override public Iterator<Vertex> vertices(Direction direction){
+  checkRemoved();
+  ArrayList<Vertex> vertices=new ArrayList<>();
+  if (direction.equals(Direction.OUT) || direction.equals(Direction.BOTH))   vertices.add(outVertex);
+  if (direction.equals(Direction.IN) || direction.equals(Direction.BOTH))   vertices.add(inVertex);
+  return vertices.iterator();
+}

@@ -1,0 +1,3 @@
+@Override public BanList getBanList(Type type){
+  throw new NotImplementedException();
+}

@@ -1,0 +1,18 @@
+/** 
+ * Package constructor, called from  {@link BluetoothLeScannerCompatProvider}.
+ */
+JbBluetoothLeScannerCompat(Context context,BluetoothManager manager,AlarmManager alarmManager){
+  this(manager,alarmManager,new SystemClock(),PendingIntent.getBroadcast(context,0,new Intent(context,ScanWakefulBroadcastReceiver.class).putExtra(ScanWakefulService.EXTRA_USE_LOLLIPOP_API,false),0));
+  this.crashResolver=new BluetoothCrashResolver(context);
+  this.crashResolver.start();
+  this.mainHandler=new Handler(Looper.getMainLooper());
+}
+/** 
+ * Testing constructor for the scanner.
+ * @VisibleForTesting
+ */
+JbBluetoothLeScannerCompat(BluetoothManager manager,AlarmManager alarmManager,Clock clock,PendingIntent alarmIntent){
+  super(clock,alarmManager,alarmIntent);
+  Logger.logDebug("BLE 'JB' hardware access layer activated");
+  this.bluetoothAdapter=manager.getAdapter();
+}

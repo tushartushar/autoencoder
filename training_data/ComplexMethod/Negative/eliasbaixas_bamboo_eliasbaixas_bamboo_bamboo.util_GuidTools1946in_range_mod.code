@@ -1,0 +1,14 @@
+public static boolean in_range_mod(BigInteger low,BigInteger high,BigInteger query,BigInteger mod){
+  if (low.compareTo(high) <= 0) {
+  }
+ else {
+    high=high.add(mod);
+  }
+  if (low.compareTo(query) <= 0) {
+  }
+ else {
+    query=query.add(mod);
+  }
+  boolean result=((query.compareTo(high) <= 0) && (query.compareTo(low) >= 0));
+  return result;
+}

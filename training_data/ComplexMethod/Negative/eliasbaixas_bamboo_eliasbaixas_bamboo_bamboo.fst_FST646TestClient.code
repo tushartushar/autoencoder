@@ -1,0 +1,10 @@
+public TestClient(ASyncCore a,FST f,Client i,int p,int s,int t,int seed){
+  acore=a;
+  fst=f;
+  id=i;
+  period_ms=p;
+  size=s;
+  ttl_sec=t;
+  ttl_ms=t * 1000;
+  rand=new Random(seed);
+}

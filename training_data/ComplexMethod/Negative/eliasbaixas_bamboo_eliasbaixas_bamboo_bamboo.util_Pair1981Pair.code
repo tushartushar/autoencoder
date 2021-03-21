@@ -1,0 +1,7 @@
+/** 
+ * Use this constructor if you're masochistic; otherwise, use  {@link #create}. 
+ */
+public Pair(T1 f,T2 s){
+  first=f;
+  second=s;
+}

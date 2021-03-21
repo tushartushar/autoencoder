@@ -1,0 +1,15 @@
+@Transactional @Override public Users delete(int id){
+  try {
+    Users users=usersRepository.findOne(id);
+    if (users != null) {
+      users.setDeleted(true);
+      HashSet<Role> roleSet=new HashSet<Role>();
+      users.setUserRoles(roleSet);
+      usersRepository.save(users);
+    }
+    return users;
+  }
+ catch (  Exception e) {
+    throw new BSLException();
+  }
+}

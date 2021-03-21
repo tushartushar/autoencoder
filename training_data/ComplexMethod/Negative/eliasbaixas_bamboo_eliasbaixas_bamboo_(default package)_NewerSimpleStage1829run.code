@@ -1,0 +1,3 @@
+public void run(){
+  router=Router.instance(my_node_id);
+}

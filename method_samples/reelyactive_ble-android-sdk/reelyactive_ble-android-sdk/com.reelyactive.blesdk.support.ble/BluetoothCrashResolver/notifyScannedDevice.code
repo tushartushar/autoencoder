@@ -1,0 +1,24 @@
+/** 
+ * Call this method from your BluetoothAdapter.LeScanCallback method. Doing so is optional, but if you do, this class will be able to count the number of disctinct bluetooth devices scanned, and prevent crashes before they happen. <p/> This works very well if the app containing this class is the only one running bluetooth LE scans on the device, or it is constantly doing scans (e.g. is in the foreground for extended periods of time.) <p/> This will not work well if the application using this class is only scanning periodically (e.g. when in the background to save battery) and another application is also scanning on the same device, because this class will only get the counts from this application. <p/> Future augmentation of this class may improve this by somehow centralizing the list of unique scanned devices.
+ * @param device
+ */
+@TargetApi(18) public void notifyScannedDevice(BluetoothDevice device,BluetoothAdapter.LeScanCallback scanner){
+  int oldSize=0, newSize=0;
+  if (isDebugEnabled())   oldSize=distinctBluetoothAddresses.size();
+  distinctBluetoothAddresses.add(device.getAddress());
+  if (isDebugEnabled()) {
+    newSize=distinctBluetoothAddresses.size();
+    if (oldSize != newSize && newSize % 100 == 0) {
+      if (isDebugEnabled())       Log.d(TAG,"Distinct bluetooth devices seen: " + distinctBluetoothAddresses.size());
+    }
+  }
+  if (distinctBluetoothAddresses.size() > getCrashRiskDeviceCount()) {
+    if (PREEMPTIVE_ACTION_ENABLED && !recoveryInProgress) {
+      Log.w(TAG,"Large number of bluetooth devices detected: " + distinctBluetoothAddresses.size() + " Proactively attempting to clear out address list to prevent a crash");
+      Log.w(TAG,"Stopping LE Scan");
+      BluetoothAdapter.getDefaultAdapter().stopLeScan(scanner);
+      startRecovery();
+      processStateChange();
+    }
+  }
+}

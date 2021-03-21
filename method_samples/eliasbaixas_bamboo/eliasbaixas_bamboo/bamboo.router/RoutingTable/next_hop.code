@@ -1,0 +1,10 @@
+public NeighborInfo next_hop(BigInteger guid,Set ignore){
+  int[] dest_digits=guid_to_digits(guid);
+  int fd=calc_first_diff(dest_digits);
+  if (fd == GUID_DIGITS)   return my_neighbor_info;
+ else {
+    NeighborInfo result=primary(fd,dest_digits[fd]);
+    if (ignore.contains(result))     return null;
+ else     return result;
+  }
+}

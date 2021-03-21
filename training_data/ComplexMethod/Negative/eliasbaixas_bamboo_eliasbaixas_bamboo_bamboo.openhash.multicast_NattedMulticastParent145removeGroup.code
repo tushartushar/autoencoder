@@ -1,0 +1,9 @@
+public void removeGroup(BigInteger group){
+  if (children.containsKey(group)) {
+    for (    TcpMsgChannel c : children.get(group)) {
+      c.close();
+      groups.remove(c);
+    }
+    children.remove(group);
+  }
+}

@@ -1,0 +1,7 @@
+/** 
+ * Override this in order to chose which kind of scan is to be used before  {@link #startScan} is called when the service starts.
+ * @return The {@link BleService.ScanType} to be used in the current application state.
+ */
+protected BleService.ScanType getScanType(){
+  return getActivityCount() == 0 ? BleService.ScanType.LOW_POWER : BleService.ScanType.ACTIVE;
+}

@@ -1,0 +1,19 @@
+protected void handle_fetch_merkle_tree_node_req(final FetchMerkleTreeNodeReq req){
+  if (!valid_db(req.peer,req.peer_guid,req.low_guid,req.high_guid)) {
+    dispatch(new FetchMerkleTreeNodeReject(req.peer,FetchMerkleTreeNodeReject.BAD_GUID_RANGE,req.seq));
+    return;
+  }
+  if (req.expansion != expansion) {
+    dispatch(new FetchMerkleTreeNodeReject(req.peer,FetchMerkleTreeNodeReject.BAD_EXPANSION,req.seq));
+    return;
+  }
+  TreeState ts=tree_state(req.low_guid,req.high_guid);
+  if (logger.isDebugEnabled())   logger.debug("db range is " + (new GuidRange(req.low_guid,req.high_guid)).toString());
+  ts.wait_for_ready(new TreeReadyCB(){
+    public FetchMerkleTreeNodeReq r=req;
+    public void tree_ready(    MerkleTree tree){
+      handle_fetch_tree_ready(tree,r);
+    }
+  }
+);
+}

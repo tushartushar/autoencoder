@@ -1,0 +1,8 @@
+/** 
+ * This method requests the  {@link BleService} to stop scanning.
+ */
+protected void stopScan(){
+  if (isBound()) {
+    getBleService().stopScan();
+  }
+}

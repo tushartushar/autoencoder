@@ -1,0 +1,1 @@
+@Query("Select uar from UserToAccessRights uar where isDeleted = ?") List<UserToAccessRights> findByIsDeleted(int x);

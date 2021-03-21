@@ -1,0 +1,3 @@
+public void ping(String user_agent,InetSocketAddress client,Thunk1<Object> result_cb){
+  result_cb.run(client.getAddress().getHostAddress() + ":" + client.getPort()+ ", "+ user_agent);
+}

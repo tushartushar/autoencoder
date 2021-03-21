@@ -1,0 +1,3 @@
+protected void set_queue_size(Integer client,long value){
+  queue_size.put(client,new Long(value));
+}

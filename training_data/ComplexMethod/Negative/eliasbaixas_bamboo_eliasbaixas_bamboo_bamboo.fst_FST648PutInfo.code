@@ -1,0 +1,7 @@
+public PutInfo(int s,int t,long st,Client c,Runnable r){
+  size=s;
+  ttl=t;
+  startTime=st;
+  client=c;
+  cb=r;
+}

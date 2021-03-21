@@ -1,0 +1,4 @@
+public boolean verifyData(byte[] key,int index,byte[] found){
+  byte[] expected=makeData(key,index);
+  return java.util.Arrays.equals(expected,found);
+}

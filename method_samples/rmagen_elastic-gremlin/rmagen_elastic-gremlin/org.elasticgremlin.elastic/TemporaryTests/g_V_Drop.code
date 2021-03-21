@@ -1,0 +1,4 @@
+@Test @LoadGraphWith(MODERN) public void g_V_Drop() throws Exception {
+  GraphTraversal traversal=g.V().and(has("age",P.gt(27)),outE().count().is(P.gte(2l))).values("name");
+  check(traversal);
+}

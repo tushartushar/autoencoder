@@ -1,0 +1,24 @@
+public static Node addPut(Node n,long now,long rate,long ttl,long size){
+  if (n == null) {
+    Node a=makeLeaf(size,now);
+    Node b=makeLeaf(size + rate * (ttl - 1),now + ttl - 1);
+    Node c=makeParent(0,a,b);
+    Node d=makeLeaf(rate * ttl,now + ttl);
+    Node e=makeParent(0,c,d);
+    return e;
+  }
+  n=createPoint(n,rate,now);
+  n=createPoint(n,rate,now + ttl - 1);
+  n=createPoint(n,rate,now + ttl);
+  return incrementRange(n,now,now + ttl - 1,size);
+}
+public boolean addPut(long ttl,long size){
+  Node newRoot=addPut(root,now,rate,ttl,size);
+  if (newRoot.value() + newRoot.offset() <= capacity) {
+    root=newRoot;
+    return true;
+  }
+ else {
+    return false;
+  }
+}

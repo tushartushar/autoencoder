@@ -1,0 +1,15 @@
+/** 
+ * Returns a map of service UUID and its corresponding service data.
+ */
+public Map<ParcelUuid,byte[]> getServiceData(){
+  return mServiceData;
+}
+/** 
+ * Returns the service data byte array associated with the  {@code serviceUuid}. Returns {@code null} if the {@code serviceDataUuid} is not found.
+ */
+@Nullable public byte[] getServiceData(ParcelUuid serviceDataUuid){
+  if (serviceDataUuid == null) {
+    return null;
+  }
+  return mServiceData.get(serviceDataUuid);
+}

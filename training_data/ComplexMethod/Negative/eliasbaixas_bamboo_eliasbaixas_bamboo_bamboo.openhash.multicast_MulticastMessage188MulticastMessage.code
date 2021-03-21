@@ -1,0 +1,22 @@
+public MulticastMessage(BigInteger group,NodeId sender_id,long est_rtt,long begin_time,QuickSerializable payload){
+  this.group=group;
+  this.sender_id=sender_id;
+  this.est_rtt=est_rtt;
+  this.begin_time=begin_time;
+  this.rtt_times="";
+  this.transit_times="";
+  this.prev_time=begin_time;
+  this.hops=0;
+  this.payload=payload;
+}
+public MulticastMessage(InputBuffer buffer) throws QSException {
+  group=buffer.nextBigInteger();
+  sender_id=(NodeId)buffer.nextObject();
+  est_rtt=buffer.nextLong();
+  begin_time=buffer.nextLong();
+  rtt_times=buffer.nextString();
+  transit_times=buffer.nextString();
+  prev_time=buffer.nextLong();
+  hops=buffer.nextInt();
+  payload=buffer.nextObject();
+}

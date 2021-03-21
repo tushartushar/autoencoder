@@ -1,0 +1,11 @@
+private void colorThrobber(){
+  ValueAnimator va;
+  va=ObjectAnimator.ofInt(findViewById(R.id.linearLayout),"backgroundColor",start,end);
+  start=Color.WHITE;
+  end=Color.LTGRAY;
+  va.setDuration(500);
+  va.setEvaluator(new ArgbEvaluator());
+  va.setRepeatCount(1);
+  va.setRepeatMode(ValueAnimator.REVERSE);
+  va.start();
+}

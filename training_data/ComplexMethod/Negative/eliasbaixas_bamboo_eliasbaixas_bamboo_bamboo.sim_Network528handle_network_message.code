@@ -1,0 +1,15 @@
+protected void handle_network_message(final NetworkMessage msg){
+  send(msg,msg.peer,msg.timeout_sec,new Thunk1<Boolean>(){
+    public void run(    Boolean success){
+      if (msg.comp_q != null) {
+        try {
+          msg.comp_q.enqueue(new NetworkMessageResult(msg.user_data,success.booleanValue()));
+        }
+ catch (        SinkException e) {
+          assert false;
+        }
+      }
+    }
+  }
+);
+}

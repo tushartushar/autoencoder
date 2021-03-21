@@ -1,0 +1,24 @@
+public String toString(){
+  return "(Dht.PutReq key=" + GuidTools.guid_to_string(key) + " put="+ put+ " ttl="+ ttl_sec+ " client_id="+ client_id.getHostAddress()+ ")";
+}
+public String toString(){
+  return "(Dht.GetReq key=" + GuidTools.guid_to_string(key) + " maxvals="+ maxvals+ " all="+ all+ " placemark="+ placemark+ ")";
+}
+public String toString(){
+  return "(Dht.PutResp)";
+}
+public String toString(){
+  return "(Dht.GetResp values.size ()=" + values.size() + " placemark="+ placemark+ ")";
+}
+public String toString(){
+  return "(Dht.PutReqPayload time_usec=" + time_usec + " key="+ GuidTools.guid_to_string(key)+ " put="+ put+ " return_addr="+ return_addr+ " seq="+ seq+ " ttl="+ ttl_sec+ " retried="+ retried+ ")";
+}
+public String toString(){
+  return "(Dht.PutRespMsg seq=" + seq + " result="+ result+ ")";
+}
+public String toString(){
+  return "(Dht.GetRespMsg seq=" + seq + " key="+ GuidTools.guid_to_string(key)+ " values.size ()="+ values.size()+ " orig_placemark="+ orig_placemark+ " new_placemark="+ new_placemark+ ")";
+}
+public String toString(){
+  return "(Dht.ForwardThroughLeafSetReq payload=" + payload + ")";
+}

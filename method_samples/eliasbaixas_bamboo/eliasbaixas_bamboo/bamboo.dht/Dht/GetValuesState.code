@@ -1,0 +1,4 @@
+public GetValuesState(int m,Thunk2<LinkedList<Pair<Key,ByteBuffer>>,Boolean> d){
+  maxvals=m;
+  done=d;
+}

@@ -1,0 +1,9 @@
+public static Node invalidateRange(Node n,long low,long high){
+  if ((high < n.low) || (low > n.high)) {
+    return n;
+  }
+  if ((low <= n.low) && (high >= n.high)) {
+    return invalidate(n);
+  }
+  return makeParent(n.offset(),invalidateRange(n.left,low,high),invalidateRange(n.right,low,high));
+}

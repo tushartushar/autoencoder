@@ -1,0 +1,8 @@
+/** 
+ * Don't use this function; I'm trying to figure out how to get rid of it.
+ */
+public LinkedList send_q(InetSocketAddress peer){
+  Connection conn=(Connection)conns.get(peer);
+  if (conn == null)   return null;
+ else   return conn.send_q;
+}

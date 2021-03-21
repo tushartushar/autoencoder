@@ -1,0 +1,4 @@
+public void route_continue(BigInteger src,BigInteger dest,NodeId immediate_src,long app_id,boolean intermediate_upcall,boolean iter,QuickSerializable payload){
+  BambooRouteContinue outb=new BambooRouteContinue(src,dest,immediate_src,app_id,intermediate_upcall,iter,payload);
+  dispatch(outb);
+}

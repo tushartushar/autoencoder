@@ -1,0 +1,12 @@
+protected static Node shift_time(Node n,long now,long rate,long then){
+  if (n == null)   return n;
+  n=create_point(n,rate,then);
+  n=remove_range(n,now,then - 1);
+  n=increment_range(n,then,Long.MAX_VALUE,-1 * (then - now) * rate);
+  if ((n.leaf()) && (n.value == 0) && (n.offset == 0))   return null;
+ else   return n;
+}
+public void shift_time(long then){
+  root=shift_time(root,now,rate,then);
+  now=then;
+}

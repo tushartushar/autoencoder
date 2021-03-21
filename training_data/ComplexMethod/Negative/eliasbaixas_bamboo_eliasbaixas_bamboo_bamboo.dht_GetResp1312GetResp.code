@@ -1,0 +1,5 @@
+public GetResp(LinkedList v,Object ud,StorageManager.Key p){
+  user_data=ud;
+  values=v;
+  placemark=p;
+}

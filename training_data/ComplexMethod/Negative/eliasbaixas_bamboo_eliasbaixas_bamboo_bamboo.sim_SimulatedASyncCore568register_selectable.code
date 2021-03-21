@@ -1,0 +1,3 @@
+public SelectionKey register_selectable(SelectableChannel channel,int interest_ops,SelectableCB cb,Object user_data) throws ClosedChannelException {
+  throw new NoSuchMethodError("running under simulator");
+}

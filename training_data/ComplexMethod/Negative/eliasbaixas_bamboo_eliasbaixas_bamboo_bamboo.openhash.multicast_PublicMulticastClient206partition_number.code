@@ -1,0 +1,6 @@
+protected BigInteger partition_number(BigInteger key){
+  BigInteger two2thel=TWO.pow(total_levels - 1);
+  BigInteger partition_width=MOD.divide(two2thel);
+  BigInteger partition_number=key.divide(partition_width);
+  return partition_number;
+}

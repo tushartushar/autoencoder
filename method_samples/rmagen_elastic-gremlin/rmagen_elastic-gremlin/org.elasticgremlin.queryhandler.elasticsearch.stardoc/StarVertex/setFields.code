@@ -1,0 +1,6 @@
+public void setFields(Map<String,Object> entries){
+  entries.entrySet().forEach(field -> {
+    if (field.getValue() != null)     addPropertyLocal(field.getKey(),field.getValue());
+  }
+);
+}

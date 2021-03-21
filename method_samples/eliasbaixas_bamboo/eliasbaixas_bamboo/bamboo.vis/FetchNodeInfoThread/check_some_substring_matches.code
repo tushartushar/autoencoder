@@ -1,0 +1,18 @@
+protected boolean check_some_substring_matches(String a,String b){
+  String short_string;
+  String long_string;
+  if (a.length() < b.length()) {
+    short_string=a;
+    long_string=b;
+  }
+ else {
+    short_string=b;
+    long_string=a;
+  }
+  for (int x=0; x < long_string.length(); x++) {
+    if (long_string.regionMatches(true,x,short_string,0,short_string.length())) {
+      return true;
+    }
+  }
+  return false;
+}

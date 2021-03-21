@@ -1,0 +1,4 @@
+/** 
+ * This function should return a non-negative integer indicating the priority to accept parsed data. For example, when the input text fits in both the contact format and the plain text format, the contact format should be chosen, thus the priority of contact is higher than that of plain text. Plain text is the fallback format,  so its priority is always 0.
+ */
+int getParsingPriority();

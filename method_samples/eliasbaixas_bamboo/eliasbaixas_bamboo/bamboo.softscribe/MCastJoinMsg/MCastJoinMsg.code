@@ -1,0 +1,12 @@
+public MCastJoinMsg(NodeId srcid,BigInteger dstguid){
+  this.srcid=srcid;
+  this.dstguid=dstguid;
+}
+public MCastJoinMsg(MCastJoinMsg other){
+  srcid=other.srcid;
+  dstguid=other.dstguid;
+}
+public MCastJoinMsg(InputBuffer buffer) throws QSException {
+  srcid=(NodeId)buffer.nextObject();
+  dstguid=buffer.nextBigInteger();
+}

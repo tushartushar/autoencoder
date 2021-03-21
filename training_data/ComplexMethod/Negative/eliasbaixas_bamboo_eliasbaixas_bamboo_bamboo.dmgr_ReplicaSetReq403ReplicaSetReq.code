@@ -1,0 +1,10 @@
+public ReplicaSetReq(NodeId n,BigInteger g,long x){
+  return_address=n;
+  guid=g;
+  nonce=x;
+}
+public ReplicaSetReq(InputBuffer buffer) throws QSException {
+  return_address=new NodeId(buffer);
+  guid=buffer.nextBigInteger();
+  nonce=buffer.nextLong();
+}

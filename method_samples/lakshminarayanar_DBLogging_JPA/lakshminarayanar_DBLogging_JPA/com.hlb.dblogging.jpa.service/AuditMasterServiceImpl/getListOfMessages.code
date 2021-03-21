@@ -1,0 +1,3 @@
+@Transactional(readOnly=true) @Override public List<AuditMaster> getListOfMessages(){
+  return auditMasterRepo.findFirst10ByLogInterfaceOrderByTransDateTimeDesc("MBASE");
+}

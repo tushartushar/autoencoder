@@ -1,0 +1,37 @@
+public int dispatch_send(int level,QuickSerializable payload){
+  if (logger.isDebugEnabled())   logger.debug("Dispatch_send[" + level + "]: "+ queue[level]);
+  int num_forwarded=0;
+  if (level == total_levels - 1) {
+    for (int i=1; i <= queue[level].size(); i++) {
+      long rtt=queue[level].getIndexPriority(i);
+      NodeId peer=(NodeId)queue[level].getIndex(i);
+      MulticastMessage sm=new MulticastMessage(groupname,my_node_id,rtt,timer_ms(),payload);
+      sm.add_rtt(rtt / 2);
+      sm.add_transit(timer_ms());
+      network.send(sm,peer);
+      num_forwarded++;
+      if (logger.isDebugEnabled())       logger.debug("Sending(" + level + ") to "+ peer.address().getHostAddress()+ ":"+ peer.port());
+    }
+  }
+ else {
+    if (!queue[level].isEmpty()) {
+      NodeId peer=(NodeId)(queue[level].getFirst());
+      long fastest_rtt=queue[level].getFirstPriority();
+      assert (fastest_rtt != -1);
+      MulticastMessage sm=new MulticastMessage(groupname,my_node_id,fastest_rtt,timer_ms(),payload);
+      MulticastMessage clone=null;
+      try {
+        clone=(MulticastMessage)sm.clone();
+      }
+ catch (      CloneNotSupportedException e) {
+        assert false : e;
+      }
+      sm.add_rtt(fastest_rtt / 2);
+      sm.add_transit(timer_ms());
+      network.send(sm,peer,curry(resend,new Integer(level),clone,new Boolean(true)));
+      num_forwarded++;
+      if (logger.isDebugEnabled())       logger.debug("Sending(" + level + ") to "+ peer.address().getHostAddress()+ ":"+ peer.port());
+    }
+  }
+  return num_forwarded;
+}

@@ -1,0 +1,5 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  os=new FileOutputStream(config_get_string(config,"output_file"));
+  acore.registerTimer(0,ready);
+}

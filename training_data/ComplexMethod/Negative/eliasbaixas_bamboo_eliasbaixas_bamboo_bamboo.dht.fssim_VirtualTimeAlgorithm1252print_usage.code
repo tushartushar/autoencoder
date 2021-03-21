@@ -1,0 +1,10 @@
+public void print_usage(){
+  super.print_usage();
+  if (DEBUG)   System.err.print(sim.now_ms());
+  for (int i=0; i < client_count; ++i) {
+    Integer client=new Integer(i);
+    Long count=(Long)commitments_granted.get(client);
+    if (DEBUG)     System.err.print(" " + (count == null ? 0 : count.longValue()));
+  }
+  if (DEBUG)   System.err.println();
+}

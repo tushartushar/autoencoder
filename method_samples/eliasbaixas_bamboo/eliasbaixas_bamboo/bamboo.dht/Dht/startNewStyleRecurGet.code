@@ -1,0 +1,38 @@
+protected void startNewStyleRecurGet(final long seq,final BigInteger key,final Key placemark,final int maxvals,final NodeId client,final NodeId return_addr,Set<NeighborInfo> replicas){
+  Pair<NodeId,Long> pair=Pair.create(return_addr,new Long(seq));
+  if (getsBeingProcessed.contains(pair)) {
+    StringBuffer sbuf=new StringBuffer(200);
+    sbuf.append("upcall for get req key=0x");
+    sbuf.append(GuidTools.guid_to_string(key));
+    sbuf.append(" return addr=");
+    sbuf.append(return_addr);
+    sbuf.append(" seq=");
+    sbuf.append(seq);
+    sbuf.append(" already being processed");
+    logger.info(sbuf.toString());
+    return;
+  }
+  getsBeingProcessed.add(pair);
+  Set<NodeId> r=new LinkedHashSet<NodeId>();
+  Set<NodeId> synced=new LinkedHashSet<NodeId>();
+  for (  NeighborInfo ni : replicas) {
+    r.add(ni.node_id);
+    if (!ni.node_id.equals(my_node_id) && dmgr.synced(key,ni.node_id))     synced.add(ni.node_id);
+  }
+  Set<NodeId> others=new LinkedHashSet<NodeId>();
+  others.addAll(r);
+  others.removeAll(synced);
+  others.remove(my_node_id);
+  StringBuffer sbuf=new StringBuffer(200);
+  sbuf.append("upcall for get req key=0x");
+  sbuf.append(GuidTools.guid_to_string(key));
+  sbuf.append(" return addr=");
+  sbuf.append(return_addr);
+  sbuf.append(" seq=");
+  sbuf.append(seq);
+  sbuf.append(" reached replica, new recur style");
+  sbuf.append(", replicas=").append(r);
+  sbuf.append(", synced=").append(synced);
+  logger.info(sbuf.toString());
+  getValues(key,placemark,maxvals,curry(sendRecurGetResp,return_addr,new Long(seq),r,synced,new Integer(maxvals),client,pair));
+}

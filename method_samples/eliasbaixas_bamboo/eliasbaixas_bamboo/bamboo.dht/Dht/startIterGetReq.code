@@ -1,0 +1,11 @@
+public void startIterGetReq(){
+  for (  NeighborInfo ni : router.leafSet().as_set()) {
+    VirtualCoordinate vc=router.coordinate(ni);
+    nodes.put(ni,vc);
+  }
+  for (  NeighborInfo ni : router.routingTable().as_list()) {
+    VirtualCoordinate vc=router.coordinate(ni);
+    nodes.put(ni,vc);
+  }
+  sendReq(my_node_id,null,null);
+}

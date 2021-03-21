@@ -1,0 +1,68 @@
+public void run(){
+  Router router=Router.instance(my_node_id);
+  try {
+    router.registerApplication(Router.applicationID(WebInterface.class),lsChanged,rtChanged,null,null,null);
+  }
+ catch (  Router.DuplicateApplicationException e) {
+    BUG(e);
+  }
+  MODULUS=router.modulus();
+  DIGIT_VALUES=router.valuesPerDigit();
+  my_guid=router.id();
+  my_neighbor_info=new BambooNeighborInfo(my_node_id,my_guid,0.0);
+  rt=new RoutingTable(new NeighborInfo(my_node_id,my_guid),1.0,MODULUS,router.digitsPerID(),DIGIT_VALUES);
+{
+    SecureHash my_guid_sh=GuidTools.big_integer_to_secure_hash(my_guid);
+    byte[] noise=my_guid_sh.bytes();
+    int seed=ostore.util.ByteUtils.bytesToInt(noise,new int[1]);
+    rand=new Random(seed);
+  }
+  try {
+    svr_ch=ServerSocketChannel.open();
+    svr_ch.configureBlocking(false);
+    SocketAddress addr=new InetSocketAddress(my_node_id.address(),listen_port);
+    ServerSocket sock=svr_ch.socket();
+    sock.bind(addr);
+    acore.register_selectable(svr_ch,SelectionKey.OP_ACCEPT,new ASyncCore.SelectableCB(){
+      public void select_cb(      SelectionKey skey,      Object user_data){
+        if (skey.isAcceptable())         handle_accept_ready();
+      }
+    }
+,null);
+  }
+ catch (  IOException e) {
+    BUG(e);
+  }
+  acore.register_timer(10 * 750 + rand.nextInt(10 * 500),periodic_timer_cb,null);
+}
+public void run(Object response){
+  state.outstandingReqs--;
+  byte[] resp=null;
+  if (response instanceof Exception) {
+    resp=responseProcessor.processException((Exception)response,requestProcessor.getEncoding());
+  }
+ else {
+    try {
+      resp=responseProcessor.processResponse(response,requestProcessor.getEncoding());
+    }
+ catch (    Exception e) {
+      resp=responseProcessor.processException(e,requestProcessor.getEncoding());
+    }
+  }
+  if (skey.isValid()) {
+    skey.interestOps(SelectionKey.OP_WRITE);
+    create_response(state,resp);
+  }
+}
+public void run(BambooNeighborInfo p[],BambooNeighborInfo s[]){
+  preds=p;
+  succs=s;
+}
+public void run(BambooNeighborInfo add[],BambooNeighborInfo rem[]){
+  if (add != null) {
+    for (int i=0; i < add.length; ++i)     rt.force_add(new NeighborInfo(add[i].node_id,add[i].guid),add[i].rtt_ms);
+  }
+  if (rem != null) {
+    for (int i=0; i < rem.length; ++i)     rt.remove(new NeighborInfo(rem[i].node_id,rem[i].guid));
+  }
+}

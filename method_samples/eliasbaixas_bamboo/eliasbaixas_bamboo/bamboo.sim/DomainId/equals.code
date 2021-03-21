@@ -1,0 +1,7 @@
+public boolean equals(Object other){
+  DomainId rhs=(DomainId)other;
+  if (dom != rhs.dom)   return false;
+  if (snum != rhs.snum)   return false;
+  if (snum == -1)   return true;
+  return dnn == rhs.dnn;
+}

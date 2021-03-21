@@ -1,0 +1,14 @@
+protected void redraw_all(){
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  if ((!ring_mode) && (the_ring != null)) {
+    layer.remove(the_ring);
+    the_ring=null;
+  }
+  if (ring_mode && (the_ring == null)) {
+    the_ring=new BasicEllipse(-1.0 * ring_radius,-1.0 * ring_radius,2.0 * ring_radius,2.0 * ring_radius);
+    the_ring.setLineWidth((float)(dot_radius / 3.0));
+    the_ring.repaint();
+    layer.add(the_ring);
+  }
+  for (  BambooNode b : FNIT.nodes_by_id.values())   b.redraw();
+}

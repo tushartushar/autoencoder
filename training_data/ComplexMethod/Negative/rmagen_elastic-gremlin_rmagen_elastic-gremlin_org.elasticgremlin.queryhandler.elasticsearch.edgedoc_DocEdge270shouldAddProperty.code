@@ -1,0 +1,3 @@
+@Override protected boolean shouldAddProperty(String key){
+  return super.shouldAddProperty(key) && !key.equals(OutId) && !key.equals(OutLabel)&& !key.equals(InId)&& !key.equals(InLabel);
+}

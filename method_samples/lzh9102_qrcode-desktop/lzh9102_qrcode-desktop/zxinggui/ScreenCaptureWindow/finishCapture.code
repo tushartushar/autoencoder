@@ -1,0 +1,7 @@
+private void finishCapture(){
+  BufferedImage image=ImageHelper.cropImage(screencapture,rect.getX1(),rect.getY1(),rect.getW(),rect.getH());
+  setVisible(false);
+  if (screen_capture_listener != null) {
+    screen_capture_listener.screenshotCaptured(image);
+  }
+}

@@ -1,0 +1,3 @@
+public void setErrorMessage(String errorMessage){
+  ErrorMessage=errorMessage;
+}

@@ -1,0 +1,3 @@
+@Column(name="UPDATEDDATETIME",nullable=true) public Date getUpdatedDateTime(){
+  return UpdatedDateTime;
+}

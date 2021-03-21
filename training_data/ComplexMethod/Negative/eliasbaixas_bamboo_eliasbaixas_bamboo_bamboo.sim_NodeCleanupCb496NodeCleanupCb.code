@@ -1,0 +1,3 @@
+public NodeCleanupCb(NodeId n){
+  node_id=n;
+}

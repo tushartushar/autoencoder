@@ -1,0 +1,3 @@
+public FileShare() throws Exception {
+  md=MessageDigest.getInstance("SHA");
+}

@@ -1,0 +1,22 @@
+public String getLogLevelMessage(InputStream inputStream){
+  try {
+    DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
+    factory.setNamespaceAware(true);
+    DocumentBuilder builder;
+    Document doc=null;
+    builder=factory.newDocumentBuilder();
+    doc=builder.parse(inputStream);
+    ApplLogger.getLogger().info("Parsing the formatted XML and finding whether the LogLevel property matches or not");
+    XPathExpression xPathExpression=XPathFactory.newInstance().newXPath().compile("//LogLevel");
+    NodeList nodes=(NodeList)xPathExpression.evaluate(doc,XPathConstants.NODESET);
+    Node node=nodes.item(0);
+    if (node != null && node.getTextContent() != null && !node.getTextContent().isEmpty()) {
+      ApplLogger.getLogger().info("LogLevel property value from the Quere message is  : " + node.getTextContent());
+      return node.getTextContent().trim();
+    }
+  }
+ catch (  Exception e) {
+    ApplLogger.getLogger().error("Error while mapping the xml data to find LogLevel of message: ",e);
+  }
+  return null;
+}

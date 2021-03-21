@@ -1,0 +1,1 @@
+AccessRights findAccessRights(String accessRight);

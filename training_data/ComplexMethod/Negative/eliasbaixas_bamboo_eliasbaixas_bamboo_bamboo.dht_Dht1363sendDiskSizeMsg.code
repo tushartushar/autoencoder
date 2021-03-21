@@ -1,0 +1,3 @@
+protected void sendDiskSizeMsg(InetSocketAddress peer,boolean reply){
+  network.send(new DiskSizeMsg(ttl_sec_ranges,disk_sizes,reply),peer);
+}

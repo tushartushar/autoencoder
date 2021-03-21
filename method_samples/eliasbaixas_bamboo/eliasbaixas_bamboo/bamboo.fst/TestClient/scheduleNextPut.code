@@ -1,0 +1,4 @@
+public void scheduleNextPut(){
+  long wait=3 * period_ms / 4 + rand.nextInt(period_ms / 2);
+  acore.registerTimer(wait,doPut);
+}

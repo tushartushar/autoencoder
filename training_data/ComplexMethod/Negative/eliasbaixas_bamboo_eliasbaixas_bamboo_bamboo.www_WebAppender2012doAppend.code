@@ -1,0 +1,4 @@
+public synchronized void doAppend(LoggingEvent e){
+  events.addLast(e);
+  if (events.size() > max_events)   events.removeFirst();
+}

@@ -1,0 +1,3 @@
+public NodeId current_node_id(){
+  return current_node_id;
+}

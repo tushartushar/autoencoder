@@ -1,0 +1,20 @@
+protected void dumpLeafSetRTTsDialog(){
+  String s=(String)JOptionPane.showInputDialog(frame,"Dump LeafSet RTTs to File:","Dump LeafSet RTTs to File",JOptionPane.PLAIN_MESSAGE);
+  if ((s != null) && (s.length() > 0)) {
+    logger.info("filename: " + s);
+    PrintStream os=null;
+    try {
+      os=new PrintStream(new FileOutputStream(s));
+    }
+ catch (    IOException e) {
+      logger.warn(e);
+      return;
+    }
+    for (    BambooNode node : FNIT.nodes_by_id.values()) {
+      for (      ExtendedNeighborInfo ni : node.ls_lat.keySet()) {
+        os.println(node.node_id + " " + ni.node_id+ " "+ node.ls_lat.get(ni));
+      }
+    }
+    os.close();
+  }
+}

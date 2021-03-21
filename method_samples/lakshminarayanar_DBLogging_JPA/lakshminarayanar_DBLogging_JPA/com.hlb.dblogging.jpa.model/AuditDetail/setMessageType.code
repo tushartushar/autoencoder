@@ -1,0 +1,3 @@
+public void setMessageType(String messageType){
+  MessageType=messageType;
+}

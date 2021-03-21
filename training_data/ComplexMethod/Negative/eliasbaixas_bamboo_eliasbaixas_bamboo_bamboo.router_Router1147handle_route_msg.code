@@ -1,0 +1,35 @@
+protected void handle_route_msg(final RouteMsg req){
+  NeighborInfo peer_ni=new NeighborInfo(req.peer,req.peer_guid);
+  location_cache.add_node(peer_ni);
+  NeighborInfo next_hop=calc_next_hop(req.dest,true);
+  if (next_hop == my_neighbor_info) {
+    deliver(req.src,req.dest,req.peer,req.app_id,-1,req.wait_ms,req.est_rtt_ms,req.payload);
+  }
+ else {
+    ApplicationInfo appInfo=apps.get(new Long(req.app_id));
+    if (req.intermediate_upcall && (appInfo != null) && (appInfo.routeUpcall != null)) {
+      appInfo.routeUpcall.run(req.src,req.dest,req.peer,new Long(req.wait_ms),new Long(req.est_rtt_ms),req.payload);
+    }
+ else {
+      if (req.intermediate_upcall && logger.isDebugEnabled()) {
+        if (appInfo == null) {
+          logger.debug("Could not upcall " + req + ", no app.  Forwarding it towards the root.");
+        }
+ else {
+          logger.debug("Could not upcall " + req + ", no upcall.  Forwarding it towards the root.");
+        }
+      }
+      RouteMsg outb=new RouteMsg(next_hop.node_id,req.src,req.dest,req.app_id,req.intermediate_upcall,my_guid,req.payload);
+      outb.comp_q=my_sink;
+      outb.user_data=new RecursiveRouteCB(next_hop,new Runnable(){
+        public void run(){
+          handleEvent(req);
+        }
+      }
+);
+      if (no_rexmit_routes)       outb.timeout_sec=-1;
+ else       outb.timeout_sec=5;
+      dispatch(outb);
+    }
+  }
+}

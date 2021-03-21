@@ -1,0 +1,4 @@
+public LBleAdvertiser(Context context,BluetoothManager manager){
+  this.advertiser=manager.getAdapter().getBluetoothLeAdvertiser();
+  this.context=context;
+}

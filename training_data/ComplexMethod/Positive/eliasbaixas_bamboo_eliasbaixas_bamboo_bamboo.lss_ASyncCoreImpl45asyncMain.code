@@ -1,0 +1,81 @@
+public void asyncMain(){
+  if (logger.isDebugEnabled())   logger.debug("async_main called");
+  if (useWatchdog) {
+    registerTimer(0,new WatchdogReset());
+    (new Watchdog()).start();
+  }
+  while (true) {
+synchronized (timers) {
+      while (!timers.isEmpty()) {
+        TimerInfo ti=timers.getFirst();
+        if (cancelled_timers.remove(ti)) {
+          if (logger.isDebugEnabled())           logger.debug("removing timer " + ti);
+          timers.removeFirst();
+        }
+ else {
+          if (logger.isDebugEnabled())           logger.debug("finished removing timers");
+          break;
+        }
+      }
+    }
+    long now_ms=nowMillis();
+    if (logger.isDebugEnabled())     logger.debug("now_ms=" + now_ms);
+    try {
+      long time_ms=-1;
+synchronized (timers) {
+        if (!timers.isEmpty())         time_ms=timers.getFirstPriority().longValue();
+      }
+      if (time_ms == -1) {
+        if (logger.isDebugEnabled())         logger.debug("calling select ()");
+        selector.select();
+      }
+ else {
+        if (now_ms >= time_ms) {
+          if (logger.isDebugEnabled())           logger.debug("calling selectNow ()");
+          selector.selectNow();
+        }
+ else {
+          if (logger.isDebugEnabled())           logger.debug("calling select (" + (time_ms - now_ms) + ")");
+          selector.select(time_ms - now_ms);
+        }
+      }
+    }
+ catch (    IOException e) {
+      if (!e.getMessage().equals("Interrupted system call")) {
+        logger.fatal("unhandled exception: " + e,e);
+        System.exit(1);
+      }
+    }
+    if (logger.isDebugEnabled())     logger.debug("select returned");
+    Iterator i=selector.selectedKeys().iterator();
+    while (i.hasNext()) {
+      SelectionKey skey=(SelectionKey)i.next();
+      i.remove();
+      SelectableInfo si=selectable_info.get(skey.channel());
+      if (si == null)       continue;
+      if (si.cb != null)       ((SelectableCB)si.cb).select_cb(skey,si.user_data);
+      if (skey.isValid() && (si.accept_cb != null) && ((skey.readyOps() & OP_ACCEPT) != 0))       si.accept_cb.run();
+      if (skey.isValid() && (si.connect_cb != null) && ((skey.readyOps() & OP_CONNECT) != 0))       si.connect_cb.run();
+      if (skey.isValid() && (si.read_cb != null) && ((skey.readyOps() & OP_READ) != 0))       si.read_cb.run();
+      if (skey.isValid() && (si.write_cb != null) && ((skey.readyOps() & OP_WRITE) != 0))       si.write_cb.run();
+    }
+    while (true) {
+      TimerInfo info=null;
+synchronized (timers) {
+        if (timers.isEmpty())         break;
+        long time_ms=timers.getFirstPriority().longValue();
+        if (now_ms < time_ms)         break;
+        info=timers.removeFirst();
+        if (cancelled_timers.remove(info)) {
+          if (logger.isDebugEnabled()) {
+            logger.debug("Skipping cancelled timer " + info);
+          }
+          continue;
+        }
+      }
+      if (logger.isDebugEnabled())       logger.debug("calling timer " + info);
+      if (info.cb instanceof TimerCB)       ((TimerCB)info.cb).timer_cb(info.user_data);
+ else       ((Runnable)info.cb).run();
+    }
+  }
+}

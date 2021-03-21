@@ -1,0 +1,23 @@
+@Override public void onScanResult(int callbackType,android.bluetooth.le.ScanResult osResult){
+  String address=osResult.getDevice().getAddress();
+  boolean seenItBefore=addressesSeen.contains(address);
+  int clientFlags=settings.getCallbackType();
+  int firstMatchBit=clientFlags & ScanSettings.CALLBACK_TYPE_FIRST_MATCH;
+  int allMatchesBit=clientFlags & ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
+  ScanResult result=fromOs(osResult);
+  recentScanResults.put(address,result);
+  if ((firstMatchBit | allMatchesBit) != 0) {
+    try {
+      if (!seenItBefore) {
+        callback.onScanResult(ScanSettings.CALLBACK_TYPE_FIRST_MATCH,result);
+      }
+ else       if (allMatchesBit != 0) {
+        callback.onScanResult(ScanSettings.CALLBACK_TYPE_ALL_MATCHES,result);
+      }
+    }
+ catch (    Exception e) {
+      Logger.logError("Failure while handling scan result",e);
+    }
+  }
+  addressesSeen.add(address);
+}

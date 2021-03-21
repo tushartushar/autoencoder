@@ -1,0 +1,10 @@
+private void readFromParcel(Parcel in){
+  if (in.readInt() == 1) {
+    mDevice=BluetoothDevice.CREATOR.createFromParcel(in);
+  }
+  if (in.readInt() == 1) {
+    mScanRecord=ScanRecord.parseFromBytes(in.createByteArray());
+  }
+  mRssi=in.readInt();
+  mTimestampNanos=in.readLong();
+}

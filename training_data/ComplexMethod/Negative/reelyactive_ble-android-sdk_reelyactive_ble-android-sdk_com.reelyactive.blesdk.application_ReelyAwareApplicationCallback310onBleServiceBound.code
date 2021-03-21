@@ -1,0 +1,6 @@
+/** 
+ * This method is called when the  {@link BleService is available}.<br/> The default behaviour is to start a scan.
+ */
+protected void onBleServiceBound(){
+  startScan();
+}

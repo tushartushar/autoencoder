@@ -1,0 +1,15 @@
+public PointList[] leavesToPoints(Node node,long aoff){
+  if (node.leaf()) {
+    long val=node.valid ? node.offset() + node.value() + aoff - rate * (node.low - now) : 0;
+    PointList left=new PointList(node.low,val);
+    PointList right=new PointList(node.low + 1,val);
+    left.next=right;
+    return new PointList[]{left,right};
+  }
+ else {
+    PointList[] left=leavesToPoints(node.left,aoff + node.offset());
+    PointList[] right=leavesToPoints(node.right,aoff + node.offset());
+    left[1].next=right[0];
+    return new PointList[]{left[0],right[1]};
+  }
+}

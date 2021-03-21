@@ -1,0 +1,3 @@
+public String setTableName(String tablename){
+  return TABLE_NAME=tablename;
+}

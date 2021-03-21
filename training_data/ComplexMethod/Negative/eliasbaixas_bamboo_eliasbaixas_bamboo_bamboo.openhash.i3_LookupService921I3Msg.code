@@ -1,0 +1,10 @@
+public I3Msg(BigInteger k,byte[] p){
+  dest=k;
+  payload_bytes=p;
+}
+public I3Msg(InputBuffer ib) throws QSException {
+  dest=ib.nextBigInteger();
+  int len=ib.nextInt();
+  payload_bytes=new byte[len];
+  ib.nextBytes(payload_bytes,0,len);
+}

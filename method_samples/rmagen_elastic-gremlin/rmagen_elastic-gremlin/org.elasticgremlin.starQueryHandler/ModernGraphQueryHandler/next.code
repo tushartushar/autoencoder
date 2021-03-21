@@ -1,0 +1,3 @@
+@Override public E next(){
+  return firstIterator.hasNext() ? firstIterator.next() : secondIterator.next();
+}

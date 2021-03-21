@@ -1,0 +1,18 @@
+public void get(bamboo_get_args get_args,final GetDoneCb cb,final Object user_data){
+  Thunk1 t=new Thunk1(){
+    public void run(    Object resp){
+      cb.get_done_cb((bamboo_get_res)resp,user_data);
+    }
+  }
+;
+  req(2,3,get_args,t);
+}
+public void get(bamboo_get_args get_args,final Thunk1<bamboo_get_res> thunk){
+  Thunk1 t=new Thunk1(){
+    public void run(    Object resp){
+      thunk.run((bamboo_get_res)resp);
+    }
+  }
+;
+  req(2,3,get_args,t);
+}

@@ -1,0 +1,3 @@
+@Column(name="CUSTOMINT1",nullable=true,length=20) public int getCustomInt1(){
+  return CustomInt1;
+}

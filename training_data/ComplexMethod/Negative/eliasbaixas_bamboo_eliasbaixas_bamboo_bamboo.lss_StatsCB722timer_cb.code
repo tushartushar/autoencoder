@@ -1,0 +1,22 @@
+public void timer_cb(Object user_data){
+  long now_ms=System.currentTimeMillis();
+  Iterator i=conns.keySet().iterator();
+  while (i.hasNext()) {
+    InetSocketAddress addr=(InetSocketAddress)i.next();
+    Connection conn=(Connection)conns.get(addr);
+    double ttfs=(double)conn.time_to_first_send;
+    if (conn.time_to_first_send_cnt > 0)     ttfs/=conn.time_to_first_send_cnt;
+ else     ttfs=0.0;
+    conn.time_to_first_send=0;
+    conn.time_to_first_send_cnt=0;
+    double tta=(double)conn.time_to_ack;
+    if (conn.time_to_ack_cnt > 0)     tta/=conn.time_to_ack_cnt;
+ else     tta=0.0;
+    conn.time_to_ack=0;
+    conn.time_to_ack_cnt=0;
+    if (conn.lastrcv + 30 * 1000 > now_ms) {
+      logger.info(addr + " sa=" + (conn.sa >> 3)+ " sv="+ (conn.sv >> 2)+ " rto="+ conn.rto+ " cwnd="+ conn.cwnd+ " ssthresh="+ conn.ssthresh+ " ttfs="+ ttfs+ " tta="+ tta);
+    }
+  }
+  if (!closed)   acore.register_timer(STATS_PERIOD,this,null);
+}

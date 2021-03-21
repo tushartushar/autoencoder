@@ -1,0 +1,95 @@
+public void timer_cb(Object not_used){
+  logger.info("recv=" + received_msgs + " dup="+ received_duplicates+ " ("+ ((received_msgs > 0) ? ((double)received_duplicates / received_msgs * 100.0) : 0.0)+ "%)");
+  received_msgs=0;
+  received_duplicates=0;
+  if (track_duplicates_period != 0) {
+    acore.register_timer(track_duplicates_period,dup_track_cb,null);
+  }
+}
+public void timer_cb(Object user_data){
+  if (closed)   return;
+  Long seq=(Long)user_data;
+  TimeoutInfo tinfo=(TimeoutInfo)unacked.remove(seq);
+  if (DEBUG)   debugln("check timeout " + Long.toHexString(seq.longValue()));
+  long now_ms=System.currentTimeMillis();
+  if (tinfo == null) {
+    if (DEBUG)     debugln("seq 0x" + Long.toHexString(seq.longValue()) + " already acked");
+  }
+ else {
+    TimeoutInfo scti=new TimeoutInfo(tinfo);
+    second_chance.put(seq,scti);
+    second_chance_timeouts.add(new TimeoutInfoAndSeq(scti,seq),now_ms);
+    if (DEBUG_RTT)     debugln("timeout seq 0x" + Long.toHexString(seq.longValue()) + ", peer="+ tinfo.conn.addr+ ", rtt="+ (now_ms - tinfo.send_ms)+ ", now="+ now_ms);
+    if (tinfo.cut_ssthresh) {
+      ++tinfo.conn.consecutive_timeouts;
+      tinfo.conn.timeout();
+      Iterator j=tinfo.conn.inf.keySet().iterator();
+      while (j.hasNext()) {
+        Long s2=(Long)j.next();
+        TimeoutInfo t2=(TimeoutInfo)tinfo.conn.inf.get(s2);
+        t2.cut_ssthresh=false;
+      }
+    }
+    tinfo.conn.inf.remove(seq);
+    LinkedList to_callback=null;
+    if (tinfo.start_ms + tinfo.timeout_ms > now_ms)     tinfo.conn.retry_q.addLast(tinfo);
+ else {
+      to_callback=new LinkedList();
+      to_callback.addLast(tinfo);
+    }
+    for (int queue=0; queue < 2; ++queue) {
+      Iterator i=(queue == 0) ? tinfo.conn.retry_q.iterator() : tinfo.conn.send_q.iterator();
+      while (i.hasNext()) {
+        TimeoutInfo tmp=(TimeoutInfo)i.next();
+        if (tmp.start_ms + tmp.timeout_ms <= now_ms) {
+          i.remove();
+          if (to_callback == null)           to_callback=new LinkedList();
+          to_callback.addLast(tmp);
+        }
+      }
+    }
+    if (to_callback != null) {
+      if (DEBUG_MIN)       debugln("After " + tinfo.conn.consecutive_timeouts + " consecutive timeouts to "+ tinfo.conn.addr+ ", cancelling the following messages:");
+      while (!to_callback.isEmpty()) {
+        TimeoutInfo tmp=(TimeoutInfo)to_callback.removeFirst();
+        if (DEBUG_MIN)         debugln("    " + tmp.msg);
+        if ((!cancelled.remove(new Long(tmp.msg_id))) && (tmp.send_cb != null)) {
+          tmp.send_cb.run(new Boolean(false));
+        }
+      }
+    }
+    if (tinfo.conn.writable())     add_to_rr(tinfo.conn);
+  }
+  while ((!second_chance_timeouts.isEmpty()) && (second_chance_timeouts.getFirstPriority() + 60 * 1000 < now_ms)) {
+    TimeoutInfoAndSeq p=(TimeoutInfoAndSeq)second_chance_timeouts.removeFirst();
+    second_chance.remove(p.seq);
+  }
+}
+public void timer_cb(Object user_data){
+  long now_ms=System.currentTimeMillis();
+  if (DEBUG_MIN)   logger.info(" ib=" + in_bytes + " ip="+ in_pkts+ " ob="+ out_bytes+ " op="+ out_pkts);
+  in_bytes=in_pkts=out_bytes=out_pkts=0;
+  if (!closed)   acore.register_timer(BW_STATS_PERIOD,this,null);
+}
+public void timer_cb(Object user_data){
+  long now_ms=System.currentTimeMillis();
+  Iterator i=conns.keySet().iterator();
+  while (i.hasNext()) {
+    InetSocketAddress addr=(InetSocketAddress)i.next();
+    Connection conn=(Connection)conns.get(addr);
+    double ttfs=(double)conn.time_to_first_send;
+    if (conn.time_to_first_send_cnt > 0)     ttfs/=conn.time_to_first_send_cnt;
+ else     ttfs=0.0;
+    conn.time_to_first_send=0;
+    conn.time_to_first_send_cnt=0;
+    double tta=(double)conn.time_to_ack;
+    if (conn.time_to_ack_cnt > 0)     tta/=conn.time_to_ack_cnt;
+ else     tta=0.0;
+    conn.time_to_ack=0;
+    conn.time_to_ack_cnt=0;
+    if (conn.lastrcv + 30 * 1000 > now_ms) {
+      logger.info(addr + " sa=" + (conn.sa >> 3)+ " sv="+ (conn.sv >> 2)+ " rto="+ conn.rto+ " cwnd="+ conn.cwnd+ " ssthresh="+ conn.ssthresh+ " ttfs="+ ttfs+ " tta="+ tta);
+    }
+  }
+  if (!closed)   acore.register_timer(STATS_PERIOD,this,null);
+}

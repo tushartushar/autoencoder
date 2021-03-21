@@ -1,0 +1,31 @@
+@Transactional(rollbackFor={Exception.class}) public Users create(Users users){
+  try {
+    Users usersToBeCreated;
+    usersToBeCreated=usersRepository.findByUsername(users.getUsername());
+    if (usersToBeCreated != null) {
+      throw new DataIntegrityViolationException("User already exists");
+    }
+ else {
+      usersToBeCreated=usersRepository.findPreviouslyExistingUser(users.getUsername());
+      if (usersToBeCreated != null) {
+        ApplLogger.getLogger().info("Existing user, updating user only..");
+        usersToBeCreated.setActive(users.isActive());
+        usersToBeCreated.setDomain(users.getDomain());
+        usersToBeCreated.setUserRoles(users.getUserRoles());
+        usersToBeCreated.setLastModifiedBy("admin");
+        usersToBeCreated.setLastModifiedTime(new Date());
+        usersToBeCreated.setDeleted(Boolean.FALSE);
+        usersRepository.saveAndFlush(usersToBeCreated);
+        return usersToBeCreated;
+      }
+ else {
+        ApplLogger.getLogger().info("New user, creating new user account only..");
+        return usersRepository.save(users);
+      }
+    }
+  }
+ catch (  Exception e) {
+    if (e instanceof DataIntegrityViolationException)     throw new DataIntegrityViolationException(e.getMessage());
+    throw e;
+  }
+}

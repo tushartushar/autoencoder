@@ -1,0 +1,7 @@
+protected static BigInteger rendevous_point(BigInteger key,BigInteger namespace,int level){
+  BigInteger two2thel=TWO.pow(level);
+  BigInteger partition_width=MOD.divide(two2thel);
+  BigInteger partition_number=key.divide(partition_width);
+  BigInteger low=partition_number.multiply(partition_width);
+  return low.add(namespace.divide(two2thel));
+}

@@ -1,0 +1,8 @@
+@Override protected void innerAddProperty(BaseVertexProperty vertexProperty){
+  try {
+    elasticMutations.updateElement(this,indexName,null,false);
+  }
+ catch (  ExecutionException|InterruptedException e) {
+    e.printStackTrace();
+  }
+}

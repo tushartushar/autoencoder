@@ -1,0 +1,1 @@
+@Query("select r from Role r where isDeleted = 0") Set<Role> findAllInSet();

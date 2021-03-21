@@ -1,0 +1,8 @@
+public static byte[] addr2bytes(InetSocketAddress addr){
+  byte[] result=new byte[6];
+  System.arraycopy(addr.getAddress().getAddress(),0,result,0,4);
+  ByteBuffer bb=ByteBuffer.wrap(result);
+  bb.position(4);
+  bb.putShort((short)addr.getPort());
+  return result;
+}

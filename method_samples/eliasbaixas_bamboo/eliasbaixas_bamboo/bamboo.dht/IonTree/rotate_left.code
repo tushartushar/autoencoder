@@ -1,0 +1,3 @@
+protected static Node rotate_left(Node n){
+  return new Node(n.offset,new Node(0,n.left,new Node(n.right.left,n.right.offset)),new Node(n.right.right,n.right.offset));
+}

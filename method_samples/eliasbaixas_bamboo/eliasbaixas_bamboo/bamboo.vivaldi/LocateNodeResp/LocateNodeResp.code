@@ -1,0 +1,16 @@
+/** 
+ * Constructs a response from the located node to be sent to the requestor.
+ * @param requestor The node which sent the original message.
+ * @param locatedId The node that was discovered.
+ * @param locatedCoordinate The discovered node's virtual coordinate.
+ */
+public LocateNodeResp(NodeId requestor,NodeId locatedId,VirtualCoordinate locatedCoordinate){
+  super(requestor,false);
+  _located_coord=locatedCoordinate;
+  _located_id=locatedId;
+}
+public LocateNodeResp(InputBuffer buffer) throws QSException {
+  super(buffer);
+  _located_coord=(VirtualCoordinate)buffer.nextObject();
+  _located_id=(NodeId)buffer.nextObject();
+}

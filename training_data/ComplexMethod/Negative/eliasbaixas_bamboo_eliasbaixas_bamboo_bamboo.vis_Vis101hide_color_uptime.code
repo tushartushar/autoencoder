@@ -1,0 +1,3 @@
+public void hide_color_uptime(){
+  color_node_default();
+}

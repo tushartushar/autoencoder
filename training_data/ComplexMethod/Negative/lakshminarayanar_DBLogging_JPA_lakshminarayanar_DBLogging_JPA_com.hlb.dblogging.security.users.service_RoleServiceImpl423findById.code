@@ -1,0 +1,5 @@
+@Override @Transactional public Role findById(int id){
+  Role role=roleRepository.findOne(id);
+  if (role == null)   throw new BSLException();
+  return role;
+}

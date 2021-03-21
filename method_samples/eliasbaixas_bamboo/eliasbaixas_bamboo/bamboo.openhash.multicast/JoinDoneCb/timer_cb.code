@@ -1,0 +1,3 @@
+public void timer_cb(Object user_data){
+  logger.info("Joined groupname=0x" + GuidTools.guid_to_string(groupname) + " up to level "+ +((Integer)user_data).intValue()+ " with ttl_s="+ JOIN_TTL);
+}

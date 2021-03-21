@@ -1,0 +1,10 @@
+protected static Node remove_range(Node n,long low,long high){
+  if ((high < n.low) || (low > n.high))   return n;
+  if ((low <= n.low) && (high >= n.high))   return null;
+  Node l=remove_range(n.left,low,high);
+  Node r=remove_range(n.right,low,high);
+  if (l == null)   return new Node(r,n.offset);
+  if (r == null)   return new Node(l,n.offset);
+  Node p=new Node(n.offset,l,r);
+  return balance(p);
+}

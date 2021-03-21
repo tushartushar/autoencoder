@@ -1,0 +1,7 @@
+/** 
+ * Relative time since something. It just have to be constant.
+ * @return
+ */
+private Long time(){
+  return SystemClock.elapsedRealtime();
+}

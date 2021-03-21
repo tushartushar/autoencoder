@@ -1,0 +1,26 @@
+public void readNext(){
+  assert !readDone;
+  while (putsOutstanding < 100) {
+    try {
+      byte[] kbytes=new byte[OldStorageManager.Key.SIZE];
+      int i=is.read(kbytes);
+      if (i == -1) {
+        readDone=true;
+        break;
+      }
+      OldStorageManager.Key oldKey=new OldStorageManager.Key(ByteBuffer.wrap(kbytes));
+      byte[] lbytes=new byte[4];
+      is.read(lbytes);
+      int len=ByteBuffer.wrap(lbytes).getInt();
+      byte[] data=new byte[len];
+      is.read(data);
+      StorageManager.Key newKey=new StorageManager.Key(oldKey.time_usec,oldKey.ttl_sec,oldKey.guid,ZERO_HASH,oldKey.data_hash,oldKey.put,oldKey.client_id);
+      dispatch(new PutReq(newKey,ByteBuffer.wrap(data),my_sink,null));
+      ++putsOutstanding;
+    }
+ catch (    IOException e) {
+      logger.fatal("caught " + e);
+      System.exit(1);
+    }
+  }
+}

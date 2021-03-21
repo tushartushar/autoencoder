@@ -1,0 +1,8 @@
+public bamboo_placemark(){
+}
+public bamboo_placemark(byte[] value){
+  this.value=value;
+}
+public bamboo_placemark(XdrDecodingStream xdr) throws OncRpcException, IOException {
+  xdrDecode(xdr);
+}

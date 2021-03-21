@@ -1,0 +1,4 @@
+@Override public boolean onPreferenceClick(Preference arg0){
+  launchImagePicker();
+  return true;
+}

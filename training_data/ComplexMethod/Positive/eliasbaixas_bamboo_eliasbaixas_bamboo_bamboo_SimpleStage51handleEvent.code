@@ -1,0 +1,30 @@
+public void handleEvent(QueueElementIF elem){
+  logger.debug("Got event " + elem);
+  if (!initialized) {
+    if (elem instanceof StagesInitializedSignal) {
+      dispatch(new BambooRouterAppRegReq(app_id,false,false,false,my_sink));
+    }
+ else     if (elem instanceof BambooRouterAppRegResp) {
+      initialized=true;
+      while (!wait_q.isEmpty())       handleEvent((QueueElementIF)wait_q.removeFirst());
+      if (sender)       classifier.dispatch_later(new Alarm(),10000);
+    }
+ else     wait_q.addLast(elem);
+  }
+ else {
+    if (elem instanceof BambooRouteDeliver) {
+      BambooRouteDeliver deliver=(BambooRouteDeliver)elem;
+      Payload pay=(Payload)deliver.payload;
+      logger.info("Message is: " + pay.toString());
+    }
+ else     if (elem instanceof Alarm) {
+      String msg="This message should be send over" + "Bamboo to the node with the smallest node ID.";
+      BambooRouteInit init=new BambooRouteInit(BigInteger.ZERO,app_id,false,false,new Payload(msg));
+      dispatch(init);
+      classifier.dispatch_later(new Alarm(),10000);
+    }
+ else {
+      BUG("Event " + elem + " unknown.");
+    }
+  }
+}

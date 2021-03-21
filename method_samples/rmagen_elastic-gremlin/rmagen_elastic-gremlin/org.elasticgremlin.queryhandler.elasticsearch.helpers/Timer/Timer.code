@@ -1,0 +1,4 @@
+public Timer(String name){
+  this.name=name;
+  sw.reset();
+}

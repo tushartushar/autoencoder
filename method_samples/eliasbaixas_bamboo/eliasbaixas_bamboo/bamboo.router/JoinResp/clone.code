@@ -1,0 +1,8 @@
+public Object clone() throws CloneNotSupportedException {
+  JoinResp result=(JoinResp)super.clone();
+  result.path=new LinkedList();
+  for (Iterator i=path.iterator(); i.hasNext(); )   result.path.addLast((NeighborInfo)i.next());
+  result.leaf_set=new TreeSet();
+  for (Iterator i=leaf_set.iterator(); i.hasNext(); )   result.leaf_set.add((NeighborInfo)i.next());
+  return result;
+}

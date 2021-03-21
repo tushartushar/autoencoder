@@ -1,0 +1,8 @@
+@Override public UserToAccessRights delete(int id){
+  UserToAccessRights userToAccessRights=userToAccessRightsRepository.findOne(id);
+  if (userToAccessRights != null) {
+    userToAccessRights.setDeleted(true);
+    userToAccessRightsRepository.save(userToAccessRights);
+  }
+  return userToAccessRights;
+}

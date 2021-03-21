@@ -1,0 +1,6 @@
+public synchronized void printEvents(StringBuffer result){
+  for (Iterator i=events.iterator(); i.hasNext(); ) {
+    LoggingEvent e=(LoggingEvent)i.next();
+    result.append(layout.format(e));
+  }
+}

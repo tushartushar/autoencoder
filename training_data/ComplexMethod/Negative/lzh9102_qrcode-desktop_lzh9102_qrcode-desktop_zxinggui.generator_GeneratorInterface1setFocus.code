@@ -1,0 +1,4 @@
+/** 
+ * Called when the generator interface is activated. The generator should set the focus to the first widget it defines.
+ */
+void setFocus();

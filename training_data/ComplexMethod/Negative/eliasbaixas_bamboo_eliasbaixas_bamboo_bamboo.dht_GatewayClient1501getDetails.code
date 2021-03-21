@@ -1,0 +1,3 @@
+public void getDetails(bamboo_get_args args,Thunk1<bamboo_get_result> resp){
+  req(3,3,args,resp);
+}

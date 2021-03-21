@@ -1,0 +1,4 @@
+public abstract SelectionKey register_selectable(SelectableChannel channel,int interest_ops,SelectableCB cb,Object user_data) throws ClosedChannelException ;
+public void register_selectable(SelectableChannel channel,int interestOps,Runnable callback) throws ClosedChannelException {
+  registerSelectable(channel,interestOps,callback);
+}

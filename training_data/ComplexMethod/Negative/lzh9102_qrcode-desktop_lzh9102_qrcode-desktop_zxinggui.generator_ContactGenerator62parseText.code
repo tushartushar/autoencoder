@@ -1,0 +1,3 @@
+@Override public boolean parseText(String text,boolean write){
+  return parseMeCard(text,write) || parseVCard(text,write);
+}

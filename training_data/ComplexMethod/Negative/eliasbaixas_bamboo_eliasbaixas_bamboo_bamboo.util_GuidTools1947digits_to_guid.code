@@ -1,0 +1,15 @@
+public static BigInteger digits_to_guid(int[] digits,int bits_per_digit,int digits_per_guid,int digit_values){
+  check_bpd_and_dv(bits_per_digit,digit_values);
+  if (digits.length != digits_per_guid)   throw new IllegalArgumentException("digits [] wrong size");
+  int digits_per_byte=8 / bits_per_digit;
+  byte[] buf=new byte[digits_per_guid / digits_per_byte + 1];
+  for (int bnum=0; bnum < buf.length - 1; ++bnum) {
+    int bval=0;
+    for (int dnum=0; dnum < digits_per_byte; ++dnum) {
+      bval*=digit_values;
+      bval|=digits[bnum * digits_per_byte + dnum];
+    }
+    buf[bnum + 1]=(byte)bval;
+  }
+  return new BigInteger(buf);
+}

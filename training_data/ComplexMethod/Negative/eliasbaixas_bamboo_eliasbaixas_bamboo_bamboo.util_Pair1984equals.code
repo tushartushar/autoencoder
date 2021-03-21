@@ -1,0 +1,7 @@
+public boolean equals(Object other){
+  Pair rhs=(Pair)other;
+  if (first == null && second == null)   return rhs.first == null && rhs.second == null;
+  if (first == null)   return rhs.first == null && second.equals(rhs.second);
+  if (second == null)   return rhs.second == null && first.equals(rhs.first);
+  return first.equals(rhs.first) && second.equals(rhs.second);
+}

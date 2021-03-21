@@ -1,0 +1,11 @@
+ScanClient(ScanSettings settings,List<ScanFilter> filters,ScanCallback callback){
+  this.settings=settings;
+  this.filtersList=filters;
+  this.addressesSeen=new HashSet<>();
+  this.callback=callback;
+}
+ScanClient(ScanCallback callback,ScanSettings settings){
+  this.settings=settings;
+  this.addressesSeen=new HashSet<>();
+  this.callback=callback;
+}

@@ -1,0 +1,3 @@
+public NoQueuingAlgorithm(long p,long t){
+  super(p,t);
+}

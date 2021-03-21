@@ -1,0 +1,8 @@
+public double[] displacement(VirtualCoordinate destination){
+  double normalization=distance(destination);
+  if (normalization == 0.0)   return null;
+  double[] result=new double[_coordinate.length];
+  for (int i=0; i < _coordinate.length - 1; i++)   result[i]=(destination._coordinate[i] - _coordinate[i]) / normalization;
+  result[_coordinate.length - 1]=-1.0 * (destination._coordinate[_coordinate.length - 1] + _coordinate[_coordinate.length - 1]) / normalization;
+  return result;
+}

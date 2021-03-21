@@ -1,0 +1,13 @@
+private static List<ScanResult> fromOs(List<android.bluetooth.le.ScanResult> osResults){
+  List<ScanResult> results=new ArrayList<ScanResult>(osResults.size());
+  for (  android.bluetooth.le.ScanResult result : osResults) {
+    results.add(fromOs(result));
+  }
+  return results;
+}
+private static ScanResult fromOs(android.bluetooth.le.ScanResult osResult){
+  return new ScanResult(osResult.getDevice(),fromOs(osResult.getScanRecord()),osResult.getRssi(),osResult.getTimestampNanos() + getActualBootTimeNanos());
+}
+private static ScanRecord fromOs(android.bluetooth.le.ScanRecord osRecord){
+  return ScanRecord.parseFromBytes(osRecord.getBytes());
+}

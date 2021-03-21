@@ -1,0 +1,3 @@
+protected boolean key_expired(Key k){
+  return k.expiryTime() < ((long)now_ms() * 1000);
+}

@@ -1,0 +1,18 @@
+protected void handle_net_lat_req(final NetworkLatencyReq req){
+  final InetSocketAddress addr=new InetSocketAddress(req.node_id.address(),req.node_id.port());
+  ASyncCore.TimerCB cb=new ASyncCore.TimerCB(){
+    public void timer_cb(    Object not_used){
+      long rtt_ms=udpcc.latency_mean(addr);
+      boolean success=(rtt_ms != -1L);
+      NetworkLatencyResp resp=new NetworkLatencyResp(success,rtt_ms,req.user_data);
+      enqueue_to_main_thread(req.comp_q,resp);
+    }
+  }
+;
+  if (udpcc_thread == null) {
+    cb.timer_cb(null);
+  }
+ else {
+    udpcc_thread.register_timer(0,cb,null);
+  }
+}

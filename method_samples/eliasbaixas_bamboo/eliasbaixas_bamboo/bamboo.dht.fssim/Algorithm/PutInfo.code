@@ -1,0 +1,7 @@
+PutInfo(int c,int s,int t,PutResultCb r,Object u){
+  client=c;
+  size=s;
+  ttl_sec=t;
+  cb=r;
+  user_data=u;
+}

@@ -1,0 +1,10 @@
+@Override public boolean parseText(String text,boolean write){
+  String captext=text.toUpperCase();
+  if (!captext.matches("^SMSTO:.+$"))   return false;
+  String phone=captext.split(":")[1].trim();
+  if (!Validator.isValidPhoneNumber(phone))   return false;
+  if (write) {
+    txtPhoneNumber.setText(phone);
+  }
+  return true;
+}

@@ -1,0 +1,6 @@
+public LookupReqPayload(NodeId s){
+  rtn_addr=s;
+}
+public LookupReqPayload(InputBuffer buffer) throws QSException {
+  rtn_addr=new NodeId(buffer);
+}

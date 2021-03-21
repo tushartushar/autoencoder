@@ -1,0 +1,23 @@
+public final void add_rtt_meas(long m){
+  long orig_m=m;
+  if (sa == -1) {
+    sa=m << 3;
+    sv=0;
+    rto=(m << 2) + 10;
+  }
+ else {
+    m-=(sa >> 3);
+    sa+=m;
+    if (m < 0)     m=-1 * m;
+    m-=(sv >> 2);
+    sv+=m;
+    rto=(sa >> 3) + sv + 10;
+  }
+  if (rto > MAX_RTO) {
+    if (DEBUG)     debugln("huge rto: conn=" + addr + " m="+ orig_m+ " sa="+ sa+ " sv="+ sv+ " rto="+ rto);
+    rto=MAX_RTO;
+  }
+  if (cwnd < ssthresh)   cwnd+=1.0;
+ else   cwnd+=1.0 / cwnd;
+  if (cwnd > MAX_WND)   cwnd=MAX_WND;
+}

@@ -1,0 +1,19 @@
+@Override public void onAttach(Context context){
+  super.onAttach(context);
+  scanner=BluetoothLeScannerCompatProvider.getBluetoothLeScannerCompat(getContext());
+  isScanning=false;
+  scanCallback=new ScanCallback(){
+    @Override public void onScanResult(    int callbackType,    ScanResult result){
+      if (callbackType == ScanSettings.CALLBACK_TYPE_FIRST_MATCH) {
+        adapter.addItem(result);
+      }
+ else {
+        adapter.removeItem(result);
+      }
+    }
+    @Override public void onScanFailed(    int errorCode){
+      Log.e("SCAN","Failed " + errorCode);
+    }
+  }
+;
+}

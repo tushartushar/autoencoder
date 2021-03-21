@@ -1,0 +1,50 @@
+public void run(String exp_filename) throws Exception {
+  FileInputStream is=new FileInputStream(exp_filename);
+  Reader reader=new BufferedReader(new InputStreamReader(is));
+  StreamTokenizer tok=new StreamTokenizer(reader);
+  tok.resetSyntax();
+  tok.whitespaceChars((int)' ',(int)' ');
+  tok.whitespaceChars((int)'\t',(int)'\t');
+  tok.wordChars((int)'-',(int)'-');
+  tok.wordChars((int)'.',(int)'.');
+  tok.wordChars((int)'/',(int)'/');
+  tok.wordChars((int)':',(int)':');
+  tok.wordChars((int)'a',(int)'z');
+  tok.wordChars((int)'A',(int)'Z');
+  tok.wordChars((int)'0',(int)'9');
+  int lineno=1;
+  tok.nextToken();
+  while (tok.ttype == StreamTokenizer.TT_EOL) {
+    tok.nextToken();
+    lineno++;
+  }
+  if (tok.ttype != StreamTokenizer.TT_WORD) {
+    System.err.println("Expected network model class " + "on line " + lineno + ": "+ tok);
+    System.exit(1);
+  }
+  String network_model_class_name=tok.sval;
+  tok.nextToken();
+  if (tok.ttype != StreamTokenizer.TT_WORD) {
+    System.err.println("Expected network model file name " + "on line " + lineno + ": "+ tok);
+    System.exit(1);
+  }
+  String network_model_file_name=tok.sval;
+  tok.nextToken();
+  Class network_model_class=Class.forName(network_model_class_name);
+  Class[] args_t={("").getClass()};
+  Constructor constructor=network_model_class.getConstructor(args_t);
+  Object[] args={network_model_file_name};
+  try {
+    network_model=(NetworkModel)constructor.newInstance(args);
+  }
+ catch (  Exception e) {
+    System.err.println("Caught " + e.getCause() + " calling new "+ network_model_class_name+ " ("+ network_model_file_name+ ")");
+    e.getCause().printStackTrace(System.err);
+    System.exit(1);
+  }
+  LoadNodeCb load_node_cb=new LoadNodeCb();
+  load_node_cb.tok=tok;
+  load_node_cb.lineno=lineno;
+  load_node_cb.load_next_node();
+  event_queue.run();
+}

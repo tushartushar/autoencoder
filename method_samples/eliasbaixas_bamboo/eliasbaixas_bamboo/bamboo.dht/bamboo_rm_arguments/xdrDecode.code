@@ -1,0 +1,9 @@
+public void xdrDecode(XdrDecodingStream xdr) throws OncRpcException, IOException {
+  application=xdr.xdrDecodeString();
+  client_library=xdr.xdrDecodeString();
+  key=new bamboo_key(xdr);
+  value_hash=new bamboo_hash(xdr);
+  secret_hash_alg=xdr.xdrDecodeString();
+  secret=xdr.xdrDecodeDynamicOpaque();
+  ttl_sec=xdr.xdrDecodeInt();
+}

@@ -1,0 +1,6 @@
+public Object clone() throws CloneNotSupportedException {
+  LocateNodeResp result=(LocateNodeResp)super.clone();
+  result._located_coord=_located_coord;
+  result._located_id=_located_id;
+  return result;
+}

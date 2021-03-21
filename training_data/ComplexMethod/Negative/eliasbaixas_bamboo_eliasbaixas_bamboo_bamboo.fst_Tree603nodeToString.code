@@ -1,0 +1,13 @@
+public static String nodeToString(Node n){
+  return nodeToString(n,"");
+}
+protected static String nodeToString(Node n,String indent){
+  if (n == null)   return "(empty tree)";
+  String local=indent + "[" + n.low+ ", "+ n.high+ "] height="+ n.height;
+  if (n.valid)   local+=" offset=" + n.offset() + " value="+ n.value();
+ else   local+=" (invalid)";
+  if (n.leaf())   return local;
+ else {
+    return local + "\n" + nodeToString(n.left,indent + "  ")+ "\n"+ nodeToString(n.right,indent + "  ");
+  }
+}

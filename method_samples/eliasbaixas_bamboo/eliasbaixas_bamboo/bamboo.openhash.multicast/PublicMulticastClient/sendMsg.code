@@ -1,0 +1,7 @@
+public void sendMsg(QuickSerializable payload){
+  int num_forwarded=0;
+  for (int i=0; i < total_levels; i++) {
+    num_forwarded+=dispatch_send(i,payload);
+  }
+  if (logger.isDebugEnabled())   logger.debug("Forwarded to " + num_forwarded + " nodes.");
+}

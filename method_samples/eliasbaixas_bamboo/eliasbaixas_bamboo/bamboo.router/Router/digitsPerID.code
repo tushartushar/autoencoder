@@ -1,0 +1,6 @@
+/** 
+ * The number of digits per identifier being used by this router.
+ */
+public int digitsPerID(){
+  return GUID_DIGITS;
+}

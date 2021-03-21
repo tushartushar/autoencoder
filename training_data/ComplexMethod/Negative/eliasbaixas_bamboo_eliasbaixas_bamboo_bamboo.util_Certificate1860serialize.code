@@ -1,0 +1,6 @@
+public void serialize(OutputBuffer buffer){
+  buffer.add(cert_bytes.length);
+  buffer.add(cert_bytes);
+  buffer.add(sig_bytes.length);
+  buffer.add(sig_bytes);
+}

@@ -1,0 +1,3 @@
+public String getTypeName(){
+  return getTypeNames.get(new Integer(get_args.maxvals));
+}

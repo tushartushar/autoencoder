@@ -1,0 +1,4 @@
+Iterator<Edge> edges();
+Iterator<Edge> edges(Object[] edgeIds);
+public Iterator<Edge> edges(Predicates predicates);
+public Map<Object,Set<Edge>> edges(Iterator<BaseVertex> vertices,Direction direction,String[] edgeLabels,Predicates predicates);

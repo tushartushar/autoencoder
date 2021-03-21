@@ -1,0 +1,6 @@
+/** 
+ * When binding to the service, we return an interface to our messenger for sending messages to the service.
+ */
+@Override public IBinder onBind(Intent intent){
+  return binder;
+}

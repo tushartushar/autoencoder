@@ -1,0 +1,9 @@
+public GetReq(BigInteger k,int m,boolean a,StorageManager.Key p,SinkIF q,Object ud,NodeId c){
+  key=k;
+  maxvals=m;
+  all=a;
+  placemark=p;
+  completion_queue=q;
+  user_data=ud;
+  client=c;
+}

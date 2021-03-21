@@ -1,0 +1,6 @@
+public static synchronized BleAdvertiser getAdvertiser(Context context){
+  if (advertiserInstance == null) {
+    advertiserInstance=createInstance(context);
+  }
+  return advertiserInstance;
+}

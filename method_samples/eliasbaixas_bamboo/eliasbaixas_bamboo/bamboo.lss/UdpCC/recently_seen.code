@@ -1,0 +1,14 @@
+protected final boolean recently_seen(InetSocketAddress src,long msg_id){
+  SrcAndMsgId k=new SrcAndMsgId(src,msg_id);
+  ++received_msgs;
+  if (recently_seen_set.contains(k)) {
+    ++received_duplicates;
+    return true;
+  }
+ else {
+    recently_seen_list.addLast(k);
+    recently_seen_set.add(k);
+    if (recently_seen_list.size() > MAX_RECENTLY_SEEN_SIZE)     recently_seen_set.remove(recently_seen_list.removeFirst());
+    return false;
+  }
+}

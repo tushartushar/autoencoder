@@ -1,0 +1,3 @@
+public void send_done_cb(Object user_data){
+  acore.register_timer(1000,new SendCb(),null);
+}

@@ -1,0 +1,20 @@
+/** 
+ * Creates a unit vector in a random direction.
+ */
+protected double[] random_displacement(double[] dir,int size){
+  if (dir == null)   dir=new double[size];
+  double length=0.0;
+  for (int i=0; i < size; i++) {
+    dir[i]=Math.random() - 0.5;
+    length+=dir[i] * dir[i];
+  }
+  length=Math.sqrt(length);
+  for (int i=0; i < size; i++)   dir[i]=dir[i] / length;
+  return dir;
+}
+protected double[] random_displacement(int size){
+  return random_displacement(null,size);
+}
+protected double[] random_displacement(){
+  return random_displacement(_coordinate.length);
+}

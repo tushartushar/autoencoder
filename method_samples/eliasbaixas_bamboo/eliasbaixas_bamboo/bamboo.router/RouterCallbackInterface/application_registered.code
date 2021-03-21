@@ -1,0 +1,1 @@
+void application_registered(long app_id,boolean success,String msg,BigInteger modulus,int guid_digits,int digit_values,BigInteger node_guid,Object user_data);

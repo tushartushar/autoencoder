@@ -1,0 +1,8 @@
+/** 
+ * Stop scanning.
+ * @see JbBluetoothLeScannerCompat#startScan
+ */
+@Override public synchronized void stopScan(ScanCallback callback){
+  serialClients.remove(callback);
+  updateRepeatingAlarm();
+}

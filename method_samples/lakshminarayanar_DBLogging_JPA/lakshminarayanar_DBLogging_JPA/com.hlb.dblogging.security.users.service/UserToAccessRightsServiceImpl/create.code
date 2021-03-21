@@ -1,0 +1,10 @@
+@Override public UserToAccessRights create(UserToAccessRights userToAccessRights){
+  UserToAccessRights userToAccessRightsToBeCreated=userToAccessRights;
+  userToAccessRightsToBeCreated.setId(userToAccessRights.getId());
+  userToAccessRightsToBeCreated.setAccessRights(userToAccessRights.getAccessRights());
+  userToAccessRightsToBeCreated.setUsers(userToAccessRights.getUsers());
+  userToAccessRightsToBeCreated.setEnabled(userToAccessRights.isEnabled());
+  userToAccessRights.setDeleted(userToAccessRights.isDeleted());
+  userToAccessRightsRepository.save(userToAccessRightsToBeCreated);
+  return userToAccessRightsToBeCreated;
+}

@@ -1,0 +1,93 @@
+public void run(){
+  write();
+}
+public void run(){
+  read();
+}
+public void run(){
+  logger.info("There are " + outstanding + (mode.equals("read") ? " gets" : " puts")+ " outstanding");
+  acore.register_timer(10 * 1000,this);
+}
+public void run(final bamboo_put_args put,Integer result){
+  if (result.intValue() == 0) {
+    outstanding--;
+    write();
+  }
+ else {
+    StringBuffer sb=new StringBuffer(100);
+    bytes_to_sbuf(put.key.value,0,put.key.value.length,false,sb);
+    final String key=sb.toString();
+    logger.debug("got response " + result.intValue() + " for 0x"+ key);
+    acore.register_timer(1000,new Runnable(){
+      public void run(){
+        logger.debug("reputting block 0x" + key);
+        client.put(put,curry(put_done_cb,put));
+      }
+    }
+);
+  }
+}
+public void run(){
+  logger.debug("reputting block 0x" + key);
+  client.put(put,curry(put_done_cb,put));
+}
+public void run(final bamboo_get_args get,final Long pos,bamboo_get_res result){
+  if (result.values.length == 0) {
+    StringBuffer sb=new StringBuffer(100);
+    bytes_to_sbuf(get.key.value,0,get.key.value.length,false,sb);
+    final String key=sb.toString();
+    logger.debug("got empty response for 0x" + key);
+    acore.register_timer(1000,new Runnable(){
+      public void run(){
+        logger.debug("trying to get 0x" + key + " again");
+        client.get(get,curry(get_done_cb,get,pos));
+      }
+    }
+);
+  }
+ else {
+    assert result.values.length == 1;
+    logger.debug("got 0x" + bytes_to_str(get.key.value));
+    outstanding--;
+    ByteBuffer bb=ByteBuffer.wrap(result.values[0].value);
+    int l=bb.getInt();
+    if ((rblocks.size() < l + 1) || (rblocks.elementAt(l) == null)) {
+      rblocks.setSize(max(rblocks.size(),l + 1));
+      rblocks.setElementAt(new PriorityQueue(BRANCHING),l);
+      logger.debug("setting level " + l + " need to 0");
+      rnext.setSize(max(rnext.size(),l + 1));
+      rnext.setElementAt(new Long(0),l);
+    }
+    if (l == 0) {
+      rblocks.elementAt(l).add(bb,pos.longValue());
+    }
+ else {
+      long p=BRANCHING * pos.longValue();
+      while (bb.position() < bb.limit()) {
+        byte[] k=new byte[20];
+        bb.get(k);
+        logger.debug("need to get lev=" + l + " pos="+ p+ " key=0x"+ bytes_to_str(k));
+        rblocks.elementAt(l).add(ByteBuffer.wrap(k),p++);
+      }
+    }
+  }
+  while ((!rblocks.elementAt(0).isEmpty()) && (rnext.elementAt(0).longValue() == rblocks.elementAt(0).getFirstPriority())) {
+    long p=rblocks.elementAt(0).getFirstPriority();
+    ByteBuffer bb=(ByteBuffer)rblocks.elementAt(0).removeFirst();
+    logger.debug("wrote block; updating level 0 need to " + (p + 1));
+    rnext.setElementAt(new Long(p + 1),0);
+    try {
+      logger.debug("position=" + bb.position() + " writing "+ (bb.limit() - bb.position())+ " bytes");
+      os.write(bb.array(),bb.arrayOffset() + bb.position(),bb.limit() - bb.position());
+    }
+ catch (    IOException e) {
+      logger.error("could not write to output file");
+      System.exit(1);
+    }
+  }
+  read();
+}
+public void run(){
+  logger.debug("trying to get 0x" + key + " again");
+  client.get(get,curry(get_done_cb,get,pos));
+}

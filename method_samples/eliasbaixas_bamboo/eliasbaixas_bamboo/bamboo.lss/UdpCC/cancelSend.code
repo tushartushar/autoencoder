@@ -1,0 +1,7 @@
+/** 
+ * Cancel a send in progress.  When send is called, it returns a token; if this function is called with that token, then the corresponding message will not be sent if it hasn't already been sent, and the callback passed to send will not be called if it hasn't already been called.
+ */
+public void cancelSend(Object token){
+  if (token == null)   throw new NullPointerException();
+  cancelled.add((Long)token);
+}

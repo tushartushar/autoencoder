@@ -1,0 +1,13 @@
+protected Dbc open_cursor(Db db,DbTxn xact,String source){
+  assert source != null;
+  Long open_time_ms=new Long(timer_ms());
+  Dbc cursor=null;
+  try {
+    cursor=db.cursor(xact,(xact == null ? 0 : Db.DB_DIRTY_READ));
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  open_cursors.put(cursor,new Object[]{source,open_time_ms});
+  return cursor;
+}

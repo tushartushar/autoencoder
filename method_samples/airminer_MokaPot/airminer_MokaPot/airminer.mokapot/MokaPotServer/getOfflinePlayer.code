@@ -1,0 +1,6 @@
+@Override public OfflinePlayer getOfflinePlayer(String name){
+  throw new NotImplementedException();
+}
+@Override public OfflinePlayer getOfflinePlayer(UUID id){
+  throw new NotImplementedException();
+}

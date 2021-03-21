@@ -1,0 +1,9 @@
+public String toString(){
+  return lat + "," + lon;
+}
+public String toString(){
+  return nextStopName + " " + length+ "m";
+}
+public String toString(){
+  return time + "\t" + length+ "m\t"+ travelTime+ "sec\t"+ (busNumber == null ? "" : (busNumber + "\t"))+ (roadName == null ? stopName : "")+ "\t"+ (type.compareTo("PrivateTransportManeuverType") == 0 ? "walking" : "by bus")+ "\n"+ instruction+ "\n"+ (interRoadAndStops.size() == 0 ? "" : (interRoadAndStops + "\n"));
+}

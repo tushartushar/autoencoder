@@ -1,0 +1,18 @@
+protected String armor_string(String input){
+  byte[] in_bytes=input.getBytes();
+  byte[] out_bytes=new byte[in_bytes.length * 2];
+  int j=0;
+  for (int i=0; i < in_bytes.length; ++i) {
+    if ((in_bytes[i] < 0x20) || (in_bytes[i] > 0x7e)) {
+      out_bytes[j++]='.';
+    }
+ else     if (in_bytes[i] == '"') {
+      out_bytes[j++]='\\';
+      out_bytes[j++]='"';
+    }
+ else {
+      out_bytes[j++]=in_bytes[i];
+    }
+  }
+  return new String(out_bytes,0,j);
+}

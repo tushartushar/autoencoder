@@ -1,0 +1,9 @@
+protected final void dispatch(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("dispatching " + item + " type "+ item.getClass().getName());
+  try {
+    classifier.dispatch(item);
+  }
+ catch (  SinkException e) {
+    BUG("could not dispatch " + item,e);
+  }
+}

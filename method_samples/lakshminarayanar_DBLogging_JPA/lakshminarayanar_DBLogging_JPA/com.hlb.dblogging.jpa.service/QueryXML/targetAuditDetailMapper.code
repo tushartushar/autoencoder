@@ -1,0 +1,40 @@
+private void targetAuditDetailMapper(String nodename,AuditDetail aDetail,Object value){
+switch (nodename.toUpperCase()) {
+case "UNIQUEPROCESSID":
+    aDetail.setUniqueProcessID(value.toString());
+  break;
+case "MESSAGEID":
+aDetail.setMessageID(value.toString());
+break;
+case "CONTENT":
+aDetail.setContent(value.toString());
+break;
+case "MESSAGETYPE":
+aDetail.setMessageType(value.toString());
+break;
+case "CREATEDDATETIME":
+{
+DateFormat df=new SimpleDateFormat("yyyyMMdd hhmmss");
+try {
+Date createdDate=df.parse((String)value);
+aDetail.setCreatedDateTime(createdDate);
+}
+ catch (ParseException e) {
+ApplLogger.getLogger().error("Error while converting string date to util date",e);
+}
+}
+break;
+case "UPDATEDDATETIME":
+{
+DateFormat df=new SimpleDateFormat("yyyyMMdd hhmmss");
+try {
+Date updatedDate=df.parse((String)value);
+aDetail.setUpdatedDateTime(updatedDate);
+}
+ catch (ParseException e) {
+ApplLogger.getLogger().error("Error while converting string date to util date",e);
+}
+}
+break;
+}
+}

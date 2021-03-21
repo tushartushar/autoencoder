@@ -1,0 +1,6 @@
+public FairRateAlgorithm(long p,long t,long seed,boolean r){
+  super(p,t);
+  rand=new Random(seed);
+  window_size=30 * 1000 / ((int)period);
+  requested=r;
+}

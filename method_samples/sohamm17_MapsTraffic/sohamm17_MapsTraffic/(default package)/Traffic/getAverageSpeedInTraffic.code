@@ -1,0 +1,19 @@
+public double getAverageSpeedInTraffic(String flowRoadName,String direction,String[] crossingRoads){
+  double totalSpd=0;
+  int crossRoadCount=0;
+  for (  mainRoadway eachRW : roadways) {
+    if (getAvenueOrStreetNumber(eachRW.description) == getAvenueOrStreetNumber(flowRoadName)) {
+      for (      mainRoadway.crossFlow eachCF : eachRW.crossingRoads) {
+        int CFNumber=getAvenueOrStreetNumber(eachCF.description);
+        if (getAvenueOrStreetNumber(crossingRoads[0]) < CFNumber) {
+          crossRoadCount++;
+          totalSpd+=eachCF.speedUncapped;
+          break;
+        }
+      }
+      break;
+    }
+  }
+  if (crossRoadCount > 0)   return (totalSpd / crossRoadCount);
+ else   return -1;
+}

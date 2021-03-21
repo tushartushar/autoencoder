@@ -1,0 +1,3 @@
+public RouterCallbackInterface() throws Exception {
+  DEBUG=false;
+}

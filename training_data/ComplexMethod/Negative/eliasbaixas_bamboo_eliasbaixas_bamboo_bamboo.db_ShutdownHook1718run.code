@@ -1,0 +1,11 @@
+public void run(){
+  logger.info("shutdown hook checkpointing database");
+  try {
+    env.txnCheckpoint(0,0,Db.DB_FORCE);
+  }
+ catch (  DbException e) {
+    logger.fatal("caught exception",e);
+    return;
+  }
+  logger.info("shutdown hook checkpoint complete");
+}

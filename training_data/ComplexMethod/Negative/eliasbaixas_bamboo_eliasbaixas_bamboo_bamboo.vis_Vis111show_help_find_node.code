@@ -1,0 +1,3 @@
+protected void show_help_find_node(){
+  JOptionPane.showMessageDialog(frame,"Enter a node's ID, hostname, or IP into the input box.\n" + "If some node matches by exact string comparison it is highlighted.","How to use the view \"Find a Node\"",JOptionPane.INFORMATION_MESSAGE);
+}

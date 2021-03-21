@@ -1,0 +1,19 @@
+@Override public <V>VertexProperty<V> property(VertexProperty.Cardinality cardinality,String key,V value,Object... propertyKeys){
+  checkRemoved();
+  if (propertyKeys != null && propertyKeys.length > 0)   throw VertexProperty.Exceptions.metaPropertiesNotSupported();
+  return this.property(key,value);
+}
+@Override public <V>VertexProperty<V> property(String key,V value){
+  checkRemoved();
+  ElementHelper.validateProperty(key,value);
+  BaseVertexProperty vertexProperty=(BaseVertexProperty)addPropertyLocal(key,value);
+  innerAddProperty(vertexProperty);
+  return vertexProperty;
+}
+@Override public <V>VertexProperty<V> property(final String key){
+  checkRemoved();
+  if (this.properties.containsKey(key)) {
+    return (VertexProperty<V>)this.properties.get(key);
+  }
+ else   return VertexProperty.<V>empty();
+}

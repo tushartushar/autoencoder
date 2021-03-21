@@ -1,0 +1,58 @@
+protected void handle_writable(){
+  while (rr_first != null) {
+    Connection conn=rr_first;
+    rr_first=rr_first.next;
+    conn.in_rr=false;
+    if (conn.writable()) {
+      if (DEBUG)       debugln("handle_writable conn=" + conn.addr);
+      if (conn.can_send_either() || conn.can_send_probe()) {
+        boolean done=false;
+        while (!done) {
+switch (conn.next_q) {
+case 0:
+            if (conn.can_send_retry()) {
+              if (!send_msg(conn,true))               return;
+              done=true;
+            }
+ else             if (conn.can_send_msg()) {
+              if (!send_msg(conn,false))               return;
+              done=true;
+            }
+ else             if (DEBUG) {
+              if (conn.send_q.isEmpty() && conn.retry_q.isEmpty())               debugln("no msgs");
+ else               debugln("cwnd full");
+            }
+          break;
+case 1:
+        if (conn.can_send_probe()) {
+          if (!send_probe(conn))           return;
+          done=true;
+        }
+ else {
+          if (DEBUG)           debugln("no probes");
+        }
+      break;
+  }
+  conn.next_q=(conn.next_q + 1) % 2;
+}
+}
+ else {
+if (conn.can_send_ack()) {
+  if (!send_ack(conn))   return;
+}
+ else if (DEBUG) debugln("no acks");
+}
+}
+if (conn.writable()) {
+if (DEBUG) debugln("still writable");
+add_to_rr(conn);
+}
+if (rr_first == null) {
+if (DEBUG) debugln("rr empty");
+skey.interestOps(SelectionKey.OP_READ);
+}
+ else {
+if (DEBUG) debugln("rr not empty");
+}
+}
+}

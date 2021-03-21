@@ -1,0 +1,32 @@
+protected boolean add_to_ls_ping_time(NeighborInfo ni,double rtt_ms){
+  NeighborInfo r=leaf_set.add_node(ni);
+  if (r != null) {
+    if (logger.isInfoEnabled()) {
+      StringBuffer buf=null;
+      if (r == my_neighbor_info) {
+        buf=new StringBuffer(50);
+        buf.append("added ");
+        buf.append(ni.node_id.address().getHostAddress());
+        buf.append(":");
+        buf.append(ni.node_id.port());
+        buf.append(" to leaf set");
+      }
+ else {
+        buf=new StringBuffer(80);
+        buf.append("replaced ");
+        buf.append(r.node_id.address().getHostAddress());
+        buf.append(":");
+        buf.append(r.node_id.port());
+        buf.append(" with ");
+        buf.append(ni.node_id.address().getHostAddress());
+        buf.append(":");
+        buf.append(ni.node_id.port());
+        buf.append(" in leaf set");
+      }
+      logger.info(buf);
+    }
+    notify_leaf_set_changed();
+    return true;
+  }
+  return false;
+}

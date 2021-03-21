@@ -1,0 +1,4 @@
+public void set_leaves_below(long value){
+  if (value < 0)   throw new IllegalArgumentException("value < 0");
+  leaves_below=value;
+}

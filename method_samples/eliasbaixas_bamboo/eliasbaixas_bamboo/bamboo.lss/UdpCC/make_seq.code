@@ -1,0 +1,7 @@
+protected final long make_seq(long msg_id,int attempt){
+  if (msg_id > (Long.MAX_VALUE >> 8))   throw new IllegalArgumentException("msg_id=" + Long.toHexString(msg_id) + " in make_seq");
+  if (attempt > 0x7f)   throw new IllegalArgumentException("attempt=" + Long.toHexString(attempt) + " in make_seq");
+  long seq=(msg_id << 8) | attempt;
+  if (seq < 0)   BUG("seq=" + Long.toHexString(seq) + " in make_seq");
+  return seq;
+}

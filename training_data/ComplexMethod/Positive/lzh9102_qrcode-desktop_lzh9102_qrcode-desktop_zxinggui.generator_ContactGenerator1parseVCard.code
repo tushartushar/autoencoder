@@ -1,0 +1,45 @@
+private boolean parseVCard(String text,boolean write){
+  if (!text.startsWith("BEGIN:VCARD\n"))   return false;
+  String name=null;
+  String company=null;
+  String phone=null;
+  String email=null;
+  String addr=null;
+  String url=null;
+  String memo=null;
+  String[] fields=text.substring("BEGIN:VCARD\n".length()).split("\n");
+  for (  String field : fields) {
+    String[] field_split=field.split(":");
+    if (field_split.length < 2)     return false;
+    String field_id=field_split[0];
+    String field_val="";
+    for (int i=1; i < field_split.length; i++) {
+      field_val+=field_split[i];
+      if (i < field_split.length - 1)       field_val+=":";
+    }
+    field_val=expandEscapeChars(field_val);
+    if (field_id.equals("N"))     name=field_val;
+ else     if (field_id.equals("ORG"))     company=field_val;
+ else     if (field_id.equals("TEL"))     phone=field_val;
+ else     if (field_id.equals("EMAIL"))     email=field_val;
+ else     if (field_id.equals("ADR"))     addr=field_val;
+ else     if (field_id.equals("URL"))     url=field_val;
+ else     if (field_id.equals("NOTE"))     memo=field_val;
+ else     if (field_id.equals("END") && field_val.equals("VCARD"))     break;
+ else     return false;
+  }
+  if (name.isEmpty())   return false;
+  if (phone != null && !Validator.isValidPhoneNumber(phone))   return false;
+  if (email != null && !Validator.isValidEmail(email))   return false;
+  if (write) {
+    if (name != null)     setNameField(name);
+    if (company != null)     setOrgField(company);
+    if (phone != null)     setPhoneNumberField(phone);
+    if (email != null)     setEmailField(email);
+    if (addr != null)     setAddressField(addr);
+    if (url != null)     setWebsiteField(url);
+    if (memo != null)     setMemoField(memo);
+    setFormatField(FORMAT_VCARD);
+  }
+  return true;
+}

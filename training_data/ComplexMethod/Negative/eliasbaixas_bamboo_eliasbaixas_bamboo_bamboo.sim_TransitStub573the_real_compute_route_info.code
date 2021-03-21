@@ -1,0 +1,22 @@
+protected NetworkModel.RouteInfo the_real_compute_route_info(int src,int dst){
+  if (src == dst)   return new NetworkModel.RouteInfo(0,0.0);
+  Node[] pred=new Node[G.length];
+  long[] dist=new long[G.length];
+  GraphUtils.dijkstra(G,pred,dist,G[src],G[dst]);
+  Node walker=G[dst];
+  long total_lat=0;
+  double max_inv_bw=0.0;
+  while (!walker.equals(G[src])) {
+    if (logger.isDebugEnabled()) {
+      logger.debug("walker=" + walker + ", pred="+ pred[walker.number]);
+    }
+    Edge e=(Edge)walker.get_edge_to(pred[walker.number]);
+    total_lat+=e.latency_us();
+    if (e.inv_bw_s_per_byte > max_inv_bw)     max_inv_bw=e.inv_bw_s_per_byte;
+    if (logger.isDebugEnabled()) {
+      logger.debug("lat=" + e.latency_us() + ", bw="+ (1.0 / e.inv_bw_s_per_byte));
+    }
+    walker=pred[walker.number];
+  }
+  return new NetworkModel.RouteInfo(total_lat,max_inv_bw);
+}

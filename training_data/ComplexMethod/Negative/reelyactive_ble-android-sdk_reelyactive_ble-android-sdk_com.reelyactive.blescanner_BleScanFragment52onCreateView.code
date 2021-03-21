@@ -1,0 +1,26 @@
+@Override public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
+  View rootView=inflater.inflate(R.layout.fragment_ble_scan,container,false);
+  adapter=new BleScanResultAdapter(getContext());
+  list=(ListView)rootView.findViewById(R.id.ble_scan_results);
+  list.setAdapter(adapter);
+  scanButton=(Button)rootView.findViewById(R.id.start_ble_scan_btn);
+  scanButton.setOnClickListener(new View.OnClickListener(){
+    @Override public void onClick(    View v){
+      if (scanner != null) {
+        if (isScanning) {
+          scanner.stopScan(scanCallback);
+          scanButton.setText(R.string.start_ble_scan);
+          isScanning=false;
+        }
+ else {
+          adapter.clear();
+          scanner.startScan(Arrays.asList(new ScanFilter.Builder().setServiceUuid(ParcelUuid.fromString("7265656c-7941-6374-6976-652055554944")).build()),new ScanSettings.Builder().setCallbackType(ScanSettings.CALLBACK_TYPE_FIRST_MATCH | ScanSettings.CALLBACK_TYPE_MATCH_LOST).setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).setScanResultType(ScanSettings.SCAN_RESULT_TYPE_FULL).build(),scanCallback);
+          scanButton.setText(R.string.stop_ble_scan);
+          isScanning=true;
+        }
+      }
+    }
+  }
+);
+  return rootView;
+}

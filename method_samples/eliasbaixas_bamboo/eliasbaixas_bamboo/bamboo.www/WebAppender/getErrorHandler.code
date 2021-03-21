@@ -1,0 +1,3 @@
+public ErrorHandler getErrorHandler(){
+  throw new NoSuchMethodError();
+}

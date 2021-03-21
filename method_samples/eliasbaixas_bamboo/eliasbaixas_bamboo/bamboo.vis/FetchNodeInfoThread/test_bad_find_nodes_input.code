@@ -1,0 +1,12 @@
+public static boolean test_bad_find_nodes_input(LinkedList L){
+  if (L == null) {
+    return false;
+  }
+  if (L.size() == 1) {
+    BambooNode b=(BambooNode)L.getFirst();
+    if (b.guid == null && b.node_id == null && b.coordinates == null) {
+      return true;
+    }
+  }
+  return false;
+}

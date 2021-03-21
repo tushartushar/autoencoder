@@ -1,0 +1,13 @@
+@Transactional(rollbackFor={Exception.class}) public long create(AuditMaster auditMaster){
+  try {
+    AuditMaster auditMasterToBeCreated=auditMaster;
+    ApplLogger.getLogger().info("AuditMaster is saved in Database...!!! : " + auditMasterToBeCreated.getUniqueProcessID());
+    auditMasterToBeCreated=auditMasterRepo.save(auditMasterToBeCreated);
+    return auditMasterToBeCreated.getId();
+  }
+ catch (  Exception e) {
+    ApplLogger.getLogger().error("Error caught while saving the AuditMaster instance to Database",e);
+    if (auditMasterRepo == null)     ApplLogger.getLogger().info("Repository is not instantiated by Spring container...");
+    return 0;
+  }
+}

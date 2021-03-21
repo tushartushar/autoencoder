@@ -1,0 +1,34 @@
+protected void handle_leaf_set_changed(BambooLeafSetChanged msg){
+  if (msg.preds.length == 0) {
+    preds=null;
+    succs=null;
+    leaf_set_size=0;
+    return;
+  }
+  preds=msg.preds;
+  succs=msg.succs;
+  Set<NodeId> unique=new LinkedHashSet<NodeId>();
+  for (int i=0; i < msg.preds.length; ++i)   unique.add(msg.preds[i].node_id);
+  for (int i=0; i < msg.succs.length; ++i)   unique.add(msg.succs[i].node_id);
+  leaf_set_size=unique.size();
+  Map[] new_ds=new HashMap[ls_disk_sizes.length];
+  for (int i=0; i < ls_disk_sizes.length; ++i) {
+    new_ds[i]=new HashMap();
+  }
+  for (int i=0; i < msg.preds.length; ++i) {
+    for (int j=0; j < ls_disk_sizes.length; ++j) {
+      Double sz=(Double)ls_disk_sizes[j].get(msg.preds[i].node_id);
+      if (sz == null)       sz=new Double(0);
+      new_ds[j].put(msg.preds[i].node_id,sz);
+    }
+  }
+  for (int i=0; i < msg.succs.length; ++i) {
+    for (int j=0; j < ls_disk_sizes.length; ++j) {
+      Double sz=(Double)ls_disk_sizes[j].get(msg.succs[i].node_id);
+      if (sz == null)       sz=new Double(0);
+      new_ds[j].put(msg.succs[i].node_id,sz);
+    }
+  }
+  ls_disk_sizes=new_ds;
+  compute_rates();
+}

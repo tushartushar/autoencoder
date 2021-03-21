@@ -1,0 +1,6 @@
+@Override public void onDetach(){
+  super.onDetach();
+  if (scanner != null && isScanning) {
+    scanner.stopScan(scanCallback);
+  }
+}

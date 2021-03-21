@@ -1,0 +1,4 @@
+/** 
+ * @return time since the device was booted, in nanoseconds
+ */
+public long elapsedRealtimeNanos();

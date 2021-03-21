@@ -1,0 +1,24 @@
+@Override public synchronized boolean startScan(List<ScanFilter> filterList,ScanSettings settings,ScanCallback callback){
+  ScanClient client=new ScanClient(settings,filterList,callback);
+  serialClients.put(callback,client);
+  int clientFlags=client.settings.getCallbackType();
+  int firstMatchBit=clientFlags & ScanSettings.CALLBACK_TYPE_FIRST_MATCH;
+  int allMatchesBit=clientFlags & ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
+  if ((firstMatchBit | allMatchesBit) != 0) {
+    for (    Entry<String,ScanResult> entry : recentScanResults.entrySet()) {
+      String address=entry.getKey();
+      ScanResult savedResult=entry.getValue();
+      if (matchesAnyFilter(filterList,savedResult)) {
+        try {
+          client.callback.onScanResult(ScanSettings.CALLBACK_TYPE_FIRST_MATCH,savedResult);
+        }
+ catch (        Exception e) {
+          Logger.logError("Failure while handling scan result for new listener",e);
+        }
+        client.addressesSeen.add(address);
+      }
+    }
+  }
+  updateRepeatingAlarm();
+  return true;
+}

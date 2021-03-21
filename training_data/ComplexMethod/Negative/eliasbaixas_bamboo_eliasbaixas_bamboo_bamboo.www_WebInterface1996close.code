@@ -1,0 +1,9 @@
+protected void close(ConnState state){
+  acore.unregister_selectable(state.skey);
+  try {
+    state.channel.socket().close();
+  }
+ catch (  IOException e) {
+    BUG(e);
+  }
+}

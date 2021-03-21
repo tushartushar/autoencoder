@@ -1,0 +1,8 @@
+protected static void check_bpd_and_dv(int bits_per_digit,int digit_values){
+  if (bits_per_digit != 1 && bits_per_digit != 2 && bits_per_digit != 4 && bits_per_digit != 8) {
+    throw new IllegalArgumentException("bits_per_digit != 2^n");
+  }
+  int i=1;
+  for (int j=0; j < bits_per_digit; ++j)   i<<=1;
+  if (i != digit_values)   throw new IllegalArgumentException("digit_value");
+}

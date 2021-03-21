@@ -1,0 +1,1 @@
+void get_done_cb(bamboo_get_res get_res,Object user_data);

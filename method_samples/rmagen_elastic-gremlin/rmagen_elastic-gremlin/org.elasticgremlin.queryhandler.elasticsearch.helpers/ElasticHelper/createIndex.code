@@ -1,0 +1,14 @@
+public static void createIndex(String indexName,Client client) throws IOException {
+  IndicesExistsRequest request=new IndicesExistsRequest(indexName);
+  IndicesExistsResponse response=client.admin().indices().exists(request).actionGet();
+  if (!response.isExists()) {
+    Settings settings=ImmutableSettings.settingsBuilder().put("index.analysis.analyzer.default.type","keyword").build();
+    CreateIndexRequestBuilder createIndexRequestBuilder=client.admin().indices().prepareCreate(indexName).setSettings(settings);
+    client.admin().indices().create(createIndexRequestBuilder.request()).actionGet();
+  }
+  final ClusterHealthRequest clusterHealthRequest=new ClusterHealthRequest(indexName).timeout(TimeValue.timeValueSeconds(10)).waitForYellowStatus();
+  final ClusterHealthResponse clusterHealth=client.admin().cluster().health(clusterHealthRequest).actionGet();
+  if (clusterHealth.isTimedOut()) {
+    throw new IOException(clusterHealth.getStatus() + " status returned from cluster '" + client.admin().cluster().toString()+ "', index '"+ indexName+ "'");
+  }
+}

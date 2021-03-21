@@ -1,0 +1,21 @@
+private Iterator<Edge> createEdge(Iterator<SearchHit> hits){
+  ArrayList<Edge> edges=new ArrayList<>();
+  hits.forEachRemaining(hit -> {
+    Map<String,Object> fields=hit.getSource();
+    BaseVertex outVertex=graph.getQueryHandler().vertex(fields.get(DocEdge.OutId),fields.get(DocEdge.OutLabel).toString(),null,Direction.OUT);
+    BaseVertex inVertex=graph.getQueryHandler().vertex(fields.get(DocEdge.InId),fields.get(DocEdge.InLabel).toString(),null,Direction.IN);
+    BaseEdge edge=new DocEdge(hit.getId(),hit.getType(),null,outVertex,inVertex,graph,elasticMutations,indexName);
+    fields.entrySet().forEach((field) -> edge.addPropertyLocal(field.getKey(),field.getValue()));
+    edges.add(edge);
+  }
+);
+  return edges.iterator();
+}
+private Edge createEdge(GetResponse hit){
+  Map<String,Object> fields=hit.getSource();
+  BaseVertex outVertex=graph.getQueryHandler().vertex(fields.get(DocEdge.OutId),fields.get(DocEdge.OutLabel).toString(),null,Direction.OUT);
+  BaseVertex inVertex=graph.getQueryHandler().vertex(fields.get(DocEdge.InId),fields.get(DocEdge.InLabel).toString(),null,Direction.IN);
+  BaseEdge edge=new DocEdge(hit.getId(),hit.getType(),null,outVertex,inVertex,graph,elasticMutations,indexName);
+  fields.entrySet().forEach((field) -> edge.addPropertyLocal(field.getKey(),field.getValue()));
+  return edge;
+}

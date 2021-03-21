@@ -1,0 +1,1 @@
+List<AuditMaster> findFirst20ByTransDateTimeOrderByTransDateTimeDesc(Date date);

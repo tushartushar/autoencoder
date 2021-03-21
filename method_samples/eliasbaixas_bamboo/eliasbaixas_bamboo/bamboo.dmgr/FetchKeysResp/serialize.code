@@ -1,0 +1,13 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  if (keys == null)   buffer.add(0);
+ else {
+    buffer.add(keys.size());
+    Iterator i=keys.iterator();
+    while (i.hasNext()) {
+      StorageManager.Key k=(StorageManager.Key)i.next();
+      k.serialize(buffer);
+    }
+  }
+  buffer.add(seq);
+}

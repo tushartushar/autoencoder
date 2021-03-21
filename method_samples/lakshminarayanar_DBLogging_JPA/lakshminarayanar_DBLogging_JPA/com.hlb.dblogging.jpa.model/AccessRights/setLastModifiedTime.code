@@ -1,0 +1,3 @@
+public void setLastModifiedTime(Date lastModifiedTime){
+  this.lastModifiedTime=lastModifiedTime;
+}

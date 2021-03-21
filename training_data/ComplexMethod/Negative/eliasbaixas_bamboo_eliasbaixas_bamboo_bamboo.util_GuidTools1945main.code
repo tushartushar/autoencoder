@@ -1,0 +1,22 @@
+/** 
+ * A test harness for digits_to_guid and guid_to_digits.
+ */
+public static void main(String[] args){
+  int bits_per_digit=Integer.parseInt(args[0]);
+  int digits_per_guid=Integer.parseInt(args[1]);
+  int digit_values=Integer.parseInt(args[2]);
+  Random rand=new Random(1);
+  for (int i=0; i < 1000; ++i) {
+    BigInteger n=random_guid(rand);
+    int[] digits=guid_to_digits(n,bits_per_digit,digits_per_guid,digit_values);
+    BigInteger m=digits_to_guid(digits,bits_per_digit,digits_per_guid,digit_values);
+    if ((!m.equals(n)) || (digits.length != 40)) {
+      System.err.println("n=" + guid_to_string(n));
+      System.err.print("d=");
+      for (int j=0; j < digits.length; ++j)       System.err.print(Integer.toHexString(digits[j]));
+      System.err.println();
+      System.err.println("m=" + guid_to_string(m));
+      System.exit(1);
+    }
+  }
+}

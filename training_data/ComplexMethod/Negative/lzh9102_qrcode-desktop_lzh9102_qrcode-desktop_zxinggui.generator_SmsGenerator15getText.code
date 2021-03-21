@@ -1,0 +1,7 @@
+@Override public String getText() throws GeneratorException {
+  String number=getNumberField();
+  String message=getMessageField();
+  String output=number;
+  if (!message.isEmpty())   output+=':' + message;
+  return "smsto:" + output;
+}

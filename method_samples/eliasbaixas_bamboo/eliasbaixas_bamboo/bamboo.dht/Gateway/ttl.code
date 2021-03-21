@@ -1,0 +1,3 @@
+protected int ttl(int requested){
+  return Math.min(requested,Dht.MAX_TTL_SEC);
+}

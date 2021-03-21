@@ -1,0 +1,3 @@
+public String byteCountKey(){
+  return client + " 0x" + Integer.toHexString(maxvals & 0xffff0000);
+}

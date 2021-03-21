@@ -1,0 +1,9 @@
+public <T extends QuickSerializable>Object sendRequest(InetSocketAddress dest,QuickSerializable req,long timeout_sec,Class<T> resp_class,Thunk1<T> responseCallback,Runnable timeoutCallback){
+  Thunk1<QuickSerializable> cb=(Thunk1<QuickSerializable>)responseCallback;
+  ensure_known(resp_class);
+  Long xact_id=new Long(next_xact_id());
+  inflight.put(xact_id,Pair.create(curry(handleResponse,cb,resp_class),timeoutCallback));
+  Object timerToken=acore.registerTimer(timeout_sec * 1000,curry(requestTimeout,xact_id));
+  Object networkToken=network.send(new Msg(true,xact_id.longValue(),req),dest,timeout_sec);
+  return new SendToken(xact_id,timerToken,networkToken);
+}

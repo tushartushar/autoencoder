@@ -1,0 +1,3 @@
+@Column(name="VIEWXSLTRANSFORMER",nullable=true) public String getViewXslTransformer(){
+  return viewXslTransformer;
+}

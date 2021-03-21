@@ -1,0 +1,13 @@
+public ReplicaSetResp(NodeId dest,long n,NodeId[] r){
+  super(dest,false);
+  nonce=n;
+  replica_set=r;
+}
+public ReplicaSetResp(InputBuffer buffer) throws QSException {
+  super(buffer);
+  nonce=buffer.nextLong();
+  int n=buffer.nextInt();
+  if (n <= 0)   throw new QSException("replica_set empty");
+  replica_set=new NodeId[n];
+  for (int i=0; i < n; ++i)   replica_set[i]=new NodeId(buffer);
+}

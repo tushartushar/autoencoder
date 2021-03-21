@@ -1,0 +1,4 @@
+private void createGeoShapeMapping(Client client,String documentType) throws IOException {
+  final XContentBuilder mappingBuilder=jsonBuilder().startObject().startObject(documentType).startObject("properties").startObject("location").field("type","geo_shape").field("tree_levels","8").endObject().endObject().endObject().endObject();
+  PutMappingResponse putMappingResponse=client.admin().indices().preparePutMapping("geo_index").setType(documentType).setSource(mappingBuilder).execute().actionGet();
+}

@@ -1,0 +1,4 @@
+@Override @Transactional public SystemAuditTrail create(SystemAuditTrail systemAuditTrail){
+  SystemAuditTrail s=systemAuditTrail;
+  return systemAuditTrailRecordRepository.save(s);
+}

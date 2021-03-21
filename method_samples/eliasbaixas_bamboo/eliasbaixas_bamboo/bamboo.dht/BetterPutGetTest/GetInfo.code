@@ -1,0 +1,6 @@
+public GetInfo(bamboo_get_args g,BigInteger k,Set<PutInfo> p,long s){
+  get_args=g;
+  key=k;
+  pis=p;
+  start_time_ms=s;
+}

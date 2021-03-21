@@ -1,0 +1,1 @@
+@Query("select e from ConfigurationProperties e") ConfigurationProperties findConfigurationPropertiesOfApplication();

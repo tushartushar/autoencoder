@@ -1,0 +1,5 @@
+public Map<String,Object> allFields(){
+  Map<String,Object> map=new HashMap<>();
+  properties.forEach((key,value) -> map.put(key,value.value()));
+  return map;
+}

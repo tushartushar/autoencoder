@@ -1,0 +1,3 @@
+public ThreadManagerIF getThreadManager(){
+  return null;
+}

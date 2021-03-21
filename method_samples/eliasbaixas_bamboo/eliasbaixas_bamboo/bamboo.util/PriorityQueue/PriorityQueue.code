@@ -1,0 +1,17 @@
+/** 
+ * Creates a new priority queue.
+ */
+public PriorityQueue(){
+  heap=new Vector<Value>();
+  prio=new Vector<Priority>();
+  heap_size=0;
+}
+/** 
+ * Creates a new priority queue with the given initial capacity.
+ */
+public PriorityQueue(int initial_capacity){
+  int capacity=initial_capacity + 1;
+  heap=new Vector<Value>(capacity);
+  prio=new Vector<Priority>(capacity);
+  heap_size=0;
+}

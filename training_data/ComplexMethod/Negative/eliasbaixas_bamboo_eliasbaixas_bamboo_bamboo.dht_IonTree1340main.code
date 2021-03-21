@@ -1,0 +1,21 @@
+public static void main(String[] args){
+  long ttl=4;
+  long put=1;
+  IonTree t=new IonTree(1,put,put * ttl);
+  t.add_put(4,put);
+  System.out.println(node_to_string(t.root));
+  t.add_put(2,put);
+  System.out.println(node_to_string(t.root));
+  t.add_put(3,put);
+  System.out.println(node_to_string(t.root));
+  t.add_put(1,put);
+  System.out.println(node_to_string(t.root));
+  t.shift_time(2);
+  System.out.println(node_to_string(t.root));
+  t.add_put(4,put);
+  System.out.println(node_to_string(t.root));
+  t.shift_time(3);
+  System.out.println(node_to_string(t.root));
+  t.add_put(4,put);
+  System.out.println(node_to_string(t.root));
+}

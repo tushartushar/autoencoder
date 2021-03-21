@@ -1,0 +1,5 @@
+public Object clone() throws CloneNotSupportedException {
+  PutOrRemoveAck result=(PutOrRemoveAck)super.clone();
+  result.seq=seq;
+  return result;
+}

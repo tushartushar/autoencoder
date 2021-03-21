@@ -1,0 +1,27 @@
+public void send(InetSocketAddress dst,QuickSerializable payload,SendDoneCb cb,Object user_data){
+  if (logger.isDebugEnabled()) {
+    logger.debug("got " + payload + " to send to "+ dst.getAddress().getHostAddress()+ ":"+ dst.getPort());
+  }
+  ChannelState state=(ChannelState)client_channels.get(dst);
+  if (state == null) {
+    if (logger.isDebugEnabled())     logger.debug("no existing connection");
+    state=new ChannelState();
+    client_channels.put(dst,state);
+    try {
+      state.channel=SocketChannel.open();
+      state.channel.configureBlocking(false);
+      state.channel.connect(dst);
+      state.skey=acore.register_selectable(state.channel,SelectionKey.OP_READ | SelectionKey.OP_CONNECT,state,null);
+    }
+ catch (    Exception e) {
+      assert false;
+    }
+    state.client=true;
+  }
+ else {
+    if (logger.isDebugEnabled())     logger.debug("existing connection");
+    state.skey.interestOps(state.skey.interestOps() | SelectionKey.OP_WRITE);
+  }
+  state.waiting.addLast(new SendState(payload,cb,user_data));
+  if (logger.isDebugEnabled())   logger.debug("queue size=" + state.waiting.size());
+}

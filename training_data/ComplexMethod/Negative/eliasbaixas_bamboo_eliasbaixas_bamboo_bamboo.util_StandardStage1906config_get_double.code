@@ -1,0 +1,5 @@
+protected double config_get_double(ConfigDataIF config,String name){
+  double result=config.getDouble(name);
+  logger.info("config." + name + "="+ result);
+  return result;
+}

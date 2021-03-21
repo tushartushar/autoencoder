@@ -1,0 +1,3 @@
+public long earliest_expiry_usec(){
+  return earliest_expiry_usec;
+}

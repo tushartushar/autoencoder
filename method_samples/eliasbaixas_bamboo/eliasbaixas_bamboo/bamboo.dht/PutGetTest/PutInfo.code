@@ -1,0 +1,5 @@
+public PutInfo(byte[] k,long e,int s){
+  key=k;
+  expiry_time_ms=e;
+  size=s;
+}

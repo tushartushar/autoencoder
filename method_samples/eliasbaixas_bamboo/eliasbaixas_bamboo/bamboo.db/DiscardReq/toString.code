@@ -1,0 +1,6 @@
+public String toString(){
+  return "(DiscardReq key=" + key + " recycle="+ recycle+ ")";
+}
+public String toString(){
+  return "(DiscardReq key=" + key + " recycle="+ recycle+ ")";
+}

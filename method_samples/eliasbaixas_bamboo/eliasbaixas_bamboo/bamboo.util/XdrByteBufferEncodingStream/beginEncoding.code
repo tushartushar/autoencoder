@@ -1,0 +1,10 @@
+/** 
+ * Begins encoding a new XDR record. This involves resetting this encoding XDR stream back into a known state.
+ * @param receiver Indicates the receiver of the XDR data. This can be<code>null</code> for XDR streams connected permanently to a receiver (like in case of TCP/IP based XDR streams).
+ * @param receiverPort Port number of the receiver.
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public void beginEncoding(InetAddress receiverAddress,int receiverPort) throws OncRpcException, IOException {
+  bufferIndex=0;
+}

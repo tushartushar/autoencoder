@@ -1,0 +1,4 @@
+public void xdrDecode(XdrDecodingStream xdr) throws OncRpcException, IOException {
+  algorithm=xdr.xdrDecodeString();
+  hash=xdr.xdrDecodeDynamicOpaque();
+}

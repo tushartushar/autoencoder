@@ -1,0 +1,30 @@
+public void run(Object resp){
+  cb.get_done_cb((bamboo_get_res)resp,user_data);
+}
+public void run(Object resp){
+  thunk.run((bamboo_get_res)resp);
+}
+public void run(Object resp){
+  cb.put_done_cb((Integer)resp,user_data);
+}
+public void run(Object resp){
+  thunk.run((Integer)resp);
+}
+public void run(){
+  gnid=(NodeId)gateways.removeFirst();
+  gateways.addLast(gnid);
+  logger.info("Trying to connect to gateway " + gnid);
+  try {
+    channel=SocketChannel.open();
+    channel.configureBlocking(false);
+    gateway=new InetSocketAddress(gnid.address(),gnid.port());
+    channel.connect(gateway);
+    assert acore != null;
+    skey=acore.register_selectable(channel,SelectionKey.OP_CONNECT,new MySelectableCb(),null);
+  }
+ catch (  IOException e) {
+    BUG(e);
+  }
+  for (  Integer xact_id : inflight.keySet())   waiting.addLast(inflight.get(xact_id));
+  inflight=new HashMap<Integer,Request>();
+}

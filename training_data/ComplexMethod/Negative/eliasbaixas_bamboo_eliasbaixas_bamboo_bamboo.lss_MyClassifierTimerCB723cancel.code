@@ -1,0 +1,3 @@
+public void cancel(Object token){
+  acore.cancel_timer(token);
+}

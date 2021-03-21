@@ -1,0 +1,5 @@
+public void remove(){
+  long where=where(position);
+  if (where >= range_high())   throw new NoSuchElementException();
+  nodes[level - 1].remove(new Long(where));
+}

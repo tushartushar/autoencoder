@@ -1,0 +1,10 @@
+public PredMsg(BigInteger k,InetSocketAddress a){
+  key=k;
+  addr=a;
+}
+public PredMsg(InputBuffer ib) throws QSException {
+  key=ib.nextBigInteger();
+  byte[] ip_bytes=new byte[6];
+  ib.nextBytes(ip_bytes,0,6);
+  addr=RedirClient.bytes2addr(ip_bytes);
+}

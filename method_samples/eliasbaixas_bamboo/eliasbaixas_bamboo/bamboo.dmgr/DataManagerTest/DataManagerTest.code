@@ -1,0 +1,4 @@
+public DataManagerTest() throws Exception {
+  DEBUG=false;
+  event_types=new Class[]{StagesInitializedSignal.class,PrintDataAlarm.class};
+}

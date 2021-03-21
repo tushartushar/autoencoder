@@ -1,0 +1,3 @@
+public CachingNetworkModel(int cache_size){
+  cache=new LruMap(cache_size,new HashMap());
+}

@@ -1,0 +1,13 @@
+/** 
+ * Constructs a ping message with the sender's virtual coordinate.
+ * @param dest The destination node.
+ * @param coord The sender's current virtual coordinate.
+ */
+public PingNodeMsg(NodeId dest,VirtualCoordinate coord){
+  super(dest,false);
+  _sender_coord=coord;
+}
+public PingNodeMsg(InputBuffer buffer) throws QSException {
+  super(buffer);
+  _sender_coord=(VirtualCoordinate)buffer.nextObject();
+}

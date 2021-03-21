@@ -1,0 +1,4 @@
+public void register_recv_cb(Class msg_type,RecvMsgCb cb){
+  if (recv_cbs.containsKey(msg_type))   throw new IllegalStateException(msg_type.getName());
+ else   recv_cbs.put(msg_type,cb);
+}

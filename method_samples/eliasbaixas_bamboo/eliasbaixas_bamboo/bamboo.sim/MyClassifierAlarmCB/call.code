@@ -1,0 +1,11 @@
+public void call(Object user_data){
+  QueueElementIF item=(QueueElementIF)user_data;
+  if (logger.isDebugEnabled())   logger.debug("dispatching " + item);
+  try {
+    classifier.dispatch(item);
+  }
+ catch (  SinkFullException e) {
+    System.err.println("could not dispatch later " + item);
+    e.printStackTrace(System.err);
+  }
+}

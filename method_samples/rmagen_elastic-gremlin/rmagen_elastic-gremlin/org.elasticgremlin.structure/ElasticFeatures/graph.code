@@ -1,0 +1,3 @@
+@Override public GraphFeatures graph(){
+  return elasticGraphFeatures;
+}

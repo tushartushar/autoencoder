@@ -1,0 +1,3 @@
+public void setTransactionEndDateTime(Date transactionEndDateTime){
+  this.transactionEndDateTime=transactionEndDateTime;
+}

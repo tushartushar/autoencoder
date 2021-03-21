@@ -1,0 +1,34 @@
+/** 
+ * Set filtering on service data.
+ * @throws IllegalArgumentException If {@code serviceDataUuid} is null.
+ */
+public Builder setServiceData(ParcelUuid serviceDataUuid,byte[] serviceData){
+  if (serviceDataUuid == null) {
+    throw new IllegalArgumentException("serviceDataUuid is null");
+  }
+  mServiceDataUuid=serviceDataUuid;
+  mServiceData=serviceData;
+  mServiceDataMask=null;
+  return this;
+}
+/** 
+ * Set partial filter on service data. For any bit in the mask, set it to 1 if it needs to match the one in service data, otherwise set it to 0 to ignore that bit. <p> The  {@code serviceDataMask} must have the same length of the {@code serviceData}.
+ * @throws IllegalArgumentException If {@code serviceDataUuid} is null or{@code serviceDataMask} is {@code null} while {@code serviceData} is not or{@code serviceDataMask} and {@code serviceData} has different length.
+ */
+public Builder setServiceData(ParcelUuid serviceDataUuid,byte[] serviceData,byte[] serviceDataMask){
+  if (serviceDataUuid == null) {
+    throw new IllegalArgumentException("serviceDataUuid is null");
+  }
+  if (mServiceDataMask != null) {
+    if (mServiceData == null) {
+      throw new IllegalArgumentException("serviceData is null while serviceDataMask is not null");
+    }
+    if (mServiceData.length != mServiceDataMask.length) {
+      throw new IllegalArgumentException("size mismatch for service data and service data mask");
+    }
+  }
+  mServiceDataUuid=serviceDataUuid;
+  mServiceData=serviceData;
+  mServiceDataMask=serviceDataMask;
+  return this;
+}

@@ -1,0 +1,8 @@
+/** 
+ * Returns the current estimate of the mean latency to this peer, or -1 if there is no current estimate.
+ */
+public long latency_mean(InetSocketAddress peer){
+  Connection conn=(Connection)conns.get(peer);
+  if (conn == null)   return -1L;
+ else   return conn.sa >> 3;
+}

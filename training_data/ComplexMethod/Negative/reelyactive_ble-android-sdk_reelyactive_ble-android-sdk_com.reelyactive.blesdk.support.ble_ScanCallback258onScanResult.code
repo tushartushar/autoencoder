@@ -1,0 +1,7 @@
+/** 
+ * Callback when a BLE advertisement has been found.
+ * @param callbackType Determines why this callback was triggered:com.reelyactive.blesdk.support.ble.ScanSettings.CALLBACK_TYPE_FIRST_MATCH: the first (recent) scan result for this beacon com.reelyactive.blesdk.support.ble.ScanSettings.CALLBACK_TYPE_ALL_MATCHES: a regular scan result com.reelyactive.blesdk.support.ble.ScanSettings.CALLBACK_TYPE_MATCH_LOST: a lost match indication
+ * @param result A Bluetooth LE scan result.
+ */
+public void onScanResult(int callbackType,ScanResult result){
+}

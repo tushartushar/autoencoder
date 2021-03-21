@@ -1,0 +1,4 @@
+public SrcDst(int s,int d){
+  src=s;
+  dst=d;
+}

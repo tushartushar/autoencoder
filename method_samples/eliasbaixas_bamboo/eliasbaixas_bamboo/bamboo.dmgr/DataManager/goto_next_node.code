@@ -1,0 +1,18 @@
+protected void goto_next_node(){
+  if (logger.isDebugEnabled())   logger.debug(ae_state + " goto_next_node");
+  assert ae_state != null;
+  TreeState ts=tree_state(ae_state.low_guid,ae_state.high_guid);
+  if (ts.tree.root().valid(now_ms())) {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " tree is ready");
+    goto_next_node_ready(ts.tree);
+  }
+ else {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " getting tree ready");
+    ts.wait_for_ready(new TreeReadyCB(){
+      public void tree_ready(      MerkleTree tree){
+        goto_next_node_ready(tree);
+      }
+    }
+);
+  }
+}

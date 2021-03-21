@@ -1,0 +1,3 @@
+public void setLastModifiedTime(java.util.Date lastModifiedTime){
+  this.lastModifiedTime=lastModifiedTime;
+}

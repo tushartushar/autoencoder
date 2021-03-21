@@ -1,0 +1,9 @@
+private boolean matchesServiceUuid(UUID uuid,UUID mask,UUID data){
+  if (mask == null) {
+    return uuid.equals(data);
+  }
+  if ((uuid.getLeastSignificantBits() & mask.getLeastSignificantBits()) != (data.getLeastSignificantBits() & mask.getLeastSignificantBits())) {
+    return false;
+  }
+  return ((uuid.getMostSignificantBits() & mask.getMostSignificantBits()) == (data.getMostSignificantBits() & mask.getMostSignificantBits()));
+}

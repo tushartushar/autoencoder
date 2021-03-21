@@ -1,0 +1,9 @@
+protected void check_put_or_remove_done(Long seq,PutOrRemoveState p){
+  if ((p.event.completion_queue != null) && p.stored && ((p.expected_ack_cnt - p.unacked.size() >= required_acks) || (p.unacked.isEmpty()))) {
+    enqueue(p.event.completion_queue,new PutOrRemoveResp(p.event.user_data));
+    p.event.completion_queue=null;
+  }
+  if (p.unacked.isEmpty() && p.stored) {
+    put_or_remove_acks.remove(seq);
+  }
+}

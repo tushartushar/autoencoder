@@ -1,0 +1,22 @@
+protected void deliver(BigInteger src,BigInteger dest,NodeId is,long app_id,int tries,long wait_ms,long est_rtt_ms,QuickSerializable payload){
+  if (app_id == 0) {
+    if (payload instanceof LookupReqPayload) {
+      LookupReqPayload req=(LookupReqPayload)payload;
+      NeighborInfo peer_ni=new NeighborInfo(req.rtn_addr,src);
+      location_cache.add_node(peer_ni);
+      dispatch(new LookupRespMsg(req.rtn_addr,dest,my_guid));
+    }
+ else {
+      if (logger.isDebugEnabled())       logger.debug("unknown payload type " + payload.getClass().getName());
+    }
+  }
+ else {
+    ApplicationInfo appInfo=apps.get(new Long(app_id));
+    if (appInfo == null) {
+      if (logger.isDebugEnabled())       logger.debug("no app with id " + app_id);
+    }
+ else     if (appInfo.routeDeliver != null) {
+      appInfo.routeDeliver.run(src,dest,is,new Long(wait_ms),new Long(est_rtt_ms),payload);
+    }
+  }
+}

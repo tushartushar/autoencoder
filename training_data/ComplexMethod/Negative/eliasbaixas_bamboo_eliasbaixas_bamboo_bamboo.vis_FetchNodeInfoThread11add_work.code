@@ -1,0 +1,16 @@
+public static void add_work(String url,Object user_data){
+synchronized (work_queue) {
+    work_queue.addLast(new Object[]{url,user_data});
+    if (work_queue.size() == 1)     work_queue.notify();
+  }
+}
+protected void add_work(String url,BigInteger id){
+  if (!outstanding(url)) {
+    NodeInfo ninfo=new NodeInfo();
+    ninfo.url=url;
+    ninfo.id=id;
+    waiting.put(url,ninfo);
+    waitlist.addLast(url);
+    check_waiting();
+  }
+}

@@ -1,0 +1,12 @@
+void cb(boolean success,boolean again);
+public void cb(Object not_used){
+  remove_put(pi);
+}
+public void cb(Object not_used){
+  LinkedList pp=pending_puts;
+  pending_puts=new LinkedList();
+  process_pending_puts(pp);
+  if (sim.now_ms() < stop_time)   sim.register_event(period,this,null);
+ else   simulation_finished();
+  if (print_usages && (sim.now_ms() % 10000 == 0))   print_usage();
+}

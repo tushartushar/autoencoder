@@ -1,0 +1,7 @@
+/** 
+ * Get currently running Activity.
+ * @return The currently running Activity.
+ */
+protected Activity getCurrentActivity(){
+  return current;
+}

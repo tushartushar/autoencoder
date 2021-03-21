@@ -1,0 +1,5 @@
+protected int calc_first_diff(int[] other){
+  int fd=0;
+  while ((fd < GUID_DIGITS) && (my_digits[fd] == other[fd]))   ++fd;
+  return fd;
+}

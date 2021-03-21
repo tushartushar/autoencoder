@@ -1,0 +1,3 @@
+public MyClassifierTimerCB(Classifier classifier){
+  classifier_alarm_cb=new MyClassifierAlarmCB(classifier);
+}

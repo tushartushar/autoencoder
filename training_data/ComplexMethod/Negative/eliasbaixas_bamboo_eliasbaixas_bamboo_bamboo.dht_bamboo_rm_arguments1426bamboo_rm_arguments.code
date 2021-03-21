@@ -1,0 +1,5 @@
+public bamboo_rm_arguments(){
+}
+public bamboo_rm_arguments(XdrDecodingStream xdr) throws OncRpcException, IOException {
+  xdrDecode(xdr);
+}

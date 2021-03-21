@@ -1,0 +1,14 @@
+public NattedMulticastClient(ASyncCore acore,GatewayClient client,long seed,BigInteger group,int maxLevel,Thunk1<MulticastMessage> upcall){
+  this.acore=acore;
+  this.client=client;
+  this.upcall=upcall;
+  this.group=group;
+  this.maxLevel=maxLevel;
+  rand=new Random(seed);
+  acore.registerTimer(0,new Runnable(){
+    public void run(){
+      connect.run();
+    }
+  }
+);
+}

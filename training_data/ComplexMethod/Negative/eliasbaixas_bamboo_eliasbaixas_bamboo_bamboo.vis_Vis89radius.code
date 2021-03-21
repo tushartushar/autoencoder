@@ -1,0 +1,3 @@
+public final double radius(){
+  return dot_radius;
+}

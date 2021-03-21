@@ -1,0 +1,12 @@
+public Object clone() throws CloneNotSupportedException {
+  FetchMerkleTreeNodeReq result=(FetchMerkleTreeNodeReq)super.clone();
+  result.peer_guid=peer_guid;
+  result.low_guid=low_guid;
+  result.high_guid=high_guid;
+  result.expansion=expansion;
+  result.level=level;
+  result.low_time=low_time;
+  result.expected_hash=expected_hash;
+  result.seq=seq;
+  return result;
+}

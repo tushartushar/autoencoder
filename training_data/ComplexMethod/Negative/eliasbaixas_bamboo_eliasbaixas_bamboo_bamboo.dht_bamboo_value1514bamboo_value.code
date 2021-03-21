@@ -1,0 +1,8 @@
+public bamboo_value(){
+}
+public bamboo_value(byte[] value){
+  this.value=value;
+}
+public bamboo_value(XdrDecodingStream xdr) throws OncRpcException, IOException {
+  xdrDecode(xdr);
+}

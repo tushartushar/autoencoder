@@ -1,0 +1,7 @@
+/** 
+ * Returns the estimated round-trip latency to the given peer, or -1 if the no estimate is available.  (If you send a message to the peer and it is successful, there will be an estimate available if this function is called from the result callback.)
+ */
+public long estimatedRTTMillis(InetSocketAddress peer){
+  assert udpcc_thread == null;
+  return udpcc.latency_mean(peer);
+}

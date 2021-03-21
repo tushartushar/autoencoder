@@ -1,0 +1,3 @@
+public String toString(){
+  return "(MCastJoin  groupguid=" + GuidTools.guid_to_string(groupguid) + " inbound="+ inbound+ " join="+ join+ ")";
+}

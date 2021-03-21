@@ -1,0 +1,8 @@
+private List<AuditMaster> constructList(Iterable<AuditMaster> auditMasterIterable){
+  List<AuditMaster> list=new ArrayList<AuditMaster>();
+  for (  AuditMaster auditMasterBean : auditMasterIterable) {
+    list.add(auditMasterBean);
+  }
+  ApplLogger.getLogger().info("Filtered results list size is : " + list.size());
+  return list;
+}

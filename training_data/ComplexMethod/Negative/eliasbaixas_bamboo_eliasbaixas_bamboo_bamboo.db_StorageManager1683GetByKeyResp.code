@@ -1,0 +1,5 @@
+public GetByKeyResp(Key k,ByteBuffer d,Object ud){
+  key=k;
+  data=d;
+  user_data=ud;
+}

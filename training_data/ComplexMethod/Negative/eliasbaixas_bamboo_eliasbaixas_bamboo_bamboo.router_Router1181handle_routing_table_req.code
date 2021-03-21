@@ -1,0 +1,20 @@
+protected void handle_routing_table_req(RoutingTableReq req){
+  if (req.level >= GUID_DIGITS) {
+    if (logger.isDebugEnabled())     logger.debug("Got " + req + " with level too high.");
+    return;
+  }
+  NeighborInfo ni=new NeighborInfo(req.peer,req.guid);
+  location_cache.add_node(ni);
+  LinkedList<NeighborInfo> neighbors=null;
+  for (int value=0; value < DIGIT_VALUES; ++value) {
+    if ((rt.primary(req.level,value) != null) && (rt.primary(req.level,value) != my_neighbor_info)) {
+      if (neighbors == null) {
+        neighbors=new LinkedList<NeighborInfo>();
+      }
+      neighbors.addLast(rt.primary(req.level,value));
+    }
+  }
+  RoutingTableResp outb=new RoutingTableResp(req.peer,my_guid,neighbors);
+  if (leaf_set.contains(ni) || rt.contains(ni) || reverse_rt.contains(ni))   use_as_periodic_ping(ni,outb);
+  dispatch(outb);
+}

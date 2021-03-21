@@ -1,0 +1,10 @@
+@Override public View getView(int position,View convertView,ViewGroup parent){
+  if (convertView == null) {
+    convertView=LayoutInflater.from(mContext).inflate(R.layout.ble_scan_result,parent,false);
+  }
+  TextView tv=(TextView)convertView.findViewById(R.id.device_name);
+  tv.setText(getItem(position).getDevice().getName());
+  tv=(TextView)convertView.findViewById(R.id.device_address);
+  tv.setText(getItem(position).getDevice().getAddress());
+  return convertView;
+}

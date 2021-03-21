@@ -1,0 +1,9 @@
+@TargetApi(21) private static BleAdvertiser createInstance(Context context){
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    BluetoothManager manager=(BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE);
+    if (manager.getAdapter().isMultipleAdvertisementSupported()) {
+      return new LBleAdvertiser(context,manager);
+    }
+  }
+  return new DummyBleAdvertiser(context);
+}

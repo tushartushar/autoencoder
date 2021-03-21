@@ -1,0 +1,20 @@
+@Override protected Void doInBackground(Void... params){
+  try {
+    Thread.sleep(TIME_TO_LET_DISCOVERY_RUN_MILLIS);
+    if (!discoveryStartConfirmed) {
+      Log.w(TAG,"BluetoothAdapter.ACTION_DISCOVERY_STARTED never received.  Recovery may fail.");
+    }
+    final BluetoothAdapter adapter=BluetoothAdapter.getDefaultAdapter();
+    if (adapter.isDiscovering()) {
+      if (isDebugEnabled())       Log.d(TAG,"Cancelling discovery");
+      adapter.cancelDiscovery();
+    }
+ else {
+      if (isDebugEnabled())       Log.d(TAG,"Discovery not running.  Won't cancel it");
+    }
+  }
+ catch (  InterruptedException e) {
+    if (isDebugEnabled())     Log.d(TAG,"DiscoveryCanceller sleep interrupted.");
+  }
+  return null;
+}

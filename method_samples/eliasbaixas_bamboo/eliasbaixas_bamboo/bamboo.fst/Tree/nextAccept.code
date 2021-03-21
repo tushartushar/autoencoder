@@ -1,0 +1,18 @@
+public long nextAccept(long ttl,long size){
+  if (acceptPut(ttl,size))   return now;
+  long high=now + (size - 1) / rate + 1;
+{
+    Node n=shiftTime(root,now,rate,high);
+    n=addPut(n,high,rate,ttl,size);
+    assert n.value() + n.offset() <= capacity : "\n" + nodeToString(n) + "\ncap="+ capacity+ " now="+ now;
+  }
+  long low=now;
+  while (high - low > 1) {
+    long then=low + (high - low) / 2;
+    Node n=shiftTime(root,now,rate,then);
+    n=addPut(n,then,rate,ttl,size);
+    if (n.value() + n.offset() <= capacity)     high=then;
+ else     low=then;
+  }
+  return high;
+}

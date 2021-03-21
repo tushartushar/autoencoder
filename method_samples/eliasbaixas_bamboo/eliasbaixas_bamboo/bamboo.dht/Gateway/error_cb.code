@@ -1,0 +1,3 @@
+protected Function0<Boolean> error_cb(int xact_id,int code,String m){
+  return curry(normal_resp_cb,new Integer(xact_id),new Integer(code),new XdrVoid(),curry(close_cb,m));
+}

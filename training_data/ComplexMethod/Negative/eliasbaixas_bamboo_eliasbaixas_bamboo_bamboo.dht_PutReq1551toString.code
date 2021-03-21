@@ -1,0 +1,3 @@
+public String toString(){
+  return "(Dht.PutReq key=" + GuidTools.guid_to_string(key) + " put="+ put+ " ttl="+ ttl_sec+ " client_id="+ client_id.getHostAddress()+ ")";
+}

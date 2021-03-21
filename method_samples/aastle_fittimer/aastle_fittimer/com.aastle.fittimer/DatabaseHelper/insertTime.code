@@ -1,0 +1,20 @@
+/** 
+ * @param tableName
+ * @param date
+ * @param time
+ * @param appState
+ * @return
+ */
+public long insertTime(String tableName,String date,String time,String appState,int interval,int session){
+  long id;
+  thisDataBase=getWritableDatabase();
+  ContentValues initialValues=new ContentValues();
+  initialValues.put(COL_DATE,date);
+  initialValues.put(COL_TIME,time);
+  initialValues.put(COL_APPSTATE,appState);
+  initialValues.put(COL_INTERVAL,interval);
+  initialValues.put(COL_SESSION,session);
+  id=thisDataBase.insert(tableName,null,initialValues);
+  thisDataBase.close();
+  return id;
+}

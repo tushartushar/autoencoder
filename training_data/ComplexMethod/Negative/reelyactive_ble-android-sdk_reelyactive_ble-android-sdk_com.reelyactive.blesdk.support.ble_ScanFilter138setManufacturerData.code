@@ -1,0 +1,34 @@
+/** 
+ * Set filter on on manufacturerData. A negative manufacturerId is considered as invalid id. <p> Note the first two bytes of the  {@code manufacturerData} is the manufacturerId.
+ * @throws IllegalArgumentException If the {@code manufacturerId} is invalid.
+ */
+public Builder setManufacturerData(int manufacturerId,byte[] manufacturerData){
+  if (manufacturerData != null && manufacturerId < 0) {
+    throw new IllegalArgumentException("invalid manufacture id");
+  }
+  mManufacturerId=manufacturerId;
+  mManufacturerData=manufacturerData;
+  mManufacturerDataMask=null;
+  return this;
+}
+/** 
+ * Set filter on partial manufacture data. For any bit in the mask, set it to 1 if it needs to match the one in manufacturer data, otherwise set it to 0. <p> The  {@code manufacturerDataMask} must have the same length of {@code manufacturerData}.
+ * @throws IllegalArgumentException If the {@code manufacturerId} is invalid, or{@code manufacturerData} is null while {@code manufacturerDataMask} is not,or  {@code manufacturerData} and {@code manufacturerDataMask} have differentlength.
+ */
+public Builder setManufacturerData(int manufacturerId,byte[] manufacturerData,byte[] manufacturerDataMask){
+  if (manufacturerData != null && manufacturerId < 0) {
+    throw new IllegalArgumentException("invalid manufacture id");
+  }
+  if (mManufacturerDataMask != null) {
+    if (mManufacturerData == null) {
+      throw new IllegalArgumentException("manufacturerData is null while manufacturerDataMask is not null");
+    }
+    if (mManufacturerData.length != mManufacturerDataMask.length) {
+      throw new IllegalArgumentException("size mismatch for manufacturerData and manufacturerDataMask");
+    }
+  }
+  mManufacturerId=manufacturerId;
+  mManufacturerData=manufacturerData;
+  mManufacturerDataMask=manufacturerDataMask;
+  return this;
+}

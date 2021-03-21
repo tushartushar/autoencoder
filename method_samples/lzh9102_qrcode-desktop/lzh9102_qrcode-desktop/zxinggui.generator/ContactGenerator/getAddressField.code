@@ -1,0 +1,4 @@
+private String getAddressField() throws GeneratorException {
+  String addr=txtAddress.getText();
+  return addr;
+}

@@ -1,0 +1,6 @@
+public Group(BigInteger g){
+  group=g;
+}
+public Group(InputBuffer buffer) throws QSException {
+  group=buffer.nextBigInteger();
+}

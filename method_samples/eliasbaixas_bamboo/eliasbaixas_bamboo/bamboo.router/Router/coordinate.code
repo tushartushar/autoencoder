@@ -1,0 +1,4 @@
+public VirtualCoordinate coordinate(NeighborInfo ni){
+  Pair<VirtualCoordinate,Long> p=coords.get(ni);
+  return (p == null) ? null : p.first;
+}

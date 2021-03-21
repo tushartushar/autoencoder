@@ -1,0 +1,29 @@
+protected void goto_next_node_ready(MerkleTree tree){
+  if (logger.isDebugEnabled())   logger.debug(ae_state + " goto_next_node_ready");
+  if (ae_state == null) {
+    if (logger.isDebugEnabled())     logger.debug("ae_state == null, must have timed out");
+    return;
+  }
+  MerkleTree.Node node=null;
+  while (!ae_state.nodes_to_do.isEmpty()) {
+    Pair p=(Pair)ae_state.nodes_to_do.removeFirst();
+    int level=((Integer)p.first).intValue();
+    long low_time=((Long)p.second).longValue();
+    node=tree.node(level,low_time);
+    if (node == null) {
+      if (logger.isDebugEnabled())       logger.debug(ae_state + " no longer a node");
+    }
+ else {
+      break;
+    }
+  }
+  if (node == null) {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " all nodes finished--ae done");
+    synced(ae_state.guid_range,ae_state.ni.node_id);
+    ae_state=null;
+    return;
+  }
+  ae_state.current_level=node.level();
+  ae_state.current_low_time=node.range_low();
+  handle_ae_tree_ready(tree);
+}

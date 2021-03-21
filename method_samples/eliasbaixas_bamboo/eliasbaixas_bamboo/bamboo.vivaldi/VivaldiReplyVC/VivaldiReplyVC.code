@@ -1,0 +1,11 @@
+/** 
+ * Constructs the reply.
+ * @param coordinate The virtual coordinate.
+ * @param samples The number of samples used to calculate the coordinate.
+ * @param user_data The user-specified object included in the request.
+ */
+public VivaldiReplyVC(VirtualCoordinate coordinate,int samples,Object user_data){
+  this.coordinate=coordinate;
+  this.samples=samples;
+  this.user_data=user_data;
+}

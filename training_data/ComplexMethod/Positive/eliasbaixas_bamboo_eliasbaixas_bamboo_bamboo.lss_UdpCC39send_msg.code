@@ -1,0 +1,85 @@
+protected final boolean send_msg(Connection conn,boolean retry){
+  TimeoutInfo tinfo=null;
+  LinkedList<TimeoutInfo> q=retry ? conn.retry_q : conn.send_q;
+  while (!q.isEmpty()) {
+    TimeoutInfo t=q.getFirst();
+    if (cancelled.remove(new Long(t.msg_id)))     q.removeFirst();
+ else {
+      tinfo=t;
+      break;
+    }
+  }
+  if (tinfo == null)   return true;
+  tinfo.attempt++;
+  long seq=make_seq(tinfo.msg_id,tinfo.attempt);
+  if (DEBUG)   debugln("sending " + tinfo.msg + " seq=0x"+ Long.toHexString(seq));
+  long ack=-1L;
+  if (!conn.ack_q.isEmpty()) {
+    ack=((Long)conn.ack_q.getFirst()).longValue();
+    if (DEBUG)     debugln("piggybacking ack " + ack);
+  }
+  long now_ms=System.currentTimeMillis();
+  long wait_ms=now_ms - tinfo.start_ms;
+  int sz=serializer.serialize_size(tinfo.msg) + 28;
+  if (sz > MAX_MSG_SIZE) {
+    BUG("size=" + sz + " is greater than max size="+ MAX_MSG_SIZE+ " for msg "+ tinfo.msg);
+  }
+  ByteBuffer bb=null;
+  if (mac == null) {
+    bb=alloc_bb(sz);
+    bb.putInt(0);
+  }
+ else {
+    bb=alloc_bb(sz + 20);
+    bb.putInt(1);
+  }
+  bb.putLong(ack);
+  bb.putLong(seq);
+  bb.putInt((int)wait_ms);
+  bb.putInt((int)(conn.sa >> 3));
+  serializer.serialize(tinfo.msg,bb);
+  if (mac != null) {
+    mac.update(bb.array(),bb.arrayOffset(),bb.position());
+    byte[] macbytes=mac.doFinal();
+    bb.put(macbytes,0,20);
+  }
+  bb.rewind();
+  int n=0;
+  try {
+    n=channel.send(bb,conn.addr);
+  }
+ catch (  IOException e) {
+    bb.rewind();
+    byte[] data=new byte[bb.limit() - bb.position()];
+    bb.get(data,0,data.length);
+    logger.fatal("bb.pos=" + bb.position() + " bb.lim="+ bb.limit()+ " addr="+ conn.addr.getAddress().getHostAddress()+ " msg=\n"+ StringUtil.bytes_to_str(data),e);
+    System.exit(1);
+  }
+  if (n == 0) {
+    if (DEBUG)     debugln("send failed, will retry later");
+    return false;
+  }
+  out_pkts+=1;
+  out_bytes+=bb.limit() + 20;
+  if (ack != -1)   conn.ack_q.removeFirst();
+  if (retry) {
+    conn.retry_q.removeFirst();
+    TimeoutInfo tnew=new TimeoutInfo(conn,tinfo.msg,tinfo.start_ms,tinfo.timeout_ms,tinfo.msg_id,tinfo.send_cb);
+    tnew.attempt=tinfo.attempt;
+    tinfo=tnew;
+  }
+ else {
+    conn.send_q.removeFirst();
+    conn.time_to_first_send+=(tinfo.send_ms - tinfo.start_ms);
+    conn.time_to_first_send_cnt+=1;
+  }
+  tinfo.send_ms=now_ms;
+  Long Seq=new Long(seq);
+  unacked.put(Seq,tinfo);
+  conn.inf.put(Seq,tinfo);
+  conn.lastsnd=now_ms;
+  long timeout_ms=Math.round(conn.rto * timeout_factor + timeout_diff);
+  if (DEBUG)   debugln("setting timeout for " + timeout_ms);
+  acore.register_timer(timeout_ms,ack_timeout_cb,Seq);
+  return true;
+}

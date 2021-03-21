@@ -1,0 +1,10 @@
+protected void update_transform(){
+  CanvasPane pane=canvas.getCanvasPane();
+  Dimension2D d=(Dimension2D)canvas.getSize();
+  AffineTransform t=new AffineTransform();
+  t.translate(0.5 * d.getWidth(),0.5 * d.getHeight());
+  t.scale(zoom,zoom);
+  t.translate(x_offset,y_offset);
+  pane.setTransform(t);
+  pane.repaint();
+}

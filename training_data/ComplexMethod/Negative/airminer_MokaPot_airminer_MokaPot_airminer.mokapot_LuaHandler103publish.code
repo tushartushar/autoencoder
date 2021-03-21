@@ -1,0 +1,19 @@
+@Override public void publish(LogRecord record){
+  Level level=record.getLevel();
+  String message=getFormatter().formatMessage(record);
+  if (level == Level.SEVERE) {
+    MokaPot.log(message);
+  }
+ else   if (level == Level.WARNING) {
+    MokaPot.log(message);
+  }
+ else   if (level == Level.INFO) {
+    MokaPot.log(message);
+  }
+ else   if (level == Level.CONFIG) {
+    MokaPot.log(message);
+  }
+ else {
+    MokaPot.log(message);
+  }
+}

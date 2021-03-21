@@ -1,0 +1,5 @@
+@Override protected void onStop(){
+  super.onStop();
+  saveTime(TABLE_NAME,getDate(),getTime(),"stopped",interval,session);
+  stopWatch.resetClock();
+}

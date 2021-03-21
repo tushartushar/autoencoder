@@ -1,0 +1,5 @@
+public void join(BigInteger groupname,int ttl_s,String app,ASyncCore.TimerCB cb,Object user_data){
+  this.groupname=groupname;
+  JoinState state=new JoinState(groupname,total_levels,ttl_s,app,cb,user_data);
+  join_get(state);
+}

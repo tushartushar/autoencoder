@@ -1,0 +1,13 @@
+void tree_ready(MerkleTree tree);
+public void tree_ready(MerkleTree tree){
+  handle_ae_tree_ready(tree);
+}
+public void tree_ready(MerkleTree tree){
+  handle_ae_tree_ready_resp(tree,r);
+}
+public void tree_ready(MerkleTree tree){
+  goto_next_node_ready(tree);
+}
+public void tree_ready(MerkleTree tree){
+  handle_fetch_tree_ready(tree,r);
+}

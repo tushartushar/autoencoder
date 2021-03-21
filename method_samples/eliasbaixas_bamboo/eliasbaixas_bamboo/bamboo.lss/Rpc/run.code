@@ -1,0 +1,44 @@
+public void run(Long xact_id){
+  Pair<Thunk1<QuickSerializable>,Runnable> cb=inflight.remove(xact_id);
+  if (cb != null && cb.second != null)   cb.second.run();
+}
+public void run(Thunk1<QuickSerializable> responseCallback,Class responseClass,QuickSerializable payload){
+  if (payload == null) {
+    responseCallback.run(null);
+  }
+ else   if (responseClass.equals(payload.getClass())) {
+    responseCallback.run(payload);
+  }
+ else   if (logger.isDebugEnabled()) {
+    logger.debug("bad response class; expected " + responseClass.getName() + " but got "+ payload.getClass().getName());
+  }
+}
+public void run(){
+  network=Network.instance(my_node_id);
+  try {
+    network.registerReceiver(Msg.class,handleMsg);
+  }
+ catch (  DuplicateTypeException e) {
+    BUG(e);
+  }
+}
+public void run(Msg msg,InetSocketAddress peer){
+  if (msg.req) {
+    Thunk3<InetSocketAddress,QuickSerializable,Object> cb=handlers.get(msg.payload.getClass());
+    if (cb == null) {
+      if (logger.isDebugEnabled())       logger.debug("unknown request " + msg.payload.getClass());
+    }
+ else {
+      cb.run(peer,msg.payload,Pair.create(peer,new Long(msg.xact_id)));
+    }
+  }
+ else {
+    Pair<Thunk1<QuickSerializable>,Runnable> pair=inflight.remove(new Long(msg.xact_id));
+    if (pair == null) {
+      if (logger.isDebugEnabled())       logger.debug("unknown response xact_id=" + msg.xact_id);
+    }
+ else {
+      pair.first.run(msg.payload);
+    }
+  }
+}

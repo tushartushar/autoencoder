@@ -1,0 +1,6 @@
+public void timer_cb(Object user_data){
+  client.sendMsg(groupname,new Payload(my_node_id,messageNumber));
+  logger.info("Message number " + messageNumber + " done sending.");
+  messageNumber++;
+  acore.register_timer(5 * 1000,new SendCb(),null);
+}

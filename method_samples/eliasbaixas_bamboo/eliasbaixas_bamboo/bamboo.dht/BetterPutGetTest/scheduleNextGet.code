@@ -1,0 +1,5 @@
+protected void scheduleNextGet(){
+  long s=Math.round(random_exponential(mean_get_period_ms,rand));
+  logger.info("Next get in " + s + " ms");
+  acore.registerTimer(s,nextGet);
+}

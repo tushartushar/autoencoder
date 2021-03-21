@@ -1,0 +1,3 @@
+public String toString(){
+  return "(TimerInfo cb=" + cb + " user_data="+ user_data+ ")";
+}

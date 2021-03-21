@@ -1,0 +1,15 @@
+protected void BUG(Exception e){
+  logger.fatal("unhandled exception",e);
+  System.exit(1);
+}
+protected void BUG(String msg){
+  Exception e=null;
+  try {
+    throw new Exception();
+  }
+ catch (  Exception c) {
+    e=c;
+  }
+  logger.fatal(msg,e);
+  System.exit(1);
+}

@@ -1,0 +1,4 @@
+public RecursiveRouteCB(NeighborInfo n,Runnable r){
+  ni=n;
+  retry=r;
+}

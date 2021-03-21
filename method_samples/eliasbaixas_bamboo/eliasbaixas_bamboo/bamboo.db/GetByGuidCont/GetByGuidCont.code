@@ -1,0 +1,18 @@
+public GetByGuidCont(Object c,boolean d,SinkIF s,Object ud){
+  continuation=c;
+  del=d;
+  comp_q=s;
+  user_data=ud;
+}
+public GetByGuidCont(Object c,SinkIF s,Object ud){
+  this(c,false,s,ud);
+}
+public GetByGuidCont(Object c,boolean d,SinkIF s,Object ud){
+  continuation=c;
+  del=d;
+  comp_q=s;
+  user_data=ud;
+}
+public GetByGuidCont(Object c,SinkIF s,Object ud){
+  this(c,false,s,ud);
+}

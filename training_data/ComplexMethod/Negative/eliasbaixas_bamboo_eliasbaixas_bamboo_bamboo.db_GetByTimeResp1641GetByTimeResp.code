@@ -1,0 +1,10 @@
+public GetByTimeResp(LinkedList<Key> k,Object c,Object ud){
+  keys=k;
+  continuation=c;
+  user_data=ud;
+}
+public GetByTimeResp(LinkedList<Key> k,Object c,Object ud){
+  keys=k;
+  continuation=c;
+  user_data=ud;
+}

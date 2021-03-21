@@ -1,0 +1,3 @@
+@Column(name="NAME",nullable=true) public String getName(){
+  return name;
+}

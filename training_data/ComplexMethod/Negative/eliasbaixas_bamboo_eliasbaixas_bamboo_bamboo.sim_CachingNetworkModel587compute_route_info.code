@@ -1,0 +1,9 @@
+public synchronized RouteInfo compute_route_info(int src,int dst){
+  SrcDst key=new SrcDst(src,dst);
+  RouteInfo cached=(RouteInfo)cache.get(key);
+  if (cached == null) {
+    cached=the_real_compute_route_info(src,dst);
+    cache.put(key,cached);
+  }
+  return cached;
+}

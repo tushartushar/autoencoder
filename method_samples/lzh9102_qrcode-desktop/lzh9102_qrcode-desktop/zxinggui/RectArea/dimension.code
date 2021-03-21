@@ -1,0 +1,9 @@
+/** 
+ * Return the dimension of the shape formed by the four points.
+ * @return If the four points form a rectangle, the function returns 2.Otherwise, it returns 1 if they form a line and 0 if they form a point.
+ */
+private int dimension(){
+  if (x1 == x2 && y1 == y2)   return 0;
+ else   if (x1 == x2 || y1 == y2)   return 1;
+ else   return 2;
+}

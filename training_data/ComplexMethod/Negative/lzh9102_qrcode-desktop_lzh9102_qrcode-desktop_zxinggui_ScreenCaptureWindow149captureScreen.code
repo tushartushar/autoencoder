@@ -1,0 +1,14 @@
+/** 
+ * Show the screen capture window and let user select the region.
+ */
+public void captureScreen(){
+  try {
+    screencapture=ImageHelper.captureScreen();
+  }
+ catch (  Exception e) {
+    return;
+  }
+  screen_buffer=new BufferedImage(screencapture.getWidth(),screencapture.getHeight(),screencapture.getType());
+  setVisible(true);
+  return;
+}

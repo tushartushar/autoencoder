@@ -1,0 +1,3 @@
+public static boolean isAudioSource(ParcelUuid uuid){
+  return uuid.equals(AudioSource);
+}

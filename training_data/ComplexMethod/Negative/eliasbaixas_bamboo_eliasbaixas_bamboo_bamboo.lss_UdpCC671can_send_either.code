@@ -1,0 +1,10 @@
+/** 
+ * Do we have a regular msg to send or retry, and are we within the congestion window?
+ */
+public final boolean can_send_either(){
+  if (DEBUG) {
+    if (send_q.isEmpty() && retry_q.isEmpty())     debugln("send_q and retry_q both empty");
+ else     if (inf.size() >= (int)cwnd)     debugln("inf.size >= cwnd");
+  }
+  return (((!send_q.isEmpty()) || (!retry_q.isEmpty())) && (inf.size() < (int)cwnd));
+}

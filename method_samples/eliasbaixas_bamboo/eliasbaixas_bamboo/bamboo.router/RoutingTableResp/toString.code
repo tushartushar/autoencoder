@@ -1,0 +1,16 @@
+public String toString(){
+  StringBuffer result=new StringBuffer(50 + 70 * ((neighbors == null) ? 0 : neighbors.size()));
+  result.append("(RoutingTableResp super=");
+  result.append(super.toString());
+  result.append(" peer_guid=");
+  result.append(peer_guid);
+  result.append(" neighbors=(");
+  if (neighbors != null) {
+    for (Iterator i=neighbors.iterator(); i.hasNext(); ) {
+      result.append((NeighborInfo)i.next());
+      if (i.hasNext())       result.append(", ");
+    }
+  }
+  result.append("))");
+  return result.toString();
+}

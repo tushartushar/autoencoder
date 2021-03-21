@@ -1,0 +1,4 @@
+ClientInfo(int window_size){
+  accepted=new int[window_size];
+  requested=new int[window_size];
+}

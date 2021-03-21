@@ -1,0 +1,4 @@
+public Node(Object k,Object v){
+  key=k;
+  value=v;
+}

@@ -1,0 +1,20 @@
+public static void main(String[] args){
+  long seed=1;
+  long stop_time=16 * 3600 * 1000;
+  int ttl_sec=3 * 3600;
+  Simulator sim=new Simulator();
+  if (args[0].equals("control"))   new RandomAlgorithm(1000,stop_time,seed++);
+ else   if (args[0].equals("rate"))   new FairRateAlgorithm(1000,stop_time,seed++,false);
+ else   if (args[0].equals("storage"))   new FairStorageAlgorithm(1000,stop_time,seed++);
+ else   if (args[0].equals("commitment"))   new FairCommitmentAlgorithm(1000,stop_time,seed++);
+ else   if (args[0].equals("virtual"))   new VirtualTimeAlgorithm(1000,stop_time);
+ else   if (args[0].equals("noqueue"))   new NoQueuingAlgorithm(1000,stop_time);
+ else {
+    System.err.println("mode " + args[0] + " not supported");
+    System.exit(1);
+  }
+  for (int i=0; i < start_times.length; ++i) {
+    new EcnBitClient(i,1000,1024,ttl_sec,start_times[i],stop_times[i],seed++);
+  }
+  sim.main_loop();
+}

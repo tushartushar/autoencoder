@@ -1,0 +1,16 @@
+public Request(XdrAble r,SinkIF c,Object u){
+  request=r;
+  completion_queue=c;
+  user_data=u;
+  vers=2;
+  if (request instanceof XdrVoid)   proc=1;
+ else   if (request instanceof bamboo_put_args)   proc=2;
+ else   if (request instanceof bamboo_get_args)   proc=3;
+ else   assert false : request.getClass().getName();
+}
+public Request(int v,int p,XdrAble r,Thunk1 u){
+  vers=v;
+  proc=p;
+  request=r;
+  user_data=u;
+}

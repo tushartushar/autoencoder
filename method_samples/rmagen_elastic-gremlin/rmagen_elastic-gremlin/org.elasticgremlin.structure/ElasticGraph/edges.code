@@ -1,0 +1,10 @@
+@Override public Iterator<Edge> edges(Object... edgeIds){
+  if (edgeIds == null || edgeIds.length == 0)   return queryHandler.edges();
+  if (edgeIds.length > 1 && !edgeIds[0].getClass().equals(edgeIds[1].getClass()))   throw Graph.Exceptions.idArgsMustBeEitherIdOrElement();
+  if (edgeIds[0] instanceof Edge) {
+    ArrayList<Edge> list=new ArrayList();
+    for (int i=0; i < edgeIds.length; i++)     list.add((Edge)edgeIds[i]);
+    return list.iterator();
+  }
+  return queryHandler.edges(edgeIds);
+}

@@ -1,0 +1,3 @@
+public void registerClient(BleServiceCallback client){
+  mClients.add(client);
+}

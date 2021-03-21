@@ -1,0 +1,3 @@
+private boolean equals(EdgeMapping mapping,EdgeMapping otherMapping){
+  return mapping.getDirection().equals(otherMapping.getDirection()) && mapping.getLabel().equals(otherMapping.getLabel()) && mapping.getExternalVertexField().equals(otherMapping.getExternalVertexField())&& mapping.getExternalVertexLabel().equals(otherMapping.getExternalVertexLabel());
+}

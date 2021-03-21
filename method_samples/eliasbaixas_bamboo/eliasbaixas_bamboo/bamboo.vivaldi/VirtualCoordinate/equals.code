@@ -1,0 +1,6 @@
+public boolean equals(Object other){
+  if (!(other instanceof VirtualCoordinate) || (other == null))   return false;
+  VirtualCoordinate o=(VirtualCoordinate)other;
+  for (int i=0; i < _coordinate.length; i++)   if (_coordinate[i] != o._coordinate[i])   return false;
+  return true;
+}

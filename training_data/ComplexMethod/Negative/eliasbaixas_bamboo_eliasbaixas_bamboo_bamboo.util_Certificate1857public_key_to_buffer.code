@@ -1,0 +1,9 @@
+public static void public_key_to_buffer(OutputBuffer buffer,PublicKey public_key) throws NoSuchAlgorithmException, InvalidKeySpecException {
+  String key_alg=public_key.getAlgorithm();
+  KeyFactory kf=KeyFactory.getInstance(key_alg);
+  X509EncodedKeySpec ks=(X509EncodedKeySpec)kf.getKeySpec(public_key,X509EncodedKeySpec.class);
+  byte[] key_bytes=ks.getEncoded();
+  buffer.add(key_alg);
+  buffer.add(key_bytes.length);
+  buffer.add(key_bytes,0,key_bytes.length);
+}

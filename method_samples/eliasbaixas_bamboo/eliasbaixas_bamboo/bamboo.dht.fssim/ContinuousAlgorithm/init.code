@@ -1,0 +1,27 @@
+protected void init(long st){
+  instance=this;
+  sim=Simulator.instance;
+  storage_tree=new Tree(0,params.RATE,params.DISK_SIZE + params.MAX_SIZE - 1);
+  if (INIT_STORAGE_TREE) {
+    for (long i=1; i < params.MAX_TTL; ++i) {
+      boolean r=storage_tree.addPut(i * params.TTL_MULT,params.MAX_SIZE);
+      assert r : i;
+    }
+  }
+  stop_time=st;
+  sim.register_event(st,new Simulator.EventCb(){
+    public void cb(    Object not_used){
+      simulation_finished();
+    }
+  }
+,null);
+  sim.register_event(10000,new Simulator.EventCb(){
+    public void cb(    Object not_used){
+      if (print_usages && (sim.now_ms() < stop_time)) {
+        print_usage();
+        sim.register_event(10000,this,null);
+      }
+    }
+  }
+,null);
+}

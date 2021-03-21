@@ -1,0 +1,4 @@
+public Node(int n,DomainId d){
+  super(n);
+  domain=d;
+}

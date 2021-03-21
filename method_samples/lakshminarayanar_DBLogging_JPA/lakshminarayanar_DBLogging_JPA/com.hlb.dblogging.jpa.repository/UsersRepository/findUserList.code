@@ -1,0 +1,1 @@
+@Query("select username from Users u where username like ? and deleted=0") List<String> findUserList(String username);

@@ -1,0 +1,5 @@
+protected BluetoothLeScannerCompat(Clock clock,AlarmManager alarmManager,PendingIntent alarmIntent){
+  this.clock=clock;
+  this.alarmManager=alarmManager;
+  this.alarmIntent=alarmIntent;
+}

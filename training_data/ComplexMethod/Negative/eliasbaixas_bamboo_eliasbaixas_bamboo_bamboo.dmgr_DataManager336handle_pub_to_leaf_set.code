@@ -1,0 +1,34 @@
+protected void handle_pub_to_leaf_set(PutOrRemoveMsg msg){
+  if (logger.isDebugEnabled())   logger.debug("handle_pub_to_leaf_set called w/ msg=" + msg + " in_leaf_set_range(guid="+ GuidTools.guid_to_string(msg.guid)+ ")="+ in_leaf_set_range(msg.guid));
+  byte[] hash=msg.value_hash;
+  if (msg.put) {
+    md.update(msg.value.array(),msg.value.arrayOffset(),msg.value.limit());
+    hash=md.digest();
+  }
+  Key key=new Key(msg.time_usec,msg.ttl_sec,msg.guid,msg.secret_hash,hash,msg.put,msg.client_id);
+  if (!key.put) {
+    byte[] secretHash=md.digest(msg.value.array());
+    if (!Arrays.equals(key.secret_hash,secretHash)) {
+      StringBuffer buf=new StringBuffer(200);
+      buf.append("got bad remove ");
+      key.toStringBuffer(buf);
+      buf.append(" hash(data)=0x");
+      bytes_to_sbuf(secretHash,0,4,buf);
+      buf.append(" from root ");
+      addr_to_sbuf(msg.peer,buf);
+      logger.warn(buf);
+      return;
+    }
+  }
+  if (logger.isInfoEnabled()) {
+    StringBuffer buf=new StringBuffer(200);
+    buf.append("got ");
+    key.toStringBuffer(buf);
+    buf.append(" size=");
+    buf.append(msg.value.limit());
+    buf.append(" from root ");
+    addr_to_sbuf(msg.peer,buf);
+    logger.info(buf);
+  }
+  db_put(key,msg.value,msg);
+}

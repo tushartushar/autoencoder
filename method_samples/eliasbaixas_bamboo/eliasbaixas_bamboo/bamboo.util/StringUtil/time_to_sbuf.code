@@ -1,0 +1,15 @@
+public static final void time_to_sbuf(long secs,StringBuffer buf){
+  int i=time_units.length - 1;
+  while (secs > 0) {
+    if (secs >= time_units[i]) {
+      long div=secs / (time_units[i]);
+      secs%=time_units[i];
+      buf.append(div);
+      buf.append(" ");
+      buf.append(time_desc[i]);
+      if (div != 1)       buf.append("s");
+      if (secs > 0)       buf.append(" ");
+    }
+    --i;
+  }
+}

@@ -1,0 +1,13 @@
+public void handleEvent(QueueElementIF item){
+  if (item instanceof NetworkMessageResult) {
+    NetworkMessageResult result=(NetworkMessageResult)item;
+    NodeId node=(NodeId)result.user_data;
+    outstanding.remove(node);
+    if (result.success)     log.println(now_ms() + " " + node+ " 1");
+ else     log.println(now_ms() + " " + node+ " 0");
+    ping_cb.timer_cb(null);
+  }
+ else {
+    BUG("unexpected event: " + item);
+  }
+}

@@ -1,0 +1,8 @@
+protected void use_as_periodic_ping(NeighborInfo ni,NetworkMessage outb){
+  if (!periodic_pings.contains(ni)) {
+    periodic_pings.add(ni);
+    outb.comp_q=my_sink;
+    outb.user_data=new PeriodicPingCB(ni);
+    outb.timeout_sec=5;
+  }
+}

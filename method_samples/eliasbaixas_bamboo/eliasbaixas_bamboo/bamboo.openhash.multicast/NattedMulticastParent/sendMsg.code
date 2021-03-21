@@ -1,0 +1,3 @@
+public void sendMsg(MulticastMessage msg){
+  for (  TcpMsgChannel c : children.get(msg.group))   c.send(msg);
+}

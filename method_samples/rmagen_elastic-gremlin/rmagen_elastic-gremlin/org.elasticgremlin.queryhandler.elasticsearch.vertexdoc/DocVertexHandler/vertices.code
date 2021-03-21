@@ -1,0 +1,17 @@
+@Override public Iterator<Vertex> vertices(){
+  return new QueryIterator<>(FilterBuilders.missingFilter(DocEdge.InId),0,scrollSize,Integer.MAX_VALUE,client,this::createVertex,refresh,timing,indexName);
+}
+@Override public Iterator<? extends Vertex> vertices(Object[] vertexIds){
+  List<BaseVertex> vertices=new ArrayList<>();
+  for (  Object id : vertexIds) {
+    DocVertex vertex=new DocVertex(id.toString(),null,null,graph,getLazyGetter(),elasticMutations,indexName);
+    vertex.setSiblings(vertices);
+    vertices.add(vertex);
+  }
+  return vertices.iterator();
+}
+@Override public Iterator<Vertex> vertices(Predicates predicates){
+  BoolFilterBuilder boolFilter=ElasticHelper.createFilterBuilder(predicates.hasContainers);
+  boolFilter.must(FilterBuilders.missingFilter(DocEdge.InId));
+  return new QueryIterator<>(boolFilter,0,scrollSize,predicates.limitHigh - predicates.limitLow,client,this::createVertex,refresh,timing,indexName);
+}

@@ -1,0 +1,5 @@
+private static byte[] extractBytes(byte[] scanRecord,int start,int length){
+  byte[] bytes=new byte[length];
+  System.arraycopy(scanRecord,start,bytes,0,length);
+  return bytes;
+}

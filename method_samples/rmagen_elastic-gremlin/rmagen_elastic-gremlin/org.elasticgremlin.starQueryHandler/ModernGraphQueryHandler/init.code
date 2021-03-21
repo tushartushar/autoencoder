@@ -1,0 +1,14 @@
+@Override public void init(ElasticGraph graph,Configuration configuration) throws IOException {
+  String indexName=configuration.getString("elasticsearch.index.name","graph");
+  boolean refresh=configuration.getBoolean("elasticsearch.refresh",false);
+  int scrollSize=configuration.getInt("elasticsearch.scrollSize",100);
+  this.client=ElasticClientFactory.create(configuration);
+  ElasticHelper.createIndex(indexName,client);
+  timing=new TimingAccessor();
+  elasticMutations=new ElasticMutations(false,client,timing);
+  this.docVertexHandler=new DocVertexHandler(graph,client,elasticMutations,indexName,scrollSize,refresh,timing);
+  this.starHandler=new StarHandler(graph,client,elasticMutations,indexName,scrollSize,refresh,timing,new BasicEdgeMapping("knows","person",Direction.OUT,"knows-fk"),new BasicEdgeMapping("created","software",Direction.OUT,"created-fk"));
+  this.vertexHandlers=new HashMap<>();
+  this.vertexHandlers.put(PERSON,starHandler);
+  this.vertexHandlers.put(SOFTWARE,docVertexHandler);
+}

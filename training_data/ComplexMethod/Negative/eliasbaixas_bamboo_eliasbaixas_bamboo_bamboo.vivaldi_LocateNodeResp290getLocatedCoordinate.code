@@ -1,0 +1,6 @@
+/** 
+ * Returns the virtual coordinate of the discovered noded.
+ */
+public VirtualCoordinate getLocatedCoordinate(){
+  return _located_coord;
+}

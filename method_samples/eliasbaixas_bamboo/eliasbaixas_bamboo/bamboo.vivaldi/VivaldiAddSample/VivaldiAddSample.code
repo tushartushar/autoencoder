@@ -1,0 +1,9 @@
+/** 
+ * Constructs a message containing a single latency/coordinate sample.
+ * @param coordinate The current virtual coordinate at the remote node.
+ * @param latency The one way latency between the local and remote node in milliseconds.
+ */
+public VivaldiAddSample(VirtualCoordinate coordinate,double latency_ms){
+  remote_coordinate=coordinate;
+  this.latency_ms=latency_ms;
+}

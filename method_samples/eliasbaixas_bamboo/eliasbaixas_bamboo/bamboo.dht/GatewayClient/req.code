@@ -1,0 +1,3 @@
+protected void req(int vers,int proc,XdrAble req,Thunk1 resp){
+  handleEvent(new Request(vers,proc,req,resp));
+}

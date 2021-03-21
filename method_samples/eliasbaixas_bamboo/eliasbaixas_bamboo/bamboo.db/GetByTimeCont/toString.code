@@ -1,0 +1,6 @@
+public String toString(){
+  return "(GetByTimeCont continuation=" + continuation + " comp_q="+ comp_q+ ")";
+}
+public String toString(){
+  return "(GetByTimeCont continuation=" + continuation + " comp_q="+ comp_q+ ")";
+}

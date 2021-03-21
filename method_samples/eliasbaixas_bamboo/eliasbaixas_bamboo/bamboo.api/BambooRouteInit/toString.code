@@ -1,0 +1,3 @@
+public String toString(){
+  return "(BambooRouteInit dest=" + GuidTools.guid_to_string(dest) + " app_id="+ Long.toHexString(app_id)+ " intermediate_upcall="+ intermediate_upcall+ " iter="+ iter+ " payload="+ payload+ ")";
+}

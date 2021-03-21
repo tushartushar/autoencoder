@@ -1,0 +1,4 @@
+public void run(){
+  MainWindow window=new MainWindow();
+  window.setVisible(true);
+}

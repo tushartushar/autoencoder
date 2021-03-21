@@ -1,0 +1,7 @@
+public static void main(String[] args) throws XPathExpressionException, ParserConfigurationException, SAXException, FileNotFoundException {
+  QueryXML process=new QueryXML();
+  File file=new File("C:\\Users\\Lakshminarayana\\Desktop\\sample.xml");
+  FileInputStream in=new FileInputStream(file);
+  System.out.println("=======================");
+  process.getLogLevelMessage(in);
+}

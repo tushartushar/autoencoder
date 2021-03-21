@@ -1,0 +1,60 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  final String mode=config_get_string(config,"mode");
+  secret=config_get_string(config,"secret").getBytes();
+  String file=config_get_string(config,"file");
+  String gwc=config_get_string(config,"client_stage_name");
+  client=(GatewayClient)lookup_stage(config,gwc);
+  if (mode.equals("write")) {
+    is=null;
+    try {
+      is=new FileInputStream(file);
+    }
+ catch (    IOException e) {
+      logger.error("couldn't open file: " + file);
+      System.exit(1);
+    }
+    ttl=config_get_int(config,"ttl");
+    wblocks=new Vector<LinkedList<ByteBuffer>>(10);
+    wblocks.add(new LinkedList<ByteBuffer>());
+    ready=new LinkedList<Pair<byte[],ByteBuffer>>();
+    for (int i=0; i < MAX_PARALLEL; ++i) {
+      acore.register_timer(0,new Runnable(){
+        public void run(){
+          write();
+        }
+      }
+);
+    }
+  }
+ else   if (mode.equals("read")) {
+    try {
+      os=new FileOutputStream(file);
+    }
+ catch (    IOException e) {
+      logger.error("couldn't open file: " + file);
+      System.exit(1);
+    }
+    String kstr=config_get_string(config,"key");
+    key=bi2bytes(new BigInteger(kstr.substring(2),16));
+    rblocks=new Vector<PriorityQueue>(10);
+    rnext=new Vector<Long>(10);
+    acore.register_timer(0,new Runnable(){
+      public void run(){
+        read();
+      }
+    }
+);
+  }
+ else {
+    logger.error("mode \"" + mode + "\" not supported");
+    System.exit(1);
+  }
+  acore.register_timer(10 * 1000,new Runnable(){
+    public void run(){
+      logger.info("There are " + outstanding + (mode.equals("read") ? " gets" : " puts")+ " outstanding");
+      acore.register_timer(10 * 1000,this);
+    }
+  }
+);
+}

@@ -1,0 +1,19 @@
+/** 
+ * Creates a new request, ready to be sent out to the network.
+ * @param requestor The node orginiating this request.
+ * @param coord The requestor's current virtual coordinate.
+ */
+public LocateNodeMsg(NodeId requestor,VirtualCoordinate coord,int version){
+  _requestor=requestor;
+  _coordinate=coord;
+  _version_number=version;
+}
+/** 
+ * Deserializes an existing request from the input buffer (network).
+ * @param buffer The buffer from which to retreive the object.
+ */
+public LocateNodeMsg(InputBuffer buffer) throws QSException {
+  _version_number=buffer.nextInt();
+  _requestor=(NodeId)buffer.nextObject();
+  _coordinate=(VirtualCoordinate)buffer.nextObject();
+}

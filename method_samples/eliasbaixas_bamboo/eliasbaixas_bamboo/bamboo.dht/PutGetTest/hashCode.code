@@ -1,0 +1,4 @@
+public int hashCode(){
+  ByteBuffer bb=ByteBuffer.wrap(key);
+  return bb.getInt();
+}

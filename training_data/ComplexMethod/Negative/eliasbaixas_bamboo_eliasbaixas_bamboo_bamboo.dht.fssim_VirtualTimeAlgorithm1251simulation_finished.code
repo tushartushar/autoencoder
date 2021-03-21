@@ -1,0 +1,5 @@
+public void simulation_finished(){
+  System.err.println("accept_responses=" + accept_responses);
+  System.err.println("again_responses=" + again_responses);
+  System.err.println("cap_responses=" + cap_responses);
+}

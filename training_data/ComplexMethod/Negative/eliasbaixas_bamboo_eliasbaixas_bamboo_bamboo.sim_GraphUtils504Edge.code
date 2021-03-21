@@ -1,0 +1,4 @@
+public Edge(Node t,long l){
+  tail=t;
+  len=l;
+}

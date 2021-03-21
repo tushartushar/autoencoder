@@ -1,0 +1,6 @@
+@Override protected void onNewScanCycle(){
+  for (  ScanCallback callback : callbacksMap.keySet()) {
+    callback.onScanCycleCompleted();
+  }
+  updateRepeatingAlarm();
+}

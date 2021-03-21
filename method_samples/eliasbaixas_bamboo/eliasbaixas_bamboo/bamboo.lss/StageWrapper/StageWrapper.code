@@ -1,0 +1,3 @@
+public StageWrapper(EventHandlerIF eh){
+  this.eh=eh;
+}

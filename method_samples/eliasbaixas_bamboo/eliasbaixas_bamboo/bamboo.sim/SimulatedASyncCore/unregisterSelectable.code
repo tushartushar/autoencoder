@@ -1,0 +1,6 @@
+public void unregisterSelectable(SelectableChannel channel,int interestOps) throws ClosedChannelException {
+  throw new NoSuchMethodError("running under simulator");
+}
+public void unregisterSelectable(SelectableChannel channel){
+  throw new NoSuchMethodError("running under simulator");
+}

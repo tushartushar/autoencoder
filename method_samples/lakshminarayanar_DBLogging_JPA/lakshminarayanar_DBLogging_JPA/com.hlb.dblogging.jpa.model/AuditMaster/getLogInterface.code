@@ -1,0 +1,3 @@
+@Column(name="LogInterface",nullable=true,length=255) public String getLogInterface(){
+  return LogInterface;
+}

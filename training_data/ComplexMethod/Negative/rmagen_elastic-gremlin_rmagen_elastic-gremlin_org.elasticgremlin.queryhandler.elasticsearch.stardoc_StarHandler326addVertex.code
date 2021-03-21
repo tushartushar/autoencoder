@@ -1,0 +1,11 @@
+@Override public BaseVertex addVertex(Object id,String label,Object[] properties){
+  String index=getIndex(properties);
+  BaseVertex v=new StarVertex(id,label,properties,graph,null,elasticMutations,index,edgeMappings);
+  try {
+    elasticMutations.addElement(v,index,null,true);
+  }
+ catch (  DocumentAlreadyExistsException ex) {
+    throw Graph.Exceptions.vertexWithIdAlreadyExists(id);
+  }
+  return v;
+}

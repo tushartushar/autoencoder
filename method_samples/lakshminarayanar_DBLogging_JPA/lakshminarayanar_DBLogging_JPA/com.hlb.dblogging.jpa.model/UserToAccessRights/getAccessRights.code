@@ -1,0 +1,3 @@
+@OneToOne @JoinColumn(name="accessRightsId") public AccessRights getAccessRights(){
+  return accessRights;
+}

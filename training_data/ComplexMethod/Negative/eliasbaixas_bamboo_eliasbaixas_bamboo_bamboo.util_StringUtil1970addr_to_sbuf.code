@@ -1,0 +1,5 @@
+public static void addr_to_sbuf(InetSocketAddress addr,StringBuffer buf){
+  buf.append(addr.getAddress().getHostAddress());
+  buf.append(":");
+  buf.append(addr.getPort());
+}

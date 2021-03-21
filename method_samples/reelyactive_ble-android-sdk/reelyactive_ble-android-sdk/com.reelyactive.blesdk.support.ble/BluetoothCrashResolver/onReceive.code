@@ -1,0 +1,46 @@
+@Override public void onReceive(Context context,Intent intent){
+  String action=intent.getAction();
+  if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
+    if (recoveryInProgress) {
+      if (isDebugEnabled())       Log.d(TAG,"Bluetooth discovery finished");
+      finishRecovery();
+    }
+ else {
+      if (isDebugEnabled())       Log.d(TAG,"Bluetooth discovery finished (external)");
+    }
+  }
+  if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_STARTED)) {
+    if (recoveryInProgress) {
+      discoveryStartConfirmed=true;
+      if (isDebugEnabled())       Log.d(TAG,"Bluetooth discovery started");
+    }
+ else {
+      if (isDebugEnabled())       Log.d(TAG,"Bluetooth discovery started (external)");
+    }
+  }
+  if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+    final int state=intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,BluetoothAdapter.ERROR);
+switch (state) {
+case BluetoothAdapter.ERROR:
+      if (isDebugEnabled())       Log.d(TAG,"Bluetooth state is ERROR");
+    break;
+case BluetoothAdapter.STATE_OFF:
+  if (isDebugEnabled())   Log.d(TAG,"Bluetooth state is OFF");
+lastBluetoothOffTime=new Date().getTime();
+break;
+case BluetoothAdapter.STATE_TURNING_OFF:
+break;
+case BluetoothAdapter.STATE_ON:
+if (isDebugEnabled()) Log.d(TAG,"Bluetooth state is ON");
+if (isDebugEnabled()) Log.d(TAG,"Bluetooth was turned off for " + (lastBluetoothTurningOnTime - lastBluetoothOffTime) + " milliseconds");
+if (lastBluetoothTurningOnTime - lastBluetoothOffTime < SUSPICIOUSLY_SHORT_BLUETOOTH_OFF_INTERVAL_MILLIS) {
+crashDetected();
+}
+break;
+case BluetoothAdapter.STATE_TURNING_ON:
+lastBluetoothTurningOnTime=new Date().getTime();
+if (isDebugEnabled()) Log.d(TAG,"Bluetooth state is TURNING_ON");
+break;
+}
+}
+}

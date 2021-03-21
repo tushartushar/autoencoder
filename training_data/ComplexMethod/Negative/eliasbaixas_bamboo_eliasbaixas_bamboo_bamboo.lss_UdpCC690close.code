@@ -1,0 +1,8 @@
+/** 
+ * Closes the socket associated with this object, removes its callbacks from ASyncCore, and causes it to stop responding to any outstanding timers it has registered--in other words, turns it off.  There is no way to turn it back on; instead, just create a new one.
+ */
+public void close(){
+  acore.unregister_selectable(skey);
+  sock.close();
+  closed=true;
+}

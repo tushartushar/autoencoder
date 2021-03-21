@@ -1,0 +1,7 @@
+@Transactional(readOnly=true) @Override public List<AuditMaster> getSearchResultList(SearchBean searchCriteria){
+  if (checkSearchCriteriaIsEmpty(searchCriteria))   return getListOfMessagesByTime(new Date());
+  ApplLogger.getLogger().info("Search criteria is not empty, so results are filtered..");
+  searchCriteria=trimInputSearchCriteria(searchCriteria);
+  Iterable<AuditMaster> searchResultList=auditMasterRepo.findAll(getSearchFilterPredicate(searchCriteria),orderByTranscationDateAsc());
+  return constructList(searchResultList);
+}

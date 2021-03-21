@@ -1,0 +1,3 @@
+public TemporaryTests() throws InterruptedException, ExecutionException, IOException {
+  GraphManager.setGraphProvider(new ElasticGraphGraphProvider());
+}

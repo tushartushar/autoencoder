@@ -1,0 +1,10 @@
+/** 
+ * Can be called multiple times, sets the state to paused
+ */
+public void pauseClock(){
+  if (!isRunning) {
+    return;
+  }
+  this.stop();
+  setClockIsNotRunning();
+}

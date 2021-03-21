@@ -1,0 +1,18 @@
+@Override public void paintComponent(Graphics g){
+  int w, h;
+  int x, y;
+  if (image == null)   return;
+  if (getWidth() * image.getHeight() < getHeight() * image.getWidth()) {
+    w=getWidth();
+    h=getWidth() * image.getHeight() / image.getWidth();
+    x=0;
+    y=(getHeight() - h) / 2;
+  }
+ else {
+    w=getHeight() * image.getWidth() / image.getHeight();
+    h=getHeight();
+    x=(getWidth() - w) / 2;
+    y=0;
+  }
+  g.drawImage(image,x,y,x + w,y + h,0,0,image.getWidth(),image.getHeight(),null);
+}

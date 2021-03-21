@@ -1,0 +1,6 @@
+public MulticastPingMessage(NodeId peer){
+  super(peer,false);
+}
+public MulticastPingMessage(InputBuffer buffer) throws QSException {
+  super(buffer);
+}

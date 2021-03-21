@@ -1,0 +1,4 @@
+@Test @LoadGraphWith(MODERN) public void get_g_VX1X_out_hasIdX2X(){
+  GraphTraversal traversal=g.V("1").out().hasId("2");
+  check(traversal);
+}

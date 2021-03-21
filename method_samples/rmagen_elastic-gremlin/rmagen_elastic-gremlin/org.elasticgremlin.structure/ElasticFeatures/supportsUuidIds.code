@@ -1,0 +1,9 @@
+@Override public boolean supportsUuidIds(){
+  return false;
+}
+@Override public boolean supportsUuidIds(){
+  return false;
+}
+@Override public boolean supportsUuidIds(){
+  return false;
+}

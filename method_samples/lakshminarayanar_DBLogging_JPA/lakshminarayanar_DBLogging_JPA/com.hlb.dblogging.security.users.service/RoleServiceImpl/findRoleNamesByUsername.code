@@ -1,0 +1,4 @@
+@Override public List<String> findRoleNamesByUsername(String username){
+  List<String> roleNameList=roleRepository.findRoleNamesByUsername(username);
+  return roleNameList;
+}

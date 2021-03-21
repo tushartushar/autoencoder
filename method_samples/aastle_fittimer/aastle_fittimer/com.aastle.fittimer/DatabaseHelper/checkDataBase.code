@@ -1,0 +1,15 @@
+private boolean checkDataBase(){
+  SQLiteDatabase checkDB=null;
+  try {
+    sb.append(DB_PATH).append(DB_NAME);
+    checkDB=SQLiteDatabase.openDatabase(sb.toString(),null,SQLiteDatabase.OPEN_READONLY);
+  }
+ catch (  SQLiteException e) {
+  }
+  if (checkDB != null) {
+    checkDB.close();
+  }
+ else {
+  }
+  return checkDB != null ? true : false;
+}

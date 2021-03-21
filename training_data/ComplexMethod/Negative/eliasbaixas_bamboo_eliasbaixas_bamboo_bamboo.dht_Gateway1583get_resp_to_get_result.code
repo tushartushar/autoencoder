@@ -1,0 +1,36 @@
+protected bamboo_get_result get_resp_to_get_result(Dht.GetResp resp){
+  bamboo_get_result gresp=new bamboo_get_result();
+  gresp.values=new bamboo_get_value[resp.values.size()];
+  int j=0;
+  Iterator i=resp.values.iterator();
+  while (i.hasNext()) {
+    Object obj=i.next();
+    GetValue gv=null;
+    if (obj instanceof GetValue)     gv=(GetValue)obj;
+ else {
+      ByteBuffer value=(ByteBuffer)obj;
+      gv=new GetValue(value,-1,new byte[0]);
+    }
+    assert gv.value.position() == 0;
+    assert gv.value.hasArray();
+    assert gv.value.arrayOffset() == 0;
+    assert gv.value.array().length == gv.value.limit();
+    gresp.values[j]=new bamboo_get_value();
+    gresp.values[j].value=new bamboo_value();
+    gresp.values[j].value.value=gv.value.array();
+    gresp.values[j].ttl_sec_rem=gv.ttlRemaining;
+    gresp.values[j].secret_hash=new bamboo_hash();
+    gresp.values[j].secret_hash.algorithm=gv.hashAlgorithm;
+    gresp.values[j].secret_hash.hash=gv.secretHash;
+    ++j;
+  }
+  gresp.placemark=new bamboo_placemark();
+  if (resp.placemark.equals(StorageManager.ZERO_KEY)) {
+    gresp.placemark.value=new byte[0];
+  }
+ else {
+    gresp.placemark.value=new byte[StorageManager.Key.SIZE];
+    resp.placemark.to_byte_buffer(ByteBuffer.wrap(gresp.placemark.value));
+  }
+  return gresp;
+}

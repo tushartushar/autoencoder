@@ -1,0 +1,7 @@
+@Override public void stateChanged(ChangeEvent e){
+  Object obj=e.getSource();
+  if (obj == menuBar_Image) {
+    menuImage_ViewPlainText.setEnabled(!prevText.isEmpty());
+    menuImage_SaveImage.setEnabled(generated_image != null);
+  }
+}

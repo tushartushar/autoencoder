@@ -1,0 +1,18 @@
+public IterRouteResp(NodeId n,BigInteger s,BigInteger d,long a,boolean u,QuickSerializable p,NeighborInfo nh){
+  super(n,false);
+  src=s;
+  dest=d;
+  app_id=a;
+  payload=p;
+  intermediate_upcall=u;
+  next_hop=nh;
+}
+public IterRouteResp(InputBuffer buffer) throws QSException {
+  super(buffer);
+  src=buffer.nextBigInteger();
+  dest=buffer.nextBigInteger();
+  app_id=buffer.nextLong();
+  intermediate_upcall=buffer.nextBoolean();
+  payload=buffer.nextObject();
+  next_hop=new NeighborInfo(buffer);
+}

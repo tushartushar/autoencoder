@@ -1,0 +1,6 @@
+/** 
+ * Returns true if its safe to call GetTimeOfDayCC.currentTimeMillis.
+ */
+public static boolean available(){
+  return loaded;
+}

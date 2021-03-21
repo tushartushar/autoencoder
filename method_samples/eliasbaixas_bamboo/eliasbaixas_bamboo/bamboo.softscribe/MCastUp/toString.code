@@ -1,0 +1,3 @@
+public String toString(){
+  return "(MCastUp  dstguid=" + GuidTools.guid_to_string(dstguid) + " inbound="+ inbound+ " o="+ o+ ")";
+}

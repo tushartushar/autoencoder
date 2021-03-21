@@ -1,0 +1,18 @@
+/** 
+ * The given callback will be called every time a new message with a payload of the given type is received.
+ * @throws NoSuchMethodException if the type passed in does not have aconstructor that takes an ostore.util.InputBuffer (i.e., it is not a well formed object of type ostore.util.QuickSerializable).
+ */
+public <T extends QuickSerializable>void registerReceiver(Class<T> type,Thunk1<MulticastMessage> cb) throws NoSuchMethodException {
+  if (receivers.containsKey(type)) {
+    throw new IllegalStateException("already have a receiver of type " + type.getName() + ": "+ receivers.get(type).getClass().getName());
+  }
+  try {
+    ostore.util.TypeTable.register_type(type);
+  }
+ catch (  ostore.util.TypeTable.DuplicateTypeCode e) {
+  }
+catch (  ostore.util.TypeTable.NotQuickSerializable e) {
+    assert false;
+  }
+  receivers.put(type,cb);
+}

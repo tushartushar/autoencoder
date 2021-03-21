@@ -1,0 +1,3 @@
+protected void check_thread(){
+  if (Thread.currentThread() != thread)   throw new IllegalStateException("may only be called from thread " + thread.getName());
+}

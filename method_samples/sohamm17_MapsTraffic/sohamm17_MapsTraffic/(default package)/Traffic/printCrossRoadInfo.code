@@ -1,0 +1,12 @@
+public void printCrossRoadInfo(String flowRoadName,String direction,String[] crossingRoads){
+  for (  mainRoadway eachRW : roadways) {
+    if (eachRW.description.contains(flowRoadName)) {
+      for (      mainRoadway.crossFlow eachCF : eachRW.crossingRoads) {
+        if (contains(crossingRoads,eachCF.description) && eachCF.direction.compareTo(direction) == 0) {
+          System.out.println(eachCF);
+        }
+      }
+      break;
+    }
+  }
+}

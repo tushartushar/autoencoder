@@ -1,0 +1,4 @@
+private void scheduleNextPing(PingAlarm trigger){
+  long delay=_ping_period + (long)(((_prng.nextDouble() - .5) * .4 * _ping_period));
+  classifier.dispatch_later(trigger,delay);
+}

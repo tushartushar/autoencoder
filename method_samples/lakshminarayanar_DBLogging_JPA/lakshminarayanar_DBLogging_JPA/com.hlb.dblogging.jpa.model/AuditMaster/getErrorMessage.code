@@ -1,0 +1,3 @@
+@Column(name="ERRORMESSAGE",nullable=true,length=250) public String getErrorMessage(){
+  return ErrorMessage;
+}

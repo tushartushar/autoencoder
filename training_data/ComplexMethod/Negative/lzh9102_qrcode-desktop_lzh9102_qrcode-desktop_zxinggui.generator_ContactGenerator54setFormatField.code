@@ -1,0 +1,12 @@
+/** 
+ * Set the selection field according to the text.
+ * @param text this text can be FORMAT_MECARD or FORMAT_VCARD
+ */
+public void setFormatField(String text){
+  for (int i=0; i < cbFormat.getItemCount(); i++) {
+    if (cbFormat.getItemAt(i).toString() == text) {
+      cbFormat.setSelectedIndex(i);
+      break;
+    }
+  }
+}

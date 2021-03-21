@@ -1,0 +1,3 @@
+public String byteCountKey(){
+  return ((ByteCount)payload).byteCountKey();
+}

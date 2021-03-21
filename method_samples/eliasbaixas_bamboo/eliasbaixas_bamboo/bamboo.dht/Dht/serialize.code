@@ -1,0 +1,67 @@
+public void serialize(OutputBuffer buf){
+  buf.add(value.limit() - value.position());
+  buf.add(value.array(),value.arrayOffset() + value.position(),value.limit() - value.position());
+  buf.add(ttlRemaining);
+  byte[] str=hashAlgorithm.getBytes();
+  buf.add(str.length);
+  buf.add(str);
+  buf.add(secretHash.length);
+  buf.add(secretHash);
+}
+public void serialize(OutputBuffer buffer){
+  if ((secret_hash == null) || java.util.Arrays.equals(secret_hash,ZERO_HASH))   buffer.add(time_usec);
+ else   buffer.add(0x8000000000000000L | time_usec);
+  buffer.add(key);
+  buffer.add(value.limit());
+  buffer.add(value.array(),value.arrayOffset(),value.limit());
+  buffer.add(put);
+  return_addr.serialize(buffer);
+  buffer.add(seq);
+  buffer.add(ttl_sec);
+  byte[] client_bytes=client_id.getAddress();
+  buffer.add(client_bytes.length);
+  buffer.add(client_bytes,0,client_bytes.length);
+  buffer.add(retried);
+  if (!put)   buffer.add(value_hash,0,20);
+  if ((secret_hash != null) && !java.util.Arrays.equals(secret_hash,ZERO_HASH))   buffer.add(secret_hash,0,20);
+}
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  buffer.add(seq);
+  buffer.add(result);
+}
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  boolean useGetValues=(!values.isEmpty()) && (values.getFirst() instanceof GetValue);
+  buffer.add(seq);
+  buffer.add(key);
+  if (useGetValues)   buffer.add(values.size() * -1);
+ else   buffer.add(values.size());
+  Iterator i=values.iterator();
+  while (i.hasNext()) {
+    if (useGetValues) {
+      GetValue value=(GetValue)i.next();
+      value.serialize(buffer);
+    }
+ else {
+      ByteBuffer bb=(ByteBuffer)i.next();
+      buffer.add(bb.limit());
+      buffer.add(bb.array(),bb.arrayOffset(),bb.limit());
+    }
+  }
+  orig_placemark.serialize(buffer);
+  new_placemark.serialize(buffer);
+}
+public void serialize(OutputBuffer buffer){
+  buffer.add(payload);
+  payload.peer.serialize(buffer);
+}
+public void serialize(OutputBuffer buf){
+  assert (ttls.length == sizes.length);
+  buf.add(ttls.length);
+  for (int i=0; i < ttls.length; ++i) {
+    buf.add(ttls[i]);
+    buf.add(sizes[i]);
+  }
+  buf.add(reply);
+}

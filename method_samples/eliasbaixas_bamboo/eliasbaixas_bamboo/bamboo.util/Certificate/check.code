@@ -1,0 +1,40 @@
+protected void check() throws InvalidException {
+  ByteArrayInputBuffer ib=new ByteArrayInputBuffer(cert_bytes);
+  sig_alg=ib.nextString();
+  try {
+    public_key=buffer_to_public_key(ib);
+  }
+ catch (  NoSuchAlgorithmException e) {
+    throw new InvalidException("no such algorithm: " + e);
+  }
+catch (  InvalidKeySpecException e) {
+    throw new InvalidException("bad key encoding: " + e);
+  }
+  Signature sig=null;
+  try {
+    sig=Signature.getInstance(sig_alg);
+  }
+ catch (  NoSuchAlgorithmException e) {
+    throw new InvalidException("no such algorithm: " + e);
+  }
+  try {
+    sig.initVerify(public_key);
+  }
+ catch (  InvalidKeyException e) {
+    throw new InvalidException("invalid key: " + e);
+  }
+  try {
+    sig.update(cert_bytes);
+    if (!sig.verify(sig_bytes))     throw new InvalidException("signature didn't verify");
+  }
+ catch (  SignatureException e) {
+    throw new InvalidException("signature exception: " + e);
+  }
+  try {
+    signed_value=ib.nextObject();
+  }
+ catch (  QSException e) {
+    throw new InvalidException("value decoding error: " + e);
+  }
+  checked=true;
+}

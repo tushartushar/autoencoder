@@ -1,0 +1,8 @@
+public Edge(Node t,long l){
+  tail=t;
+  len=l;
+}
+public Edge(Node t,long l,double ib){
+  super(t,l);
+  inv_bw_s_per_byte=ib;
+}

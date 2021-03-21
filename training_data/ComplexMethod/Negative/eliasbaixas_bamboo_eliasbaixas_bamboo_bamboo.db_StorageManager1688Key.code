@@ -1,0 +1,37 @@
+public Key(long t,int tt,BigInteger g,byte[] sh,byte[] dh,boolean p,InetAddress c){
+  time_usec=t;
+  ttl_sec=tt;
+  guid=g;
+  data_hash=dh;
+  put=p;
+  client_id=c;
+  if (sh == null)   secret_hash=ZERO_HASH;
+ else   secret_hash=sh;
+}
+public Key(ByteBuffer buf){
+  this(new NioInputBuffer(buf),true);
+}
+protected Key(Dbt dbt){
+  this(new NioInputBuffer(ByteBuffer.wrap(dbt.getData(),dbt.getOffset(),dbt.getSize())),true);
+}
+public Key(InputBuffer buf){
+  this(buf,false);
+}
+public Key(InputBuffer buf,boolean onDisk){
+  time_usec=buf.nextLong();
+  ttl_sec=buf.nextInt();
+  byte[] guid_bytes=new byte[21];
+  buf.nextBytes(guid_bytes,1,20);
+  guid=new BigInteger(guid_bytes);
+  secret_hash=new byte[20];
+  if (onDisk || ((time_usec & 0x8000000000000000L) != 0)) {
+    buf.nextBytes(secret_hash,0,20);
+    time_usec&=0x7fffffffffffffffL;
+  }
+  data_hash=new byte[20];
+  buf.nextBytes(data_hash,0,20);
+  put=(buf.nextByte() == 1);
+  byte[] client_bytes=new byte[4];
+  buf.nextBytes(client_bytes,0,4);
+  client_id=bytes_to_addr(client_bytes);
+}

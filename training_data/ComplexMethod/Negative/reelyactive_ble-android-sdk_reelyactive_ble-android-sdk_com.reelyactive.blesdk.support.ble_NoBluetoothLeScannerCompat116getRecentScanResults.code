@@ -1,0 +1,3 @@
+@Override protected Collection<ScanResult> getRecentScanResults(){
+  return Collections.emptyList();
+}

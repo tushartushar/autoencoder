@@ -1,0 +1,3 @@
+public String toString(){
+  return "(Rpc.Msg req=" + req + " xact_id="+ xact_id+ " payload="+ payload+ ")";
+}

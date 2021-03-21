@@ -1,0 +1,56 @@
+public void handleEvent(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("got " + item);
+  if (item instanceof Request) {
+    if (sim_running) {
+      final int xact_id=next_xact_id++;
+      Request req=(Request)item;
+      inflight.put(new Integer(xact_id),req);
+      set_client_library(req);
+      final XdrAble clone=XdrClone.xdr_clone(req.request,bbuf);
+      int size=bbuf.position();
+      long lat=Network.msg_latency_us(my_node_id,gnid,size) / 1000;
+      final GatewayClient self=this;
+      EventQueue.Callback cb=new EventQueue.Callback(){
+        int id=xact_id;
+        XdrAble arg=clone;
+        public void call(        Object not_used){
+          if (arg instanceof bamboo_put_args) {
+            gway_inst.do_put(id,(bamboo_put_args)arg,my_node_id,self);
+          }
+ else {
+            assert arg instanceof bamboo_get_args;
+            gway_inst.do_get(id,(bamboo_get_args)arg,my_node_id,self);
+          }
+        }
+      }
+;
+      simulator.event_queue.register_timer(gway_inst.my_node_id(),lat,cb,clone);
+    }
+ else {
+      waiting.addLast(item);
+      if ((skey != null) && skey.isValid())       skey.interestOps(skey.interestOps() | SelectionKey.OP_WRITE);
+    }
+  }
+ else {
+    Response resp=(Response)item;
+    if (resp.user_data instanceof Thunk1) {
+      Thunk1 cb=(Thunk1)resp.user_data;
+      cb.run((XdrAble)resp.response);
+    }
+ else {
+      Object[] ud=(Object[])resp.user_data;
+      Object user_data=ud[1];
+      if (ud[0] instanceof GetDoneCb) {
+        GetDoneCb cb=(GetDoneCb)ud[0];
+        cb.get_done_cb((bamboo_get_res)resp.response,user_data);
+      }
+ else       if (ud[0] instanceof PutDoneCb) {
+        PutDoneCb cb=(PutDoneCb)ud[0];
+        cb.put_done_cb(((Integer)resp.response).intValue(),user_data);
+      }
+ else {
+        assert false : ud[0].getClass().getName();
+      }
+    }
+  }
+}

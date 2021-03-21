@@ -1,0 +1,3 @@
+@Override public void onEnable(){
+  getLogger().info("MokaTestPlugin enabled");
+}

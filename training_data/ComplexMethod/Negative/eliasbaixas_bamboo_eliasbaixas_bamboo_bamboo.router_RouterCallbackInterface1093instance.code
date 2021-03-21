@@ -1,0 +1,3 @@
+public static RouterCallbackInterface instance(NodeId node_id){
+  return (RouterCallbackInterface)instances.get(node_id);
+}

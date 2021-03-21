@@ -1,0 +1,9 @@
+protected void remove_put(PutInfo pi){
+  Integer client=new Integer(pi.client);
+  Long count=(Long)storage_by_client.get(client);
+  assert count != null;
+  long new_count=count.longValue() - pi.size;
+  storage_by_client.put(client,new Long(new_count));
+  --total_puts;
+  if (new_count == 0)   all_puts_expired(pi.client);
+}

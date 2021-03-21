@@ -1,0 +1,11 @@
+protected static boolean matchesAnyFilter(List<ScanFilter> filters,ScanResult result){
+  if (filters == null || filters.isEmpty()) {
+    return true;
+  }
+  for (  ScanFilter filter : filters) {
+    if (filter.matches(result)) {
+      return true;
+    }
+  }
+  return false;
+}

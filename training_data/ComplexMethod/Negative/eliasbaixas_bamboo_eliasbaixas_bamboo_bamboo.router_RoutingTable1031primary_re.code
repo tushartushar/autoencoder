@@ -1,0 +1,3 @@
+public RoutingEntry primary_re(int digit,int value){
+  return table[digit][value];
+}

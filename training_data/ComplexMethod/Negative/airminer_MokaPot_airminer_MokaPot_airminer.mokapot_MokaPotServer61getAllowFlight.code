@@ -1,0 +1,3 @@
+@Override public boolean getAllowFlight(){
+  throw new NotImplementedException();
+}

@@ -1,0 +1,3 @@
+public void setSystemAuditTrailRecordService(SystemAuditTrailRecordService systemAuditTrailRecordService){
+  this.systemAuditTrailRecordService=systemAuditTrailRecordService;
+}

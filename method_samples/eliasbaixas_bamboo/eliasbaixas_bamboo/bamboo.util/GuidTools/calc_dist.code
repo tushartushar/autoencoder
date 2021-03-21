@@ -1,0 +1,6 @@
+public static BigInteger calc_dist(BigInteger a,BigInteger b,BigInteger mod){
+  BigInteger one=b.subtract(a).mod(mod);
+  BigInteger two=a.subtract(b).mod(mod);
+  if (one.compareTo(two) <= 0)   return one;
+ else   return two;
+}

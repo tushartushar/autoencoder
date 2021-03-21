@@ -1,0 +1,13 @@
+@Override public Iterator<Edge> edges(Direction direction,String... edgeLabels){
+  return edges(direction,edgeLabels,new Predicates());
+}
+public Iterator<Edge> edges(Direction direction,String[] edgeLabels,Predicates predicates){
+  EdgeQueryInfo queryInfo=new EdgeQueryInfo(direction,edgeLabels,predicates,elasticMutations.getRevision());
+  Set<Edge> edges=queriedEdges.get(queryInfo);
+  if (edges != null)   return edges.iterator();
+  List<BaseVertex> vertices=siblings == null ? IteratorUtils.asList(this) : siblings;
+  Map<Object,Set<Edge>> vertexToEdge=graph.getQueryHandler().edges(vertices.iterator(),direction,edgeLabels,predicates);
+  vertices.forEach(vertex -> vertex.addQueriedEdges(queryInfo,vertexToEdge.get(vertex.id())));
+  Set<Edge> thisEdges=vertexToEdge.get(this.id());
+  return thisEdges != null ? thisEdges.iterator() : Collections.emptyIterator();
+}

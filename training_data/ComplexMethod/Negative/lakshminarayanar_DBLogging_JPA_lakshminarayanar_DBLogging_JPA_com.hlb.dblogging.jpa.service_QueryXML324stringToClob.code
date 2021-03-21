@@ -1,0 +1,9 @@
+@SuppressWarnings("unused") private java.sql.Clob stringToClob(String source){
+  try {
+    return new javax.sql.rowset.serial.SerialClob(source.toCharArray());
+  }
+ catch (  Exception e) {
+    ApplLogger.getLogger().error("Could not convert string to a CLOB :",e);
+    return null;
+  }
+}

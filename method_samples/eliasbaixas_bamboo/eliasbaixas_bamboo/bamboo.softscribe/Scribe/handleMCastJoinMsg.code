@@ -1,0 +1,16 @@
+private void handleMCastJoinMsg(BambooRouteUpcall upcall,MCastJoinMsg payload){
+  if (DEBUG && upcall == null)   Debug.printtagln(tag,"handleMCastJoinMsg at root, message " + payload);
+ else   if (DEBUG)   Debug.printtagln(tag,"handleMCastJoinMsg not at root, message " + payload);
+  if (payload.srcid == my_node_id)   return;
+  if (myLocalGroups.contains(payload.dstguid) || upcall == null) {
+    unionChildToGroup(payload.dstguid,payload.srcid);
+    if (DEBUG) {
+      Debug.printtagln(tag,"we are a member or root, updating our child table");
+      printChildTable();
+    }
+  }
+ else {
+    if (DEBUG)     Debug.printtagln(tag,"we are neither a member nor root, continuing the message");
+    dispatch(new BambooRouteContinue(upcall,payload));
+  }
+}

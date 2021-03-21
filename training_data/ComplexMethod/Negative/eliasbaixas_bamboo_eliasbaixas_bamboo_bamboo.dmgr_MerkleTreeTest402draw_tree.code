@@ -1,0 +1,20 @@
+public static void draw_tree(MerkleTree.Node root,SortedSet keys,String prefix){
+  System.out.println(prefix + root);
+  if (root.has_children()) {
+    for (MerkleTree.Node.Iter i=root.children(); i.hasNext(); ) {
+      MerkleTree.Node child=i.next();
+      if (child != null)       draw_tree(child,keys,prefix + "  ");
+    }
+  }
+ else {
+    StorageManager.Key low=new StorageManager.Key(root.range_low(),0,min_guid,min_hash,min_hash,false,StorageManager.ZERO_CLIENT);
+    StorageManager.Key high=new StorageManager.Key(root.range_high(),0,max_guid,max_hash,max_hash,true,StorageManager.MAX_CLIENT);
+    if (keys != null) {
+      SortedSet under_me=keys.headSet(high).tailSet(low);
+      for (Iterator i=under_me.iterator(); i.hasNext(); ) {
+        StorageManager.Key k=(StorageManager.Key)i.next();
+        System.out.println(prefix + "  " + Long.toHexString(k.time_usec));
+      }
+    }
+  }
+}

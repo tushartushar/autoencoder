@@ -1,0 +1,14 @@
+public void log(AccessLogActivity accessLogActivity,AccessLogLevel accessLogLevel,int actorUserId,String actorUserName,String description){
+{
+    AccessLog accessLog=new AccessLog();
+    Date currentDate=new Date();
+    accessLog.setActionDate(currentDate);
+    accessLog.setActivity(accessLogActivity.getActivity());
+    accessLog.setLevel(accessLogLevel.getLevel());
+    accessLog.setDescription(description);
+    accessLog.setActorUserId(actorUserId);
+    accessLog.setActorUsername(actorUserName);
+    accessLog.setDeleted(false);
+    accessLogRepository.save(accessLog);
+  }
+}

@@ -1,0 +1,18 @@
+/** 
+ * Convert a big integer to an array of <code>digits_per_guid</code> integers, one for each digit of the the big integer.  This function was mostly cribbed from ostore.tapestry.impl.RoutingTable.digits, which I think was originally written by Jeremy Stribling.
+ */
+public static int[] guid_to_digits(BigInteger guid,int bits_per_digit,int digits_per_guid,int digit_values){
+  check_bpd_and_dv(bits_per_digit,digit_values);
+  byte[] buf=guid.toByteArray();
+  int digits_per_byte=8 / bits_per_digit;
+  int space=buf.length - digits_per_guid / digits_per_byte;
+  int[] result=new int[digits_per_guid];
+  int i=result.length - 1;
+  while ((i >= 0) && (space + i / digits_per_byte >= 0)) {
+    for (int j=i; j > (i - digits_per_byte); j--) {
+      result[j]=((int)(buf[space + i / digits_per_byte] >>> (i - j) * bits_per_digit) & (digit_values - 1));
+    }
+    i-=digits_per_byte;
+  }
+  return result;
+}

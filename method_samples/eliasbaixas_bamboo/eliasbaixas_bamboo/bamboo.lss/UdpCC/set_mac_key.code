@@ -1,0 +1,10 @@
+public void set_mac_key(String keyfile) throws Exception {
+  USE_DIRECT=false;
+  reuse_buf=ByteBuffer.allocate(MAX_MSG_SIZE);
+  FileInputStream file=new FileInputStream(keyfile);
+  byte[] keymat=new byte[20];
+  file.read(keymat,0,20);
+  mac=Mac.getInstance("HmacSHA1");
+  Key key=new SecretKeySpec(keymat,0,keymat.length,"HmacSHA1");
+  mac.init(key);
+}

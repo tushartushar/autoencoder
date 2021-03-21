@@ -1,0 +1,3 @@
+public static ASyncCore acore_instance(){
+  return acore;
+}

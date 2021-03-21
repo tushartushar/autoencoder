@@ -1,0 +1,6 @@
+public BaseProperty(BaseElement element,String key,V value){
+  this.element=element;
+  this.key=key;
+  this.value=value;
+  this.graph=this.element.graph;
+}

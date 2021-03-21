@@ -1,0 +1,68 @@
+public void write(){
+  logger.debug("write");
+  if (is != null) {
+    while (ready.size() < MAX_BUFFER) {
+      ByteBuffer bb=ByteBuffer.wrap(new byte[1024]);
+      bb.putInt(0);
+      int len=0;
+      try {
+        len=is.read(bb.array(),4,bb.limit() - 4);
+      }
+ catch (      IOException e) {
+        is=null;
+        break;
+      }
+      if (len == -1) {
+        is=null;
+        break;
+      }
+      logger.debug("position=" + bb.position() + " read "+ len+ " bytes");
+      bb.position(len + 4);
+      wblocks.elementAt(0).addLast(bb);
+      logger.debug("read a block");
+      if (wblocks.elementAt(0).size() == BRANCHING)       make_parents(false);
+    }
+    if (is == null) {
+      make_parents(true);
+      for (int l=0; l < wblocks.size(); ++l) {
+        if (!wblocks.elementAt(l).isEmpty()) {
+          ByteBuffer bb=wblocks.elementAt(l).removeFirst();
+          bb.flip();
+          md.update(secret);
+          md.update(bb.array(),0,bb.limit());
+          byte[] dig=md.digest();
+          StringBuffer sb=new StringBuffer(100);
+          bytes_to_sbuf(dig,0,dig.length,false,sb);
+          logger.info("root digest is 0x" + sb.toString());
+          ready.addLast(new Pair<byte[],ByteBuffer>(dig,bb));
+          break;
+        }
+      }
+    }
+  }
+  if (ready.isEmpty()) {
+    if (outstanding == 0) {
+      logger.info("all puts finished successfully");
+      System.exit(0);
+    }
+  }
+ else {
+    Pair<byte[],ByteBuffer> head=ready.removeFirst();
+    outstanding++;
+    bamboo_put_args put=new bamboo_put_args();
+    put.application=APPLICATION;
+    put.value=new bamboo_value();
+    if (head.second.limit() == head.second.array().length)     put.value.value=head.second.array();
+ else {
+      put.value.value=new byte[head.second.limit()];
+      head.second.get(put.value.value);
+    }
+    put.key=new bamboo_key();
+    put.key.value=head.first;
+    put.ttl_sec=3600;
+    StringBuffer sb=new StringBuffer(100);
+    bytes_to_sbuf(head.first,0,head.first.length,false,sb);
+    logger.debug("putting block size=" + put.value.value.length + " key=0x"+ sb.toString());
+    client.put(put,curry(put_done_cb,put));
+  }
+}

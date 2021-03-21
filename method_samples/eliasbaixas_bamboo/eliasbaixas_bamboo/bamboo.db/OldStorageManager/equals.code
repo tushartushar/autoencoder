@@ -1,0 +1,4 @@
+public boolean equals(Object rhs){
+  OldStorageManager.Key other=(OldStorageManager.Key)rhs;
+  return compareTo(rhs) == 0;
+}

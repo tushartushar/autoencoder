@@ -1,0 +1,3 @@
+protected long now_ms(){
+  return bamboo.util.StandardStage.now_ms(my_node_id);
+}

@@ -1,0 +1,3 @@
+public EventHandlerIF getEventHandler(){
+  return eh;
+}

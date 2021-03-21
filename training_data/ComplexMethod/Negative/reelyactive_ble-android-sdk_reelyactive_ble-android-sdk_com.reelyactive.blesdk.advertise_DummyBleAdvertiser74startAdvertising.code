@@ -1,0 +1,14 @@
+@Override public void startAdvertising(String uuid,List<ScanResult> closestBeacon,String fallbackUrl){
+  if (Looper.myLooper() != Looper.getMainLooper()) {
+    throw new RuntimeException("Do not try to run from outside the main thread !");
+  }
+  this.uuid=uuid;
+synchronized (this) {
+    this.closestBeacon=closestBeacon;
+  }
+  this.url=fallbackUrl;
+  if (!advertising) {
+    advertising=true;
+    worker.getHandler().post(runnable);
+  }
+}

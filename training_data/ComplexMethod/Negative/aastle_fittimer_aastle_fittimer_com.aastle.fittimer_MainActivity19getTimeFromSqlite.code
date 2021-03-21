@@ -1,0 +1,14 @@
+private Cursor getTimeFromSqlite(){
+  Cursor cursor;
+  StringBuilder sqlBuilder=new StringBuilder();
+  sqlBuilder.append("SELECT _id,appstate,date,time,interval session FROM ");
+  sqlBuilder.append(TABLE_NAME);
+  sqlBuilder.append(" WHERE date >= date() ");
+  sqlBuilder.append(" AND session = ");
+  sqlBuilder.append(session);
+  sqlBuilder.append(" ORDER BY interval,date");
+  DatabaseHelper databaseHelper=new DatabaseHelper(getBaseContext(),DATABASE_NAME,null,DATABASE_VERSION);
+  databaseHelper.setTableName(TABLE_NAME);
+  cursor=databaseHelper.getReadableDatabase().rawQuery(sqlBuilder.toString(),null);
+  return cursor;
+}

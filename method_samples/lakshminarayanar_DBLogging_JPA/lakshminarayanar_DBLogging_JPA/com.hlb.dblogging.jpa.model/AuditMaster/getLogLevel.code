@@ -1,0 +1,3 @@
+@Column(name="LOGLEVEL",nullable=false,length=8) public String getLogLevel(){
+  return LogLevel;
+}

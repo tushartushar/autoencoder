@@ -1,0 +1,10 @@
+public byte nextByte(){
+  if (buffers.isEmpty())   throw new IllegalStateException();
+  if (remaining == 0)   throw new IllegalStateException();
+  ByteBuffer bb=(ByteBuffer)buffers.getFirst();
+  byte result=bb.get();
+  if (bb.position() == bb.limit())   buffers.removeFirst();
+  --size;
+  if (remaining != -1)   --remaining;
+  return result;
+}

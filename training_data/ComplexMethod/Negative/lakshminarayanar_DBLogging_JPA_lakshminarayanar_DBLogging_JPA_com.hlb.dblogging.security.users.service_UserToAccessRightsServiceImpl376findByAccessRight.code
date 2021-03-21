@@ -1,0 +1,4 @@
+@Override public UserToAccessRights findByAccessRight(UserToAccessRights userToAccessRights){
+  UserToAccessRights userToAccessRights1=userToAccessRightsRepository.findByAccessRight(userToAccessRights.getUsers().getId(),userToAccessRights.getAccessRights().getId());
+  return userToAccessRights1;
+}

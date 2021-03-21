@@ -1,0 +1,3 @@
+public void setActionDate(Date actionDate){
+  this.actionDate=actionDate;
+}

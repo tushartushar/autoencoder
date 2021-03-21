@@ -1,0 +1,4 @@
+/** 
+ * @return current time in milliseconds
+ */
+public long currentTimeMillis();

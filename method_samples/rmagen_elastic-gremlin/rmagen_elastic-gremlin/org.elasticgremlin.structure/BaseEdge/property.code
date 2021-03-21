@@ -1,0 +1,7 @@
+@Override public <V>Property<V> property(String key,V value){
+  checkRemoved();
+  ElementHelper.validateProperty(key,value);
+  BaseProperty<V> vertexProperty=(BaseProperty<V>)addPropertyLocal(key,value);
+  innerAddProperty(vertexProperty);
+  return vertexProperty;
+}

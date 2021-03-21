@@ -1,0 +1,19 @@
+public void receive(MulticastMessage msg,InetSocketAddress peer){
+  msg.hops++;
+  byte[] recv_bytes=addr2bytes(peer);
+  BigInteger recv_key=bytes2bi(digest.digest(recv_bytes));
+  int level=get_recv_level(my_key,recv_key,total_levels);
+  int num_forwarded=0;
+  if (level != (total_levels - 1)) {
+    for (int i=level + 1; i < total_levels; i++) {
+      try {
+        num_forwarded+=dispatch_forward(i,(MulticastMessage)msg.clone());
+      }
+ catch (      CloneNotSupportedException e) {
+        logger.warn("MulticastMessage exception: ",e);
+      }
+    }
+  }
+  if (logger.isDebugEnabled())   logger.debug("Received message from " + msg.sender_id.address().getHostAddress() + ":"+ msg.sender_id.port()+ "; est_rtt/2 = "+ (msg.est_rtt / 2)+ " ms; transit time = "+ (timer_ms() - msg.begin_time)+ " ms; hops = "+ msg.hops+ ".");
+  if (logger.isDebugEnabled())   logger.debug("Forwarded to " + num_forwarded + " nodes.");
+}

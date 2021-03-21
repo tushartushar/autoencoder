@@ -1,0 +1,5 @@
+public FillHolesState(long m,long l,long h){
+  max_leaves_below=m;
+  range_low=l;
+  range_high=h;
+}

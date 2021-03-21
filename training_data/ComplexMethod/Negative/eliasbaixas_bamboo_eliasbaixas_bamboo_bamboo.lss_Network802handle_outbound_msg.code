@@ -1,0 +1,29 @@
+protected final void handle_outbound_msg(final NetworkMessage msg){
+  final InetSocketAddress dst=new InetSocketAddress(msg.peer.address(),msg.peer.port());
+  if (msg.timeout_sec == -1) {
+    if (udpcc_thread == null) {
+      udpcc.send_nocc(msg,dst);
+    }
+ else {
+      udpcc_thread.registerTimer(0,new Runnable(){
+        public void run(){
+          udpcc.send_nocc(msg,dst);
+        }
+      }
+);
+    }
+  }
+ else {
+    final SinkIF comp_q=msg.comp_q;
+    final Object user_data=msg.user_data;
+    final long timeout_sec=(msg.timeout_sec == 0) ? DEFAULT_TIMEOUT : msg.timeout_sec;
+    final Thunk1<Boolean> callback=(msg.comp_q == null) ? null : new Thunk1<Boolean>(){
+      public void run(      Boolean success){
+        NetworkMessageResult outb=new NetworkMessageResult(user_data,success);
+        enqueue_to_main_thread(comp_q,outb);
+      }
+    }
+;
+    send(msg,dst,timeout_sec,callback);
+  }
+}

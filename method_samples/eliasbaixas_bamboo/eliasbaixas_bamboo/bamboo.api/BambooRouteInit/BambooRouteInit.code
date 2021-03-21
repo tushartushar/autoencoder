@@ -1,0 +1,7 @@
+public BambooRouteInit(BigInteger d,long a,boolean u,boolean i,QuickSerializable p){
+  dest=d;
+  app_id=a;
+  intermediate_upcall=u;
+  iter=i;
+  payload=p;
+}

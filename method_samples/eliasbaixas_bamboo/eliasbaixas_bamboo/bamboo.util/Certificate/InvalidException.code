@@ -1,0 +1,3 @@
+public InvalidException(String s){
+  super(s);
+}

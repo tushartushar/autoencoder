@@ -1,0 +1,10 @@
+public JFrame visualize(){
+  JFrame f=new JFrame("Tree Visualization");
+  JApplet applet=new Visual();
+  f.getContentPane().add("Center",applet);
+  applet.init();
+  f.pack();
+  f.setSize(new Dimension(300,220));
+  f.show();
+  return f;
+}

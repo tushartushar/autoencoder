@@ -1,0 +1,8 @@
+/** 
+ * Stops looking for crashes.  Does not need to be called in normal operations, but may be useful for testing.
+ */
+public void stop(){
+  context.unregisterReceiver(receiver);
+  if (isDebugEnabled())   Log.d(TAG,"stopped listening for BluetoothAdapter events");
+  saveState();
+}

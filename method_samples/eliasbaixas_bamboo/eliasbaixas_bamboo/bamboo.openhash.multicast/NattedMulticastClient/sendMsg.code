@@ -1,0 +1,9 @@
+public void sendMsg(QuickSerializable payload){
+  if (channel == null) {
+    waiting.addLast(payload);
+  }
+ else {
+    inflight.addLast(payload);
+    channel.send(payload);
+  }
+}

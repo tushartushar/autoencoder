@@ -1,0 +1,4 @@
+public void enqueue_abort(Object key){
+  check_thread();
+  prepares.remove(key);
+}

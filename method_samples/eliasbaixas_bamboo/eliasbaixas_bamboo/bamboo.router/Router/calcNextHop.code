@@ -1,0 +1,6 @@
+/** 
+ * Calculate the next hop using the standard algorithm.  If we're within the range of the leaf set, returns the root.  Otherwise, if we can resolve another digit using a neighbor in the routing table, returns that neighbor.  If neither of the above, returns the closest node in the leaf set.  If my_neighbor_info is returned, we're the root.
+ */
+public NeighborInfo calcNextHop(BigInteger key){
+  return calc_next_hop(key,false);
+}

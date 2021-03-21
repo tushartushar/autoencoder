@@ -1,0 +1,12 @@
+/** 
+ * Calculates the next hop using greedy routing.
+ */
+public NeighborInfo calcNextHopGreedy(BigInteger key,Map<NeighborInfo,Long> allNeighbors){
+  return calcNextHopScaledPRS(key,greedyScaling,allNeighbors);
+}
+/** 
+ * Calculates the next hop using greedy routing.
+ */
+public NeighborInfo calcNextHopGreedy(BigInteger key){
+  return calcNextHopScaledPRS(key,allNeighbors());
+}

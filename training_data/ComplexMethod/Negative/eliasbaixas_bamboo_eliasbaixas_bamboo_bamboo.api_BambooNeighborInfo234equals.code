@@ -1,0 +1,5 @@
+public boolean equals(Object rhs){
+  if (!(rhs instanceof BambooNeighborInfo))   return false;
+  BambooNeighborInfo other=(BambooNeighborInfo)rhs;
+  return node_id.equals(other.node_id) && guid.equals(other.guid);
+}

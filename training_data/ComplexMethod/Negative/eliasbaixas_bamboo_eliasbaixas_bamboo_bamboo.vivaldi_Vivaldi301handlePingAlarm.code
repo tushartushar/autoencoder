@@ -1,0 +1,4 @@
+private void handlePingAlarm(){
+  BigInteger random_guid=new BigInteger(160,_prng);
+  dispatch(new BambooRouteInit(random_guid,_app_id,false,false,new LocateNodeMsg(my_node_id,_my_coordinate,_version_number)));
+}

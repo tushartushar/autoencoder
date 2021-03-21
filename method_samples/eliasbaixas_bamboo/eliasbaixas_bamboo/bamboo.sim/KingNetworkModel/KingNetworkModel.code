@@ -1,0 +1,77 @@
+public KingNetworkModel(String filename) throws IOException {
+  logger=Logger.getLogger(KingNetworkModel.class);
+  FileInputStream is=new FileInputStream(filename);
+  Reader reader=new BufferedReader(new InputStreamReader(is));
+  StreamTokenizer tok=new StreamTokenizer(reader);
+  logger.debug("filename=" + filename);
+  tok.resetSyntax();
+  tok.whitespaceChars((int)',',(int)',');
+  tok.whitespaceChars((int)' ',(int)' ');
+  tok.wordChars((int)'_',(int)'_');
+  tok.wordChars((int)'A',(int)'Z');
+  tok.wordChars((int)'a',(int)'z');
+  tok.wordChars((int)'0',(int)'9');
+  int lno=1;
+  while (lno < 5) {
+    tok.nextToken();
+    if (tok.ttype == StreamTokenizer.TT_EOL)     lno++;
+  }
+  int nodes=0;
+  while (true) {
+    tok.nextToken();
+    if ((tok.ttype != StreamTokenizer.TT_WORD) || (!tok.sval.equals("node"))) {
+      break;
+    }
+    tok.nextToken();
+    if (tok.ttype != StreamTokenizer.TT_WORD)     break;
+    int n=Integer.parseInt(tok.sval);
+    if (n != nodes + 1) {
+      logger.fatal("skipped a node number: " + n + ", line "+ lno);
+      System.exit(1);
+    }
+    tok.nextToken();
+    if (tok.ttype != StreamTokenizer.TT_EOL) {
+      logger.fatal("expected a new line, line " + lno);
+      System.exit(1);
+    }
+    ++lno;
+    ++nodes;
+  }
+  logger.info("topology has " + nodes + " nodes");
+  latencies=new int[nodes + 1][];
+  for (int i=1; i < nodes + 1; ++i)   latencies[i]=new int[nodes + 1];
+  for (int i=1; i < nodes + 1; ++i) {
+    for (int j=i + 1; j < nodes + 1; ++j) {
+      if (tok.ttype != StreamTokenizer.TT_WORD) {
+        logger.fatal("expected a number, line " + lno);
+        System.exit(1);
+      }
+      if (Integer.parseInt(tok.sval) != i) {
+        logger.fatal("expected first number to be " + i + ", line "+ lno);
+        System.exit(1);
+      }
+      tok.nextToken();
+      if (tok.ttype != StreamTokenizer.TT_WORD) {
+        logger.fatal("expected a number, line " + lno);
+        System.exit(1);
+      }
+      if (Integer.parseInt(tok.sval) != j) {
+        logger.fatal("expected second number to be " + j + ", line "+ lno);
+        System.exit(1);
+      }
+      tok.nextToken();
+      if (tok.ttype != StreamTokenizer.TT_WORD) {
+        logger.fatal("expected a latency, line " + lno);
+        System.exit(1);
+      }
+      latencies[i][j]=latencies[j][i]=Integer.parseInt(tok.sval);
+      tok.nextToken();
+      if (tok.ttype != StreamTokenizer.TT_EOL) {
+        logger.fatal("expected a new line, line " + lno);
+        System.exit(1);
+      }
+      ++lno;
+      tok.nextToken();
+    }
+  }
+}

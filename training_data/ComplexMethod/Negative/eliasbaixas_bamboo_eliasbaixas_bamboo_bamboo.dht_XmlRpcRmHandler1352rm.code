@@ -1,0 +1,27 @@
+public void rm(byte[] key_bytes,byte[] value_hash,String hash_alg,byte[] secret,int ttl_sec,String application,String user_agent,InetSocketAddress client,Thunk1<Object> result_cb){
+  if (key_bytes.length > 20) {
+    result_cb.run(new Exception("key is longer than 20 bytes"));
+    return;
+  }
+  if (value_hash.length > 20) {
+    result_cb.run(new Exception("value_hash is longer than 20 bytes"));
+    return;
+  }
+  if (!hash_alg.equals("SHA")) {
+    result_cb.run(new Exception("unknown secret hash algorithm: \"" + hash_alg + "\""));
+    return;
+  }
+  if (secret.length > 40) {
+    result_cb.run(new Exception("secret is longer than 40 bytes"));
+    return;
+  }
+  BigInteger key=byte_array_to_big_int(key_bytes);
+  ttl_sec=(ttl_sec > Dht.MAX_TTL_SEC) ? Dht.MAX_TTL_SEC : ttl_sec;
+  String client_string=client.getAddress().getHostAddress() + ":" + client.getPort();
+  Long start_ms=new Long(now_ms());
+  byte[] secret_hash=md.digest(secret);
+  Dht.PutReq req=new Dht.PutReq(key,ByteBuffer.wrap(secret),secret_hash,value_hash,false,my_sink,null,ttl_sec,client.getAddress());
+  req.user_data=curry(xml_rpc_rm_done,result_cb,req,client_string,start_ms,user_agent,application);
+  log_rm_req(-1,req,client_string,user_agent,application);
+  dispatch(req);
+}

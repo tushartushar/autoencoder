@@ -1,0 +1,1 @@
+@Query("select l from SystemAuditTrail l where isDeleted = 0 and activity =? and actiondate between ? and  ? ") List<SystemAuditTrail> findByDate(String activity,Date date,Date dates);

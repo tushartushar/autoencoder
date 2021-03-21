@@ -1,0 +1,3 @@
+public EnqueuePredicateIF getEnqueuePredicate(){
+  throw new NoSuchMethodError("not supported by DustDevilSink.");
+}

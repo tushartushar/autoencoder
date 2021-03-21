@@ -1,0 +1,4 @@
+public void serialize(OutputBuffer buffer){
+  source.serialize(buffer);
+  buffer.add(seq);
+}

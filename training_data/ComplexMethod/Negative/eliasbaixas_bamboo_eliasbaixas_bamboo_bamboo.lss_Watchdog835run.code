@@ -1,0 +1,22 @@
+public void run(){
+  while (true) {
+    long now=System.currentTimeMillis();
+    long wake=now + watchdogCheckPeriod;
+    do {
+      try {
+        Thread.sleep(wake - now);
+      }
+ catch (      InterruptedException e) {
+      }
+      now=System.currentTimeMillis();
+    }
+ while (now < wake);
+    boolean flag=false;
+synchronized (watchdogLock) {
+      flag=watchdogFlag;
+      watchdogFlag=true;
+    }
+    if (flag)     logger.warn("main thread appears stalled");
+ else     logger.info("watchdog awakened");
+  }
+}

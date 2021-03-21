@@ -1,0 +1,6 @@
+public static Node incrementRange(Node n,long low,long high,long inc){
+  if ((low > n.high) || (high < n.low))   return n;
+  assert n.valid : nodeToString(n);
+  if ((low <= n.low) && (high >= n.high))   return incrementOffset(n,inc);
+ else   return makeParent(n.offset(),incrementRange(n.left,low,high,inc),incrementRange(n.right,low,high,inc));
+}

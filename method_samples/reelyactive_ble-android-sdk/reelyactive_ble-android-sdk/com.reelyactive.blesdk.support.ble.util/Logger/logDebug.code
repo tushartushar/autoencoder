@@ -1,0 +1,5 @@
+public static void logDebug(String message){
+  if (Log.isLoggable(TAG,Log.DEBUG)) {
+    Log.d(TAG,message);
+  }
+}

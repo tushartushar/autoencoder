@@ -1,0 +1,9 @@
+private ScanRecord(List<ParcelUuid> serviceUuids,SparseArray<byte[]> manufacturerData,Map<ParcelUuid,byte[]> serviceData,int advertiseFlags,int txPowerLevel,String localName,byte[] bytes){
+  mServiceUuids=serviceUuids;
+  mManufacturerSpecificData=manufacturerData;
+  mServiceData=serviceData;
+  mDeviceName=localName;
+  mAdvertiseFlags=advertiseFlags;
+  mTxPowerLevel=txPowerLevel;
+  mBytes=bytes;
+}

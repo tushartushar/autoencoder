@@ -1,0 +1,7 @@
+public void timer_cb(Object user_data){
+  ++message_num;
+  String msg="This is message " + message_num;
+  QSString qsmsg=new QSString(msg);
+  logger.info("sending " + qsmsg);
+  transport.send(dst,qsmsg,new SendDoneCb(),null);
+}

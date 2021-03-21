@@ -1,0 +1,13 @@
+protected void accept_put(final PutInfo pi){
+  assert false;
+}
+protected void accept_put(MyPutInfo pi){
+  Integer client=new Integer(pi.client);
+  set_queue_size(client,queue_size(client) - pi.commitment());
+  virtual_time=max(virtual_time,pi.start_time);
+  Long cg=commitments_granted.get(client);
+  long ncg=((cg == null) ? 0 : cg.longValue()) + pi.size * pi.ttl_sec;
+  commitments_granted.put(client,new Long(ncg));
+  pi.cb.cb(true,false);
+  super.accept_put(pi);
+}

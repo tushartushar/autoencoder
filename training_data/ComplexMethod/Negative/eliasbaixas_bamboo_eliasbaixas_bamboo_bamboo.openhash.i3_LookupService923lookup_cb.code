@@ -1,0 +1,17 @@
+public void lookup_cb(BigInteger key,InetSocketAddress succ_addr,BigInteger succ_hash,int gets,Object user_data){
+  if (logger.isDebugEnabled()) {
+    logger.debug("found successor: 0x" + GuidTools.guid_to_string(succ_hash));
+  }
+  succ_id=succ_hash;
+  PredMsg msg=new PredMsg(my_id,my_addr);
+  udpcc.send(msg,succ_addr,10,pred_send_cb,msg);
+  acore.register_timer(10 * 1000,stabilize_cb,null);
+}
+public void lookup_cb(BigInteger key,InetSocketAddress succ_addr,BigInteger succ_hash,int gets,Object user_data){
+  byte[] payload_bytes=(byte[])user_data;
+  if (logger.isDebugEnabled()) {
+    logger.debug("lookup for 0x" + GuidTools.guid_to_string(key) + " returned "+ GuidTools.guid_to_string(succ_hash));
+  }
+  I3Msg outb=new I3Msg(key,payload_bytes);
+  udpcc.send(outb,succ_addr,10,i3_send_cb,outb);
+}

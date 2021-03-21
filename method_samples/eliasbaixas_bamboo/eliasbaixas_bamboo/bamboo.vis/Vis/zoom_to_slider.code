@@ -1,0 +1,3 @@
+protected int zoom_to_slider(double zoom){
+  return (int)Math.round(100.0 * Math.log(zoom) / Math.log(10.0));
+}

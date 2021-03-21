@@ -1,0 +1,6 @@
+public Object clone() throws CloneNotSupportedException {
+  FetchMerkleTreeNodeReject result=(FetchMerkleTreeNodeReject)super.clone();
+  result.reason=reason;
+  result.seq=seq;
+  return result;
+}

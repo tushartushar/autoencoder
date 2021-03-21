@@ -1,0 +1,5 @@
+public void setFailureHandler(Runnable value){
+  if (fail != null)   throw new IllegalStateException();
+  fail=value;
+  if (channel == null)   fail.run();
+}

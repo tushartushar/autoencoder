@@ -1,0 +1,3 @@
+@Column(name="REQUESTDATETIME",nullable=false) @Temporal(TemporalType.TIMESTAMP) public Date getRequestDateTime(){
+  return RequestDateTime;
+}

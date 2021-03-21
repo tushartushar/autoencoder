@@ -1,0 +1,12 @@
+/** 
+ * Call remote procedure BAMBOO_DHT_PROC_GET_3.
+ * @param arg1 parameter (of type bamboo_get_args) to the remote procedure call.
+ * @return Result from remote procedure call (of type bamboo_get_result).
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public bamboo_get_result BAMBOO_DHT_PROC_GET_3(bamboo_get_args arg1) throws OncRpcException, IOException {
+  bamboo_get_result result$=new bamboo_get_result();
+  client.call(gateway_prot.BAMBOO_DHT_PROC_GET_3,gateway_prot.BAMBOO_DHT_GATEWAY_VERSION_3,arg1,result$);
+  return result$;
+}

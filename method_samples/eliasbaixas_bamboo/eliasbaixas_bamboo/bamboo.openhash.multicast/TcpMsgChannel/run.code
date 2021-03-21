@@ -1,0 +1,107 @@
+public void run(){
+  try {
+    if (!channel.finishConnect())     return;
+    acore.unregisterSelectable(channel,OP_CONNECT);
+  }
+ catch (  IOException e) {
+    error();
+    return;
+  }
+  if (recv != null) {
+    try {
+      acore.registerSelectable(channel,OP_READ,read);
+    }
+ catch (    ClosedChannelException e) {
+      error();
+    }
+  }
+}
+public void run(){
+  while (true) {
+    ByteBuffer inbuf=ByteBuffer.allocate(1500);
+    int count=0;
+    try {
+      count=channel.read(inbuf);
+    }
+ catch (    IOException e) {
+      error();
+      return;
+    }
+    if (count < 0) {
+      error();
+      return;
+    }
+    if (count == 0)     break;
+    inbuf.flip();
+    ib.add_packet(inbuf);
+  }
+  while (true) {
+    ib.unlimit();
+    if (nextReadSize == -1) {
+      if (ib.size() < 4)       break;
+      nextReadSize=ib.nextInt() & 0x7fffffff;
+    }
+    if (ib.size() < nextReadSize)     break;
+    ib.limit(nextReadSize);
+    try {
+      recv.run(ib.nextObject());
+    }
+ catch (    QSException e) {
+      logger.warn("Unknown type " + e + ".  Closing connection");
+      error();
+      return;
+    }
+    if (ib.limit_remaining() != 0) {
+      error();
+      return;
+    }
+    nextReadSize=-1;
+  }
+}
+public void run(){
+  while (true) {
+    if (outbuf == null) {
+      if (outq.isEmpty()) {
+        try {
+          acore.unregisterSelectable(channel,OP_WRITE);
+        }
+ catch (        ClosedChannelException e) {
+          error();
+        }
+        break;
+      }
+      QuickSerializable qs=outq.removeFirst();
+      CountBuffer cb=new CountBuffer();
+      cb.add(qs);
+      outbuf=ByteBuffer.allocate(cb.size() + 4);
+      NioOutputBuffer ob=new NioOutputBuffer(outbuf);
+      ob.add(cb.size());
+      ob.add(qs);
+      outbuf.flip();
+    }
+    int n=0;
+    try {
+      n=channel.write(outbuf);
+    }
+ catch (    IOException e) {
+      error();
+    }
+    if (outbuf.position() == outbuf.limit())     outbuf=null;
+ else     break;
+  }
+}
+public void run(){
+  System.err.println("connection failed");
+  System.exit(1);
+}
+public void run(QuickSerializable qs){
+  System.out.println("received: " + qs);
+}
+public void run(Integer i){
+  if (i.intValue() == 10) {
+    c.close();
+    return;
+  }
+  c.send(new QSInt(i.intValue()));
+  acore.registerTimer(1000,curry(this,new Integer(i.intValue() + 1)));
+}

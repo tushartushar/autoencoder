@@ -1,0 +1,5 @@
+public FiveDVC(){
+}
+public FiveDVC(InputBuffer buffer) throws QSException {
+  super(buffer);
+}

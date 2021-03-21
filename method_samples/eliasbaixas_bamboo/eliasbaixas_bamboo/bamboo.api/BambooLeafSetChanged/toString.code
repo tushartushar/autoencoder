@@ -1,0 +1,7 @@
+public String toString(){
+  String result="(BambooLeafSetChanged preds=(";
+  for (int i=preds.length - 1; i >= 0; --i)   result+=preds[i] + ((i == 0) ? "" : " ");
+  result+=") succs=";
+  for (int i=0; i < succs.length; ++i)   result+=succs[i] + ((i == succs.length - 1) ? "" : " ");
+  return result + "))";
+}

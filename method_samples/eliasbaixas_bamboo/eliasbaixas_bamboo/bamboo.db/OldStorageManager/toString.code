@@ -1,0 +1,45 @@
+public String toString(){
+  return "(Key time_usec=" + Long.toHexString(time_usec) + " ttl_sec="+ ttl_sec+ " guid="+ GuidTools.guid_to_string(guid)+ " data_hash="+ ByteUtils.print_bytes(data_hash,0,3)+ " put="+ put+ " client_id="+ client_id.getHostAddress()+ ")";
+}
+public String toString(){
+  return "(PutReq key=" + key + " user_data="+ user_data+ ")";
+}
+public String toString(){
+  return "(PutResp inval_put_key=" + inval_put_key + " inval_put_data="+ inval_put_data+ " inval_rm_key="+ inval_rm_key+ " inval_rm_data="+ inval_rm_data+ " user_data="+ user_data+ ")";
+}
+public String toString(){
+  return "(GetByKeyReq key=" + key + " comp_q="+ comp_q+ ")";
+}
+public String toString(){
+  return "(GetByKeyResp key=" + key + " data="+ (data == null ? "null" : "<data>")+ ")";
+}
+public String toString(){
+  return "(GetByGuidReq guid=" + GuidTools.guid_to_string(guid) + " primary="+ primary+ " placemark="+ placemark+ " comp_q="+ comp_q+ ")";
+}
+public String toString(){
+  return "(GetByGuidResp key=" + key + " data length="+ (data == null ? 0 : data.limit())+ ")";
+}
+public String toString(){
+  return "(GetByGuidCont continuation=" + continuation + " del="+ del+ " comp_q="+ comp_q+ ")";
+}
+public String toString(){
+  return "(GetByTimeReq low=" + Long.toHexString(low) + " high="+ Long.toHexString(high)+ " comp_q="+ comp_q+ ")";
+}
+public String toString(){
+  return "(GetByTimeResp keys.size=" + (keys == null ? 0 : keys.size()) + ")";
+}
+public String toString(){
+  return "(GetByTimeCont continuation=" + continuation + " comp_q="+ comp_q+ ")";
+}
+public String toString(){
+  return "(DiscardReq key=" + key + " recycle="+ recycle+ ")";
+}
+public String toString(){
+  return "(IterateByGuidReq low=" + GuidTools.guid_to_string(low) + " high="+ GuidTools.guid_to_string(high)+ " comp_q="+ comp_q+ ")";
+}
+public String toString(){
+  return "(IterateByGuidResp key=" + key + ")";
+}
+public String toString(){
+  return "(IterateByGuidCont continuation=" + continuation + " comp_q="+ comp_q+ ")";
+}

@@ -1,0 +1,8 @@
+protected void sendGetReq(GetReq req,Long seq){
+  if ((NEW_RECUR_MASK & req.maxvals) != 0) {
+    Key placemark=req.placemark == null ? ZERO_KEY : req.placemark;
+    handleRecurGetReq.run(new RecurGetReq(req.key,req.maxvals,placemark,seq.longValue(),req.client,my_node_id),my_node_id);
+    return;
+  }
+  acore.registerTimer(get_timeout,curry(getRetry,seq));
+}

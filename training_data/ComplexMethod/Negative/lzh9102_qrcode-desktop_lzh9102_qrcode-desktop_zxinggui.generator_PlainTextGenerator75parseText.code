@@ -1,0 +1,5 @@
+@Override public boolean parseText(String text,boolean write){
+  if (text.isEmpty())   return false;
+  if (write)   textarea.setText(text);
+  return true;
+}

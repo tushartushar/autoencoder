@@ -1,0 +1,76 @@
+protected void finish_get_by_time(GBTCont cont,DbTxn xact,Dbc cursor,Dbt data,int retval,SinkIF comp_q,Object user_data){
+  LinkedList keys=new LinkedList();
+  while (true) {
+    if (retval != 0) {
+      assert retval == Db.DB_NOTFOUND;
+      GetByTimeResp resp=null;
+      if (keys.isEmpty())       resp=new GetByTimeResp(null,null,user_data);
+ else       resp=new GetByTimeResp(keys,cont,user_data);
+      application_enqueue(comp_q,resp);
+      break;
+    }
+    Key k=new Key(ByteBuffer.wrap(cont.key.getData(),cont.key.getOffset(),cont.key.getSize()));
+    assert k.time_usec >= cont.low : k.time_usec + " " + cont.low;
+    if (key_expired(k)) {
+      if (logger.isDebugEnabled())       logger.debug("dropping in do_get_by_time");
+      drop_expired_data(xact,cursor,k,data.getSize());
+      try {
+        retval=cursor.get(cont.key,data,Db.DB_NEXT);
+      }
+ catch (      DbException e) {
+        BUG(e);
+      }
+      close_cursor(cursor);
+      try {
+        xact.commit(Db.DB_TXN_NOSYNC);
+      }
+ catch (      DbException e) {
+        BUG(e);
+      }
+      logger.info("dropping key and reopenning xact");
+      try {
+        xact=env.txnBegin(null,Db.DB_TXN_NOSYNC);
+      }
+ catch (      DbException e) {
+        BUG(e);
+      }
+      cursor=open_cursor(by_time,xact,"finish_get_by_time");
+      try {
+        retval=cursor.get(cont.key,data,Db.DB_SET_RANGE);
+      }
+ catch (      DbException e) {
+        BUG(e);
+      }
+    }
+ else {
+      if (k.time_usec > cont.high) {
+        GetByTimeResp resp=null;
+        if (keys.isEmpty())         resp=new GetByTimeResp(null,null,user_data);
+ else         resp=new GetByTimeResp(keys,cont,user_data);
+        application_enqueue(comp_q,resp);
+        break;
+      }
+      keys.addLast(k);
+      if (keys.size() >= 33) {
+        GetByTimeResp resp=new GetByTimeResp(keys,cont,user_data);
+        application_enqueue(comp_q,resp);
+        break;
+      }
+ else {
+        try {
+          retval=cursor.get(cont.key,data,Db.DB_NEXT);
+        }
+ catch (        DbException e) {
+          BUG(e);
+        }
+      }
+    }
+  }
+  close_cursor(cursor);
+  try {
+    xact.commit(Db.DB_TXN_NOSYNC);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+}

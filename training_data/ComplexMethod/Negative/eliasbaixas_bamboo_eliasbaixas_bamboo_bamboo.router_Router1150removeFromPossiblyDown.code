@@ -1,0 +1,11 @@
+public void removeFromPossiblyDown(NeighborInfo ni){
+  if (possibly_down.containsKey(ni)) {
+    possibly_down.remove(ni);
+    possibly_down_helper.remove(ni.node_id);
+    if (logger.isDebugEnabled())     logger.debug("removed " + ni + " from possibly_down");
+  }
+}
+public void removeFromPossiblyDown(NodeId n){
+  NeighborInfo ni=possibly_down_helper.get(n);
+  if (ni != null)   removeFromPossiblyDown(ni);
+}

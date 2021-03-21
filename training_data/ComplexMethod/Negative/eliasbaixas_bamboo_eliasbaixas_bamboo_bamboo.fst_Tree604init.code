@@ -1,0 +1,4 @@
+public void init(){
+  setBackground(Color.white);
+  setForeground(Color.black);
+}

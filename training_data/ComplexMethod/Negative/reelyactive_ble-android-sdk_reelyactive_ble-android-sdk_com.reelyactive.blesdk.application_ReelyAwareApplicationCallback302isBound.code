@@ -1,0 +1,7 @@
+/** 
+ * Get the status of the connection to the  {@link BleService}
+ * @return true if the {@link BleService} is bound, false otherwise.
+ */
+protected boolean isBound(){
+  return bound;
+}

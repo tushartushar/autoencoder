@@ -1,0 +1,131 @@
+public TransitStub(String filename) throws IOException {
+  this(filename,1000 * 1000,1000,5000,10 * 1000,10 * 1000,INV_BW_1_Mbps / 100.0,INV_BW_1_Mbps / 1.5,INV_BW_1_Mbps / 45.0,INV_BW_1_Mbps / 1.5);
+}
+public TransitStub(String filename,int cache_size,long ss_lat,long st_lat,long tt_lat,long id_lat,double ss_beta,double st_beta,double tt_beta,double id_beta) throws IOException {
+  super(cache_size);
+  FileInputStream is=new FileInputStream(filename);
+  Reader reader=new BufferedReader(new InputStreamReader(is));
+  StreamTokenizer tok=new StreamTokenizer(reader);
+  System.out.println("filename=" + filename);
+  tok.resetSyntax();
+  tok.whitespaceChars((int)' ',(int)' ');
+  tok.wordChars((int)'-',(int)'-');
+  tok.wordChars((int)'0',(int)'9');
+  int lineno=1;
+  tok.nextToken();
+  while (tok.ttype == StreamTokenizer.TT_EOL) {
+    tok.nextToken();
+    lineno++;
+  }
+  if (tok.ttype != StreamTokenizer.TT_WORD) {
+    System.err.println("Expected node count on line " + lineno + ": "+ tok);
+    System.exit(1);
+  }
+  int n=Integer.parseInt(tok.sval);
+  G=new Node[n];
+  System.out.println("Graph size = " + G.length);
+  tok.nextToken();
+  while (tok.ttype == StreamTokenizer.TT_EOL) {
+    tok.nextToken();
+    lineno++;
+  }
+  for (int vertex=0; vertex < G.length; ++vertex) {
+    if (tok.ttype != StreamTokenizer.TT_WORD) {
+      System.err.println("Expected vertex number on line " + lineno + ": "+ tok);
+      System.exit(1);
+    }
+    if (Integer.parseInt(tok.sval) != vertex)     Carp.die("Expected vertex = " + vertex);
+    tok.nextToken();
+    if (tok.ttype != StreamTokenizer.TT_WORD) {
+      System.err.println("Expected dom on line " + lineno + ": "+ tok);
+      System.exit(1);
+    }
+    int dom=Integer.parseInt(tok.sval);
+    tok.nextToken();
+    if (tok.ttype != StreamTokenizer.TT_WORD) {
+      System.err.println("Expected dnn on line " + lineno + ": "+ tok);
+      System.exit(1);
+    }
+    int dnn=Integer.parseInt(tok.sval);
+    tok.nextToken();
+    if (tok.ttype != StreamTokenizer.TT_WORD) {
+      System.err.println("Expected snum on line " + lineno + ": "+ tok);
+      System.exit(1);
+    }
+    int snum=Integer.parseInt(tok.sval);
+    tok.nextToken();
+    if (tok.ttype != StreamTokenizer.TT_WORD) {
+      System.err.println("Expected snn on line " + lineno + ": "+ tok);
+      System.exit(1);
+    }
+    int snn=Integer.parseInt(tok.sval);
+    DomainId domain=new DomainId(dom,dnn,snum);
+    G[vertex]=new Node(vertex,domain);
+    tok.nextToken();
+    while (tok.ttype == StreamTokenizer.TT_EOL) {
+      tok.nextToken();
+      lineno++;
+    }
+  }
+  int edge_count=0;
+  LinkedList interdomain_edges=new LinkedList();
+  while (tok.ttype != StreamTokenizer.TT_EOF) {
+    if (tok.ttype != StreamTokenizer.TT_WORD) {
+      System.err.println("Expected from on line " + lineno + ": "+ tok);
+      System.exit(1);
+    }
+    int from=Integer.parseInt(tok.sval);
+    tok.nextToken();
+    if (tok.ttype != StreamTokenizer.TT_WORD) {
+      System.err.println("Expected to on line " + lineno + ".");
+      System.exit(1);
+    }
+    int to=Integer.parseInt(tok.sval);
+    tok.nextToken();
+    if (tok.ttype != StreamTokenizer.TT_WORD) {
+      System.err.println("Expected length on line " + lineno + ".");
+      System.exit(1);
+    }
+    edge_count+=1;
+    long latency_us=0;
+    double inv_bw_s_per_byte=0.0;
+    Node src=G[from];
+    Node dst=G[to];
+    boolean interdomain_edge=!src.domain.equals(dst.domain);
+    if (src.domain.snum == -1) {
+      if (dst.domain.snum != -1) {
+        latency_us=st_lat;
+        inv_bw_s_per_byte=st_beta;
+      }
+ else {
+        latency_us=tt_lat;
+        inv_bw_s_per_byte=tt_beta;
+      }
+    }
+ else {
+      if (dst.domain.snum == -1) {
+        latency_us=st_lat;
+        inv_bw_s_per_byte=st_beta;
+      }
+ else {
+        if (interdomain_edge) {
+          latency_us=id_lat;
+          inv_bw_s_per_byte=id_beta;
+        }
+ else {
+          latency_us=ss_lat;
+          inv_bw_s_per_byte=ss_beta;
+        }
+      }
+    }
+    src.add_edge(new Edge(dst,latency_us,inv_bw_s_per_byte));
+    dst.add_edge(new Edge(src,latency_us,inv_bw_s_per_byte));
+    tok.nextToken();
+    while (tok.ttype == StreamTokenizer.TT_EOL) {
+      tok.nextToken();
+      lineno++;
+    }
+  }
+  Carp.out("Edges = " + edge_count);
+  is.close();
+}

@@ -1,0 +1,3 @@
+public StreamInputBuffer(InputStream i){
+  is=i;
+}

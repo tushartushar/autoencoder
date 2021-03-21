@@ -1,0 +1,10 @@
+public Connection(InetSocketAddress a,long now_ms){
+  addr=a;
+  sa=-1;
+  sv=0;
+  rto=MAX_RTO;
+  lastrcv=now_ms;
+  lastsnd=now_ms;
+  cwnd=1.0;
+  ssthresh=MAX_WND;
+}

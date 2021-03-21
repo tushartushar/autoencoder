@@ -1,0 +1,39 @@
+public void run(TcpMsgChannel channel){
+  logger.info("new connection from " + channel.peer().getAddress().getHostAddress() + ":"+ channel.peer().getPort());
+  channel.setReceiveHandler(curry(recv,channel));
+}
+public void run(TcpMsgChannel channel,QuickSerializable qs){
+  if (logger.isDebugEnabled())   logger.debug("received " + qs + " from "+ channel.peer());
+  if (qs instanceof Group) {
+    Group g=(Group)qs;
+    if (children.containsKey(g.group)) {
+      groups.put(channel,g.group);
+      children.get(g.group).add(channel);
+      channel.setFailureHandler(curry(fail,g.group,channel));
+    }
+ else {
+      logger.warn("unknown group 0x" + GuidTools.guid_to_string(g.group) + ".  Closing connection.");
+      channel.close();
+      return;
+    }
+  }
+ else {
+    BigInteger group=groups.get(channel);
+    if (group == null) {
+      logger.warn("no group set for " + channel.peer() + ".  Closing connection.");
+      channel.close();
+      return;
+    }
+    MulticastMessage mm=new MulticastMessage(group,NodeId.create(channel.peer()),0,0,qs);
+    upcall.run(mm);
+    for (    TcpMsgChannel c : children.get(group)) {
+      if (!c.peer().equals(channel.peer()))       c.send(mm);
+    }
+  }
+  channel.send(new Ack());
+}
+public void run(BigInteger group,TcpMsgChannel channel){
+  logger.info("connection to " + channel.peer().getAddress().getHostAddress() + ":"+ channel.peer().getPort()+ " closed.");
+  children.get(group).remove(channel);
+  groups.remove(channel);
+}

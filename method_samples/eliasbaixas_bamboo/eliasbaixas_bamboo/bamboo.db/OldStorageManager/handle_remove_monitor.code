@@ -1,0 +1,4 @@
+public void handle_remove_monitor(RemoveMonitor event){
+  storage_monitors.remove(event.monitor);
+  if (logger.isDebugEnabled())   logger.debug("removed monitor " + event.monitor);
+}

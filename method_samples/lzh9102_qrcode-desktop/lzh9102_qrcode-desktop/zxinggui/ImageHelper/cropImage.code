@@ -1,0 +1,7 @@
+public static BufferedImage cropImage(BufferedImage src,int x,int y,int w,int h){
+  BufferedImage dest=new BufferedImage(w,h,src.getType());
+  Graphics g=dest.getGraphics();
+  g.drawImage(src,0,0,w,h,x,y,x + w,y + h,null);
+  g.dispose();
+  return dest;
+}

@@ -1,0 +1,12 @@
+public Scribe() throws Exception {
+  DEBUG=true;
+  ostore.util.TypeTable.register_type("bamboo.softscribe.MCastUpMsg");
+  ostore.util.TypeTable.register_type("bamboo.softscribe.MCastJoinMsg");
+  ostore.util.TypeTable.register_type("bamboo.softscribe.MCastDown");
+  String[] event_types={"seda.sandStorm.api.StagesInitializedSignal","bamboo.softscribe.Scribe$ParentAlarm","bamboo.softscribe.Scribe$ChildAlarm"};
+  this.event_types=event_types;
+  String[] inb_msg_types={"bamboo.softscribe.MCastDownMsg"};
+  this.inb_msg_types=inb_msg_types;
+  String[] outb_msg_types={"bamboo.softscribe.MCastUp","bamboo.softscribe.MCastJoin"};
+  this.outb_msg_types=outb_msg_types;
+}

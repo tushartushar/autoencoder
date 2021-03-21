@@ -1,0 +1,9 @@
+public static PublicKey buffer_to_public_key(InputBuffer ib) throws NoSuchAlgorithmException, InvalidKeySpecException {
+  String key_alg=ib.nextString();
+  int key_len=ib.nextInt();
+  byte[] key_bytes=new byte[key_len];
+  ib.nextBytes(key_bytes,0,key_len);
+  X509EncodedKeySpec key_spec=new X509EncodedKeySpec(key_bytes);
+  KeyFactory kf=KeyFactory.getInstance(key_alg);
+  return kf.generatePublic(key_spec);
+}

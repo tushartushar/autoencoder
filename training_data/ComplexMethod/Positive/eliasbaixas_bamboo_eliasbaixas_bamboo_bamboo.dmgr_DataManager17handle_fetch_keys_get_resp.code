@@ -1,0 +1,19 @@
+protected void handle_fetch_keys_get_resp(StorageManager.GetByTimeResp resp){
+  Pair ud=(Pair)resp.user_data;
+  FetchKeysReq req=(FetchKeysReq)ud.first;
+  LinkedList keys=(LinkedList)ud.second;
+  if (resp.continuation != null) {
+    if (keys == null)     ud.second=keys=new LinkedList();
+    for (    StorageManager.Key k : resp.keys) {
+      if (keys.size() >= (1 << expansion) + 1)       break;
+      if (in_range_mod(req.low_guid,req.high_guid,k.guid))       keys.addLast(k);
+    }
+  }
+  if ((resp.continuation == null) || ((keys != null) && (keys.size() >= (1 << expansion) + 1))) {
+    if (resp.continuation != null)     dispatch(new StorageManager.GetByTimeCont(resp.continuation,null,null));
+    dispatch(new FetchKeysResp(req.peer,keys,req.seq));
+  }
+ else {
+    dispatch(new StorageManager.GetByTimeCont(resp.continuation,my_sink,ud));
+  }
+}

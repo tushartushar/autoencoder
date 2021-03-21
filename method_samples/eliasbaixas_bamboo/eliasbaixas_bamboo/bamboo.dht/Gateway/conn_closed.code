@@ -1,0 +1,14 @@
+protected void conn_closed(){
+  acore.unregister_selectable(sc);
+  try {
+    sc.close();
+  }
+ catch (  IOException e) {
+  }
+  if (logger.isInfoEnabled()) {
+    StringBuffer buf=new StringBuffer(45);
+    buf.append("connection closed by ");
+    buf.append(client_string);
+    logger.info(buf);
+  }
+}

@@ -1,0 +1,9 @@
+public static BigInteger secure_hash_to_big_integer(SecureHash x){
+  CountBuffer cb=new CountBuffer();
+  x.serialize(cb);
+  byte[] data=new byte[cb.size() + 1];
+  ByteArrayOutputBuffer ob=new ByteArrayOutputBuffer(data);
+  ob.add((byte)0);
+  x.serialize(ob);
+  return new BigInteger(data);
+}

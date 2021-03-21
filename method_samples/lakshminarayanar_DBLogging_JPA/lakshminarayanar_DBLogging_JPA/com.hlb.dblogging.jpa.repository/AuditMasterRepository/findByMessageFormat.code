@@ -1,0 +1,1 @@
+@Query("select e from AuditMaster e where MessageFormat = ?") List<AuditMaster> findByMessageFormat(String messageFormat);

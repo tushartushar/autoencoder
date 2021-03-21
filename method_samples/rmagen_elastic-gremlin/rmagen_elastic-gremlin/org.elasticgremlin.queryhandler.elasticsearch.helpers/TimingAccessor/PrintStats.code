@@ -1,0 +1,6 @@
+public void PrintStats(){
+  if (numOfRuns > 0) {
+    float time=sw.getTime() / 1000f;
+    System.out.println(name + ": " + twoDForm.format(time)+ " total secs, "+ twoDForm.format(time / numOfRuns)+ " secs per run, "+ numOfRuns+ " runs, "+ twoDForm.format(longestRun / 1000f)+ " sec for longest run");
+  }
+}

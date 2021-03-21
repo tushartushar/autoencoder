@@ -1,0 +1,12 @@
+private ScanSettings(int scanMode,int callbackType,int scanResultType,long reportDelayMillis){
+  mScanMode=scanMode;
+  mCallbackType=callbackType;
+  mScanResultType=scanResultType;
+  mReportDelayMillis=reportDelayMillis;
+}
+private ScanSettings(Parcel in){
+  mScanMode=in.readInt();
+  mCallbackType=in.readInt();
+  mScanResultType=in.readInt();
+  mReportDelayMillis=in.readLong();
+}

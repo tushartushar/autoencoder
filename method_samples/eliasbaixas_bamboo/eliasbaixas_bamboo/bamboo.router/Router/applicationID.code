@@ -1,0 +1,6 @@
+/** 
+ * Computes an app_id based on the class name for convenience.
+ */
+public static final long applicationID(Class clazz){
+  return app_id(clazz);
+}

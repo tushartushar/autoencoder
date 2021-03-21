@@ -1,0 +1,4 @@
+public void applyLazyFields(MultiGetItemResponse response){
+  setLabel(response.getType());
+  response.getResponse().getSource().entrySet().forEach((field) -> addPropertyLocal(field.getKey(),field.getValue()));
+}

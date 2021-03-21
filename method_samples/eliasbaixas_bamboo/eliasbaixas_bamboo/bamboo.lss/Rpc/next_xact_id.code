@@ -1,0 +1,5 @@
+protected long next_xact_id(){
+  long result=next_xact_id;
+  next_xact_id=(next_xact_id == Long.MAX_VALUE) ? 0 : (next_xact_id + 1);
+  return result;
+}

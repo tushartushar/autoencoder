@@ -1,0 +1,11 @@
+public void close(){
+  if (channel != null) {
+    try {
+      acore.unregisterSelectable(channel);
+      channel.close();
+    }
+ catch (    IOException e) {
+    }
+    channel=null;
+  }
+}

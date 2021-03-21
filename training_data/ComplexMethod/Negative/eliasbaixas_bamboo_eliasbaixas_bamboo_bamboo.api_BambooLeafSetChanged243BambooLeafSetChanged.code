@@ -1,0 +1,4 @@
+public BambooLeafSetChanged(BambooNeighborInfo[] p,BambooNeighborInfo[] s){
+  preds=p;
+  succs=s;
+}

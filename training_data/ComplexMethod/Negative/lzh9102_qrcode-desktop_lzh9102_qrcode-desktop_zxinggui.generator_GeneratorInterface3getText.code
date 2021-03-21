@@ -1,0 +1,4 @@
+/** 
+ * @return the generated text to be encoded
+ */
+String getText() throws GeneratorException ;

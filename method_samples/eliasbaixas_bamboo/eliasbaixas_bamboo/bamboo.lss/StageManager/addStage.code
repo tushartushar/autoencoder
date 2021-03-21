@@ -1,0 +1,3 @@
+public void addStage(String stagename,StageIF stage){
+  _stages.put(stagename,stage);
+}

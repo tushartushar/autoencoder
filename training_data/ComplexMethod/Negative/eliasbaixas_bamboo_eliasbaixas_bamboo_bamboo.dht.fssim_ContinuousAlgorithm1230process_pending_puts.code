@@ -1,0 +1,3 @@
+public void process_pending_puts(LinkedList puts){
+  throw new NoSuchMethodError();
+}

@@ -1,0 +1,21 @@
+protected void handle_fetch_keys_resp(FetchKeysResp resp){
+  if (ae_state == null) {
+    if (logger.isDebugEnabled())     logger.debug("ae_state == null, must have timed out: " + resp);
+    return;
+  }
+  ae_state.last_activity_ms=timer_ms();
+  if (resp.seq != ae_state.fetch_keys_seq) {
+    logger.debug(ae_state + " " + resp+ " has bad seq != "+ ae_state.fetch_node_seq);
+    return;
+  }
+  if (resp.keys == null) {
+    goto_next_node();
+    return;
+  }
+  ae_state.fetched_keys.addAll(resp.keys);
+  Iterator i=resp.keys.iterator();
+  while (i.hasNext()) {
+    StorageManager.Key k=(StorageManager.Key)i.next();
+    dispatch(new StorageManager.GetByKeyReq(k,my_sink,ae_state));
+  }
+}

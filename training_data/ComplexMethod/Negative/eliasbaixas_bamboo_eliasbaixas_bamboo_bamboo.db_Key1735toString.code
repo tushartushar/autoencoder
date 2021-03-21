@@ -1,0 +1,8 @@
+public String toString(){
+  StringBuffer buf=new StringBuffer(100);
+  toStringBuffer(buf);
+  return buf.toString();
+}
+public String toString(){
+  return "(Key time_usec=" + Long.toHexString(time_usec) + " ttl_sec="+ ttl_sec+ " guid="+ GuidTools.guid_to_string(guid)+ " data_hash="+ ByteUtils.print_bytes(data_hash,0,3)+ " put="+ put+ " client_id="+ client_id.getHostAddress()+ ")";
+}

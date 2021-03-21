@@ -1,0 +1,4 @@
+@Override public <V>Iterator<VertexProperty<V>> properties(final String... propertyKeys){
+  checkRemoved();
+  return innerPropertyIterator(propertyKeys);
+}

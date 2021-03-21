@@ -1,0 +1,9 @@
+public LookupState(BigInteger k,BigInteger n,int l,String app,LookupCb c,Object u){
+  key=k;
+  namespace=n;
+  levels=l;
+  cb=c;
+  user_data=u;
+  current_level=levels - 1;
+  application=app;
+}

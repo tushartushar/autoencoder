@@ -1,0 +1,20 @@
+protected void fetch_failed(final NodeInfo ninfo){
+  logger.debug("fetch_failed " + ninfo.url);
+synchronized (inflight) {
+    inflight.remove(ninfo.url);
+  }
+  if (ninfo.id != null) {
+    java.awt.EventQueue.invokeLater(new Runnable(){
+      public void run(){
+        BambooNode node=nodes_by_id.get(ninfo.id);
+        if (node != null) {
+          nodes_by_id.remove(ninfo.id);
+        }
+        if (fetch_fail != null) {
+          acore.register_timer(0,curry(fetch_fail,node));
+        }
+      }
+    }
+);
+  }
+}

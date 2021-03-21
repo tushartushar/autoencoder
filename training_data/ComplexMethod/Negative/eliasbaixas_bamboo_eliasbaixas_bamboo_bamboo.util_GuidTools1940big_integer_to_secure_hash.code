@@ -1,0 +1,15 @@
+public static SecureHash big_integer_to_secure_hash(BigInteger i){
+  byte[] bytes=i.toByteArray();
+  ByteArrayInputBuffer ib=null;
+  if (bytes.length > 20) {
+    if ((bytes.length != 21) || (bytes[0] != 0))     Carp.die("Bad format");
+    ib=new ByteArrayInputBuffer(bytes,bytes.length - 20,20);
+  }
+ else {
+    byte[] new_bytes=new byte[20];
+    System.arraycopy(bytes,0,new_bytes,20 - bytes.length,bytes.length);
+    ib=new ByteArrayInputBuffer(new_bytes);
+  }
+  SHA1Hash result=new SHA1Hash(ib);
+  return result;
+}

@@ -1,0 +1,8 @@
+public void run(){
+  logger.info("starting load");
+  readNext();
+  if (readDone && putsOutstanding == 0) {
+    logger.info("databases loaded successfully");
+    System.exit(0);
+  }
+}

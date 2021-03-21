@@ -1,0 +1,11 @@
+@Override @Transactional(rollbackFor={Exception.class,BSLException.class}) public AccessRights create(AccessRights accessRights){
+  try {
+    AccessRights accessRightsToBeCreated=accessRights;
+    log.info("New Access Right is saving into database with Name :" + accessRights.getAccessRights());
+    return accessRightsRepository.save(accessRightsToBeCreated);
+  }
+ catch (  Exception e) {
+    log.error("Error while saving new Access Right :" + accessRights.getAccessRights(),e);
+    throw new BSLException("err.accessRights.create",e);
+  }
+}

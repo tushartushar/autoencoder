@@ -1,0 +1,15 @@
+public String toString(String prefix){
+  String result=prefix + "Node low=" + low+ " high="+ high+ " min_free="+ min_free+ " offset="+ offset+ " valid="+ valid;
+  if (children == null)   result+=" has no children.";
+ else {
+    result+=" has children:";
+    for (int index=0; index < branching; ++index) {
+      Node child=children[index];
+      result+="\n" + child.toString(prefix + "  ");
+    }
+  }
+  return result;
+}
+public String toString(){
+  return toString("");
+}

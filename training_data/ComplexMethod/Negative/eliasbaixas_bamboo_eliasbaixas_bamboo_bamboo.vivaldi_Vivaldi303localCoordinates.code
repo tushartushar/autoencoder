@@ -1,0 +1,3 @@
+public VirtualCoordinate localCoordinates(){
+  return _my_coordinate;
+}

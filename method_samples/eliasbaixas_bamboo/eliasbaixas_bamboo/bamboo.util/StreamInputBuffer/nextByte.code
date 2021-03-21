@@ -1,0 +1,9 @@
+public byte nextByte(){
+  try {
+    return (byte)is.read();
+  }
+ catch (  IOException e) {
+    error(e);
+    return (byte)0;
+  }
+}

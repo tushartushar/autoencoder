@@ -1,0 +1,1 @@
+public boolean onBleEvent(BleService.Event event,Object data);

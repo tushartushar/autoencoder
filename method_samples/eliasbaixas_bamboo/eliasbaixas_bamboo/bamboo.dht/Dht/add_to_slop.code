@@ -1,0 +1,20 @@
+protected void add_to_slop(BambooRouteDeliver msg,PutReqPayload payload){
+  int i=ttl_to_vdisk(payload.ttl_sec);
+  int storage_size=storage_size(payload);
+  Long l=(Long)slop_usage[i].get(payload.client_id);
+  if (l == null) {
+    slop_usage[i].put(payload.client_id,new Long(storage_size));
+  }
+ else {
+    slop_usage[i].put(payload.client_id,new Long(l.longValue() + storage_size));
+  }
+  slop.addLast(new Object[]{msg,payload});
+  slop_size[i]+=storage_size;
+  if (logger.isDebugEnabled())   logger.debug("added " + payload + " to slop, size="+ slop_size[i]);
+  if (slop.size() == 1) {
+    double rate=disk_avail_rate(payload.ttl_sec);
+    long wait_ms=Math.round(Math.ceil(storage_size / rate));
+    acore.register_timer(wait_ms,slop_to_disk_cb,null);
+    if (logger.isDebugEnabled())     logger.debug("waiting " + wait_ms + " ms to retry");
+  }
+}

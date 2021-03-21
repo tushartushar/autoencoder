@@ -1,0 +1,7 @@
+/** 
+ * Get access to the underlying service.
+ * @return The {@link com.reelyactive.blesdk.service.BleService} instance running.
+ */
+protected BleService getBleService(){
+  return service;
+}

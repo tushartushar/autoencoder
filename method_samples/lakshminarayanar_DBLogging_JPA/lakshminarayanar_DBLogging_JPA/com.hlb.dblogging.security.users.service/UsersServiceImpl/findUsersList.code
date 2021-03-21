@@ -1,0 +1,6 @@
+@Override public List<String> findUsersList(String username){
+  List<String> s1=new ArrayList<String>();
+  String usernameSearchTerm=username + "%";
+  s1=usersRepository.findUserList(usernameSearchTerm);
+  return s1;
+}

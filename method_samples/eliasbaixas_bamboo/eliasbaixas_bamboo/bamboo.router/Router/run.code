@@ -1,0 +1,251 @@
+public void run(){
+  routeInit(dest,applicationID,intermediateUpcall,payload);
+}
+public void run(){
+  routeContinue(src,dest,immediateSource,applicationID,intermediateUpcall,payload);
+}
+public void run(){
+  for (int i=0; i < 3; ++i) {
+    Iterator j=null;
+    if (i == 0)     j=leaf_set.as_list().iterator();
+ else     if (i == 1)     j=rt.as_list().iterator();
+ else     j=reverse_rt.iterator();
+    while (j.hasNext()) {
+      NeighborInfo ni=(NeighborInfo)j.next();
+      if ((!periodic_pings.contains(ni) && (!possibly_down.containsKey(ni)))) {
+        periodic_pings.add(ni);
+        PingMsg outb=new PingMsg(ni.node_id);
+        outb.comp_q=my_sink;
+        outb.user_data=new PeriodicPingCB(ni);
+        outb.timeout_sec=5;
+        dispatch(outb);
+      }
+    }
+  }
+  acore.registerTimer(randomPeriod(periodic_ping_period),pingAlarm);
+}
+public void run(){
+  if (down_nodes.size() > 0) {
+    int which=rand.nextInt(down_nodes.size());
+    Iterator<NodeId> i=down_nodes.iterator();
+    NodeId n=null;
+    while (which-- >= 0)     n=i.next();
+    JoinReq outb=new JoinReq(n,my_node_id,my_guid,0);
+    outb.timeout_sec=10;
+    outb.comp_q=my_sink;
+    outb.user_data=new PartitionCheckCB(n);
+    if (logger.isDebugEnabled())     logger.debug("sending " + outb + " to check for partition");
+    dispatch(outb);
+  }
+ else {
+    if (logger.isDebugEnabled())     logger.debug("no down nodes");
+  }
+  if (partition_check_alarm_period != 0) {
+    acore.registerTimer(randomPeriod(partition_check_alarm_period),this);
+  }
+}
+public void run(){
+  NeighborInfo ni=leaf_set.random_member(rand);
+  if ((ni != null) && (!possibly_down.containsKey(ni))) {
+    LeafSetChanged outb=new LeafSetChanged(ni.node_id,my_guid,leaf_set.as_list());
+    use_as_periodic_ping(ni,outb);
+    outb.want_reply=true;
+    dispatch(outb);
+  }
+  acore.registerTimer(randomPeriod(ls_alarm_period),this);
+}
+public void run(BambooNeighborInfo preds[],BambooNeighborInfo succs[]){
+  application_enqueue(sink,new BambooLeafSetChanged(preds,succs));
+}
+public void run(BambooNeighborInfo added[],BambooNeighborInfo removed[]){
+  application_enqueue(sink,new BambooRoutingTableChanged(added,removed));
+}
+public void run(BambooNeighborInfo added[],BambooNeighborInfo removed[]){
+  application_enqueue(sink,new BambooReverseRoutingTableChanged(added,removed));
+}
+public void run(BigInteger src,BigInteger dest,NodeId immediateSource,Long waitMillis,Long estRTTMillis,QuickSerializable payload){
+  application_enqueue(sink,new BambooRouteUpcall(src,dest,immediateSource,applicationID,false,0,waitMillis.longValue(),estRTTMillis.longValue(),payload));
+}
+public void run(BigInteger src,BigInteger dest,NodeId immediateSource,Long waitMillis,Long estRTTMillis,QuickSerializable payload){
+  application_enqueue(sink,new BambooRouteDeliver(src,dest,immediateSource,applicationID,0,waitMillis.longValue(),estRTTMillis.longValue(),payload));
+}
+public void run(){
+  notify_leaf_set_changed(appInfo);
+  BambooNeighborInfo added[]=new BambooNeighborInfo[rt.size()];
+  int j=0;
+  for (int level=0; level < GUID_DIGITS; ++level) {
+    for (int digit=0; digit < DIGIT_VALUES; ++digit) {
+      NeighborInfo ni=rt.primary(level,digit);
+      if ((ni != null) && (!ni.equals(my_neighbor_info))) {
+        added[j++]=new BambooNeighborInfo(ni.node_id,ni.guid,rtt_ms(ni));
+      }
+    }
+  }
+  if (rtct != null)   rtct.run(added,null);
+  added=new BambooNeighborInfo[reverse_rt.size()];
+  j=0;
+  for (Iterator i=reverse_rt.iterator(); i.hasNext(); ) {
+    NeighborInfo ni=(NeighborInfo)i.next();
+    added[j++]=new BambooNeighborInfo(ni.node_id,ni.guid);
+  }
+  if (rrtct != null)   rrtct.run(added,null);
+}
+public void run(){
+  handleEvent(req);
+}
+public void run(){
+  network=Network.instance(my_node_id);
+  vivaldi=Vivaldi.instance(my_node_id);
+  rpc=Rpc.instance(my_node_id);
+  try {
+    rpc.registerRequestHandler(CoordReq.class,coordReqHandler);
+  }
+ catch (  DuplicateTypeException e) {
+    BUG(e);
+  }
+  start_time_ms=now_ms();
+  if (gateways.isEmpty()) {
+    logger.info("Joined through gateway " + my_node_id);
+    set_initialized();
+    notify_leaf_set_changed();
+  }
+ else {
+    NodeId gateway=gateways.removeFirst();
+    gateways.addLast(gateway);
+    logger.info("Trying to join through gateway " + gateway);
+    dispatch(new JoinReq(gateway,my_node_id,my_guid,0));
+    acore.registerTimer(randomPeriod(10 * 1000),curry(joinAlarm,new Integer(0),new Integer(10 * 1000),new Integer(0)));
+  }
+  acore.registerTimer(randomPeriod(periodic_ping_period),pingAlarm);
+  acore.registerTimer(randomPeriod(COORD_CHECK),expireCoordsAlarm);
+  acore.registerTimer(randomPeriod(send_coord_period),sendCoordsAlarm);
+}
+public void run(){
+  if (rt.size() > 0) {
+    int which=weighted_random_rt_level();
+    int orig_which=which;
+    if (logger.isDebugEnabled())     logger.debug("RT AE on level " + which);
+    NeighborInfo ni=rt.random_neighbor(which,rand);
+    int highest_level=rt.highest_level();
+    while ((ni == null) && (which <= highest_level))     ni=rt.random_neighbor(++which,rand);
+    if (ni == null)     BUG("level=" + which + " highest="+ rt.highest_level()+ " orig_level="+ orig_which+ " rt=\n"+ rt);
+    if (!possibly_down.containsKey(ni)) {
+      RoutingTableReq outb=new RoutingTableReq(ni.node_id,my_guid,which);
+      use_as_periodic_ping(ni,outb);
+      dispatch(outb);
+    }
+  }
+  acore.registerTimer(randomPeriod(near_rt_alarm_period),this);
+}
+public void run(){
+  int digit=weighted_random_rt_level();
+  int value=rand.nextInt(DIGIT_VALUES);
+  int[] lookup_digits=new int[GUID_DIGITS];
+  for (int i=0; i < GUID_DIGITS; ++i) {
+    if (i < digit)     lookup_digits[i]=my_digits[i];
+ else     if (i == digit)     lookup_digits[i]=value;
+ else     lookup_digits[i]=(byte)rand.nextInt(DIGIT_VALUES);
+  }
+  BigInteger lookup_guid=rt.digits_to_guid(lookup_digits);
+  logger.debug("looking for a closer neighbor at level " + digit + " and value "+ Integer.toHexString(value)+ " by looking up "+ GuidTools.guid_to_string(lookup_guid));
+  BambooRouteInit outb=new BambooRouteInit(lookup_guid,0,false,false,new LookupReqPayload(my_node_id));
+  handleEvent(outb);
+  acore.registerTimer(randomPeriod(far_rt_alarm_period),this);
+}
+public void run(){
+  int highest=rt.highest_level();
+  if (logger.isDebugEnabled())   logger.debug("highest=" + highest);
+  Set<int[]> choices=new LinkedHashSet<int[]>();
+  for (int digit=0; digit <= highest; ++digit) {
+    for (int value=0; value < DIGIT_VALUES; ++value) {
+      NeighborInfo ni=rt.primary(digit,value);
+      if (ni == null)       choices.add(new int[]{digit,value});
+      if (logger.isDebugEnabled())       logger.debug("digit=" + digit + ", value="+ value+ ", neighbor="+ (ni == null ? "null" : GuidTools.guid_to_string(ni.guid)));
+    }
+  }
+  if (choices.size() != 0) {
+    int which=rand.nextInt(choices.size());
+    int digit=0, value=0;
+{
+      Iterator<int[]> i=choices.iterator();
+      while (which-- > 0)       i.next();
+      int[] dv=i.next();
+      digit=dv[0];
+      value=dv[1];
+    }
+    int[] lookup_digits=new int[GUID_DIGITS];
+    for (int i=0; i < GUID_DIGITS; ++i) {
+      if (i < digit)       lookup_digits[i]=my_digits[i];
+ else       if (i == digit)       lookup_digits[i]=value;
+ else       lookup_digits[i]=(byte)rand.nextInt(DIGIT_VALUES);
+    }
+    BigInteger lookup_guid=rt.digits_to_guid(lookup_digits);
+    if (logger.isDebugEnabled())     logger.debug("trying to fill hole at digit=" + digit + " and value="+ Integer.toHexString(value)+ " by looking up "+ GuidTools.guid_to_string(lookup_guid));
+    BambooRouteInit outb=new BambooRouteInit(lookup_guid,0,false,false,new LookupReqPayload(my_node_id));
+    handleEvent(outb);
+  }
+  DustDevil.acore_instance().registerTimer(randomPeriod(lookup_rt_alarm_period),this);
+}
+public void run(Integer tries,Integer period,Integer revTTL){
+  if (!initialized) {
+    tries=new Integer(tries.intValue() + 1);
+    revTTL=new Integer(revTTL.intValue() + 1);
+    period=new Integer(period.intValue() >= 30 * 1000 ? 60 * 1000 : period.intValue() * 2);
+    int divisor=Math.max(3,gateways.size());
+    NodeId gateway=gateways.removeFirst();
+    gateways.addLast(gateway);
+    logger.info("Join try " + tries + " timed out.  Gateway="+ gateway+ ".  Trying again "+ " with rev_ttl="+ revTTL.intValue() / divisor);
+    dispatch(new JoinReq(gateway,my_node_id,my_guid,revTTL.intValue() / divisor));
+    acore.registerTimer(randomPeriod(period.intValue()),curry(this,tries,period,revTTL));
+  }
+}
+public void run(){
+  handleEvent(orig);
+}
+public BigInteger run(BigInteger dist,Long lat){
+  return dist;
+}
+public BigInteger run(BigInteger dist,Long lat){
+  return dist.divide(BigInteger.valueOf(lat.longValue()));
+}
+public void run(BigInteger id){
+  PendingLookupInfo pl=pending_lookups.get(id);
+  if ((pl != null) && (now_ms() > 60 * 1000 + pl.last_start_time)) {
+    pl.last_start_time=now_ms();
+    BambooRouteInit outb=new BambooRouteInit(id,0,false,false,new LookupReqPayload(my_node_id));
+    classifier.dispatch_later(outb,0);
+    acore.registerTimer(60 * 1000,curry(this,id));
+  }
+}
+public void run(){
+  long timer_ms=timer_ms();
+  Iterator<NeighborInfo> i=coords.keySet().iterator();
+  while (i.hasNext()) {
+    NeighborInfo ni=i.next();
+    Pair<VirtualCoordinate,Long> p=coords.get(ni);
+    if (p.second.longValue() + COORD_CHECK > timer_ms)     i.remove();
+  }
+  acore.registerTimer(randomPeriod(COORD_CHECK),this);
+}
+public void run(){
+  if (sendCoordsShuffle.isEmpty()) {
+    Set<NeighborInfo> s=leaf_set.as_set();
+    s.addAll(rt.as_list());
+    sendCoordsShuffle.addAll(s);
+  }
+  if (!sendCoordsShuffle.isEmpty()) {
+    NeighborInfo ni=sendCoordsShuffle.removeFirst();
+    CoordReq req=new CoordReq(my_guid,vivaldi.localCoordinates());
+    rpc.sendRequest(ni.node_id,req,5,CoordResp.class,curry(coordRespHandler,ni),null);
+  }
+  acore.registerTimer(randomPeriod(send_coord_period),this);
+}
+public void run(NeighborInfo ni,CoordResp resp){
+  coords.put(ni,Pair.create(resp.coords,new Long(timer_ms())));
+}
+public void run(InetSocketAddress peer,CoordReq req,Object respTok){
+  NeighborInfo other=new NeighborInfo(NodeId.create(peer),req.srcID);
+  coords.put(other,Pair.create(req.srcCoords,new Long(timer_ms())));
+  VirtualCoordinate local=vivaldi.localCoordinates();
+  rpc.sendResponse(new CoordResp(vivaldi.localCoordinates()),respTok);
+}

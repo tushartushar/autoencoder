@@ -1,0 +1,32 @@
+public void timer_cb(Object user_data){
+  dispatch(new VivaldiRequestVC(my_sink,null));
+}
+public void timer_cb(Object user_data){
+  if (preds != null) {
+    for (int i=preds.length - 1; i >= 0; --i)     dispatch(new NetworkLatencyReq(preds[i].node_id,my_sink,preds[i].node_id));
+  }
+  if (succs != null) {
+    for (int i=succs.length - 1; i >= 0; --i)     dispatch(new NetworkLatencyReq(succs[i].node_id,my_sink,succs[i].node_id));
+  }
+  for (int i=0; i <= rt.highest_level(); ++i) {
+    for (int j=0; j < DIGIT_VALUES; ++j) {
+      RoutingTable.RoutingEntry re=rt.primary_re(i,j);
+      if (re != null) {
+        BambooNeighborInfo ni=new BambooNeighborInfo(re.ni.node_id,re.ni.guid,re.rtt_ms);
+        dispatch(new NetworkLatencyReq(re.ni.node_id,my_sink,re.ni.node_id));
+      }
+    }
+  }
+  acore.register_timer(10 * 750 + rand.nextInt(10 * 500),periodic_timer_cb,null);
+}
+public void timer_cb(Object user_data){
+  ConnState state=(ConnState)user_data;
+  if (state.outstandingReqs > 0) {
+    acore.register_timer(60 * 1000,conn_timeout_cb,state);
+  }
+ else   if (state.skey.isValid()) {
+    InetSocketAddress remote=(InetSocketAddress)state.channel.socket().getRemoteSocketAddress();
+    logger.info("timeout on connection to " + remote.getAddress().getHostAddress() + ":"+ remote.getPort());
+    close(state);
+  }
+}

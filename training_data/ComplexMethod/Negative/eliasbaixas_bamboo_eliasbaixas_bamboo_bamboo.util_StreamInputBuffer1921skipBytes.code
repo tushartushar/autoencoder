@@ -1,0 +1,8 @@
+public void skipBytes(int length){
+  try {
+    is.skip(length);
+  }
+ catch (  IOException e) {
+    error(e);
+  }
+}

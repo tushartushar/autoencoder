@@ -1,0 +1,7 @@
+/** 
+ * Called by the class in order to check if a scan should be started.<br> Override this method if you need to change the behaviour of the scan.
+ * @return true if the conditions for a scan are present, false otherwise.
+ */
+protected boolean shouldStartScan(){
+  return isReelyAware(getCurrentActivity());
+}

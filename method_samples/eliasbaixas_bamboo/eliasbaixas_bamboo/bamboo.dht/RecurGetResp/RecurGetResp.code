@@ -1,0 +1,36 @@
+public RecurGetResp(NodeId dest,long q,Set<NodeId> r,Set<NodeId> s,LinkedList<Pair<Key,ByteBuffer>> v,boolean a,NodeId t,int m,NodeId c){
+  super(dest,false);
+  seq=q;
+  replicas=r;
+  synced=s;
+  values=v;
+  allRead=a;
+  thisReplica=t;
+  maxvals=m;
+  client=c;
+}
+public RecurGetResp(InputBuffer buffer) throws QSException {
+  super(buffer);
+  seq=buffer.nextLong();
+  int cnt=buffer.nextInt();
+  replicas=new LinkedHashSet<NodeId>();
+  synced=new LinkedHashSet<NodeId>();
+  while (cnt-- > 0) {
+    NodeId n=new NodeId(buffer);
+    replicas.add(n);
+    if (buffer.nextBoolean())     synced.add(n);
+  }
+  cnt=buffer.nextInt();
+  values=new LinkedList<Pair<Key,ByteBuffer>>();
+  while (cnt-- > 0) {
+    Key k=new Key(buffer);
+    int len=buffer.nextInt();
+    byte b[]=new byte[len];
+    buffer.nextBytes(b,0,len);
+    values.addLast(Pair.create(k,ByteBuffer.wrap(b)));
+  }
+  allRead=buffer.nextBoolean();
+  thisReplica=new NodeId(buffer);
+  maxvals=buffer.nextInt();
+  client=new NodeId(buffer);
+}

@@ -1,0 +1,12 @@
+/** 
+ * Callback method called from the OS on each BLE device sighting. This method is invoked on the AIDL handler thread, so all methods called here must be synchronized.
+ * @param device The device discovered
+ * @param rssi The signal strength in dBm it was received at
+ * @param scanRecordBytes The raw byte payload buffer
+ */
+@Override public void onLeScan(BluetoothDevice device,int rssi,byte[] scanRecordBytes){
+  long currentTimeInNanos=TimeUnit.MILLISECONDS.toNanos(getClock().currentTimeMillis());
+  ScanResult result=new ScanResult(device,ScanRecord.parseFromBytes(scanRecordBytes),rssi,currentTimeInNanos);
+  onScanResult(device.getAddress(),result);
+  if (crashResolver != null)   crashResolver.notifyScannedDevice(device,this);
+}

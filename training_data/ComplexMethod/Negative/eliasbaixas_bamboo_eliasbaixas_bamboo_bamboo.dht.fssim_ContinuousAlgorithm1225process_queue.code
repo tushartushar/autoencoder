@@ -1,0 +1,34 @@
+public void process_queue(){
+  assert !queue.isEmpty();
+  long now_ms=sim.now_ms();
+  storage_tree.shiftTime(now_ms);
+  PriorityQueue pq=new PriorityQueue(queue.size());
+  for (  Integer client : queue.keySet()) {
+    LinkedList<MyPutInfo> ll=queue.get(client);
+    MyPutInfo pi=ll.getFirst();
+    pq.add(pi,pi.start_time);
+  }
+  while (!pq.isEmpty()) {
+    MyPutInfo pi=(MyPutInfo)pq.removeFirst();
+    long ttl_ms=pi.ttl_sec * params.TTL_MULT;
+    if (storage_tree.addPut(ttl_ms,pi.size)) {
+      accept_put(pi);
+      Integer client=new Integer(pi.client);
+      LinkedList<MyPutInfo> ll=queue.get(client);
+      ll.removeFirst();
+      if (ll.isEmpty())       queue.remove(client);
+ else {
+        pi=ll.getFirst();
+        pq.add(pi,pi.start_time);
+      }
+    }
+ else {
+      waiting_ms=storage_tree.nextAccept(ttl_ms,pi.size);
+      sim.register_event(waiting_ms - now_ms,waiting_cb,null);
+      waiting_put=pi;
+      if (DEBUG)       System.err.println(sim.now_ms() + ": waiting until " + waiting_ms+ " to accept put from client "+ waiting_put.client);
+      break;
+    }
+  }
+  assert queue.isEmpty() || (waiting_put != null);
+}

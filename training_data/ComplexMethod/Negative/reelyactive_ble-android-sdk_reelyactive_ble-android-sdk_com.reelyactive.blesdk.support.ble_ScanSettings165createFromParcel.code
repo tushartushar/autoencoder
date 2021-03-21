@@ -1,0 +1,3 @@
+@Override public ScanSettings createFromParcel(Parcel in){
+  return new ScanSettings(in);
+}

@@ -1,0 +1,9 @@
+public void force_add(NeighborInfo ni,double rtt_ms){
+  int[] dest_digits=guid_to_digits(ni.guid);
+  int fd=calc_first_diff(dest_digits);
+  if (fd == GUID_DIGITS)   throw new IllegalArgumentException("can't force_add self");
+  if (table[fd][dest_digits[fd]] == null)   ++size;
+  RoutingEntry re=new RoutingEntry(ni,rtt_ms);
+  table[fd][dest_digits[fd]]=re;
+  if (fd > highest_level)   highest_level=fd;
+}

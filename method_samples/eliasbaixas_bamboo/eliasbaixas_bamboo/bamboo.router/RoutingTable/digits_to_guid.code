@@ -1,0 +1,3 @@
+public BigInteger digits_to_guid(int[] digits){
+  return GuidTools.digits_to_guid(digits,BITS_PER_DIGIT,GUID_DIGITS,DIGIT_VALUES);
+}

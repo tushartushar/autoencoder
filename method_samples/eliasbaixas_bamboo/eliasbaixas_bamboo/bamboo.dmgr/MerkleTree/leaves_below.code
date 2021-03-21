@@ -1,0 +1,4 @@
+public long leaves_below(){
+  if (hash == null)   throw new IllegalStateException("not valid");
+  return leaves_below;
+}

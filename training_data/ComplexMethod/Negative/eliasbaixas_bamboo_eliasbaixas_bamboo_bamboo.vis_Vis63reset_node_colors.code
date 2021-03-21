@@ -1,0 +1,9 @@
+protected void reset_node_colors(){
+  BambooNode current_node;
+  Iterator IT=FNIT.get_all_nodes();
+  while (IT.hasNext()) {
+    current_node=(BambooNode)IT.next();
+    current_node.color_node_default();
+    current_node.hide_guid();
+  }
+}

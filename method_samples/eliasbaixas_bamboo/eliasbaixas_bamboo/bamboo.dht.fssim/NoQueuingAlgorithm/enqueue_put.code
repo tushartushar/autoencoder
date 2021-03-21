@@ -1,0 +1,42 @@
+public void enqueue_put(int client,int size,int ttl_sec,final PutResultCb cb,Object user_data){
+  if (client + 1 > client_count)   client_count=client + 1;
+  long lowest_ft=Long.MAX_VALUE;
+  Iterator i=accept_virtual_times.iterator();
+  while (i.hasNext()) {
+    Object[] pair=(Object[])i.next();
+    long then=((Long)pair[0]).longValue();
+    long ft=((Long)pair[1]).longValue();
+    if (then + period * 2 < sim.now_ms())     i.remove();
+ else     lowest_ft=Math.min(lowest_ft,ft);
+  }
+  long lft=-1;
+{
+    Long l=(Long)latest_finish_times.get(new Integer(client));
+    if (l != null)     lft=l.longValue();
+  }
+  long ft=start_time(client) + size * ttl_sec;
+  if (DEBUG)   System.err.print(sim.now_ms() + ": vt=" + virtual_time+ " client="+ client+ " last_ft="+ lft+ " lowest_ft="+ lowest_ft+ ", st="+ start_time(client)+ " ft="+ ft);
+  if (ft > lowest_ft) {
+    if (DEBUG)     System.err.println(" CAPACITY");
+    cb.cb(false,false);
+    return;
+  }
+  storage_tree.shift_time(sim.now_ms() / 1000);
+  if (storage_tree.add_put(ttl_sec,size)) {
+    if (DEBUG)     System.err.println(" SUCCESS");
+    accept_put(new PutInfo(client,size,ttl_sec,cb,user_data));
+    latest_finish_times.put(new Integer(client),new Long(ft));
+    virtual_time=Math.max(ft - MAX_PUT - 1,virtual_time);
+    Object[] pair={new Long(sim.now_ms()),new Long(ft)};
+    accept_virtual_times.addLast(pair);
+    cb.cb(true,false);
+    return;
+  }
+  if (DEBUG)   System.err.println(" AGAIN");
+  sim.register_event(1000,new Simulator.EventCb(){
+    public void cb(    Object not_used){
+      cb.cb(false,true);
+    }
+  }
+,null);
+}

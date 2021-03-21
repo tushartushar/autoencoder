@@ -1,0 +1,6 @@
+/** 
+ * Returns the lowest timestamp covered by the child at the  current iterator position.
+ */
+protected long where(int position){
+  return start + position * (1L << ((level - 1) * expansion));
+}

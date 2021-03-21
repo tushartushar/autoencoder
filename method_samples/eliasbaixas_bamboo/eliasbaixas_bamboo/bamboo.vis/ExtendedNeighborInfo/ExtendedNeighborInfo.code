@@ -1,0 +1,10 @@
+public ExtendedNeighborInfo(NeighborInfo n){
+  super(n.node_id,n.guid);
+}
+public ExtendedNeighborInfo(NodeId n,BigInteger g){
+  super(n,g);
+}
+public ExtendedNeighborInfo(NodeId a,BigInteger i,long r){
+  super(a,i);
+  rtt_ms=r;
+}

@@ -1,0 +1,11 @@
+protected void invalidate_merkle_trees(BigInteger guid,long time_usec){
+  Iterator i=merkle_trees.keySet().iterator();
+  while (i.hasNext()) {
+    GuidRange p=(GuidRange)i.next();
+    if (in_range_mod(p.low,p.high,guid)) {
+      if (logger.isDebugEnabled())       logger.debug("invalidating tree");
+      TreeState ts=(TreeState)merkle_trees.get(p);
+      ts.tree.root().invalidate_path(time_usec);
+    }
+  }
+}

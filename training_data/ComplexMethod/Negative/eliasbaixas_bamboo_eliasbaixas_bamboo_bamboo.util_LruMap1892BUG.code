@@ -1,0 +1,5 @@
+protected void BUG(String msg){
+  System.err.println(msg);
+  Thread.dumpStack();
+  System.exit(1);
+}

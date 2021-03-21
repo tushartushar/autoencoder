@@ -1,0 +1,7 @@
+ApplicationInfo(Thunk2<BambooNeighborInfo[],BambooNeighborInfo[]> leafSetChanged,Thunk2<BambooNeighborInfo[],BambooNeighborInfo[]> routingTableChanged,Thunk2<BambooNeighborInfo[],BambooNeighborInfo[]> reverseRoutingTableChanged,Thunk6<BigInteger,BigInteger,NodeId,Long,Long,QuickSerializable> routeUpcall,Thunk6<BigInteger,BigInteger,NodeId,Long,Long,QuickSerializable> routeDeliver){
+  this.leafSetChanged=leafSetChanged;
+  this.routingTableChanged=routingTableChanged;
+  this.reverseRoutingTableChanged=reverseRoutingTableChanged;
+  this.routeUpcall=routeUpcall;
+  this.routeDeliver=routeDeliver;
+}

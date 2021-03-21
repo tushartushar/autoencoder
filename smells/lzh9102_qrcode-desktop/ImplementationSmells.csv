@@ -1,0 +1,58 @@
+Project Name,Package Name,Type Name,Method Name,Implementation Smell,Cause of the Smell
+lzh9102_qrcode-desktop,zxinggui,ViewPlainTextWindow,init_widgets,Magic Number,The method contains a magic number: 400
+lzh9102_qrcode-desktop,zxinggui,ViewPlainTextWindow,init_widgets,Magic Number,The method contains a magic number: 300
+lzh9102_qrcode-desktop,zxinggui,ImageHelper,cropImage,Long Parameter List,The method has 5 parameters. 
+lzh9102_qrcode-desktop,zxinggui,BufferedImageLuminanceSource,BufferedImageLuminanceSource,Long Parameter List,The method has 5 parameters. 
+lzh9102_qrcode-desktop,zxinggui,ScreenCaptureWindow,paint,Magic Number,The method contains a magic number: 2
+lzh9102_qrcode-desktop,zxinggui,ScreenCaptureWindow,paint,Magic Number,The method contains a magic number: 2
+lzh9102_qrcode-desktop,zxinggui,ScreenCaptureWindow,drawThickRect,Magic Number,The method contains a magic number: 2
+lzh9102_qrcode-desktop,zxinggui,ScreenCaptureWindow,drawThickRect,Magic Number,The method contains a magic number: 2
+lzh9102_qrcode-desktop,zxinggui,RectArea,dimension,Magic Number,The method contains a magic number: 2
+lzh9102_qrcode-desktop,zxinggui,RectArea,isEmpty,Magic Number,The method contains a magic number: 2
+lzh9102_qrcode-desktop,zxinggui,MainWindow,showAboutDialog,Long Statement,The length of the statement "String msg="QRCode Desktop` Copyright 2012 Timothy Lin <lzh9102@gmail.com>\n" + "\n" + "This program is free software licensed under the \n"+ "Apache Lincense Version 2.\n\n"+ "For more information` please see the project page: \n"+ "http://code.google.com/p/qrcode-desktop/"+ "\n";" is 282.
+lzh9102_qrcode-desktop,zxinggui,MainWindow,captureScreen,Empty catch clause,The method has an empty catch block.
+lzh9102_qrcode-desktop,zxinggui,MainWindow,captureScreen,Magic Number,The method contains a magic number: 500
+lzh9102_qrcode-desktop,zxinggui,MainWindow,actionPerformed,Complex Method,Cyclomatic complexity of the method is 8
+lzh9102_qrcode-desktop,zxinggui,ImageDisplay,paintComponent,Magic Number,The method contains a magic number: 2
+lzh9102_qrcode-desktop,zxinggui,ImageDisplay,paintComponent,Magic Number,The method contains a magic number: 2
+lzh9102_qrcode-desktop,zxinggui.generator,UrlGenerator,UrlGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,UrlGenerator,UrlGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,UrlGenerator,UrlGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,UrlGenerator,UrlGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,UrlGenerator,UrlGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,EmailGenerator,EmailGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,EmailGenerator,EmailGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,EmailGenerator,EmailGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,EmailGenerator,EmailGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,EmailGenerator,EmailGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,ContactGenerator,encodeMeCard,Complex Method,Cyclomatic complexity of the method is 8
+lzh9102_qrcode-desktop,zxinggui.generator,ContactGenerator,getPhoneNumberField,Long Statement,The length of the statement "if (!number.isEmpty() && !Validator.isValidPhoneNumber(number)) throw new GeneratorException("Incorrect phone number."`txtPhoneNumber);" is 135.
+lzh9102_qrcode-desktop,zxinggui.generator,ContactGenerator,getEmailField,Long Statement,The length of the statement "if (!email.isEmpty() && !Validator.isValidEmail(email)) throw new GeneratorException("Incorrect Email address."`txtEmail);" is 122.
+lzh9102_qrcode-desktop,zxinggui.generator,ContactGenerator,getParsingPriority,Magic Number,The method contains a magic number: 10
+lzh9102_qrcode-desktop,zxinggui.generator,ContactGenerator,parseMeCard,Complex Method,Cyclomatic complexity of the method is 27
+lzh9102_qrcode-desktop,zxinggui.generator,ContactGenerator,parseMeCard,Magic Number,The method contains a magic number: 2
+lzh9102_qrcode-desktop,zxinggui.generator,ContactGenerator,parseVCard,Complex Method,Cyclomatic complexity of the method is 25
+lzh9102_qrcode-desktop,zxinggui.generator,ContactGenerator,parseVCard,Magic Number,The method contains a magic number: 2
+lzh9102_qrcode-desktop,zxinggui.generator,PhoneNumberGenerator,PhoneNumberGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,PhoneNumberGenerator,PhoneNumberGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,PhoneNumberGenerator,PhoneNumberGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,PhoneNumberGenerator,PhoneNumberGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,PhoneNumberGenerator,PhoneNumberGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,SmsGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,SmsGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,SmsGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,SmsGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,SmsGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,SmsGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,SmsGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,SmsGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,SmsGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,SmsGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,SmsGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,SmsGenerator,SmsGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,PlainTextGenerator,PlainTextGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,PlainTextGenerator,PlainTextGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,PlainTextGenerator,PlainTextGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,PlainTextGenerator,PlainTextGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,PlainTextGenerator,PlainTextGenerator,Magic Number,The method contains a magic number: 5
+lzh9102_qrcode-desktop,zxinggui.generator,PlainTextGenerator,PlainTextGenerator,Magic Number,The method contains a magic number: 5

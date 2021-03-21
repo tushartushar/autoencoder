@@ -1,0 +1,24 @@
+protected void create_network_stage(String name,String node_id_str,StageManager mgr,ConfigData config_data,LinkedList classifiers) throws Exception {
+  NodeId node_id=null;
+  try {
+    node_id=new NodeId(node_id_str);
+  }
+ catch (  ostore.util.NodeId.BadFormat e) {
+    logger.fatal("node_id must be an IP:port tuple");
+    System.exit(1);
+  }
+catch (  UnknownHostException e) {
+    logger.fatal("unknown host: " + node_id_str);
+    System.exit(1);
+  }
+  Classifier classifier=Classifier.getClassifier(node_id);
+  classifier.set_timer_cb(create_timer_cb(classifier));
+  classifiers.addLast(classifier);
+  InetSocketAddress my_addr=new InetSocketAddress(node_id.address(),node_id.port());
+  EventHandlerIF network=create_network(my_addr);
+  SinkIF sink=new DustDevilSink(network,Thread.currentThread());
+  StageIF stage=new SimulatorStage(name,new StageWrapper(network),sink);
+  config_data.setStage(stage);
+  network.init(config_data);
+  mgr.addStage(stage.getName(),stage);
+}

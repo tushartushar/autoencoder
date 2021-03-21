@@ -1,0 +1,99 @@
+public void process_pending_puts(LinkedList puts){
+  PriorityQueue pq=new PriorityQueue(clients.size());
+  int widx=(int)((sim.now_ms() / period) % window_size);
+  Iterator i=clients.keySet().iterator();
+  int t=0;
+  while (i.hasNext()) {
+    Integer client=(Integer)i.next();
+    ClientInfo cinfo=(ClientInfo)clients.get(client);
+    cinfo.total_requested-=cinfo.requested[widx];
+    cinfo.requested[widx]=0;
+    cinfo.total_accepted-=cinfo.accepted[widx];
+    cinfo.accepted[widx]=0;
+    if (requested) {
+      t+=cinfo.total_requested;
+      pq.add(client,cinfo.total_requested);
+    }
+ else {
+      t+=cinfo.total_accepted;
+      pq.add(client,cinfo.total_accepted);
+    }
+  }
+  if (puts.isEmpty())   return;
+  i=puts.iterator();
+  HashSet new_clients=new HashSet();
+  HashSet put_clients=new HashSet();
+  while (i.hasNext()) {
+    PutInfo pi=(PutInfo)i.next();
+    Integer client=new Integer(pi.client);
+    ClientInfo cinfo=(ClientInfo)clients.get(client);
+    put_clients.add(client);
+    if ((!clients.containsKey(client)) && (!new_clients.contains(client))) {
+      pq.add(client,0);
+      new_clients.add(client);
+    }
+  }
+  int n=pq.size();
+  HashSet below=new HashSet();
+  while (true) {
+    double nth=((double)t) / n;
+    while ((!pq.isEmpty()) && (pq.getFirstPriority() <= nth)) {
+      Integer client=(Integer)pq.getFirst();
+      t-=pq.getFirstPriority();
+      n-=1;
+      assert t >= 0;
+      assert n >= 0;
+      pq.removeFirst();
+      if (put_clients.contains(client))       below.add(client);
+    }
+    if (!below.isEmpty())     break;
+  }
+  Integer accepted_client=null;
+  if (use_last_accept) {
+    PriorityQueue la=new PriorityQueue(below.size());
+    i=below.iterator();
+    while (i.hasNext()) {
+      Integer client=(Integer)i.next();
+      ClientInfo cinfo=(ClientInfo)clients.get(client);
+      if (cinfo == null)       la.add(client,0);
+ else       la.add(client,cinfo.last_accept);
+    }
+    accepted_client=(Integer)la.getFirst();
+  }
+ else {
+    int which=rand.nextInt(below.size());
+    i=below.iterator();
+    while (which-- >= 0)     accepted_client=(Integer)i.next();
+  }
+  PutInfo accepted=null;
+  i=puts.iterator();
+  while (i.hasNext()) {
+    PutInfo pi=(PutInfo)i.next();
+    if ((accepted == null) && (pi.client == accepted_client.intValue())) {
+      accepted=pi;
+      pi.cb.cb(true,false);
+    }
+ else     pi.cb.cb(false,false);
+  }
+  accept_put(accepted);
+  ClientInfo cinfo=(ClientInfo)clients.get(accepted_client);
+  if (cinfo == null) {
+    cinfo=new ClientInfo(window_size);
+    clients.put(accepted_client,cinfo);
+  }
+  cinfo.last_accept=sim.now_ms();
+  cinfo.accepted[widx]=accepted.size;
+  cinfo.total_accepted+=accepted.size;
+  i=puts.iterator();
+  while (i.hasNext()) {
+    PutInfo pi=(PutInfo)i.next();
+    Integer client=new Integer(pi.client);
+    cinfo=(ClientInfo)clients.get(client);
+    if (cinfo == null) {
+      cinfo=new ClientInfo(window_size);
+      clients.put(client,cinfo);
+    }
+    cinfo.requested[widx]+=1;
+    cinfo.total_requested+=1;
+  }
+}

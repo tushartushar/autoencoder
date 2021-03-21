@@ -1,0 +1,32 @@
+private void saveState(){
+  FileOutputStream outputStream=null;
+  OutputStreamWriter writer=null;
+  lastStateSaveTime=new Date().getTime();
+  try {
+    outputStream=context.openFileOutput(DISTINCT_BLUETOOTH_ADDRESSES_FILE,Context.MODE_PRIVATE);
+    writer=new OutputStreamWriter(outputStream);
+    writer.write(lastBluetoothCrashDetectionTime + "\n");
+    writer.write(detectedCrashCount + "\n");
+    writer.write(recoveryAttemptCount + "\n");
+    writer.write(lastRecoverySucceeded ? "1\n" : "0\n");
+synchronized (distinctBluetoothAddresses) {
+      for (      String mac : distinctBluetoothAddresses) {
+        writer.write(mac);
+        writer.write("\n");
+      }
+    }
+  }
+ catch (  IOException e) {
+    Log.w(TAG,"Can't write macs to " + DISTINCT_BLUETOOTH_ADDRESSES_FILE);
+  }
+ finally {
+    if (writer != null) {
+      try {
+        writer.close();
+      }
+ catch (      IOException e1) {
+      }
+    }
+  }
+  if (isDebugEnabled())   Log.d(TAG,"Wrote " + distinctBluetoothAddresses.size() + " bluetooth addresses");
+}

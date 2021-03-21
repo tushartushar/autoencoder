@@ -1,0 +1,3 @@
+public void setJournalSequence(String journalSequence){
+  this.journalSequence=journalSequence;
+}

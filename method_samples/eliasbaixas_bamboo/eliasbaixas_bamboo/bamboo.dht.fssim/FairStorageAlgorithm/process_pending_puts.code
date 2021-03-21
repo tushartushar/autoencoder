@@ -1,0 +1,32 @@
+public void process_pending_puts(LinkedList puts){
+  if (puts.isEmpty())   return;
+  Iterator i=puts.iterator();
+  HashSet put_clients=new HashSet();
+  while (i.hasNext()) {
+    PutInfo pi=(PutInfo)i.next();
+    Integer client=new Integer(pi.client);
+    put_clients.add(client);
+  }
+  PriorityQueue pq=new PriorityQueue(put_clients.size());
+  int t=0;
+  i=put_clients.iterator();
+  while (i.hasNext()) {
+    Integer client=(Integer)i.next();
+    Long count=(Long)storage_by_client.get(client);
+    long c=(count == null) ? 0 : count.longValue();
+    t+=c;
+    pq.add(client,c);
+  }
+  Integer accepted_client=(Integer)pq.getFirst();
+  PutInfo accepted=null;
+  i=puts.iterator();
+  while (i.hasNext()) {
+    PutInfo pi=(PutInfo)i.next();
+    if ((accepted == null) && (pi.client == accepted_client.intValue())) {
+      accepted=pi;
+      pi.cb.cb(true,false);
+    }
+ else     pi.cb.cb(false,false);
+  }
+  accept_put(accepted);
+}

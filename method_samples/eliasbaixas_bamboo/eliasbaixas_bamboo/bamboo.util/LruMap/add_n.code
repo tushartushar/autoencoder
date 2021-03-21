@@ -1,0 +1,7 @@
+protected void add_n(Node n){
+  n.succ=first;
+  n.pred=null;
+  if (first != null)   first.pred=n;
+  first=n;
+  if (last == null)   last=first;
+}

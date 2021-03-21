@@ -1,0 +1,11 @@
+public LinkedList<NeighborInfo> as_list(){
+  LinkedList<NeighborInfo> result=new LinkedList<NeighborInfo>();
+  for (int digit=0; digit < GUID_DIGITS; ++digit) {
+    for (int value=0; value < DIGIT_VALUES; ++value) {
+      if ((table[digit][value] != null) && (table[digit][value] != my_routing_entry)) {
+        result.addLast(table[digit][value].ni);
+      }
+    }
+  }
+  return result;
+}

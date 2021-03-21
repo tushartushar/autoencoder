@@ -1,0 +1,9 @@
+@Override public Iterator<Vertex> vertices(){
+  return elasticDocVertexHandler.vertices();
+}
+@Override public Iterator<? extends Vertex> vertices(Object[] vertexIds){
+  return elasticDocVertexHandler.vertices(vertexIds);
+}
+@Override public Iterator<Vertex> vertices(Predicates predicates){
+  return elasticDocVertexHandler.vertices(predicates);
+}

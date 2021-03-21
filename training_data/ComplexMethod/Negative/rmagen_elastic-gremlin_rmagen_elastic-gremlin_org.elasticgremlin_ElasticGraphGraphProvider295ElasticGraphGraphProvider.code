@@ -1,0 +1,11 @@
+public ElasticGraphGraphProvider() throws IOException, ExecutionException, InterruptedException {
+  System.setProperty("build.dir",System.getProperty("user.dir") + "\\build");
+  String path=new java.io.File(".").getCanonicalPath() + "\\data";
+  File file=new File(path);
+  FileUtils.deleteQuietly(file);
+  this.port=findFreePort();
+  node=ElasticClientFactory.createNode(CLUSTER_NAME,false,port);
+  client=node.client();
+  final ClusterHealthResponse clusterHealth=client.admin().cluster().prepareHealth().setTimeout(TimeValue.timeValueSeconds(10)).setWaitForGreenStatus().execute().get();
+  if (clusterHealth.isTimedOut())   System.out.print(clusterHealth.getStatus());
+}

@@ -1,0 +1,53 @@
+/** 
+ * Decodes (aka "deserializes") an opaque value, which is nothing more than a series of octets (or 8 bits wide bytes). Because the length of the opaque value is given, we don't need to retrieve it from the XDR stream. This is different from {@link #xdrDecodeOpaque(byte[],int,int)} wherefirst the length of the opaque value is retrieved from the XDR stream.
+ * @param length Length of opaque data to decode.
+ * @return Opaque data as a byte vector.
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public byte[] xdrDecodeOpaque(int length) throws OncRpcException, IOException {
+  int alignedLength=length;
+  if ((alignedLength & 3) != 0) {
+    alignedLength=(alignedLength & ~3) + 4;
+  }
+  byte[] bytes=new byte[length];
+  if (length > 0) {
+    if (bufferIndex <= bufferHighmark - alignedLength + 4) {
+      buffer.get(bytes,0,length);
+    }
+ else {
+      System.err.println("bufferIndex=" + bufferIndex);
+      System.err.println("bufferHighmark=" + bufferHighmark);
+      System.err.println("alignedLength=" + alignedLength);
+      throw (new OncRpcException(OncRpcException.RPC_BUFFERUNDERFLOW));
+    }
+  }
+  bufferIndex+=alignedLength;
+  buffer.position(buffer.position() + alignedLength - length);
+  return bytes;
+}
+/** 
+ * Decodes (aka "deserializes") a XDR opaque value, which is represented by a vector of byte values, and starts at <code>offset</code> with a length of <code>length</code>. Only the opaque value is decoded, so the caller has to know how long the opaque value will be. The decoded data is always padded to be a multiple of four (because that's what the sender does).
+ * @param opaque Byte vector which will receive the decoded opaque value.
+ * @param offset Start offset in the byte vector.
+ * @param length the number of bytes to decode.
+ * @return The number of opaque bytes read.
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public void xdrDecodeOpaque(byte[] opaque,int offset,int length) throws OncRpcException, IOException {
+  int alignedLength=length;
+  if ((alignedLength & 3) != 0) {
+    alignedLength=(alignedLength & ~3) + 4;
+  }
+  if (length > 0) {
+    if (bufferIndex <= bufferHighmark - alignedLength + 4) {
+      buffer.get(opaque,offset,length);
+    }
+ else {
+      throw (new OncRpcException(OncRpcException.RPC_BUFFERUNDERFLOW));
+    }
+  }
+  bufferIndex+=alignedLength;
+  buffer.position(buffer.position() + alignedLength - length);
+}

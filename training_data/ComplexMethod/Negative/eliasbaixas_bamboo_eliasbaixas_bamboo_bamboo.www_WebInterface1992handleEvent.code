@@ -1,0 +1,15 @@
+public void handleEvent(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("got " + item);
+  if (item instanceof VivaldiReplyVC) {
+    VivaldiReplyVC reply=(VivaldiReplyVC)item;
+    coordinate=reply.coordinate;
+    classifier.dispatch_later(new VivaldiRequestVC(my_sink,null),5000);
+  }
+ else   if (item instanceof NetworkLatencyResp) {
+    NetworkLatencyResp resp=(NetworkLatencyResp)item;
+    if (resp.success)     latencies.put(resp.user_data,new Long(resp.rtt_ms));
+  }
+ else {
+    BUG("got event of unexpected type: " + item + ".");
+  }
+}

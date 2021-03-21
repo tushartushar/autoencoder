@@ -1,0 +1,17 @@
+public InnerEdge addInnerEdge(EdgeMapping mapping,Object edgeId,String label,Vertex externalVertex,Object[] properties){
+  boolean mappingExists=false;
+  for (  EdgeMapping edgeMapping : edgeMappings) {
+    if (mapping.equals(edgeMapping)) {
+      mappingExists=true;
+    }
+  }
+  if (!mappingExists) {
+    return null;
+  }
+  property(mapping.getExternalVertexField(),externalVertex.id());
+  Vertex inVertex=mapping.getDirection().equals(Direction.IN) ? this : externalVertex;
+  Vertex outVertex=mapping.getDirection().equals(Direction.OUT) ? this : externalVertex;
+  InnerEdge edge=new InnerEdge(edgeId,mapping,outVertex,inVertex,properties,graph);
+  this.innerEdges.add(edge);
+  return edge;
+}

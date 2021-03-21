@@ -1,0 +1,9 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  buffer.add(src);
+  buffer.add(dest);
+  buffer.add(app_id);
+  buffer.add(intermediate_upcall);
+  buffer.add(peer_guid);
+  buffer.add(payload);
+}

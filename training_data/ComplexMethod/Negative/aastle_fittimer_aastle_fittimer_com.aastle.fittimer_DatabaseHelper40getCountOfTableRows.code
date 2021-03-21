@@ -1,0 +1,12 @@
+public Long getCountOfTableRows(String tableName){
+  thisDataBase=getReadableDatabase();
+  Long results=null;
+  try {
+    SQLiteStatement sqLiteStatement=thisDataBase.compileStatement("SELECT COUNT(*) FROM " + tableName);
+    results=sqLiteStatement.simpleQueryForLong();
+  }
+ catch (  SQLiteDoneException de) {
+    Log.e("SQL",de.getMessage());
+  }
+  return results;
+}

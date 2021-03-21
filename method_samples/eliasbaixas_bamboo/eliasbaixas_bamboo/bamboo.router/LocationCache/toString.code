@@ -1,0 +1,22 @@
+public String toString(){
+  if (cache.isEmpty())   return "(LocationCache <empty>)";
+  StringBuffer result=new StringBuffer(cache.size() * 100);
+  Iterator j=cache.values().iterator();
+  result.append("(Location Cache\n  Sorted by guid:\n");
+  while (j.hasNext()) {
+    Node n=(Node)j.next();
+    result.append("    ");
+    result.append(n.ni);
+    result.append("\n");
+  }
+  result.append("  Sorted by use order (first is most recent):\n");
+  Node n=first;
+  while (n != null) {
+    result.append("    ");
+    result.append(n.ni);
+    result.append("\n");
+    n=n.succ;
+  }
+  result.append(")\n");
+  return result.toString();
+}

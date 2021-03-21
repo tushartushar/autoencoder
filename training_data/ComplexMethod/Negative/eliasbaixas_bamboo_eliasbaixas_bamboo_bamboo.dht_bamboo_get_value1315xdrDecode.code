@@ -1,0 +1,5 @@
+public void xdrDecode(XdrDecodingStream xdr) throws OncRpcException, IOException {
+  value=new bamboo_value(xdr);
+  ttl_sec_rem=xdr.xdrDecodeInt();
+  secret_hash=new bamboo_hash(xdr);
+}

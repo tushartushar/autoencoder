@@ -1,0 +1,10 @@
+public ProcInfo(Class c,Thunk2<Integer,XdrAble> h){
+  assert XdrAble.class.isAssignableFrom(c);
+  try {
+    constructor=c.getConstructor(new Class[]{});
+  }
+ catch (  NoSuchMethodException e) {
+    assert false;
+  }
+  handler=h;
+}

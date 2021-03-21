@@ -1,0 +1,7 @@
+/** 
+ * Returns the primary neighbor for this entry, or null if there is a hole.
+ */
+public NeighborInfo primary(int digit,int value){
+  if (table[digit][value] == null)   return null;
+ else   return table[digit][value].ni;
+}

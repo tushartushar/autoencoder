@@ -1,0 +1,3 @@
+@Column(name="MESSAGEID",nullable=true,length=50) public String getMessageID(){
+  return MessageID;
+}

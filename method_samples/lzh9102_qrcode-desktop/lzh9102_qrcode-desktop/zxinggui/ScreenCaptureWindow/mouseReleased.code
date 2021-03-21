@@ -1,0 +1,6 @@
+@Override public void mouseReleased(MouseEvent e){
+  if (e.getButton() == MouseEvent.BUTTON1) {
+    rect.setXY2(e.getX(),e.getY());
+    if (!rect.isEmpty())     finishCapture();
+  }
+}

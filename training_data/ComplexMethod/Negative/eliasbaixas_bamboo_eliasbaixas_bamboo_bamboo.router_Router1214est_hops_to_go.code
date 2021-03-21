@@ -1,0 +1,10 @@
+protected int est_hops_to_go(BigInteger guid,boolean use_lc){
+  Set<NeighborInfo> ignore=possibly_down.keySet();
+  if (leaf_set.within_leaf_set(guid)) {
+    if (leaf_set.closest_leaf(guid,ignore) == my_neighbor_info)     return 0;
+ else     return 1;
+  }
+ else {
+    return rt.highest_level() - rt.matching_digits(guid);
+  }
+}

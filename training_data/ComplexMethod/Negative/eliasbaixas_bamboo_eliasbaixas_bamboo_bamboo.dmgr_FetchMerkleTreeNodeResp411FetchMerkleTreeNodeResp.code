@@ -1,0 +1,24 @@
+public FetchMerkleTreeNodeResp(NodeId dest,byte[] h,boolean l,LinkedList c,long s){
+  super(dest,false);
+  hash=h;
+  leaf=l;
+  children=c;
+  seq=s;
+}
+public FetchMerkleTreeNodeResp(InputBuffer buffer) throws QSException {
+  super(buffer);
+  int len=buffer.nextInt();
+  hash=new byte[len];
+  buffer.nextBytes(hash,0,len);
+  leaf=buffer.nextBoolean();
+  seq=buffer.nextLong();
+  int cnt=buffer.nextInt();
+  if (cnt > 0) {
+    children=new LinkedList();
+    while (cnt-- > 0) {
+      byte[] child=new byte[len];
+      buffer.nextBytes(child,0,len);
+      children.addLast(child);
+    }
+  }
+}

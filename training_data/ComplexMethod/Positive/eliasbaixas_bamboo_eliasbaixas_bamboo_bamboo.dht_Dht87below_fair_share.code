@@ -1,0 +1,56 @@
+protected boolean below_fair_share(InetAddress client,int size,int ttl_sec){
+  int i=ttl_to_vdisk(ttl_sec);
+  long current_usage=slop_usage(i,client);
+  int client_count=client_to_usage.size();
+{
+    Long l=(Long)client_to_usage.get(client);
+    if (l != null)     current_usage+=l.longValue();
+ else     client_count+=1;
+  }
+  if (logger.isDebugEnabled())   logger.debug("below_fair_share " + client.getHostAddress());
+  if (current_usage == 0) {
+    if (logger.isDebugEnabled())     logger.debug("fair share: no existing usage by this client");
+    return true;
+  }
+  long new_client=current_usage + size;
+  int k=0;
+  int n=1;
+  long t=new_client;
+  PriorityQueue pq=new PriorityQueue(n);
+  pq.add(client,new_client);
+  if (logger.isDebugEnabled())   logger.debug("adding " + new_client);
+  Iterator j=client_to_usage.keySet().iterator();
+  while (j.hasNext()) {
+    InetAddress c=(InetAddress)j.next();
+    if (!c.equals(client)) {
+      Long l=(Long)client_to_usage.get(c);
+      long v=l.longValue() + slop_usage(i,c);
+      pq.add(c,v);
+      if (logger.isDebugEnabled())       logger.debug("adding " + l.longValue());
+      n+=1;
+      t+=v;
+    }
+  }
+  assert n == client_count;
+  while (n > 0) {
+    double nth=((double)t) / n;
+    if (logger.isDebugEnabled())     logger.debug("n=" + n + " t="+ t+ " k="+ k+ " nc="+ new_client+ " nth="+ nth);
+    if (new_client <= nth) {
+      System.out.println("slop avail=" + (slop_cap[i] - slop_size[i]));
+      return slop_cap[i] - slop_size[i] >= k * 1024;
+    }
+    boolean once=false;
+    while ((!pq.isEmpty()) && (pq.getFirstPriority() < nth)) {
+      if (logger.isDebugEnabled())       logger.debug("removing " + pq.getFirstPriority());
+      t-=pq.getFirstPriority();
+      n-=1;
+      assert t >= 0;
+      assert n >= 0;
+      pq.removeFirst();
+      once=true;
+    }
+    if (!once)     break;
+    k+=1;
+  }
+  return false;
+}

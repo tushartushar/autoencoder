@@ -1,0 +1,8 @@
+public void timer_cb(Object user_data){
+  logger.debug("joining");
+  client.join(my_addr,my_id,namespace,levels,3600,APP,join_cb,null);
+}
+public void timer_cb(Object user_data){
+  logger.debug("stabilizing");
+  client.lookup(my_id,namespace,levels,APP,found_succ_cb,null);
+}

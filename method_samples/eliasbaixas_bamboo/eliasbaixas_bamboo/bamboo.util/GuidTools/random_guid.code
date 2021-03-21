@@ -1,0 +1,6 @@
+public static BigInteger random_guid(Random rand){
+  byte[] guid_bytes=new byte[21];
+  rand.nextBytes(guid_bytes);
+  guid_bytes[0]=0;
+  return new BigInteger(guid_bytes);
+}

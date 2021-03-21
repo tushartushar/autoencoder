@@ -1,0 +1,10 @@
+/** 
+ * Extract the Service Identifier or the actual uuid from the Parcel Uuid. For example, if 0000110B-0000-1000-8000-00805F9B34FB is the parcel Uuid, this function will return 110B
+ * @param parcelUuid
+ * @return the service identifier.
+ */
+public static int getServiceIdentifierFromParcelUuid(ParcelUuid parcelUuid){
+  UUID uuid=parcelUuid.getUuid();
+  long value=(uuid.getMostSignificantBits() & 0x0000FFFF00000000L) >>> 32;
+  return (int)value;
+}

@@ -1,0 +1,7 @@
+public FST(ASyncCore acore,int rateBytesPerSecond,long capacityBytes,int maxPutBytes,int maxQueueSize,long burstyAdvantage){
+  this.acore=acore;
+  this.maxQueueSize=maxQueueSize;
+  this.burstyAdvantage=burstyAdvantage;
+  int rateBytesPerMilli=rateBytesPerSecond / 1000;
+  tree=new Tree(acore.nowMillis(),rateBytesPerMilli,capacityBytes + maxPutBytes);
+}

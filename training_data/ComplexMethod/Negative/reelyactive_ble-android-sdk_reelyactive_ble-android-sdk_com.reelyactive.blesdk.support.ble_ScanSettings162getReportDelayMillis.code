@@ -1,0 +1,6 @@
+/** 
+ * Returns report delay timestamp based on the device clock.
+ */
+public long getReportDelayMillis(){
+  return mReportDelayMillis;
+}

@@ -1,0 +1,6 @@
+/** 
+ * Notify this node that its current hash value should be recomputed, presumably because of a change in the underlying database.
+ */
+public void invalidate(){
+  hash=null;
+}

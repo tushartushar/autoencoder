@@ -1,0 +1,16 @@
+void failure();
+public void failure(){
+  periodic_pings.remove(ni);
+  generic_msg_failure(ni,null);
+}
+public void failure(){
+  handle_monitor_node_down(ni);
+}
+public void failure(){
+  generic_msg_failure(ni,retry);
+}
+public void failure(){
+}
+public void failure(){
+  pings_in_flight.remove(ni);
+}

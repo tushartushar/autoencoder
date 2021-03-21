@@ -1,0 +1,4 @@
+public static boolean contains(String[] edgeLabels,String label){
+  for (  String edgeLabel : edgeLabels)   if (edgeLabel.equals(label))   return true;
+  return false;
+}

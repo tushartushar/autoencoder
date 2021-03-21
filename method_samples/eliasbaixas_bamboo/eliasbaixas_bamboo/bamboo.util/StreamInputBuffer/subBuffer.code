@@ -1,0 +1,3 @@
+public InputBuffer subBuffer(int length){
+  throw new NoSuchMethodError();
+}

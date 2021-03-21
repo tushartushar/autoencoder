@@ -1,0 +1,5 @@
+@Override public boolean findUserExistInApplication(String username){
+  int count=usersRepository.findUsernameExists(username);
+  if (count == 1)   return true;
+  return false;
+}

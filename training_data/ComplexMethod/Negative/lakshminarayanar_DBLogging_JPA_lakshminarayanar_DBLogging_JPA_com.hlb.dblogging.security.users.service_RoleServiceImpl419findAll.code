@@ -1,0 +1,4 @@
+@Override public List<Role> findAll(){
+  List<Role> resultList=roleRepository.findByIsDeleted(0);
+  return resultList;
+}

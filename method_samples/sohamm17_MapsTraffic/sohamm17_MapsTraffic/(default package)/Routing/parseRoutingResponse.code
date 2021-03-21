@@ -1,0 +1,76 @@
+public RouteInfo parseRoutingResponse(URIBuilder uri) throws URISyntaxException {
+  try (CloseableHttpClient httpClient=HttpClientBuilder.create().build()){
+    HttpGet request=new HttpGet(uri.build());
+    request.addHeader("content-type","application/json");
+    HttpResponse result=httpClient.execute(request);
+    String json=EntityUtils.toString(result.getEntity(),"UTF-8");
+    try {
+      StringReader reader=new StringReader(json);
+      JsonReader jsonReader=Json.createReader(reader);
+      JsonObject wholeObject=jsonReader.readObject();
+      JsonObject firstRoute=(JsonObject)wholeObject.getJsonObject("response").getJsonArray("route").get(0);
+      JsonObject leg=(JsonObject)firstRoute.getJsonArray("leg").get(0);
+      JsonArray publicTransportLines=firstRoute.getJsonArray("publicTransportLine");
+      JsonArray links=leg.getJsonArray("link");
+      JsonArray maneuvers=leg.getJsonArray("maneuver");
+      RouteInfo route=new RouteInfo();
+      for (      JsonValue eachmanvr : maneuvers) {
+        JsonObject manvrObj=(JsonObject)eachmanvr;
+        RouteInfo.maneuvar eachManeuvar=new RouteInfo.maneuvar();
+        route.maneuvars.add(eachManeuvar);
+        eachManeuvar.id=manvrObj.getJsonString("id").getString();
+        eachManeuvar.length=manvrObj.getJsonNumber("length").longValue();
+        eachManeuvar.travelTime=manvrObj.getJsonNumber("travelTime").longValue();
+        eachManeuvar.position=new RouteInfo.maneuvar.latlon(manvrObj.getJsonObject("position").getJsonNumber("latitude").longValue(),manvrObj.getJsonObject("position").getJsonNumber("longitude").longValue());
+        eachManeuvar.instruction=manvrObj.getJsonString("instruction").getString();
+        eachManeuvar.type=manvrObj.getJsonString("_type").getString();
+        String timeString=manvrObj.getJsonString("time").getString();
+        DateFormat format=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX",Locale.ENGLISH);
+        Date dateTime=format.parse(timeString);
+        eachManeuvar.time=dateTime;
+        if (eachManeuvar.type.compareTo(PUBLICManevar) == 0) {
+          JsonString temp=manvrObj.getJsonString("stopName");
+          if (temp != null)           eachManeuvar.stopName=temp.getString();
+          temp=manvrObj.getJsonString("line");
+          if (temp != null) {
+            String tempLineID=temp.getString();
+            for (            JsonValue eachPublicLine : publicTransportLines) {
+              JsonString tempID=((JsonObject)eachPublicLine).getJsonString("id");
+              if (tempID != null && tempLineID.compareTo(tempID.getString()) == 0) {
+                JsonString tempBNumber=((JsonObject)eachPublicLine).getJsonString("lineName");
+                if (tempBNumber != null)                 eachManeuvar.busNumber=tempBNumber.getString();
+              }
+            }
+          }
+          for (          JsonValue eachLink : links) {
+            JsonObject eachLinkObj=(JsonObject)eachLink;
+            if (eachLinkObj.getJsonString("maneuver") != null && eachLinkObj.getJsonString("maneuver").getString().compareTo(eachManeuvar.id) == 0) {
+              RouteInfo.maneuvar.link roadBetween=new RouteInfo.maneuvar.link();
+              eachManeuvar.interRoadAndStops.add(roadBetween);
+              roadBetween.length=eachLinkObj.getJsonNumber("length").longValue();
+              roadBetween.nextStopName=eachLinkObj.getJsonString("nextStopName").getString();
+            }
+          }
+        }
+ else {
+          JsonString temp=manvrObj.getJsonString("direction");
+          if (temp != null)           eachManeuvar.direction=temp.getString();
+          temp=manvrObj.getJsonString("roadName");
+          if (temp != null)           eachManeuvar.roadName=temp.getString();
+        }
+      }
+      route.length=leg.getJsonNumber("length").longValue();
+      route.travelTime=leg.getJsonNumber("travelTime").longValue();
+      return route;
+    }
+ catch (    Exception e) {
+      System.err.println("Error: " + e.getMessage());
+      e.printStackTrace();
+      return null;
+    }
+  }
+ catch (  IOException ex) {
+    System.err.println("Error: " + ex.getMessage());
+    return null;
+  }
+}

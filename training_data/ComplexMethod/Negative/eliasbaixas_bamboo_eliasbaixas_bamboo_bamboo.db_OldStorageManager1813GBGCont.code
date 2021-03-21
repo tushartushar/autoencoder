@@ -1,0 +1,6 @@
+public GBGCont(BigInteger g,Dbt k,boolean p,Key pl){
+  guid=g;
+  key=k;
+  primary=p;
+  placemark=pl;
+}

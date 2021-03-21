@@ -1,0 +1,13 @@
+private final void init(ByteBuffer buf){
+  time_usec=buf.getLong();
+  ttl_sec=buf.getInt();
+  byte[] guid_bytes=new byte[21];
+  buf.get(guid_bytes,1,20);
+  guid=new BigInteger(guid_bytes);
+  data_hash=new byte[20];
+  buf.get(data_hash,0,20);
+  put=(buf.get() == 1);
+  byte[] client_bytes=new byte[4];
+  buf.get(client_bytes,0,4);
+  client_id=bytes_to_addr(client_bytes);
+}

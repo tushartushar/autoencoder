@@ -1,0 +1,22 @@
+@Override public void actionPerformed(ActionEvent event){
+  Object obj=event.getSource();
+  if (obj == cbSelectGenerator) {
+    int index=cbSelectGenerator.getSelectedIndex();
+    if (index >= 0)     generatorSelected(index);
+  }
+ else   if (obj == btnEncode) {
+    encodeButtonPressed();
+  }
+ else   if (obj == menuImage_ViewPlainText) {
+    viewPlainText();
+  }
+ else   if (obj == btnCapture) {
+    captureScreen();
+  }
+ else   if (obj == menuImage_SaveImage) {
+    saveImage();
+  }
+ else   if (obj == menuAbout_About) {
+    showAboutDialog();
+  }
+}

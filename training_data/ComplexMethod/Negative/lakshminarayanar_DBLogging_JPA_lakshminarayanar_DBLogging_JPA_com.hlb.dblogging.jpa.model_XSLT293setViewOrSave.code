@@ -1,0 +1,3 @@
+public void setViewOrSave(String viewOrSave){
+  this.viewOrSave=viewOrSave;
+}

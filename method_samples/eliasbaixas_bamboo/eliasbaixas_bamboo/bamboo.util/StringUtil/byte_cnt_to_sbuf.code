@@ -1,0 +1,17 @@
+public static final void byte_cnt_to_sbuf(long bytes,StringBuffer buf){
+  int i=byte_units.length - 1;
+  while (true) {
+    if (i == 0 || bytes >= byte_units[i]) {
+      double result=((double)bytes) / (byte_units[i]);
+      NumberFormat n=NumberFormat.getInstance();
+      n.setMaximumFractionDigits(2);
+      n.setGroupingUsed(false);
+      buf.append(n.format(result));
+      buf.append(" ");
+      buf.append(byte_desc[i]);
+      if (result != 1.0)       buf.append("s");
+      break;
+    }
+    --i;
+  }
+}

@@ -1,0 +1,24 @@
+public void timer_cb(Object user_data){
+  try {
+    client.registerReceiver(Payload.class,recv);
+  }
+ catch (  Exception e) {
+    assert false : e;
+  }
+  acore.register_timer(0,new JoinCb(),null);
+  acore.register_timer(5000,new SendCb(),null);
+}
+public void timer_cb(Object user_data){
+  client.join(groupname,JOIN_TTL,APP,new JoinDoneCb(),null);
+  int random=rand.nextInt(21);
+  acore.register_timer((30 + random) * 1000,this,null);
+}
+public void timer_cb(Object user_data){
+  logger.info("Joined groupname=0x" + GuidTools.guid_to_string(groupname) + " up to level "+ +((Integer)user_data).intValue()+ " with ttl_s="+ JOIN_TTL);
+}
+public void timer_cb(Object user_data){
+  client.sendMsg(groupname,new Payload(my_node_id,messageNumber));
+  logger.info("Message number " + messageNumber + " done sending.");
+  messageNumber++;
+  acore.register_timer(5 * 1000,new SendCb(),null);
+}

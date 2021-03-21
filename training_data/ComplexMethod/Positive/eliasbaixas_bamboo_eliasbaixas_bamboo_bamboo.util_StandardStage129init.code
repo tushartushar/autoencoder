@@ -1,0 +1,29 @@
+public void init(ConfigDataIF config) throws Exception {
+  int debug_level=config.getInt("debug_level");
+  acore=DustDevil.acore_instance();
+  sim_running=config.getBoolean("simulator_running");
+  my_node_id=new NodeId(config.getString("node_id"));
+  classifier=Classifier.getClassifier(my_node_id);
+  my_sink=config.getStage().getSink();
+  for (int i=0; i < event_types.length; ++i) {
+    Filter filter=new Filter();
+    if (!filter.requireType(event_types[i]))     logger.fatal("could not require type " + event_types[i].getName());
+    if (logger.isDebugEnabled())     logger.debug("subscribing to " + event_types[i].getName());
+    classifier.subscribe(filter,my_sink);
+  }
+  for (int i=0; i < inb_msg_types.length; ++i) {
+    ostore.util.TypeTable.register_type(inb_msg_types[i]);
+    Filter filter=new Filter();
+    if (!filter.requireType(inb_msg_types[i]))     logger.fatal("could not require type " + inb_msg_types[i].getName());
+    if (!filter.requireValue("inbound",new Boolean(true)))     logger.fatal("could not require inbound = true for " + inb_msg_types[i].getName());
+    if (logger.isDebugEnabled())     logger.debug("subscribing to " + inb_msg_types[i].getName());
+    classifier.subscribe(filter,my_sink);
+  }
+  for (int i=0; i < outb_msg_types.length; ++i) {
+    Filter filter=new Filter();
+    if (!filter.requireType(outb_msg_types[i]))     logger.fatal("could not require type " + outb_msg_types[i].getName());
+    if (!filter.requireValue("inbound",new Boolean(false)))     logger.fatal("could not require inbound = false for " + outb_msg_types[i].getName());
+    if (logger.isDebugEnabled())     logger.debug("subscribing to " + outb_msg_types[i].getName());
+    classifier.subscribe(filter,my_sink);
+  }
+}

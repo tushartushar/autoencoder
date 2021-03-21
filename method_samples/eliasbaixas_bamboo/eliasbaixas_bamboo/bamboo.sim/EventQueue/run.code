@@ -1,0 +1,12 @@
+public void run(){
+  while (!event_queue.isEmpty()) {
+    now_us=event_queue.getFirstPriority();
+    TimerInfo tinfo=null;
+    while (true) {
+      tinfo=(TimerInfo)event_queue.removeFirst();
+      if (!cancelled_timers.remove(tinfo))       break;
+    }
+    current_node_id=tinfo.node_id;
+    tinfo.cb.call(tinfo.user_data);
+  }
+}

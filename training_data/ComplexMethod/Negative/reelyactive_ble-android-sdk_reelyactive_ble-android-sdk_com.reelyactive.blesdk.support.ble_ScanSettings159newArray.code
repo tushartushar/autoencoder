@@ -1,0 +1,3 @@
+@Override public ScanSettings[] newArray(int size){
+  return new ScanSettings[size];
+}

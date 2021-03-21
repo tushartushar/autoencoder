@@ -1,0 +1,7 @@
+public void select_cb(SelectionKey skey,Object user_data){
+  if (skey.isAcceptable())   handle_accept_ready();
+}
+public void select_cb(SelectionKey skey,Object ud){
+  if (((skey.interestOps() & SelectionKey.OP_READ) != 0) && skey.isReadable())   handle_read_ready(skey,(ConnState)ud);
+  if (skey.isValid() && ((skey.interestOps() & SelectionKey.OP_WRITE) != 0) && skey.isWritable())   handle_write_ready(skey,(ConnState)ud);
+}

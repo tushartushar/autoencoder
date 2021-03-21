@@ -1,0 +1,4 @@
+protected long latestFinishTime(Client client){
+  Long lft=latestFinishTimes.get(client);
+  return (lft == null) ? 0 : lft.longValue();
+}

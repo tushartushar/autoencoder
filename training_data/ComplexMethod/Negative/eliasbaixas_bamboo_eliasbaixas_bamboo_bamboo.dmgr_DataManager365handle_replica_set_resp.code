@@ -1,0 +1,17 @@
+protected void handle_replica_set_resp(ReplicaSetResp resp){
+  if ((ds == null) || (resp.nonce != ds.nonce)) {
+    if (logger.isDebugEnabled())     logger.debug("unexpected " + resp);
+    return;
+  }
+  int which=rand.nextInt(resp.replica_set.length);
+  if (logger.isInfoEnabled()) {
+    StringBuffer buf=new StringBuffer(200);
+    buf.append("discarding ");
+    ds.key.toStringBuffer(buf);
+    buf.append(" to ");
+    addr_to_sbuf(resp.replica_set[which],buf);
+    logger.info(buf);
+  }
+  PutOrRemoveMsg outb=new PutOrRemoveMsg(resp.replica_set[which],ds.key.time_usec,ds.key.ttl_sec,ds.key.guid,ds.data,ds.key.put,ds.key.client_id,ds.nonce,ds.key.data_hash,ds.key.secret_hash);
+  dispatch(outb);
+}

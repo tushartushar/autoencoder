@@ -1,0 +1,8 @@
+public int node_id_to_graph_index(NodeId node_id){
+  InetAddress addr=node_id.address();
+  byte[] bytes=addr.getAddress();
+  assert bytes.length == 4;
+  bytes[0]=0;
+  ByteBuffer bb=ByteBuffer.wrap(bytes);
+  return bb.getInt();
+}

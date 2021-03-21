@@ -1,0 +1,31 @@
+public NeighborInfo closest_leaf(BigInteger guid,Set ignore){
+  NeighborInfo closest=my_neighbor_info;
+  BigInteger dist=calc_dist(my_neighbor_info.guid,guid);
+  for (int j=0; j < leaf_pred_count; j++) {
+    NeighborInfo ni=leaf_preds[j];
+    if (ignore.contains(ni))     continue;
+    BigInteger this_dist=calc_dist(ni.guid,guid);
+    if (this_dist.compareTo(dist) < 0) {
+      closest=ni;
+      dist=this_dist;
+    }
+ else     if ((this_dist.compareTo(dist) == 0) && (!ni.equals(closest)) && (in_range_mod(closest.guid,ni.guid,guid) && (!in_range_mod(ni.guid,closest.guid,guid)))) {
+      closest=ni;
+      dist=this_dist;
+    }
+  }
+  for (int j=0; j < leaf_succ_count; j++) {
+    NeighborInfo ni=leaf_succs[j];
+    if (ignore.contains(ni))     continue;
+    BigInteger this_dist=calc_dist(ni.guid,guid);
+    if (this_dist.compareTo(dist) < 0) {
+      closest=ni;
+      dist=this_dist;
+    }
+ else     if ((this_dist.compareTo(dist) == 0) && (!ni.equals(closest)) && (in_range_mod(closest.guid,ni.guid,guid) && (!in_range_mod(ni.guid,closest.guid,guid)))) {
+      closest=ni;
+      dist=this_dist;
+    }
+  }
+  return closest;
+}

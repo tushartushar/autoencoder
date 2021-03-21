@@ -1,0 +1,8 @@
+private void unionChildToGroup(BigInteger groupguid,NodeId n){
+  HashMap h=(HashMap)allChildGroups.get(groupguid);
+  if (h == null) {
+    h=new HashMap();
+    allChildGroups.put(groupguid,h);
+  }
+  h.put(n,new Boolean(true));
+}

@@ -1,0 +1,3 @@
+public Object clone(Object other) throws CloneNotSupportedException {
+  return super.clone();
+}

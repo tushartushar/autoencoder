@@ -1,0 +1,7 @@
+protected TreeState tree_state(BigInteger low_guid,BigInteger high_guid){
+  GuidRange p=new GuidRange(low_guid,high_guid);
+  if (merkle_trees.containsKey(p))   return (TreeState)merkle_trees.get(p);
+  TreeState result=new TreeState(low_guid,high_guid);
+  merkle_trees.put(p,result);
+  return result;
+}

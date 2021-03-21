@@ -1,0 +1,12 @@
+public static void main(String[] args) throws IOException {
+  if (args.length < 1) {
+    System.err.println("usage: java HttpGet <host> <port>");
+    System.exit(1);
+  }
+  acore=new ASyncCoreImpl();
+  SocketChannel channel=SocketChannel.open();
+  channel.configureBlocking(false);
+  channel.connect(new InetSocketAddress(args[0],Integer.parseInt(args[1])));
+  acore.registerSelectable(channel,OP_CONNECT,curry(acceptCallback,channel));
+  acore.asyncMain();
+}

@@ -1,0 +1,7 @@
+/** 
+ * Get the number of  {@link ReelyAwareActivity ReelyAwareActivities} currently running (0 or 1 basically)
+ * @return The number of {@link ReelyAwareActivity ReelyAwareActivities} running
+ */
+protected int getActivityCount(){
+  return activityCount.get();
+}

@@ -1,0 +1,13 @@
+public static List<String> getStringList(String key){
+  try {
+    if (config == null) {
+      init();
+    }
+    String[] stringArray=config.getStringArray(key);
+    return new ArrayList<String>(Arrays.asList(stringArray));
+  }
+ catch (  ConfigurationException e) {
+    e.printStackTrace();
+    return null;
+  }
+}

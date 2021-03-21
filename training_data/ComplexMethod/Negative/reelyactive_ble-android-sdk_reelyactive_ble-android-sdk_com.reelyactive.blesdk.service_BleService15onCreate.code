@@ -1,0 +1,3 @@
+@Override public void onCreate(){
+  scanner=BluetoothLeScannerCompatProvider.getBluetoothLeScannerCompat(getApplicationContext());
+}

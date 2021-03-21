@@ -1,0 +1,3 @@
+private String getMessageField() throws GeneratorException {
+  return txtMessage.getText();
+}

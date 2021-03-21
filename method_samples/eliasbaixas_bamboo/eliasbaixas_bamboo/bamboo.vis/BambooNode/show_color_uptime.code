@@ -1,0 +1,9 @@
+public void show_color_uptime(){
+  if (uptime_number == 0) {
+    dot.setFillPaint(Color.RED);
+  }
+ else {
+    float darkness=1 - (((float)uptime_number) / ((float)FetchNodeInfoThread.biggestUptimeFound));
+    dot.setFillPaint(new Color(darkness,darkness,darkness));
+  }
+}

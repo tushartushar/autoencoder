@@ -1,0 +1,9 @@
+/** 
+ * End decoding of the current XDR record. The general contract of <code>endDecoding</code> is that calling it is an indication that the current record is no more interesting to the caller and any allocated data for this record can be freed. <p>This method overrides  {@link XdrDecodingStream#endDecoding}. It does nothing more than resetting the buffer pointer (eeek! a pointer in Java!!!) back to the begin of an empty buffer, so attempts to decode data will fail until the buffer is filled again.
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public void endDecoding() throws OncRpcException, IOException {
+  bufferIndex=0;
+  bufferHighmark=-4;
+}

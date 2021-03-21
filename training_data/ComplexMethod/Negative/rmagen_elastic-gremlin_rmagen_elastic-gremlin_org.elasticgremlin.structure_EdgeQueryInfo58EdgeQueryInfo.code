@@ -1,0 +1,6 @@
+public EdgeQueryInfo(Direction direction,String[] edgeLabels,Predicates predicates,int revision){
+  this.direction=direction;
+  this.edgeLabels=edgeLabels;
+  this.predicates=predicates;
+  this.revision=revision;
+}

@@ -1,0 +1,20 @@
+public PublicMulticastClient(NodeId my_node_id,long seed,int total_levels,int replication,GatewayClient client,ASyncCore acore){
+  this.acore=acore;
+  this.client=client;
+  this.my_node_id=my_node_id;
+  this.replication=replication;
+  this.total_levels=total_levels;
+  my_addr_bytes=addr2bytes(my_node_id);
+  try {
+    digest=MessageDigest.getInstance("SHA");
+  }
+ catch (  Exception e) {
+    assert false;
+  }
+  my_key=bytes2bi(digest.digest(my_addr_bytes));
+  if (logger.isDebugEnabled())   logger.debug("my_key=0x" + GuidTools.guid_to_string(my_key));
+  queue=new PriorityQueue[total_levels];
+  for (int i=0; i < total_levels; i++)   queue[i]=new PriorityQueue(10);
+  if (logger.isDebugEnabled())   logger.debug("Key 0x" + GuidTools.guid_to_string(my_key) + " is in partition "+ partition_number(my_key)+ ".");
+  acore.registerTimer(0,ready);
+}

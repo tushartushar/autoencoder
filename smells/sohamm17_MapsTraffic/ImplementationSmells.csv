@@ -1,0 +1,44 @@
+Project Name,Package Name,Type Name,Method Name,Implementation Smell,Cause of the Smell
+sohamm17_MapsTraffic,(default package),Routing,getRoute,Long Statement,The length of the statement "URIBuilder builder=new URIBuilder(url).addParameter("app_id"`APP_ID).addParameter("app_code"`APP_CODE).addParameter("waypoint0"`"geo!" + src_latlon.toString()).addParameter("waypoint1"`"geo!" + dst_latlon.toString()).addParameter("mode"`"fastest;publicTransportTimeTable").addParameter("combineChange"`"true").addParameter("alternatives"`"5").addParameter("walkSpeed"`String.valueOf(walkSpeed)).addParameter("departure"`formattedDate).addParameter("instructionformat"`"text").addParameter("maneuverAttributes"`"trafficTime`waitTime`publicTransportLine`time`roadName`length`link`direction").addParameter("legAttributes"`"links`trafficTime`waypoint").addParameter("linkAttributes"`"roadName`maneuver`length`nextStopName`dynamicSpeedInfo`speedLimit`nextLink").addParameter("routeAttributes"`"lines").addParameter("metricSystem"`"metric");" is 835.
+sohamm17_MapsTraffic,(default package),Routing,parseRoutingResponse,Complex Method,Cyclomatic complexity of the method is 12
+sohamm17_MapsTraffic,(default package),Routing,parseRoutingResponse,Long Statement,The length of the statement "eachManeuvar.position=new RouteInfo.maneuvar.latlon(manvrObj.getJsonObject("position").getJsonNumber("latitude").longValue()`manvrObj.getJsonObject("position").getJsonNumber("longitude").longValue());" is 200.
+sohamm17_MapsTraffic,(default package),Routing,parseRoutingResponse,Long Statement,The length of the statement "if (eachLinkObj.getJsonString("maneuver") != null && eachLinkObj.getJsonString("maneuver").getString().compareTo(eachManeuvar.id) == 0) {" is 137.
+sohamm17_MapsTraffic,(default package),Routing,getLatLong,Long Statement,The length of the statement "URIBuilder builder=new URIBuilder(url).addParameter("app_id"`APP_ID).addParameter("app_code"`APP_CODE).addParameter("gen"`"8").addParameter("searchtext"`location);" is 163.
+sohamm17_MapsTraffic,(default package),Routing,getLatLong,Long Statement,The length of the statement "latlon=new RouteInfo.maneuvar.latlon(displayPosition.getJsonNumber("Latitude").doubleValue()`displayPosition.getJsonNumber("Longitude").doubleValue());" is 151.
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Complex Conditional,The conditional expression i == 2 || i == 3 || i == 4 is complex.
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Complex Conditional,The conditional expression avgRealSpeed < avgFFSpeed && (i == 2 || i == 3 || i == 4) is complex.
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Complex Method,Cyclomatic complexity of the method is 8
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Long Statement,The length of the statement "double trafficModuleAvgSpdFF=realTimeTraffic.getFreeFlowSpeed("82 Av"`"+"`new String[]{"111 St"`"112 St"`"109 St"`"114 St"});" is 125.
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Long Statement,The length of the statement "double avgSpeedInFFTotal=((double)route.maneuvars.get(modifyingIndex).length / route.maneuvars.get(modifyingIndex).travelTime);" is 127.
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 1.5
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 115
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 02
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 30
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 10
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 47
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 1000000
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 1000000
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 3
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 3
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: .25
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 2
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 1000000
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 2
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 3
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 4
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 2
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 3
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 4
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,main,Magic Number,The method contains a magic number: 1000000
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,getUncommonRoads,Magic Number,The method contains a magic number: 2
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,addDelay,Magic Number,The method contains a magic number: 10
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,addDelay,Magic Number,The method contains a magic number: 60
+sohamm17_MapsTraffic,(default package),GoogleOauth,retrieve,Long Statement,The length of the statement "GoogleTokenResponse response=new GoogleAuthorizationCodeTokenRequest(new NetHttpTransport()`new JacksonFactory()`"947782242448-sq1cakbpuapr6qgmnqqu9trkavn25q9k.apps.googleusercontent.com"`"afSCZ9JfdJhHcQ9vMn-JNjhp"`"4/XqRkVT2Qc6iRICmkRMuP55j1QZcTg3CzDp6D9_bZ9Yc.cu6_9o0j6H0QEnp6UAPFm0HquuDWmAI"`"https://developers.google.com/oauthplayground").execute();" is 354.
+sohamm17_MapsTraffic,(default package),GoogleOauth,GoogleFitApi,Long Statement,The length of the statement "URIBuilder builder=new URIBuilder().setScheme("https").setHost("www.googleapis.com").setPath("/fitness/v1/users/me/dataSources/derived:com.google.speed:com.google.android.gms:motorola:XT1034:516693f8:/datasets/1427023121000000000-1427087921000000000");" is 252.
+sohamm17_MapsTraffic,(default package),GoogleOauth,GoogleFitApi,Long Statement,The length of the statement "request.addHeader("Authorization"`"Bearer " + "ya29.RgF62UYwGbg_7Rl2oL299IyhMOUKA29SXOWzXNbEiOM6y8AcGxbNdIQvkfNmd5ySmOnUvtvGOn4DEQ");" is 133.
+sohamm17_MapsTraffic,(default package),Traffic,Traffic,Long Statement,The length of the statement "URIBuilder builder=new URIBuilder(url).addParameter("app_id"`APP_ID).addParameter("app_code"`APP_CODE).addParameter("bbox"`boundingBox).addParameter("metricSystem"`"metric");" is 174.
+sohamm17_MapsTraffic,(default package),Traffic,toString,Long Statement,The length of the statement "return description + " --> FreeFlow: " + freeFlowSpeed+ "km/h` Speed(In Traffic): "+ speedUncapped+ "` Jam Factor: "+ jamFactor+ "` Confidence:"+ confidence+ "` Dir: "+ direction;" is 179.
+sohamm17_MapsTraffic,(default package),mainRoadway,toString,Long Statement,The length of the statement "return description + " --> FreeFlow: " + freeFlowSpeed+ "km/h` Speed(In Traffic): "+ speedUncapped+ "` Jam Factor: "+ jamFactor+ "` Confidence:"+ confidence+ "` Dir: "+ direction;" is 179.
+sohamm17_MapsTraffic,(default package),crossFlow,toString,Long Statement,The length of the statement "return description + " --> FreeFlow: " + freeFlowSpeed+ "km/h` Speed(In Traffic): "+ speedUncapped+ "` Jam Factor: "+ jamFactor+ "` Confidence:"+ confidence+ "` Dir: "+ direction;" is 179.
+sohamm17_MapsTraffic,(default package),RouteInfo,toString,Long Statement,The length of the statement "return time + "\t" + length+ "m\t"+ travelTime+ "sec\t"+ (busNumber == null ? "" : (busNumber + "\t"))+ (roadName == null ? stopName : "")+ "\t"+ (type.compareTo("PrivateTransportManeuverType") == 0 ? "walking" : "by bus")+ "\n"+ instruction+ "\n"+ (interRoadAndStops.size() == 0 ? "" : (interRoadAndStops + "\n"));" is 315.
+sohamm17_MapsTraffic,(default package),maneuvar,toString,Long Statement,The length of the statement "return time + "\t" + length+ "m\t"+ travelTime+ "sec\t"+ (busNumber == null ? "" : (busNumber + "\t"))+ (roadName == null ? stopName : "")+ "\t"+ (type.compareTo("PrivateTransportManeuverType") == 0 ? "walking" : "by bus")+ "\n"+ instruction+ "\n"+ (interRoadAndStops.size() == 0 ? "" : (interRoadAndStops + "\n"));" is 315.

@@ -1,0 +1,4 @@
+protected int next_msg_num(){
+  if (++next_msg_num < 0)   next_msg_num=0;
+  return next_msg_num;
+}

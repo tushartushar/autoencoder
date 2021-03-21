@@ -1,0 +1,33 @@
+public boolean dump_node_information_to_file(String file_name){
+  File F;
+  FileOutputStream FOS;
+  PrintStream P;
+  try {
+    F=new File(file_name);
+    F.delete();
+    F.createNewFile();
+    FOS=new FileOutputStream(F);
+    P=new PrintStream(FOS);
+  }
+ catch (  Exception e) {
+    return false;
+  }
+  Iterator i=get_all_nodes();
+  while (i.hasNext()) {
+    BambooNode node=(BambooNode)i.next();
+    String s=(node.build + " " + node.hostname+ " "+ node.IP+ " "+ node.port+ " "+ node.uptime_number+ " "+ node.current_storage+ " "+ ((node.coordinates == null) ? 0.0 : node.coordinates[0])+ " "+ ((node.coordinates == null) ? 0.0 : node.coordinates[1])+ " "+ node.estimate) + '\n';
+    try {
+      P.print(s);
+    }
+ catch (    Exception e) {
+      return false;
+    }
+  }
+  try {
+    P.close();
+  }
+ catch (  Exception e) {
+    return false;
+  }
+  return true;
+}

@@ -1,0 +1,4 @@
+protected long latest_finish_time(Integer client){
+  Long lft=latest_finish_times.get(client);
+  return (lft == null) ? 0 : lft.longValue();
+}

@@ -1,0 +1,3 @@
+public int ttlRemaining(long now_ms){
+  return (int)((expiryTime() - now_ms * 1000) / 1000000);
+}

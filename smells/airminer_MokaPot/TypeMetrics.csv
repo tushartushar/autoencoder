@@ -1,0 +1,8 @@
+Project Name,Package Name,Type Name,NOF,NOPF,NOM,NOPM,LOC,WMC,NC,DIT,LCOM,FANIN,FANOUT,File path
+airminer_MokaPot,airminer.mokapot.testplugin,MokaPotTestPlugin,0,0,3,3,11,3,0,0,-1.0,0,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/airminer_MokaPot/src/test/java/airminer/mokapot/testplugin/MokaPotTestPlugin.java
+airminer_MokaPot,airminer.mokapot,MokaPot,5,3,5,5,72,7,0,0,0.4,1,2,/Users/Tushar/Documents/Workspace/autoencoder/repos/airminer_MokaPot/src/main/java/airminer/mokapot/MokaPot.java
+airminer_MokaPot,airminer.mokapot,LoggerOutputStream,3,0,2,2,20,3,0,0,0.0,0,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/airminer_MokaPot/src/main/java/airminer/mokapot/LoggerOutputStream.java
+airminer_MokaPot,airminer.mokapot,MokaPotServer,1,0,96,96,291,96,0,0,1.0,1,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/airminer_MokaPot/src/main/java/airminer/mokapot/MokaPotServer.java
+airminer_MokaPot,airminer.mokapot,LuaHandler,0,0,3,3,25,7,0,0,-1.0,0,1,/Users/Tushar/Documents/Workspace/autoencoder/repos/airminer_MokaPot/src/main/java/airminer/mokapot/LuaHandler.java
+airminer_MokaPot,airminer.mokapot,LuaStateRegistry,2,1,5,4,26,6,0,0,0.6,3,2,/Users/Tushar/Documents/Workspace/autoencoder/repos/airminer_MokaPot/src/main/java/airminer/mokapot/LuaStateRegistry.java
+airminer_MokaPot,airminer.mokapot,SetLuaState,0,0,3,2,16,4,0,0,-1.0,1,1,/Users/Tushar/Documents/Workspace/autoencoder/repos/airminer_MokaPot/src/main/java/airminer/mokapot/LuaStateRegistry.java

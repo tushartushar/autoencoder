@@ -1,0 +1,27 @@
+public void handle_add_monitor(AddMonitor event){
+  storage_monitors.add(event.monitor);
+  if (logger.isDebugEnabled())   logger.debug("added monitor " + event.monitor);
+  Dbc c=open_cursor(client_counts,null,"handle_add_monitor");
+  int retval=0;
+  Dbt key=new Dbt();
+  Dbt data=new Dbt();
+  try {
+    retval=c.get(key,data,Db.DB_FIRST);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  while (retval != Db.DB_NOTFOUND) {
+    assert retval == 0 : retval;
+    InetAddress client=bytes_to_addr(key.getData());
+    long value=ByteBuffer.wrap(data.getData(),data.getOffset(),data.getSize()).getLong();
+    notify_storage_changed(event.monitor,true,client,value);
+    try {
+      retval=c.get(key,data,Db.DB_NEXT);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+  }
+  close_cursor(c);
+}

@@ -1,0 +1,9 @@
+protected static InetSocketAddress url2addr(String str){
+  try {
+    URL url=new URL(str);
+    return new InetSocketAddress(url.getHost(),url.getPort());
+  }
+ catch (  MalformedURLException e) {
+    return null;
+  }
+}

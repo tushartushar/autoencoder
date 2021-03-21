@@ -1,0 +1,5 @@
+public long failure_time_us(NodeId node_id){
+  NodeInfo ninfo=nodes_by_node_id.get(node_id);
+  if (ninfo == null)   return -1;
+  return ninfo.failure_time_us;
+}

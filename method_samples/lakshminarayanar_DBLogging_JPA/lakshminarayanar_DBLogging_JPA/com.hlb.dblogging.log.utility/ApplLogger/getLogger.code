@@ -1,0 +1,6 @@
+public static Logger getLogger(){
+  if (log == null) {
+    log=Logger.getLogger(ApplLogger.class);
+  }
+  return log;
+}

@@ -1,0 +1,15 @@
+public MCastJoin(boolean inbound,BigInteger groupguid,boolean join){
+  this.inbound=inbound;
+  this.groupguid=groupguid;
+  this.join=join;
+}
+public MCastJoin(MCastJoin other){
+  inbound=other.inbound;
+  groupguid=other.groupguid;
+  join=other.join;
+}
+public MCastJoin(InputBuffer buffer) throws QSException {
+  inbound=buffer.nextBoolean();
+  groupguid=buffer.nextBigInteger();
+  join=buffer.nextBoolean();
+}

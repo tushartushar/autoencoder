@@ -1,0 +1,3 @@
+@Column(name="domain",nullable=false) public String getDomain(){
+  return domain;
+}

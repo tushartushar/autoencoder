@@ -1,0 +1,38 @@
+public void get_done_cb(bamboo_get_res get_res,Object user_data){
+  Object[] pair=(Object[])user_data;
+  JoinState state=(JoinState)pair[0];
+  for (int i=0; i < get_res.values.length; ++i) {
+    BigInteger hash=bytes2bi(digest.digest(get_res.values[i].value));
+    if (logger.isDebugEnabled())     logger.debug("get(" + state.current_level + ") found 0x"+ GuidTools.guid_to_string(hash));
+    InetSocketAddress addr=bytes2addr(get_res.values[i].value);
+    NodeId dest=new NodeId(addr.getPort(),addr.getAddress());
+    if (my_key.compareTo(hash) == 0) {
+      continue;
+    }
+    if (same_partition(my_key,hash,state.current_level + 1)) {
+      state.current_get++;
+    }
+    if (((state.current_level == (total_levels - 1)) && (same_partition(my_key,hash,state.current_level))) || ((state.current_level != (total_levels - 1)) && (opposite_partition(my_key,hash,state.current_level)))) {
+      MulticastPingMessage mpm=new MulticastPingMessage(dest);
+      network.send(mpm,dest,10,curry(pingDone,dest,new Integer(state.current_level)));
+    }
+  }
+  if (get_res.values.length == 0 || get_res.placemark.value.length == 0) {
+    if (logger.isDebugEnabled())     logger.debug("get(" + state.current_level + ") returned "+ state.current_get+ " nodes.");
+    if ((state.current_level == total_levels - 1) || (state.current_get < replication)) {
+      join_put(state);
+      return;
+    }
+    if (state.current_level == 0) {
+      state.cb.timer_cb(new Integer(state.done_level));
+    }
+ else {
+      --state.current_level;
+      join_get(state);
+    }
+    return;
+  }
+  bamboo_get_args get_args=(bamboo_get_args)pair[1];
+  get_args.placemark=get_res.placemark;
+  client.get(get_args,this,pair);
+}

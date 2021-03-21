@@ -1,0 +1,3 @@
+@Override public String toString(){
+  return "AuditDetail [id=" + id + ", UniqueProcessID="+ UniqueProcessID+ ", MessageID="+ MessageID+ ", MessageType="+ MessageType+ ", CreatedDateTime="+ CreatedDateTime+ ", UpdatedDateTime="+ UpdatedDateTime+ ", auditMasterId="+ auditMasterId+ "]";
+}

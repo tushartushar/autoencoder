@@ -1,0 +1,8 @@
+public static byte[] bi2bytes(BigInteger i){
+  byte[] result=i.toByteArray();
+  if (result.length == 20)   return result;
+  byte[] rightsize=new byte[20];
+  if (result.length > 20)   System.arraycopy(result,result.length - 20,rightsize,0,20);
+ else   System.arraycopy(result,0,rightsize,20 - result.length,result.length);
+  return rightsize;
+}

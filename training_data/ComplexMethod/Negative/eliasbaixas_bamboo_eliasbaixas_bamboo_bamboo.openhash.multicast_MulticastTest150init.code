@@ -1,0 +1,25 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  int debug_level=config_get_int(config,"debug_level");
+  if (debug_level > 0)   logger.setLevel(Level.DEBUG);
+  acore=DustDevil.acore_instance();
+  int seed=config_get_int(config,"seed");
+  if (seed == -1)   seed=((int)now_ms()) ^ my_node_id.hashCode();
+  rand=new Random(seed);
+  String groupname_str=config_get_string(config,"groupname");
+  MessageDigest digest=null;
+  try {
+    digest=MessageDigest.getInstance("SHA");
+  }
+ catch (  Exception e) {
+    assert false;
+  }
+  groupname=MulticastClient.bytes2bi(digest.digest(groupname_str.getBytes()));
+  String client_stg_name=config_get_string(config,"client_stage_name");
+  StageIF client_stg=config.getManager().getStage(client_stg_name);
+  client=(MulticastClient)client_stg.getWrapper().getEventHandler();
+  messageNumber=0;
+  nodes=config_get_int(config,"nodes");
+  interval_sec=config_get_int(config,"interval_sec");
+  acore.register_timer(0,new ReadyCb(),null);
+}

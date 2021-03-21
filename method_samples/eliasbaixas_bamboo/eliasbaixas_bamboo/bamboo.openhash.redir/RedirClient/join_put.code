@@ -1,0 +1,12 @@
+protected void join_put(JoinState state){
+  BigInteger key=rendevous_point(state.key,state.namespace,state.current_level);
+  bamboo_put_args put=new bamboo_put_args();
+  put.application=state.application;
+  put.value=new bamboo_value();
+  put.value.value=state.addr_bytes;
+  put.key=new bamboo_key();
+  put.key.value=bi2bytes(key);
+  put.ttl_sec=(state.ttl_s);
+  if (logger.isDebugEnabled())   logger.debug("doing join put 0x" + GuidTools.guid_to_string(key));
+  client.put(put,join_put_done_cb,state);
+}

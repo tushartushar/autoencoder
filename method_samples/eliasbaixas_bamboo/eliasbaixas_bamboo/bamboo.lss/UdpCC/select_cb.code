@@ -1,0 +1,10 @@
+public void select_cb(SelectionKey skey,Object user_data){
+  if (DEBUG)   debugln("MySelectableCB readable=" + skey.isReadable() + ", writable="+ skey.isWritable()+ ", want write="+ ((skey.interestOps() & SelectionKey.OP_WRITE) != 0));
+  if (skey.isReadable()) {
+    handle_readable();
+  }
+  if (closed)   return;
+  if (((skey.interestOps() & SelectionKey.OP_WRITE) != 0) && skey.isWritable()) {
+    handle_writable();
+  }
+}

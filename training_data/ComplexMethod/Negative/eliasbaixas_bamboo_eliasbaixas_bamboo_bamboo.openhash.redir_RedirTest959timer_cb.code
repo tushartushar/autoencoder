@@ -1,0 +1,16 @@
+public void timer_cb(Object user_data){
+  client.join(my_addr,my_id,namespace,levels,10 * 3600,APP,join_cb,null);
+}
+public void timer_cb(Object user_data){
+  next_lookup();
+}
+public void timer_cb(Object user_data){
+  byte[] keyb=new byte[21];
+  rand.nextBytes(keyb);
+  keyb[0]=0;
+  BigInteger key=RedirClient.bytes2bi(keyb);
+  logger.info("looking up successor of 0x" + GuidTools.guid_to_string(key));
+  Long start_ms=new Long(timer_ms());
+  client.lookup(key,namespace,levels,APP,lookup_done_cb,start_ms);
+  next_lookup();
+}

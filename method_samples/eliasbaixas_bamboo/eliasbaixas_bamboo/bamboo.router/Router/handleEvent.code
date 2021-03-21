@@ -1,0 +1,62 @@
+public void handleEvent(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("got " + item);
+  if (item instanceof PingMsg) {
+  }
+ else   if (item instanceof JoinResp) {
+    handle_join_resp((JoinResp)item);
+  }
+ else   if (item instanceof RoutingNeighborAnnounce) {
+    handle_rt_annc((RoutingNeighborAnnounce)item);
+  }
+ else   if (item instanceof NetworkMessageResult) {
+    handle_net_msg_result((NetworkMessageResult)item);
+  }
+ else   if (item instanceof NetworkLatencyResp) {
+    handle_net_lat_resp((NetworkLatencyResp)item);
+  }
+ else {
+    if (initialized) {
+      if (item instanceof JoinReq) {
+        handle_join_req((JoinReq)item);
+      }
+ else       if (item instanceof LeafSetReq) {
+        handle_leaf_set_req((LeafSetReq)item);
+      }
+ else       if (item instanceof LeafSetChanged) {
+        handle_leaf_set_changed((LeafSetChanged)item);
+      }
+ else       if (item instanceof RoutingTableReq) {
+        handle_routing_table_req((RoutingTableReq)item);
+      }
+ else       if (item instanceof RoutingTableResp) {
+        handle_routing_table_resp((RoutingTableResp)item);
+      }
+ else       if (item instanceof BambooRouterAppRegReq) {
+        handle_router_app_reg_req((BambooRouterAppRegReq)item);
+      }
+ else       if (item instanceof BambooRouteInit) {
+        handle_route_init((BambooRouteInit)item);
+      }
+ else       if (item instanceof BambooAddToLocationCache) {
+        BambooAddToLocationCache req=(BambooAddToLocationCache)item;
+        NeighborInfo ni=new NeighborInfo(req.node_id,req.guid);
+        location_cache.add_node(ni);
+      }
+ else       if (item instanceof BambooRouteContinue) {
+        handle_route_continue((BambooRouteContinue)item);
+      }
+ else       if (item instanceof RouteMsg) {
+        handle_route_msg((RouteMsg)item);
+      }
+ else       if (item instanceof LookupRespMsg) {
+        handle_lookup_resp_msg((LookupRespMsg)item);
+      }
+ else {
+        throw new IllegalArgumentException("unknown event type " + item.getClass().getName());
+      }
+    }
+ else {
+      waitq.addLast(item);
+    }
+  }
+}

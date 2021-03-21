@@ -1,0 +1,3 @@
+public String toString(){
+  return "(MCastDownMsg  srcguid=" + GuidTools.guid_to_string(srcguid) + " srcid="+ srcid+ " dstid="+ dstid+ " o="+ o+ ")";
+}

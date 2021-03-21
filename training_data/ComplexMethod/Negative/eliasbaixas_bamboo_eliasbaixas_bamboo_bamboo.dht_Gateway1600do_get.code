@@ -1,0 +1,12 @@
+public void do_get(final int xact_id,bamboo_get_args args,final NodeId client_id,final GatewayClient client){
+  final Dht.GetReq outb=get_args_to_get_req(args,client_id);
+  final long now=timer_ms();
+  outb.user_data=new Thunk1<Dht.GetResp>(){
+    public void run(    Dht.GetResp resp){
+      simulator_get_done(outb,resp,client,client_id,xact_id,now);
+    }
+  }
+;
+  log_get_req(xact_id,outb,client.toString(),"sim","sim");
+  dispatch(outb);
+}

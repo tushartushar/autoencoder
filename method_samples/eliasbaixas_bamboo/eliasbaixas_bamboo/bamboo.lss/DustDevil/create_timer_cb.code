@@ -1,0 +1,3 @@
+public Classifier.TimerCB create_timer_cb(Classifier classifier){
+  return new MyClassifierTimerCB(classifier);
+}

@@ -1,0 +1,3 @@
+@OneToOne @JoinColumn(name="userId") public Users getUsers(){
+  return users;
+}

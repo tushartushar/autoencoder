@@ -1,0 +1,29 @@
+public void run(){
+  SocketChannel sc=null;
+  try {
+    sc=channel.accept();
+  }
+ catch (  IOException e) {
+    assert false;
+  }
+  if (sc == null)   return;
+  try {
+    sc.configureBlocking(false);
+  }
+ catch (  IOException e) {
+    assert false;
+  }
+  cb.run(new TcpMsgChannel(acore,sc));
+}
+public void run(InetSocketAddress addr){
+  System.err.println("connection to " + addr + " failed");
+  System.exit(1);
+}
+public void run(TcpMsgChannel channel,QuickSerializable qs){
+  System.out.println("received " + qs + " from "+ channel.peer());
+  channel.send(new QSInt(0));
+}
+public void run(TcpMsgChannel channel){
+  channel.setReceiveHandler(curry(recv,channel));
+  channel.setFailureHandler(curry(fail,channel.peer()));
+}

@@ -1,0 +1,8 @@
+public void main_loop(){
+  while (!pq.isEmpty()) {
+    now_ms=pq.getFirstPriority();
+    Object[] pair=(Object[])pq.removeFirst();
+    EventCb cb=(EventCb)pair[0];
+    cb.cb(pair[1]);
+  }
+}

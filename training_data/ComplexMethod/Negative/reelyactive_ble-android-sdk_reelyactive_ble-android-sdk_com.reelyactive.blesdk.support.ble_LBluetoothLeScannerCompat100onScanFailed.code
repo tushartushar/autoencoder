@@ -1,0 +1,4 @@
+@Override public void onScanFailed(int errorCode){
+  Logger.logInfo("LBluetoothLeScannerCompat::onScanFailed(" + errorCode + ")");
+  callback.onScanFailed(errorCode);
+}

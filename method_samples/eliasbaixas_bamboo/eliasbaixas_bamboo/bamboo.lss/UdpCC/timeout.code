@@ -1,0 +1,6 @@
+public final void timeout(){
+  rto<<=1;
+  if (rto > MAX_RTO)   rto=MAX_RTO;
+  ssthresh=cwnd / 2.0;
+  cwnd=1.0;
+}

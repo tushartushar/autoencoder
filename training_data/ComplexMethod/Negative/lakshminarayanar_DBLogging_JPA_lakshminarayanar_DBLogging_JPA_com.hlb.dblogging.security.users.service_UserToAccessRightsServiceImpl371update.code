@@ -1,0 +1,12 @@
+@Override public UserToAccessRights update(UserToAccessRights userToAccessRights){
+  UserToAccessRights userAccessRightsToBeUpdated=userToAccessRightsRepository.findOne(userToAccessRights.getId());
+  if (userAccessRightsToBeUpdated != null) {
+    userAccessRightsToBeUpdated.setId(userToAccessRights.getId());
+    userAccessRightsToBeUpdated.setAccessRights(userToAccessRights.getAccessRights());
+    userAccessRightsToBeUpdated.setUsers(userToAccessRights.getUsers());
+    userAccessRightsToBeUpdated.setEnabled(userToAccessRights.isEnabled());
+    userAccessRightsToBeUpdated.setDeleted(userToAccessRights.isDeleted());
+    userToAccessRightsRepository.save(userAccessRightsToBeUpdated);
+  }
+  return userAccessRightsToBeUpdated;
+}

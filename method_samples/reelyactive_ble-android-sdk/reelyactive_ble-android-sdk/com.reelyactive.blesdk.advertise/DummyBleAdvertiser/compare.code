@@ -1,0 +1,3 @@
+@Override public int compare(ScanResult lhs,ScanResult rhs){
+  return rhs.getRssi() - lhs.getRssi();
+}

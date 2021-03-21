@@ -1,0 +1,11 @@
+/** 
+ * This function is called when a generator is selected. Remove the current generator panel and add the new generator panel to panelGenerator.
+ * @param index the index of the generator in the combobox
+ */
+private void generatorSelected(int index){
+  GeneratorInterface gen=generators.getGenerator(index);
+  panelGenerator.removeAll();
+  if (gen != null)   panelGenerator.add(gen.getPanel());
+  panelMain.validate();
+  panelMain.repaint();
+}

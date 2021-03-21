@@ -1,0 +1,62 @@
+public void read(){
+  if (rblocks.size() == 0) {
+    rblocks.add(new PriorityQueue(BRANCHING));
+    logger.debug("setting level 0 need to 0");
+    rnext.add(new Long(0));
+    outstanding++;
+    bamboo_get_args get=new bamboo_get_args();
+    get.application=APPLICATION;
+    get.key=new bamboo_key();
+    get.key.value=key;
+    get.maxvals=1;
+    get.placemark=new bamboo_placemark();
+    get.placemark.value=new byte[]{};
+    logger.debug("getting root: 0x" + bytes_to_str(key));
+    client.get(get,curry(get_done_cb,get,new Long(0)));
+  }
+ else {
+    boolean empty=true;
+    while (outstanding < MAX_PARALLEL) {
+      int l=1;
+      for (; l < rblocks.size(); ++l) {
+        if ((rblocks.elementAt(l) != null) && (!rblocks.elementAt(l).isEmpty())) {
+          empty=false;
+          if (rblocks.elementAt(l).getFirstPriority() == rnext.elementAt(l).longValue()) {
+            long p=rblocks.elementAt(l).getFirstPriority();
+            ByteBuffer k=(ByteBuffer)rblocks.elementAt(l).removeFirst();
+            logger.debug("updating level " + l + " need to "+ (p + 1));
+            rnext.setElementAt(new Long(p + 1),l);
+            logger.debug("level " + l + " has need "+ rnext.elementAt(l));
+            outstanding++;
+            bamboo_get_args get=new bamboo_get_args();
+            get.application=APPLICATION;
+            get.key=new bamboo_key();
+            get.key.value=k.array();
+            get.maxvals=1;
+            get.placemark=new bamboo_placemark();
+            get.placemark.value=new byte[]{};
+            logger.debug("getting lev=" + l + " pos="+ p+ " key=0x"+ bytes_to_str(k.array()));
+            client.get(get,curry(get_done_cb,get,new Long(p)));
+            break;
+          }
+ else {
+            logger.debug("level " + l + " have "+ rblocks.elementAt(l).getFirstPriority()+ " need "+ rnext.elementAt(l).longValue());
+          }
+        }
+      }
+      if (l == rblocks.size())       break;
+    }
+    if (outstanding == 0) {
+      assert empty;
+      logger.info("all gets finished successfully");
+      try {
+        os.close();
+      }
+ catch (      IOException e) {
+        logger.error("could not close output file");
+        System.exit(1);
+      }
+      System.exit(0);
+    }
+  }
+}

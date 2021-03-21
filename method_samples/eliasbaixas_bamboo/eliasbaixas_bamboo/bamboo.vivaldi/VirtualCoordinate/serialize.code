@@ -1,0 +1,3 @@
+public void serialize(OutputBuffer buffer){
+  for (int i=0; i < _coordinate.length; i++)   buffer.add(_coordinate[i]);
+}

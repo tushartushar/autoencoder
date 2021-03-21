@@ -1,0 +1,14 @@
+/** 
+ * Initialize the generator selection combobox.
+ */
+private void setupGenerators(){
+  for (  final GeneratorInterface gen : generators.getGenerators()) {
+    Object item=new Object(){
+      public String toString(){
+        return gen.getName();
+      }
+    }
+;
+    cbSelectGenerator.addItem(item);
+  }
+}

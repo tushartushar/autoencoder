@@ -1,0 +1,5 @@
+private String getEmailField() throws GeneratorException {
+  String email=txtEmail.getText();
+  if (!email.isEmpty() && !Validator.isValidEmail(email))   throw new GeneratorException("Incorrect Email address.",txtEmail);
+  return email;
+}

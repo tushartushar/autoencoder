@@ -1,0 +1,25 @@
+protected void log_put_req(int xact_id,Dht.PutReq req,String client,byte[] value_hash,String client_lib,String application){
+  if (logger.isInfoEnabled()) {
+    StringBuffer buf=new StringBuffer(100);
+    buf.append("put req client=");
+    buf.append(client);
+    buf.append(" client_library=\"");
+    buf.append(client_lib);
+    buf.append("\" application=\"");
+    buf.append(application);
+    buf.append("\" xact_id=0x");
+    buf.append(Integer.toHexString(xact_id));
+    buf.append(" key=0x");
+    buf.append(GuidTools.guid_to_string(req.key));
+    buf.append(" secret_hash=0x");
+    if (req.secret_hash == null)     bytes_to_sbuf(StorageManager.ZERO_HASH,0,4,false,buf);
+ else     bytes_to_sbuf(req.secret_hash,0,min(req.secret_hash.length,4),false,buf);
+    buf.append(" value_hash=0x");
+    bytes_to_sbuf(value_hash,0,min(value_hash.length,4),false,buf);
+    buf.append(" size=");
+    buf.append(req.value.limit());
+    buf.append(" ttl=");
+    buf.append(req.ttl_sec);
+    logger.info(buf);
+  }
+}

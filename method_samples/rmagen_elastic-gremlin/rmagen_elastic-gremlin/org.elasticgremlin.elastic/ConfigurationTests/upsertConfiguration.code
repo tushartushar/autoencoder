@@ -1,0 +1,9 @@
+@Test public void upsertConfiguration() throws InstantiationException {
+  graph.addVertex(T.id,"1","field","a","field2","c");
+  graph.addVertex(T.id,"1","field","b");
+  GraphTraversal<Vertex,Vertex> traversal=graph.traversal().V("1");
+  Vertex vertex=traversal.next();
+  assertEquals("b",vertex.property("field").value());
+  assertEquals("c",vertex.property("field2").value());
+  assertFalse(traversal.hasNext());
+}

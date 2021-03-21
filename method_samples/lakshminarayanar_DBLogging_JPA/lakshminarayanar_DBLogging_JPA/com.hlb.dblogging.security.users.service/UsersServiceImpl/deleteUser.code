@@ -1,0 +1,3 @@
+@Transactional @Override public int deleteUser(String username){
+  return usersRepository.deleteUser(username);
+}

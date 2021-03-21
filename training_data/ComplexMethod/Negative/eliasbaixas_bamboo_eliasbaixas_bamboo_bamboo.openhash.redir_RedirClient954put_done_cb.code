@@ -1,0 +1,28 @@
+public void put_done_cb(int put_res,Object user_data){
+  JoinState state=(JoinState)user_data;
+  if (put_res == bamboo_stat.BAMBOO_OK) {
+    state.put_retry_time=1000;
+    if (state.done || (state.current_level == 0)) {
+      if (logger.isInfoEnabled()) {
+        logger.info("successfully joined namespace=0x" + GuidTools.guid_to_string(state.namespace) + " levels="+ state.levels+ " ttl_s="+ state.ttl_s);
+      }
+      if (!state.cancelled)       state.cb.join_cb(state.user_data);
+      if (!state.cancelled) {
+        state.current_level=state.levels - 1;
+        state.done=false;
+        state.rejoin_timer=acore.register_timer(state.ttl_s * 1000 / 2,rejoin_cb,state);
+      }
+    }
+ else {
+      --state.current_level;
+      join_get(state);
+    }
+  }
+ else {
+    if (!state.cancelled) {
+      logger.info("join put failed, trying again");
+      state.put_retry_time=Math.min(state.put_retry_time * 2,30 * 1000);
+      state.retry_timer=acore.register_timer(state.put_retry_time,put_retry_cb,state);
+    }
+  }
+}

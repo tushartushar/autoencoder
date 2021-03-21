@@ -1,0 +1,4 @@
+public boolean accept_put(long ttl,long size){
+  Node new_root=add_put(root,now,rate,ttl,size);
+  return new_root.value + new_root.offset <= capacity;
+}

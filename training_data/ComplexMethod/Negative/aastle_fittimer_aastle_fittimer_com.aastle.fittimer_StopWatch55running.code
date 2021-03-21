@@ -1,0 +1,7 @@
+/** 
+ * Tells if the clock is running or not, true is running.
+ * @return
+ */
+public boolean running(){
+  return isRunning;
+}

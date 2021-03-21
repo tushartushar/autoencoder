@@ -1,0 +1,6 @@
+public SelectableInfo(){
+}
+public SelectableInfo(SelectableCB c,Object u){
+  cb=c;
+  user_data=u;
+}

@@ -1,0 +1,7 @@
+public Object clone() throws CloneNotSupportedException {
+  Msg result=(Msg)super.clone();
+  result.req=req;
+  result.xact_id=xact_id;
+  result.payload=payload;
+  return result;
+}

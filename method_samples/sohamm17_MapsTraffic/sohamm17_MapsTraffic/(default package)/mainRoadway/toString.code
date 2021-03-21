@@ -1,0 +1,11 @@
+public String toString(){
+  StringBuilder ret_string=new StringBuilder();
+  ret_string.append(description + "\n");
+  for (  crossFlow eachCrossRD : crossingRoads) {
+    ret_string.append(eachCrossRD + "\n");
+  }
+  return ret_string.toString();
+}
+public String toString(){
+  return description + " --> FreeFlow: " + freeFlowSpeed+ "km/h, Speed(In Traffic): "+ speedUncapped+ ", Jam Factor: "+ jamFactor+ ", Confidence:"+ confidence+ ", Dir: "+ direction;
+}

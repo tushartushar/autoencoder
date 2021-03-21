@@ -1,0 +1,13 @@
+public boolean accept_put(long now,long exp){
+  if (valid && (low >= now) && (high <= exp)) {
+    return offset + 1 <= min_free + (range - high + now) * rate;
+  }
+ else   if (valid && (low >= exp)) {
+    return true;
+  }
+  for (int index=0; index < branching; ++index) {
+    Node child=children[index];
+    if (!child.accept_put(now,exp))     return false;
+  }
+  return true;
+}

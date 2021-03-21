@@ -1,0 +1,6 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  buffer.add(nonce);
+  buffer.add(replica_set.length);
+  for (int i=0; i < replica_set.length; ++i)   replica_set[i].serialize(buffer);
+}

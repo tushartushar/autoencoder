@@ -1,0 +1,6 @@
+public NodeInfo(NodeId n,long f,Callback cb,Object ud){
+  node_id=n;
+  failure_time_us=f;
+  cleanup_cb=cb;
+  cleanup_user_data=ud;
+}

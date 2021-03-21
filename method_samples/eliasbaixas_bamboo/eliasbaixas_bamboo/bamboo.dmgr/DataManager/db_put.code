@@ -1,0 +1,5 @@
+protected void db_put(Key key,ByteBuffer value,Object user_data){
+  invalidate_merkle_trees(key.guid,key.time_usec);
+  StorageManager.PutReq outb=new StorageManager.PutReq(key,value,my_sink,user_data);
+  dispatch(outb);
+}

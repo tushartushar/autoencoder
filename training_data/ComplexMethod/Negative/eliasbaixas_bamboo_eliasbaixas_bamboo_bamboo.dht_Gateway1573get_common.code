@@ -1,0 +1,22 @@
+private void get_common(byte[] key_bytes,int maxvals,byte[] placemark_bytes,String application,String user_agent,InetSocketAddress client,Thunk1<Object> result_cb,boolean details){
+  if (key_bytes.length > 20) {
+    result_cb.run(new Exception("key is longer than 20 bytes"));
+    return;
+  }
+  if (placemark_bytes.length > StorageManager.Key.SIZE) {
+    result_cb.run(new Exception("placemark is longer than " + StorageManager.Key.SIZE + " bytes"));
+    return;
+  }
+  BigInteger key=byte_array_to_big_int(key_bytes);
+  StorageManager.Key placemark=null;
+  if (placemark_bytes.length > 0) {
+    placemark=new StorageManager.Key(ByteBuffer.wrap(placemark_bytes));
+  }
+  String client_string=client.getAddress().getHostAddress() + ":" + client.getPort();
+  Long start_ms=new Long(now_ms());
+  boolean all=maxvals != Integer.MAX_VALUE - 1;
+  Dht.GetReq req=new Dht.GetReq(key,maxvals,all,placemark,my_sink,null,NodeId.create(client));
+  req.user_data=curry(xml_rpc_get_done,result_cb,req,client_string,start_ms,user_agent,application,details);
+  log_get_req(-1,req,client_string,user_agent,application);
+  dispatch(req);
+}

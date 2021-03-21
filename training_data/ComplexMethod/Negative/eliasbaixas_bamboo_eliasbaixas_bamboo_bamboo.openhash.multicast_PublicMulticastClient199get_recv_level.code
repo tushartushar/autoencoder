@@ -1,0 +1,5 @@
+protected int get_recv_level(BigInteger this_key,BigInteger recv_key,int num_levels){
+  for (int level=num_levels - 1; level >= 0; level--)   if (same_partition(this_key,recv_key,level))   return level;
+  assert false;
+  return 0;
+}

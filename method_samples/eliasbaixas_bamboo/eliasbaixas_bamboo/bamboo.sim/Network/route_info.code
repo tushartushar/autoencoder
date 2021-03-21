@@ -1,0 +1,8 @@
+protected static NetworkModel.RouteInfo route_info(NodeId a,NodeId b){
+  Simulator simulator=Simulator.instance();
+  int src=simulator.node_id_to_graph_index(a);
+  int dst=simulator.node_id_to_graph_index(b);
+  assert src != -1;
+  assert dst != -1;
+  return simulator.network_model.compute_route_info(src,dst);
+}

@@ -1,0 +1,3 @@
+public int hashCode(){
+  return low.hashCode() ^ high.hashCode();
+}

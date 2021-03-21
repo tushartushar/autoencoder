@@ -1,0 +1,3 @@
+public MyClassifierAlarmCB(Classifier c){
+  classifier=c;
+}

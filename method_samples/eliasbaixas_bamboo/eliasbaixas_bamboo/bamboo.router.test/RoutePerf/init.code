@@ -1,0 +1,17 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  String dest_str=config_get_string(config,"dest");
+  if (dest_str != null) {
+    final String regex="0x[0-9A-Fa-f]+";
+    if (!dest_str.matches(regex)) {
+      logger.fatal("dest must match " + regex);
+      System.exit(1);
+    }
+    dest=new BigInteger(dest_str.substring(2),16);
+    period=config_get_int(config,"period");
+    if (period <= 0) {
+      logger.fatal("period must be positive");
+      System.exit(1);
+    }
+  }
+}

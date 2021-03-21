@@ -1,0 +1,12 @@
+public static Integer getInt(String key){
+  try {
+    if (config == null) {
+      init();
+    }
+    return config.getInt(key);
+  }
+ catch (  ConfigurationException e) {
+    e.printStackTrace();
+    return null;
+  }
+}

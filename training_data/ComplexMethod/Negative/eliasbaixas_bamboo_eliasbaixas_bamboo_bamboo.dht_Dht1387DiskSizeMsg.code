@@ -1,0 +1,15 @@
+public DiskSizeMsg(int[] t,double[] s,boolean r){
+  ttls=t;
+  sizes=s;
+  reply=r;
+}
+public DiskSizeMsg(InputBuffer buf) throws QSException {
+  int cnt=buf.nextInt();
+  ttls=new int[cnt];
+  sizes=new double[cnt];
+  for (int i=0; i < cnt; ++i) {
+    ttls[i]=buf.nextInt();
+    sizes[i]=buf.nextDouble();
+  }
+  reply=buf.nextBoolean();
+}

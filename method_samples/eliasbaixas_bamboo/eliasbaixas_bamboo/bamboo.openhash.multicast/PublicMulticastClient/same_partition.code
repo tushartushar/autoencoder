@@ -1,0 +1,5 @@
+protected boolean same_partition(BigInteger this_key,BigInteger get_key,int level){
+  BigInteger xor=this_key.xor(get_key);
+  BigInteger shifted=xor.shiftRight(160 - level);
+  return shifted.intValue() == 0;
+}

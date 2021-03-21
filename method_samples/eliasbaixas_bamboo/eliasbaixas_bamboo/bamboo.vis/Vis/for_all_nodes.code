@@ -1,0 +1,12 @@
+public void for_all_nodes(ForNodeFn fn){
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  SelectionModel model=bamboo_node_interactor.getSelectionModel();
+  Iterator i=model.getSelection();
+  while (i.hasNext()) {
+    Figure dot=(Figure)i.next();
+    if (dot.getUserObject() instanceof BambooNode) {
+      BambooNode node=(BambooNode)dot.getUserObject();
+      fn.for_node(node);
+    }
+  }
+}

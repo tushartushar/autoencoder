@@ -1,0 +1,1 @@
+void leaf_set_changed(BambooNeighborInfo[] preds,BambooNeighborInfo[] succs,Object user_data);

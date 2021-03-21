@@ -1,0 +1,6 @@
+protected void handle_route_continue(BambooRouteContinue req){
+  if (req.iter) {
+    BUG("iterative routing no longer supported");
+  }
+  routeContinue(req.src,req.dest,req.immediate_src,req.app_id,req.intermediate_upcall,req.payload);
+}

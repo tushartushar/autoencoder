@@ -1,0 +1,6 @@
+/** 
+ * Returns the remote bluetooth device identified by the bluetooth device address.
+ */
+public BluetoothDevice getDevice(){
+  return mDevice;
+}

@@ -1,0 +1,7 @@
+/** 
+ * Returns the port number of the sender of the current XDR data. This method should only be called after  {@link #beginDecoding}, otherwise it might return stale information.
+ * @return Port number of the sender of the current XDR data.
+ */
+public int getSenderPort(){
+  return 0;
+}

@@ -1,0 +1,6 @@
+/** 
+ * Returns the virtual coordinate of the requestor.
+ */
+public VirtualCoordinate getRequestorCoord(){
+  return _coordinate;
+}

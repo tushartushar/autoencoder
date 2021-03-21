@@ -1,0 +1,3 @@
+@Column(name="CUSTOMSTRING3",nullable=true,length=50) public String getCustomString3(){
+  return CustomString3;
+}

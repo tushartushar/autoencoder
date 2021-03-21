@@ -1,0 +1,14 @@
+protected void handle_net_lat_resp(NetworkLatencyResp resp){
+  if (!resp.success)   return;
+  NeighborInfo ni=(NeighborInfo)resp.user_data;
+  generic_msg_success(ni);
+  Double rtt_ms=new Double((double)resp.rtt_ms);
+  if (rtt_ms == null)   BUG("compiler bug");
+  latency_map.put(ni,rtt_ms);
+  add_to_ls_ping_time(ni,resp.rtt_ms);
+  add_to_rt_ping_time(ni,resp.rtt_ms);
+  location_cache.add_node(ni);
+  if ((!leaf_set.contains(ni)) && (!rt.contains(ni)) && (!reverse_rt.contains(ni))) {
+    latency_map.remove(ni);
+  }
+}

@@ -1,0 +1,6 @@
+protected void rem_n(Node n){
+  if (first == n)   first=n.succ;
+  if (last == n)   last=n.pred;
+  if (n.pred != null)   n.pred.succ=n.succ;
+  if (n.succ != null)   n.succ.pred=n.pred;
+}

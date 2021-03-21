@@ -1,0 +1,3 @@
+public String toString(){
+  return "(BambooRouterAppRegReq app_id=" + Long.toHexString(app_id) + " send_leaf_sets="+ send_leaf_sets+ " send_rt="+ send_rt+ " send_reverse_rt="+ send_reverse_rt+ ")";
+}

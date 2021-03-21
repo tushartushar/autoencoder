@@ -1,0 +1,4 @@
+public boolean equals(Object rhs){
+  SrcAndMsgId other=(SrcAndMsgId)rhs;
+  return (msg_id == other.msg_id) && src.equals(other.src);
+}

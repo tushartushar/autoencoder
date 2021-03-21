@@ -1,0 +1,3 @@
+public void setScanType(ScanType scanType){
+  nextSettings=ScanType.ACTIVE == scanType ? higPowerScan : lowPowerScan;
+}

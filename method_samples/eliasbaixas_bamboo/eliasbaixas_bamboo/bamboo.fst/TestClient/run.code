@@ -1,0 +1,15 @@
+public void run(){
+  boolean result=fst.addPut(size,ttl_ms,id,curry(putDone,new Long(acore.nowMillis())));
+  if (!result)   ++rejects;
+  scheduleNextPut();
+}
+public void run(Long startTime){
+  bytesStored+=size;
+  commitmentsGranted+=size * ttl_sec;
+  totalWait+=acore.nowMillis() - startTime.longValue();
+  ++accepts;
+  acore.registerTimer(ttl_ms,putExpired);
+}
+public void run(){
+  bytesStored-=size;
+}

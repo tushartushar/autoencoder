@@ -1,0 +1,6 @@
+@Override public void mousePressed(MouseEvent e){
+  Object obj=e.getSource();
+  if (obj == imgDisplay) {
+    maybeShowPopup(e);
+  }
+}

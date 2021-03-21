@@ -1,0 +1,3 @@
+protected int getDimensions(){
+  return 5;
+}

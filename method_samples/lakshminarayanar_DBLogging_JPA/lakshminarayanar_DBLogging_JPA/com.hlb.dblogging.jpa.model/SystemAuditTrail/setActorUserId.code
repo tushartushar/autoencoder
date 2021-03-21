@@ -1,0 +1,3 @@
+public void setActorUserId(int actorUserId){
+  this.actorUserId=actorUserId;
+}

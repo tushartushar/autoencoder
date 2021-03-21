@@ -1,0 +1,4 @@
+protected boolean slop_space_avail(InetAddress client,int size,int ttl_sec){
+  int i=ttl_to_vdisk(ttl_sec);
+  return ((slop_size[i] + size <= slop_cap[i]) && (slop_usage(i,client) + size <= 2 * (1024 + StorageManager.Key.SIZE)));
+}

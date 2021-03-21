@@ -1,0 +1,5 @@
+protected void rpc_put_done(Dht.PutReq req,Dht.PutResp resp,Integer xact_id,long start_ms,byte[] value_hash,String client_lib,String application){
+  reqs_outstanding--;
+  Runnable log_fn=curry(log_put_resp,xact_id,req,resp,client_string,new Long(start_ms),value_hash,client_lib,application);
+  send_resp(curry(normal_resp_cb,xact_id,new Integer(0),new XdrInt(resp.result),log_fn));
+}

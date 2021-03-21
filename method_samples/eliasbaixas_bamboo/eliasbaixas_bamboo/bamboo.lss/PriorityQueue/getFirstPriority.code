@@ -1,0 +1,4 @@
+public final long getFirstPriority(){
+  if (heap_size < 1)   return 0;
+  return prio[1];
+}

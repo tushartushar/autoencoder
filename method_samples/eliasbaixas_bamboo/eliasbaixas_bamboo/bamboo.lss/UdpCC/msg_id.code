@@ -1,0 +1,4 @@
+protected final long msg_id(long seq){
+  if (seq < 0)   throw new IllegalArgumentException("seq=" + Long.toHexString(seq) + " in msg_id");
+  return seq >> 8;
+}

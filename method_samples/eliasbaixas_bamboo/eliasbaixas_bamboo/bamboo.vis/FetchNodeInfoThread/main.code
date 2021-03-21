@@ -1,0 +1,56 @@
+public static void main(String[] args) throws IOException {
+  if (args.length > 0 && args[0].equals("-d")) {
+    int refresh_period;
+    String file_name;
+    if (args.length != 3) {
+      System.out.println("Bad number of arguments given");
+      return;
+    }
+    try {
+      refresh_period=Integer.valueOf(args[1]);
+    }
+ catch (    NumberFormatException e) {
+      System.out.println("Bad number for refersh period given");
+      return;
+    }
+    file_name=args[2];
+    FetchNodeInfoThread t=new FetchNodeInfoThread(null,null);
+    t.run();
+    try {
+      Thread.sleep(500);
+    }
+ catch (    Exception e) {
+      System.out.print("Problem getting FetchNodeInfoThread to sleep, terminating...");
+      t=null;
+      return;
+    }
+    if (!t.dump_node_information_to_file(file_name)) {
+      System.out.println("Couldn't dump information to file.");
+    }
+    while (true) {
+      try {
+        Thread.sleep(refresh_period);
+      }
+ catch (      Exception e) {
+        System.out.print("Problem getting FetchNodeInfoThread to sleep, terminating...");
+        t=null;
+        return;
+      }
+      if (!t.dump_node_information_to_file(file_name)) {
+        System.out.println("Couldn't dump information to file.");
+      }
+    }
+  }
+ else {
+    Thunk1<BambooNode> fetch_succeeded=new Thunk1<BambooNode>(){
+      int count=0;
+      public void run(      BambooNode node){
+        count++;
+        System.out.println(count + ":\t" + node.IP+ ":"+ node.port+ "\t"+ node.hostname);
+      }
+    }
+;
+    FetchNodeInfoThread t=new FetchNodeInfoThread(fetch_succeeded,null);
+    t.run();
+  }
+}

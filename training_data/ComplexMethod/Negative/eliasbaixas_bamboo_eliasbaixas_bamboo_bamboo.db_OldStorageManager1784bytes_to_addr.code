@@ -1,0 +1,10 @@
+static final InetAddress bytes_to_addr(byte[] c){
+  InetAddress result=null;
+  try {
+    result=InetAddress.getByAddress(c);
+  }
+ catch (  UnknownHostException e) {
+    assert false;
+  }
+  return result;
+}

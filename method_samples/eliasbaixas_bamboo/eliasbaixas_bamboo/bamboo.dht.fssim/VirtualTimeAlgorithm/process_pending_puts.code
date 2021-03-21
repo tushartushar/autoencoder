@@ -1,0 +1,59 @@
+public void process_pending_puts(LinkedList puts){
+  storage_tree.shift_time(sim.now_ms() / 1000);
+  assert storage_tree.accept_put(MAX_TTL,MAX_SIZE);
+  if (!puts.isEmpty()) {
+    PriorityQueue pq=new PriorityQueue(puts.size());
+    HashMap second_puts=new HashMap();
+    if (DEBUG)     System.err.println(sim.now_ms() + ": system time is " + virtual_time);
+    for (Iterator i=puts.iterator(); i.hasNext(); ) {
+      PutInfo pi=(PutInfo)i.next();
+      assert pi.ttl_sec <= MAX_TTL;
+      Integer client=new Integer(pi.client);
+      LinkedList seconds=(LinkedList)second_puts.get(client);
+      if (seconds == null) {
+        second_puts.put(client,new LinkedList());
+        long ft=start_time(pi.client) + pi.size * pi.ttl_sec;
+        pq.add(pi,ft);
+        if (DEBUG)         System.err.println(sim.now_ms() + ": put from client " + client+ " has finish time "+ ft);
+      }
+ else {
+        seconds.addLast(pi);
+      }
+    }
+    while (!pq.isEmpty()) {
+      long ft=pq.getFirstPriority();
+      PutInfo pi=(PutInfo)pq.removeFirst();
+      Integer client=new Integer(pi.client);
+      if (storage_tree.add_put(pi.ttl_sec,pi.size)) {
+        if (DEBUG)         System.err.println(sim.now_ms() + ": accept put from client " + pi.client+ " with finish time "+ ft);
+        pi.cb.cb(true,false);
+        ++accept_responses;
+        accept_put(pi);
+        latest_finish_times.put(client,new Long(ft));
+        Long cg=(Long)commitments_granted.get(client);
+        long ncg=((cg == null) ? 0 : cg.longValue()) + pi.size * pi.ttl_sec;
+        commitments_granted.put(client,new Long(ncg));
+        virtual_time=Math.max(ft - MAX_PUT - 1,virtual_time);
+      }
+ else {
+        if (DEBUG)         System.err.println(sim.now_ms() + ": reject put from client " + pi.client+ " with finish time "+ ft);
+        Long lft=(Long)latest_finish_times.get(client);
+        boolean again=(lft == null) || (lft.longValue() < virtual_time);
+        pi.cb.cb(false,again);
+        if (again) {
+          ++again_responses;
+        }
+ else {
+          ++cap_responses;
+        }
+      }
+      LinkedList seconds=(LinkedList)second_puts.get(client);
+      if (!seconds.isEmpty()) {
+        PutInfo npi=(PutInfo)seconds.removeFirst();
+        long nft=start_time(npi.client) + npi.size * npi.ttl_sec;
+        pq.add(npi,nft);
+        if (DEBUG)         System.err.println(sim.now_ms() + ": extra put from client " + client+ " has finish time "+ nft);
+      }
+    }
+  }
+}

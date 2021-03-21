@@ -1,0 +1,5 @@
+private void finishRecovery(){
+  Log.w(TAG,"Recovery attempt finished");
+  distinctBluetoothAddresses.clear();
+  recoveryInProgress=false;
+}

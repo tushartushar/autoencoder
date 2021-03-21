@@ -1,0 +1,110 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  acore.registerTimer(0,ready);
+  no_rexmit_routes=config_get_boolean(config,"no_rexmit_routes");
+  ignore_possibly_down=config_get_boolean(config,"ignore_possibly_down");
+  PNS=!config_get_boolean(config,"ignore_proximity");
+  GUID_BITS=160;
+  MODULUS=BigInteger.valueOf(2).pow(GUID_BITS);
+  DIGIT_VALUES=configGetInt(config,"digit_values",16);
+  if (DIGIT_VALUES <= 1)   throw new IllegalArgumentException("digit_values must be >= 0");
+{
+    DIGIT_BITS=1;
+    int i=2;
+    while (i < DIGIT_VALUES) {
+      ++DIGIT_BITS;
+      i<<=1;
+    }
+    if (i != DIGIT_VALUES)     throw new IllegalArgumentException("digit_values must be a power of two");
+    if (GUID_BITS % DIGIT_BITS != 0)     throw new IllegalArgumentException("log_2 (digit_values) must divide 160");
+    GUID_DIGITS=GUID_BITS / DIGIT_BITS;
+  }
+  partition_check_alarm_period=config_get_seconds(config,"partition_check_alarm_period",60);
+  periodic_ping_period=config_get_seconds(config,"periodic_ping_period",20);
+  ls_alarm_period=config_get_seconds(config,"ls_alarm_period",4);
+  near_rt_alarm_period=config_get_seconds(config,"near_rt_alarm_period",10);
+  far_rt_alarm_period=config_get_seconds(config,"far_rt_alarm_period",20);
+  lookup_rt_alarm_period=config_get_seconds(config,"lookup_rt_alarm_period",0);
+  String explicit_guid=config_get_string(config,"explicit_guid");
+  String keyfilename=config_get_string(config,"pkey");
+  if (keyfilename != null && !keyfilename.equals("")) {
+    QSPublicKey pkey=null;
+    try {
+      FileInputStream keyfile=new FileInputStream(keyfilename);
+      pkey=(QSPublicKey)QSIO.read(keyfile);
+      keyfile.close();
+    }
+ catch (    Exception e) {
+      logger.fatal("Caught exception " + e + " while trying to read pkey ("+ keyfilename+ ") from disk.");
+      System.exit(1);
+    }
+    SecureHash my_guid_sh=new SHA1Hash(pkey);
+    my_guid=GuidTools.secure_hash_to_big_integer(my_guid_sh);
+  }
+ else   if (explicit_guid != null && !explicit_guid.equals("")) {
+    final String regex="0x[0-9a-fA-F]+";
+    if (!explicit_guid.matches(regex)) {
+      logger.fatal("explicit_guid must match " + regex);
+      System.exit(1);
+    }
+    my_guid=new BigInteger(explicit_guid.substring(2),16);
+  }
+ else {
+    SecureHash my_guid_sh=new SHA1Hash(my_node_id);
+    my_guid=GuidTools.secure_hash_to_big_integer(my_guid_sh);
+  }
+  my_neighbor_info=new NeighborInfo(my_node_id,my_guid);
+  int gateway_count=config_get_int(config,"gateway_count");
+  if (gateway_count < 0) {
+    NodeId g=new NodeId(config_get_string(config,"gateway"));
+    gateways.addLast(g);
+  }
+ else {
+    for (int i=0; i < gateway_count; ++i) {
+      String nid_str=config_get_string(config,"gateway_" + i);
+      NodeId g=null;
+      try {
+        g=new NodeId(nid_str);
+      }
+ catch (      java.net.UnknownHostException e) {
+        logger.warn("cannot DNS resolve host: " + nid_str);
+        continue;
+      }
+      if (!gateways.contains(g))       gateways.addLast(g);
+    }
+  }
+  boolean am_gateway=false;
+  for (Iterator i=gateways.iterator(); i.hasNext(); ) {
+    if (i.next().equals(my_node_id)) {
+      am_gateway=true;
+      i.remove();
+    }
+  }
+  if (gateways.isEmpty()) {
+    if (am_gateway && ((gateway_count == 1) || (gateway_count < 0))) {
+    }
+ else {
+      logger.fatal("Could not DNS resolve any gateways.");
+      System.exit(1);
+    }
+  }
+  logger.info("Bamboo node " + my_node_id + " has guid 0x"+ GuidTools.guid_to_string(my_guid));
+  leaf_set_size=configGetInt(config,"leaf_set_size",2);
+  leaf_set=new LeafSet(my_neighbor_info,leaf_set_size,MODULUS);
+  double rt_scale=config_get_double(config,"rt_scale");
+  if (rt_scale == -1.0)   rt_scale=0.9;
+  rt=new RoutingTable(my_neighbor_info,rt_scale,MODULUS,GUID_DIGITS,DIGIT_VALUES);
+  my_digits=rt.guid_to_digits(my_guid);
+  rand=new Random(my_guid.longValue());
+  location_cache=new LocationCache(configGetInt(config,"location_cache_size",0),MODULUS);
+  immediate_join=config_get_boolean(config,"immediate_join");
+  if (immediate_join) {
+    down_nodes_cap=Math.min(down_nodes_cap,gateways.size());
+    for (Iterator i=gateways.iterator(); i.hasNext(); ) {
+      NodeId n=(NodeId)i.next();
+      add_to_down_nodes(n);
+      i.remove();
+    }
+  }
+  instances.put(my_node_id,this);
+}

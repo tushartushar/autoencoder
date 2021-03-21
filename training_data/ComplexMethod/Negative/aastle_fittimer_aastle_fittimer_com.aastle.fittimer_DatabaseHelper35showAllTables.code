@@ -1,0 +1,4 @@
+public Cursor showAllTables(){
+  String mySql=" SELECT name FROM sqlite_master " + " WHERE type='table'" + "   AND name LIKE 'PR_%' ";
+  return thisDataBase.rawQuery(mySql,null);
+}

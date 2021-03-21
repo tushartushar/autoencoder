@@ -1,0 +1,6 @@
+public PutReq(Key k,ByteBuffer d,SinkIF s,Object ud){
+  key=k;
+  data=d;
+  comp_q=s;
+  user_data=ud;
+}

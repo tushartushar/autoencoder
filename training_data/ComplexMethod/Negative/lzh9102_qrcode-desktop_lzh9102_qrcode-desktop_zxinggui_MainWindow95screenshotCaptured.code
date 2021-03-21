@@ -1,0 +1,4 @@
+@Override public void screenshotCaptured(BufferedImage image){
+  setVisible(true);
+  decodeImage(image);
+}

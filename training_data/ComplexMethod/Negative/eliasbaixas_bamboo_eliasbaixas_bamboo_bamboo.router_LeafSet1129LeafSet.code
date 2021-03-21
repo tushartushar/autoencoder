@@ -1,0 +1,9 @@
+public LeafSet(NeighborInfo ni,int sz,BigInteger mod){
+  MODULUS=mod;
+  my_neighbor_info=ni;
+  my_guid=ni.guid;
+  leaf_set_size=sz;
+  leaf_preds=new NeighborInfo[leaf_set_size];
+  leaf_succs=new NeighborInfo[leaf_set_size];
+  updateOverlap();
+}

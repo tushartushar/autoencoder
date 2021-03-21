@@ -1,0 +1,10 @@
+public PutRespMsg(NodeId dest,long s,int r){
+  super(dest,false);
+  seq=s;
+  result=r;
+}
+public PutRespMsg(InputBuffer buffer) throws QSException {
+  super(buffer);
+  seq=buffer.nextLong();
+  result=buffer.nextInt();
+}

@@ -1,0 +1,5 @@
+protected Iterator innerPropertyIterator(String[] propertyKeys){
+  HashMap<String,Property> properties=(HashMap<String,Property>)this.properties.clone();
+  if (propertyKeys.length > 0)   return properties.entrySet().stream().filter(entry -> ElementHelper.keyExists(entry.getKey(),propertyKeys)).map(x -> x.getValue()).iterator();
+  return properties.values().iterator();
+}

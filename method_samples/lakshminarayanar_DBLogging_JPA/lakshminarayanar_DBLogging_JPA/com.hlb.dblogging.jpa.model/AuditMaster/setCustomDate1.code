@@ -1,0 +1,3 @@
+public void setCustomDate1(Date customDate1){
+  CustomDate1=customDate1;
+}

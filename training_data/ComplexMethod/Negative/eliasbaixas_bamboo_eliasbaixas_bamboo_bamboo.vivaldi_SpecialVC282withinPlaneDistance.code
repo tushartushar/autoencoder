@@ -1,0 +1,6 @@
+private double withinPlaneDistance(VirtualCoordinate destination){
+  double plane_dist=0.0;
+  for (int i=0; i < _coordinate.length - 1; i++)   plane_dist+=(_coordinate[i] - destination._coordinate[i]) * (_coordinate[i] - destination._coordinate[i]);
+  plane_dist=Math.sqrt(plane_dist);
+  return plane_dist;
+}

@@ -1,0 +1,29 @@
+public ContactGenerator(){
+  JLabel lblName=new JLabel("Name: ",ALIGH_RIGHT);
+  JLabel lblReading=new JLabel("Reading: ",ALIGH_RIGHT);
+  JLabel lblOrg=new JLabel("Company/Organization: ",ALIGH_RIGHT);
+  JLabel lblPhoneNumber=new JLabel("Phone Number: ",ALIGH_RIGHT);
+  JLabel lblEmail=new JLabel("E-Mail: ",ALIGH_RIGHT);
+  JLabel lblAddress=new JLabel("Address: ",ALIGH_RIGHT);
+  JLabel lblWebsite=new JLabel("Website: ",ALIGH_RIGHT);
+  JLabel lblMemo=new JLabel("Memo: ",ALIGH_RIGHT);
+  JLabel lblFormat=new JLabel("Format: ",ALIGH_RIGHT);
+  panel.addField(lblName,txtName);
+  panel.addField(lblReading,txtReading);
+  panel.addField(lblOrg,txtOrg);
+  panel.addField(lblPhoneNumber,txtPhoneNumber);
+  panel.addField(lblEmail,txtEmail);
+  panel.addField(lblAddress,txtAddress);
+  panel.addField(lblWebsite,txtWebsite);
+  panel.addField(lblMemo,txtMemo);
+  panel.addField(lblFormat,cbFormat);
+  cbFormat.addActionListener(cbFormatListener);
+  for (  final String format : contactFormats) {
+    cbFormat.addItem(new Object(){
+      public String toString(){
+        return format;
+      }
+    }
+);
+  }
+}

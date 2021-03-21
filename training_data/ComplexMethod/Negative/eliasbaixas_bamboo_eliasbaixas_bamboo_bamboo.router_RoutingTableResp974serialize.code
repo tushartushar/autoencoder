@@ -1,0 +1,9 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  buffer.add(peer_guid);
+  if (neighbors == null)   buffer.add(0);
+ else {
+    buffer.add(neighbors.size());
+    for (Iterator i=neighbors.iterator(); i.hasNext(); )     ((NeighborInfo)i.next()).serialize(buffer);
+  }
+}

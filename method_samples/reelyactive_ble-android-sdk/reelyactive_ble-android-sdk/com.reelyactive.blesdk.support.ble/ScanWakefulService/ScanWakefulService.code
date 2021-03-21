@@ -1,0 +1,3 @@
+public ScanWakefulService(){
+  super("com.reelyactive.blesdk.support.ble.ScanWakefulService");
+}

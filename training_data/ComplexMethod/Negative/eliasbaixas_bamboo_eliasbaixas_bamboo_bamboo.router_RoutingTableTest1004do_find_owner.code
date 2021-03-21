@@ -1,0 +1,8 @@
+public void do_find_owner(){
+  long delay=5000 - (now_ms() - last_find_owner);
+  if (delay <= 0)   delay=1;
+  last_find_owner=now_ms() + delay;
+  BigInteger dest=GuidTools.random_guid(rand);
+  BambooRouteInit outb=new BambooRouteInit(dest,app_id,false,false,new QSInt(0));
+  classifier.dispatch_later(outb,delay);
+}

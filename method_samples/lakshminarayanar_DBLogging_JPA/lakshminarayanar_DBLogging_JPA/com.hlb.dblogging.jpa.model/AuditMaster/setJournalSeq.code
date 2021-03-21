@@ -1,0 +1,3 @@
+public void setJournalSeq(int journalSeq){
+  JournalSeq=journalSeq;
+}

@@ -1,0 +1,9 @@
+public Object clone() throws CloneNotSupportedException {
+  FetchKeysReq result=(FetchKeysReq)super.clone();
+  result.low_guid=low_guid;
+  result.high_guid=high_guid;
+  result.low_time=low_time;
+  result.high_time=high_time;
+  result.seq=seq;
+  return result;
+}

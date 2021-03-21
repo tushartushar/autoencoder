@@ -1,0 +1,10 @@
+protected static void guid_to_bytes(BigInteger guid,byte[] buf,int offset){
+  byte[] guid_bytes=guid.toByteArray();
+  if (guid_bytes.length < 20) {
+    System.arraycopy(guid_bytes,0,buf,offset + 20 - guid_bytes.length,guid_bytes.length);
+  }
+ else {
+    int guid_offset=(guid_bytes.length > 20) ? 1 : 0;
+    System.arraycopy(guid_bytes,guid_offset,buf,offset,20);
+  }
+}

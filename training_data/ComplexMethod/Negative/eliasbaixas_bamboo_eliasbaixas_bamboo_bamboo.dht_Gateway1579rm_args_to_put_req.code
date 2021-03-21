@@ -1,0 +1,6 @@
+protected Dht.PutReq rm_args_to_put_req(bamboo_rm_arguments rm_args,InetAddress client){
+  BigInteger key=byte_array_to_big_int(rm_args.key.value);
+  int ttl_sec=(rm_args.ttl_sec > Dht.MAX_TTL_SEC) ? Dht.MAX_TTL_SEC : rm_args.ttl_sec;
+  byte[] secret_hash=md.digest(rm_args.secret);
+  return new Dht.PutReq(key,ByteBuffer.wrap(rm_args.secret),secret_hash,rm_args.value_hash.hash,false,my_sink,null,ttl_sec,client);
+}

@@ -1,0 +1,12 @@
+private Map<String,Object> buildGeoJsonPolygon(List<Point> points) throws IOException {
+  Map<String,Object> json=new HashMap<String,Object>();
+  json.put("type","Polygon");
+  List<double[]> newPoints=new ArrayList<double[]>();
+  for (  Point point : points) {
+    newPoints.add(new double[]{point.getX(),point.getY()});
+  }
+  Object[] pointsArray=newPoints.toArray();
+  Object[] envelopeArray=new Object[]{pointsArray};
+  json.put("coordinates",envelopeArray);
+  return json;
+}

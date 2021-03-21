@@ -1,0 +1,5 @@
+protected static Node increment_range(Node n,long low,long high,long inc){
+  if ((low <= n.low) && (high >= n.high))   return new Node(n,inc);
+  if ((low > n.high) || (high < n.low))   return n;
+  return new Node(n.offset,increment_range(n.left,low,high,inc),increment_range(n.right,low,high,inc));
+}

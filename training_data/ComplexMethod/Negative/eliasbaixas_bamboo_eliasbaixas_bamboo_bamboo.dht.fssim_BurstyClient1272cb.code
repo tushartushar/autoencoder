@@ -1,0 +1,22 @@
+public void cb(Object not_used){
+  if (sim.now_ms() == next_mode_switch) {
+    next_mode_switch=sim.now_ms() + on_time;
+  }
+  alg.enqueue_put(client,size,ttl_sec,new Algorithm.PutResultCb(){
+    public void cb(    boolean success,    boolean again){
+    }
+  }
+,null);
+  long next_wait=Math.round(Math.ceil(random_gaussian(period,period * 0.1,rand)));
+  if (sim.now_ms() + next_wait < stop_time) {
+    if (sim.now_ms() + next_wait < next_mode_switch) {
+      sim.register_event(next_wait,this,null);
+    }
+ else {
+      next_mode_switch=sim.now_ms() + off_time;
+      sim.register_event(next_mode_switch - sim.now_ms(),this,null);
+    }
+  }
+}
+public void cb(boolean success,boolean again){
+}

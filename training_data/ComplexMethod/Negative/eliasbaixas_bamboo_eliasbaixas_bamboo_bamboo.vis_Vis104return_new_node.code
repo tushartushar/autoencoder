@@ -1,0 +1,3 @@
+public BambooNode return_new_node(BigInteger g,NodeId n,double[] c){
+  return new BambooNode(g,n,c);
+}

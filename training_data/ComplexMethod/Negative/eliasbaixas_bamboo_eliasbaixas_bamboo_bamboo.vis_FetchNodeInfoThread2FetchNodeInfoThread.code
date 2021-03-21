@@ -1,0 +1,12 @@
+public FetchNodeInfoThread(Thunk1<BambooNode> fetch_succeed,Thunk1<BambooNode> fetch_fail) throws IOException {
+  this.fetch_succeed=fetch_succeed;
+  this.fetch_fail=fetch_fail;
+  this.acore=new bamboo.lss.ASyncCoreImpl();
+  stub_vis=new Vis();
+}
+public FetchNodeInfoThread(Thunk1<BambooNode> fetch_succeed,Thunk1<BambooNode> fetch_fail,Vis stub_vis) throws IOException {
+  this.fetch_succeed=fetch_succeed;
+  this.fetch_fail=fetch_fail;
+  this.acore=new bamboo.lss.ASyncCoreImpl();
+  this.stub_vis=stub_vis;
+}

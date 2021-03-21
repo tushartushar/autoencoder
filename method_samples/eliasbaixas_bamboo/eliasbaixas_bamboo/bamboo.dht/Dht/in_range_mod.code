@@ -1,0 +1,3 @@
+public boolean in_range_mod(BigInteger low,BigInteger high,BigInteger query){
+  return GuidTools.in_range_mod(low,high,query,MODULUS);
+}

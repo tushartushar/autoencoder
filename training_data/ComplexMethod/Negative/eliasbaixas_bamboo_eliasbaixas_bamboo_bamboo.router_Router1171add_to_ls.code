@@ -1,0 +1,6 @@
+protected void add_to_ls(NeighborInfo ni){
+  if (!leaf_set.contains(ni)) {
+    if (have_rtt_ms(ni))     add_to_ls_ping_time(ni,Double.MAX_VALUE);
+ else     send_ping(ni);
+  }
+}

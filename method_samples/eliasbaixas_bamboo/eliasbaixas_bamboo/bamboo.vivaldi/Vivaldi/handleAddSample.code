@@ -1,0 +1,6 @@
+private void handleAddSample(VirtualCoordinate remote_coordinate,double latency){
+  if (now_ms() <= _update_start)   return;
+  _my_coordinate.update(remote_coordinate,latency);
+  _samples++;
+  if (_samples <= _track_initial)   logVirtualCoordinate();
+}

@@ -1,0 +1,3 @@
+public static String toString(@Nullable Object a){
+  return (a == null) ? "[null]" : a.toString();
+}

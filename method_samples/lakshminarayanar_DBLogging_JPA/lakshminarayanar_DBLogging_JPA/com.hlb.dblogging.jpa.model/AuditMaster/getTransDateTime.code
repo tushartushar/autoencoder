@@ -1,0 +1,3 @@
+@Column(name="TRANSDATETIME",nullable=false) @Temporal(TemporalType.TIMESTAMP) public Date getTransDateTime(){
+  return TransDateTime;
+}

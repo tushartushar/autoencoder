@@ -1,0 +1,15 @@
+protected void handle_get_by_time_resp(StorageManager.GetByTimeResp resp){
+  if (resp.continuation == null) {
+    StorageManager.GetByGuidReq req=new StorageManager.GetByGuidReq(BigInteger.valueOf(0),false,null,my_sink,resp.user_data);
+    dispatch(req);
+  }
+ else {
+    for (    StorageManager.Key k : resp.keys) {
+      if (k.put) {
+        LinkedList data=(LinkedList)resp.user_data;
+        data.addLast(new Pair(k,null));
+      }
+    }
+    dispatch(new StorageManager.GetByTimeCont(resp.continuation,my_sink,resp.user_data));
+  }
+}

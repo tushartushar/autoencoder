@@ -1,0 +1,4 @@
+public void xdrEncode(XdrEncodingStream xdr) throws OncRpcException, IOException {
+  xdr.xdrEncodeString(algorithm);
+  xdr.xdrEncodeDynamicOpaque(hash);
+}

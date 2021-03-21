@@ -1,0 +1,5 @@
+public int size(){
+  int result=1;
+  for (PointList i=next; i != null; i=i.next)   ++result;
+  return result;
+}

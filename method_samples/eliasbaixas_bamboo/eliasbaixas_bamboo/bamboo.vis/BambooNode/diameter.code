@@ -1,0 +1,3 @@
+public final double diameter(){
+  return 2.0 * radius();
+}

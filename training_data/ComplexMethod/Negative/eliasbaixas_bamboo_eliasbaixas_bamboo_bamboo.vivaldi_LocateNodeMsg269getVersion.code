@@ -1,0 +1,6 @@
+/** 
+ * Returns the virtual coordinate version number of the requestor.
+ */
+public int getVersion(){
+  return _version_number;
+}

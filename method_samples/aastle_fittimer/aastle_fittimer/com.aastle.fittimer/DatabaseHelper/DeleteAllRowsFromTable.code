@@ -1,0 +1,4 @@
+public int DeleteAllRowsFromTable(String table){
+  thisDataBase=getWritableDatabase();
+  return thisDataBase.delete(table,null,null);
+}

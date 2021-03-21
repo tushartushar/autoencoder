@@ -1,0 +1,3 @@
+public String toString(){
+  return "(Dht.GetResp values.size ()=" + values.size() + " placemark="+ placemark+ ")";
+}

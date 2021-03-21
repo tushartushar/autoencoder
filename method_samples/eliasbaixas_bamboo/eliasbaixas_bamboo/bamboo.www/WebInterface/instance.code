@@ -1,0 +1,3 @@
+public static WebInterface instance(NodeId node_id){
+  return instances.get(node_id);
+}

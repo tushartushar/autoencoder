@@ -1,0 +1,16 @@
+/** 
+ * Test for lost tags by periodically checking the found devices for any that haven't been seen recently.
+ */
+protected void onScanCycleComplete(){
+  Iterator<Entry<String,ScanResult>> iter=recentScanResults.entrySet().iterator();
+  long lostTimestampMillis=getLostTimestampMillis();
+  while (iter.hasNext()) {
+    Entry<String,ScanResult> entry=iter.next();
+    String address=entry.getKey();
+    ScanResult savedResult=entry.getValue();
+    if (TimeUnit.NANOSECONDS.toMillis(savedResult.getTimestampNanos()) < lostTimestampMillis) {
+      iter.remove();
+      callbackLostLeScanClients(address,savedResult);
+    }
+  }
+}

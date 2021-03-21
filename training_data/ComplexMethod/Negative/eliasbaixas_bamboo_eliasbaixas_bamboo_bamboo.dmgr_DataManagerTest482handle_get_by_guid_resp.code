@@ -1,0 +1,19 @@
+protected void handle_get_by_guid_resp(StorageManager.GetByGuidResp resp){
+  if (resp.continuation == null) {
+    System.err.println("DataManagerTest-" + my_node_id + " stored data:");
+    LinkedList data=(LinkedList)resp.user_data;
+    for (Iterator i=data.iterator(); i.hasNext(); ) {
+      Pair p=(Pair)i.next();
+      StorageManager.Key k=(StorageManager.Key)p.first;
+      System.err.println("  0x" + GuidTools.guid_to_string(k.guid) + " 0x"+ ByteUtils.print_bytes(k.data_hash,0,4));
+    }
+    classifier.dispatch_later(new PrintDataAlarm(),10 * 1000);
+  }
+ else {
+    if (resp.key.put) {
+      LinkedList data=(LinkedList)resp.user_data;
+      data.addLast(new Pair(resp.key,resp.data));
+    }
+    dispatch(new StorageManager.GetByGuidCont(resp.continuation,false,my_sink,resp.user_data));
+  }
+}

@@ -1,0 +1,4 @@
+public void enqueue_put(int client,int size,int ttl_sec,PutResultCb cb,Object user_data){
+  if (client + 1 > client_count)   client_count=client + 1;
+  pending_puts.addLast(new PutInfo(client,size,ttl_sec,cb,user_data));
+}

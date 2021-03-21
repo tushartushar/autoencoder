@@ -1,0 +1,8 @@
+@Override public byte[] getMatrix(){
+  int width=getWidth();
+  int height=getHeight();
+  int area=width * height;
+  byte[] matrix=new byte[area];
+  image.getRaster().getDataElements(left,top,width,height,matrix);
+  return matrix;
+}

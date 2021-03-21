@@ -1,0 +1,8 @@
+public Payload(NodeId source,int seq){
+  this.source=source;
+  this.seq=seq;
+}
+public Payload(InputBuffer buffer) throws QSException {
+  source=new NodeId(buffer);
+  seq=buffer.nextInt();
+}

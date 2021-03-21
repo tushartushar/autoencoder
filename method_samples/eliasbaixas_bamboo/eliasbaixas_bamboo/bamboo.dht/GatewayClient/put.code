@@ -1,0 +1,18 @@
+public void put(bamboo_put_args put_args,final PutDoneCb cb,final Object user_data){
+  Thunk1 t=new Thunk1(){
+    public void run(    Object resp){
+      cb.put_done_cb((Integer)resp,user_data);
+    }
+  }
+;
+  req(2,2,put_args,t);
+}
+public void put(bamboo_put_args put_args,final Thunk1<Integer> thunk){
+  Thunk1 t=new Thunk1(){
+    public void run(    Object resp){
+      thunk.run((Integer)resp);
+    }
+  }
+;
+  req(2,2,put_args,t);
+}

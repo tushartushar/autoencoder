@@ -1,0 +1,8 @@
+@Override public BaseVertex vertex(Object vertexId,String vertexLabel,Edge edge,Direction direction){
+  if (vertexLabel == null) {
+    BaseVertex starVertex=starHandler.vertex(vertexId,vertexLabel,edge,direction);
+    BaseVertex docVertex=docVertexHandler.vertex(vertexId,vertexLabel,edge,direction);
+    return starVertex == null ? docVertex : starVertex;
+  }
+  return vertexHandlers.get(vertexLabel).vertex(vertexId,vertexLabel,edge,direction);
+}

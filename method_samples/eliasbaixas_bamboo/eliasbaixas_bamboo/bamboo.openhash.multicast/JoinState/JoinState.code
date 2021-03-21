@@ -1,0 +1,11 @@
+public JoinState(BigInteger n,int total_levels,int t,String a,ASyncCore.TimerCB c,Object u){
+  groupname=n;
+  ttl_s=t;
+  cb=c;
+  user_data=u;
+  current_level=total_levels - 1;
+  current_get=0;
+  done=false;
+  done_level=-1;
+  app=a;
+}

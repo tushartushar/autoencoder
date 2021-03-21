@@ -1,0 +1,3 @@
+protected void show_help_storage(){
+  JOptionPane.showMessageDialog(frame,"Nodes are shaded darker according to how much storage they are holding.\n" + "The darkest node is currently storing the most, while the lightest is\n" + "storing the least (relative to 0 Mb).","How to interpret the view \"Show storage distribution\"",JOptionPane.INFORMATION_MESSAGE);
+}

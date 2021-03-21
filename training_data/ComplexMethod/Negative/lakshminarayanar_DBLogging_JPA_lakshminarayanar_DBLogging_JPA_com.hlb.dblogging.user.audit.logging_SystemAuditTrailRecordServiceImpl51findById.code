@@ -1,0 +1,5 @@
+@Override public SystemAuditTrail findById(int id) throws Exception {
+  SystemAuditTrail systemAuditTrail=systemAuditTrailRecordRepository.findOne(id);
+  if (systemAuditTrail == null)   throw new Exception();
+  return systemAuditTrail;
+}

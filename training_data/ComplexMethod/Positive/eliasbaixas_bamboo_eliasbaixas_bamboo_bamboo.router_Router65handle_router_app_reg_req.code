@@ -1,0 +1,69 @@
+protected void handle_router_app_reg_req(BambooRouterAppRegReq req){
+  final SinkIF sink=req.completion_queue;
+  final long applicationID=req.app_id;
+  final Thunk2<BambooNeighborInfo[],BambooNeighborInfo[]> lsct=!req.send_leaf_sets ? null : new Thunk2<BambooNeighborInfo[],BambooNeighborInfo[]>(){
+    public void run(    BambooNeighborInfo preds[],    BambooNeighborInfo succs[]){
+      application_enqueue(sink,new BambooLeafSetChanged(preds,succs));
+    }
+  }
+;
+  final Thunk2<BambooNeighborInfo[],BambooNeighborInfo[]> rtct=!req.send_rt ? null : new Thunk2<BambooNeighborInfo[],BambooNeighborInfo[]>(){
+    public void run(    BambooNeighborInfo added[],    BambooNeighborInfo removed[]){
+      application_enqueue(sink,new BambooRoutingTableChanged(added,removed));
+    }
+  }
+;
+  final Thunk2<BambooNeighborInfo[],BambooNeighborInfo[]> rrtct=!req.send_reverse_rt ? null : new Thunk2<BambooNeighborInfo[],BambooNeighborInfo[]>(){
+    public void run(    BambooNeighborInfo added[],    BambooNeighborInfo removed[]){
+      application_enqueue(sink,new BambooReverseRoutingTableChanged(added,removed));
+    }
+  }
+;
+  Thunk6<BigInteger,BigInteger,NodeId,Long,Long,QuickSerializable> rut=new Thunk6<BigInteger,BigInteger,NodeId,Long,Long,QuickSerializable>(){
+    public void run(    BigInteger src,    BigInteger dest,    NodeId immediateSource,    Long waitMillis,    Long estRTTMillis,    QuickSerializable payload){
+      application_enqueue(sink,new BambooRouteUpcall(src,dest,immediateSource,applicationID,false,0,waitMillis.longValue(),estRTTMillis.longValue(),payload));
+    }
+  }
+;
+  Thunk6<BigInteger,BigInteger,NodeId,Long,Long,QuickSerializable> rdt=new Thunk6<BigInteger,BigInteger,NodeId,Long,Long,QuickSerializable>(){
+    public void run(    BigInteger src,    BigInteger dest,    NodeId immediateSource,    Long waitMillis,    Long estRTTMillis,    QuickSerializable payload){
+      application_enqueue(sink,new BambooRouteDeliver(src,dest,immediateSource,applicationID,0,waitMillis.longValue(),estRTTMillis.longValue(),payload));
+    }
+  }
+;
+  try {
+    registerApplication(applicationID,lsct,rtct,rrtct,rut,rdt);
+  }
+ catch (  DuplicateApplicationException e) {
+    application_enqueue(sink,new BambooRouterAppRegResp(applicationID,false,"duplicate app_id " + applicationID));
+    return;
+  }
+  if (logger.isDebugEnabled())   logger.debug("registered app " + Long.toHexString(applicationID));
+  final ApplicationInfo appInfo=apps.get(new Long(applicationID));
+  assert appInfo != null;
+  acore.registerTimer(0,new Runnable(){
+    public void run(){
+      notify_leaf_set_changed(appInfo);
+      BambooNeighborInfo added[]=new BambooNeighborInfo[rt.size()];
+      int j=0;
+      for (int level=0; level < GUID_DIGITS; ++level) {
+        for (int digit=0; digit < DIGIT_VALUES; ++digit) {
+          NeighborInfo ni=rt.primary(level,digit);
+          if ((ni != null) && (!ni.equals(my_neighbor_info))) {
+            added[j++]=new BambooNeighborInfo(ni.node_id,ni.guid,rtt_ms(ni));
+          }
+        }
+      }
+      if (rtct != null)       rtct.run(added,null);
+      added=new BambooNeighborInfo[reverse_rt.size()];
+      j=0;
+      for (Iterator i=reverse_rt.iterator(); i.hasNext(); ) {
+        NeighborInfo ni=(NeighborInfo)i.next();
+        added[j++]=new BambooNeighborInfo(ni.node_id,ni.guid);
+      }
+      if (rrtct != null)       rrtct.run(added,null);
+    }
+  }
+);
+  application_enqueue(sink,new BambooRouterAppRegResp(applicationID,true,modulus(),digitsPerID(),valuesPerDigit(),id()));
+}

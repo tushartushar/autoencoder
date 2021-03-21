@@ -1,0 +1,3 @@
+public NioOutputBuffer(ByteBuffer bb){
+  this.bb=bb;
+}

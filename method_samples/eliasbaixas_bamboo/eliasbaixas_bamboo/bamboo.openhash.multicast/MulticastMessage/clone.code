@@ -1,0 +1,13 @@
+public Object clone() throws CloneNotSupportedException {
+  MulticastMessage newone=(MulticastMessage)super.clone();
+  newone.group=group;
+  newone.sender_id=sender_id;
+  newone.est_rtt=est_rtt;
+  newone.begin_time=begin_time;
+  newone.rtt_times=rtt_times;
+  newone.transit_times=transit_times;
+  newone.prev_time=prev_time;
+  newone.hops=hops;
+  newone.payload=payload;
+  return newone;
+}

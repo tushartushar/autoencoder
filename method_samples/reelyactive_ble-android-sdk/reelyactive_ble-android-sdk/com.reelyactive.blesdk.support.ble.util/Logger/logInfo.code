@@ -1,0 +1,5 @@
+public static void logInfo(String message){
+  if (Log.isLoggable(TAG,Log.INFO)) {
+    Log.i(TAG,message);
+  }
+}

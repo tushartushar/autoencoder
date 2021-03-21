@@ -1,0 +1,3 @@
+protected int storage_size(PutReqPayload payload){
+  return payload.value.limit() + StorageManager.Key.SIZE;
+}

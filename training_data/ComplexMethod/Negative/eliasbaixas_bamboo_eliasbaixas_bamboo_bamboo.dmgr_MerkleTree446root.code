@@ -1,0 +1,10 @@
+public Node root(){
+  Long l=new Long(0L);
+  int level=nodes.length - 1;
+  Node result=(Node)nodes[level].get(l);
+  if (result == null) {
+    result=new Node(level,l.longValue());
+    nodes[level].put(l,result);
+  }
+  return result;
+}

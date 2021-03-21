@@ -1,0 +1,3 @@
+public void put_done_cb(int put_res,Object user_data){
+  logger.info("put with key 0x" + ByteUtils.print_bytes((byte[])user_data,0,4) + (put_res == bamboo_stat.BAMBOO_OK ? "succeeded" : "failed"));
+}

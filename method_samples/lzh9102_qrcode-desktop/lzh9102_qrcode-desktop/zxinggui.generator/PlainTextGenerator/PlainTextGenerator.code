@@ -1,0 +1,15 @@
+public PlainTextGenerator(){
+  SpringLayout layout=new SpringLayout();
+  JLabel label=new JLabel("Text: ");
+  JScrollPane scrollPane=new JScrollPane(textarea);
+  textarea.setLineWrap(true);
+  panel.setLayout(layout);
+  panel.add(label);
+  panel.add(scrollPane);
+  layout.putConstraint(NORTH,label,5,NORTH,panel);
+  layout.putConstraint(WEST,label,5,WEST,panel);
+  layout.putConstraint(NORTH,scrollPane,5,SOUTH,label);
+  layout.putConstraint(SOUTH,scrollPane,-5,SOUTH,panel);
+  layout.putConstraint(EAST,scrollPane,-5,EAST,panel);
+  layout.putConstraint(WEST,scrollPane,5,WEST,panel);
+}

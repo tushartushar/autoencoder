@@ -1,0 +1,3 @@
+protected void set_latest_finish_time(Integer client,long value){
+  latest_finish_times.put(client,new Long(value));
+}

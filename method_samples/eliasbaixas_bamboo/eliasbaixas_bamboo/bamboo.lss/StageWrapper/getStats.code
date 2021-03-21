@@ -1,0 +1,3 @@
+public StageStatsIF getStats(){
+  return null;
+}

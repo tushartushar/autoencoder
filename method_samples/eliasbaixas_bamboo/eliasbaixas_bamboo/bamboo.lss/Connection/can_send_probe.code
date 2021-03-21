@@ -1,0 +1,6 @@
+/** 
+ * Do we have a nocc msg to send?
+ */
+public final boolean can_send_probe(){
+  return !probe_q.isEmpty();
+}

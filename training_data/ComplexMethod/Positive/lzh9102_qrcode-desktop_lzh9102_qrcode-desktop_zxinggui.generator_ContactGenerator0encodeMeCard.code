@@ -1,0 +1,22 @@
+private String encodeMeCard() throws GeneratorException {
+  StringBuilder content=new StringBuilder();
+  String name=getNameField();
+  String reading=getReadingField();
+  String company=getOrgField();
+  String phone=getPhoneNumberField();
+  String email=getEmailField();
+  String addr=getAddressField();
+  String url=getWebsiteField();
+  String memo=getMemoField();
+  content.append("MECARD:");
+  content.append("N:" + name + ";");
+  if (!reading.isEmpty())   content.append("SOUND:" + reading + ";");
+  if (!company.isEmpty())   content.append("ORG:" + company + ";");
+  if (!phone.isEmpty())   content.append("TEL:" + phone + ";");
+  if (!email.isEmpty())   content.append("EMAIL:" + email + ";");
+  if (!addr.isEmpty())   content.append("ADR:" + addr + ";");
+  if (!url.isEmpty())   content.append("URL:" + url + ";");
+  if (!memo.isEmpty())   content.append("NOTE:" + memo + ";");
+  content.append(";");
+  return content.toString();
+}

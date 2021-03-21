@@ -1,0 +1,5 @@
+protected long slop_usage(int disk,InetAddress client){
+  Long l=(Long)slop_usage[disk].get(client);
+  if (l == null)   return 0;
+ else   return l.longValue();
+}

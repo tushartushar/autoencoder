@@ -1,0 +1,6 @@
+public LeafSetReq(NodeId dest){
+  super(dest,false);
+}
+public LeafSetReq(InputBuffer buffer) throws QSException {
+  super(buffer);
+}

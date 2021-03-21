@@ -1,0 +1,6 @@
+@Override public String getText() throws GeneratorException {
+  String uri=txtUrl.getText();
+  if (uri.isEmpty())   throw new GeneratorException("URL cannot be empty.",txtUrl);
+  if (!Validator.isValidURI(uri))   throw new GeneratorException("Incorrect URL",txtUrl);
+  return uri;
+}

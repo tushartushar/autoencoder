@@ -1,0 +1,10 @@
+public void xdrEncode(XdrEncodingStream xdr) throws OncRpcException, IOException {
+{
+    int $size=values.length;
+    xdr.xdrEncodeInt($size);
+    for (int $idx=0; $idx < $size; ++$idx) {
+      values[$idx].xdrEncode(xdr);
+    }
+  }
+  placemark.xdrEncode(xdr);
+}

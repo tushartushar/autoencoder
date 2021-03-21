@@ -1,0 +1,21 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  get_timeout=configGetInt(config,"get_timeout",5000);
+  iterative_routing=config_get_boolean(config,"iterative_routing");
+  String sm_name=config_get_string(config,"storage_manager_stage");
+  StorageManager sm=(StorageManager)lookup_stage(config,sm_name);
+  sm.register_monitor(this);
+  min_replica_count=config_get_int(config,"min_replica_count");
+  if (min_replica_count == -1)   min_replica_count=8;
+  int virtual_disks=config_get_int(config,"virtual_disks");
+  for (int i=0; i < virtual_disks; ++i) {
+    double disk_size=config_get_double(config,"disk_size_" + i);
+    if (disk_size != -1)     disk_sizes[i]=disk_size;
+    int token_bucket_size=config_get_int(config,"token_bucket_size_" + i);
+    if (token_bucket_size != -1)     max_tokens[i]=token_bucket_size;
+    int slop_size=config_get_int(config,"slop_size_" + i);
+    if (slop_size != -1)     slop_cap[i]=slop_size;
+  }
+  compute_rates();
+  acore.registerTimer(0,ready);
+}

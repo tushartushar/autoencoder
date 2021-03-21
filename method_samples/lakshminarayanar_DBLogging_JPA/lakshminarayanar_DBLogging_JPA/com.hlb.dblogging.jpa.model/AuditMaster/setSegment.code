@@ -1,0 +1,3 @@
+public void setSegment(String segment){
+  Segment=segment;
+}

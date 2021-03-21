@@ -1,0 +1,18 @@
+public static void main(String[] args) throws Exception {
+  PatternLayout pl=new PatternLayout("%d{ISO8601} %-5p %c: %m\n");
+  ConsoleAppender ca=new ConsoleAppender(pl);
+  Logger.getRoot().addAppender(ca);
+  Logger.getRoot().setLevel(Level.INFO);
+  if (args.length != 4) {
+    Logger.getLogger(GatewayTest.class).fatal("usage: <gateway host> <gateway port> <clients> <seed>");
+    System.exit(1);
+  }
+  InetAddress host=InetAddress.getByName(args[0]);
+  int port=Integer.parseInt(args[1]);
+  int clients=Integer.parseInt(args[2]);
+  int seed=Integer.parseInt(args[3]);
+  for (int i=0; i < clients; ++i) {
+    ClientThread t=new ClientThread(host,port,++seed);
+    t.start();
+  }
+}

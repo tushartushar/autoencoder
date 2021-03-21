@@ -1,0 +1,3 @@
+@Column(name="APPLNAME",nullable=true,length=20) public String getApplName(){
+  return ApplName;
+}

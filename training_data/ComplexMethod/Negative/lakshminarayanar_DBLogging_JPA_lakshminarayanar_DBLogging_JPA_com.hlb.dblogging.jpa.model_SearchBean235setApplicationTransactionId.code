@@ -1,0 +1,3 @@
+public void setApplicationTransactionId(String applicationTransactionId){
+  this.applicationTransactionId=applicationTransactionId;
+}

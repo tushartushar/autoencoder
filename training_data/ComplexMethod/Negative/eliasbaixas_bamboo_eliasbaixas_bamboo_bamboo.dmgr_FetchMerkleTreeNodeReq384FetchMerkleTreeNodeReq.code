@@ -1,0 +1,25 @@
+public FetchMerkleTreeNodeReq(NodeId dest,BigInteger pg,BigInteger lg,BigInteger hg,int exp,int lv,long lt,byte[] eh,long s){
+  super(dest,false);
+  peer_guid=pg;
+  low_guid=lg;
+  high_guid=hg;
+  expansion=exp;
+  level=lv;
+  low_time=lt;
+  expected_hash=eh;
+  seq=s;
+}
+public FetchMerkleTreeNodeReq(InputBuffer buffer) throws QSException {
+  super(buffer);
+  peer_guid=buffer.nextBigInteger();
+  low_guid=buffer.nextBigInteger();
+  high_guid=buffer.nextBigInteger();
+  expansion=buffer.nextInt();
+  level=buffer.nextInt();
+  if (level < 0)   throw new QSException("level=" + level);
+  low_time=buffer.nextLong();
+  int len=buffer.nextInt();
+  expected_hash=new byte[len];
+  buffer.nextBytes(expected_hash,0,len);
+  seq=buffer.nextLong();
+}

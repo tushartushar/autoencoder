@@ -1,0 +1,10 @@
+public void actionPerformed(ActionEvent event){
+  String format=cbFormat.getSelectedItem().toString();
+  if (format == FORMAT_VCARD) {
+    txtReading.setVisible(false);
+  }
+ else   if (format == FORMAT_MECARD) {
+    txtReading.setVisible(true);
+  }
+  panel.revalidate();
+}

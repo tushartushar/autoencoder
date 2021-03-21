@@ -1,0 +1,6 @@
+/** 
+ * The callback indicating the UdpCC layer is done with a particular message.
+ * @param user_data     the data supplied to <code>send</code>
+ * @param success       whether the message was acknowledged by therecipient
+ */
+void cb(Object user_data,boolean success);

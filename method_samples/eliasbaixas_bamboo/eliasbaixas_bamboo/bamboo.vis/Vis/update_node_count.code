@@ -1,0 +1,4 @@
+protected void update_node_count(){
+  node_count_label.setText("nodes up: " + FNIT.nodes_by_id.size());
+  node_count_label.repaint();
+}

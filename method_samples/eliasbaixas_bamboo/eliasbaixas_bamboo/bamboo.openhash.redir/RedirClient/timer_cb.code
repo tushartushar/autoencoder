@@ -1,0 +1,13 @@
+public void timer_cb(Object user_data){
+  ((JoinState)user_data).retry_timer=null;
+  join_put((JoinState)user_data);
+}
+public void timer_cb(Object user_data){
+  JoinState state=(JoinState)user_data;
+  state.rejoin_timer=null;
+  if (state.cancelled)   return;
+  if (logger.isInfoEnabled()) {
+    logger.info("rejoining namespace=0x" + GuidTools.guid_to_string(state.namespace) + " levels="+ state.levels+ " ttl_s="+ state.ttl_s);
+  }
+  join_get(state);
+}

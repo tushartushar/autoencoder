@@ -1,0 +1,35 @@
+private void handleChildAlarm(ChildAlarm alarm){
+  if (DEBUG) {
+    Debug.printtagln(tag,"handleChildAlarm entry");
+    printChildTable();
+  }
+  Vector v=new Vector();
+  Vector w=new Vector();
+  Iterator groups=allChildGroups.keySet().iterator();
+  while (groups.hasNext()) {
+    BigInteger b=(BigInteger)groups.next();
+    HashMap h=(HashMap)allChildGroups.get(b);
+    Iterator nodes=h.keySet().iterator();
+    while (nodes.hasNext()) {
+      NodeId n=(NodeId)nodes.next();
+      if ((((Boolean)h.put(n,new Boolean(false))).booleanValue()) == false) {
+        if (DEBUG)         Debug.printtagln(tag,"handleChildAlarm deleting node " + n + " from group "+ b);
+        v.add(n);
+      }
+    }
+    for (int i=0; i < v.size(); i++) {
+      h.remove((NodeId)v.get(i));
+    }
+    if (h.isEmpty()) {
+      w.add(b);
+    }
+  }
+  for (int i=0; i < w.size(); i++) {
+    allChildGroups.remove((BigInteger)w.get(i));
+  }
+  if (DEBUG) {
+    Debug.printtagln(tag,"handleChildAlarm exit");
+    printChildTable();
+  }
+  classifier.dispatch_later(new ChildAlarm(),CHILD_ALARM_INTERVAL + rand.nextInt(CHILD_ALARM_VARIATION));
+}

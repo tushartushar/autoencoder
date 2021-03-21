@@ -1,0 +1,11 @@
+public void startScan(){
+  nextSettings=nextSettings == null ? lowPowerScan : nextSettings;
+  nextFilter=nextFilter == null ? (currentFilter == null ? new ScanFilter.Builder().build() : currentFilter) : nextFilter;
+  if (currentSettings != nextSettings || nextFilter != currentFilter) {
+    stopScan();
+    notifyEvent(Event.SCAN_STARTED);
+    scanner.startScan(Collections.singletonList(nextFilter),nextSettings,callback);
+  }
+  currentSettings=nextSettings;
+  currentFilter=nextFilter;
+}

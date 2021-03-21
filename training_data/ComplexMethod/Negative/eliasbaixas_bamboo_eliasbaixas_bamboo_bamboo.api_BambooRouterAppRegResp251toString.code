@@ -1,0 +1,3 @@
+public String toString(){
+  return "(BambooRouterAppRegResp app_id=" + Long.toHexString(app_id) + " success="+ success+ " msg="+ msg+ " node_guid="+ GuidTools.guid_to_string(node_guid)+ ")";
+}

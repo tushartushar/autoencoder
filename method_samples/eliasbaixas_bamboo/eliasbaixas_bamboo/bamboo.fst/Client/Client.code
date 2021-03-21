@@ -1,0 +1,3 @@
+public Client(byte[] bytes){
+  this.bytes=bytes;
+}

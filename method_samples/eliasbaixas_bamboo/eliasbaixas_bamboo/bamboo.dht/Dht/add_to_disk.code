@@ -1,0 +1,4 @@
+protected void add_to_disk(int size,int ttl_sec){
+  int i=ttl_to_vdisk(ttl_sec);
+  avail_tokens[i]-=size;
+}

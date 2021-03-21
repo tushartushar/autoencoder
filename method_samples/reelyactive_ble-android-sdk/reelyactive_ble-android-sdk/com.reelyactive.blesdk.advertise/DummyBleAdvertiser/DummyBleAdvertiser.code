@@ -1,0 +1,7 @@
+public DummyBleAdvertiser(Context context){
+  this.context=context;
+  worker=new Worker("advertiser");
+  worker.start();
+  worker.waitUntilReady();
+  runnable=new AdvertisingRunnable();
+}

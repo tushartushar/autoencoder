@@ -1,0 +1,14 @@
+protected void handle_lookup_resp_msg(LookupRespMsg resp){
+  if (logger.isDebugEnabled()) {
+    logger.debug("got lookup resp for 0x" + GuidTools.guid_to_string(resp.lookup_id) + " from 0x"+ GuidTools.guid_to_string(resp.owner_id));
+  }
+  NeighborInfo ni=new NeighborInfo(resp.peer,resp.owner_id);
+  add_to_rt(ni);
+  location_cache.add_node(ni);
+  PendingLookupInfo pl=pending_lookups.remove(resp.lookup_id);
+  if (pl != null) {
+    for (    Pair<LookupCb,Object> pair : pl.cbs) {
+      pair.first.lookup_cb(resp.lookup_id,resp.owner_id,resp.peer,pair.second);
+    }
+  }
+}

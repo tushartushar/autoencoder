@@ -1,0 +1,4 @@
+public void setXY1(int x,int y){
+  this.x1=x;
+  this.y1=y;
+}

@@ -1,0 +1,3 @@
+public Direction getDirection(){
+  return direction;
+}

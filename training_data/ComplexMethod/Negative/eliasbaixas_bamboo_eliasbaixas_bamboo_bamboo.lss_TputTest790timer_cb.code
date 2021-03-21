@@ -1,0 +1,20 @@
+public void timer_cb(Object not_used){
+  long test_length_ms=System.currentTimeMillis() - start_time_ms;
+  System.out.println("sent " + cnt + " "+ msg_size+ "-byte "+ "packets in "+ test_length_ms+ " ms.");
+  double bw=((double)(8 * cnt * msg_size) / test_length_ms * 1000.0);
+  String units="bits";
+  if (bw > 1024.0) {
+    bw/=1024.0;
+    units="kbits";
+  }
+  if (bw > 1024.0) {
+    bw/=1024.0;
+    units="Mbits";
+  }
+  if (bw > 1024.0) {
+    bw/=1024.0;
+    units="Gbits";
+  }
+  System.out.println("bandwidth = " + bw + " "+ units+ "/s");
+  System.exit(0);
+}

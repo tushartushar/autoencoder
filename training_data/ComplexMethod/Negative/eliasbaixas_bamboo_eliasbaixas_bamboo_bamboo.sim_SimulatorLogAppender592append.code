@@ -1,0 +1,21 @@
+protected void append(LoggingEvent event){
+  String logger=event.getLoggerName();
+  String msg=event.getRenderedMessage();
+  StringBuffer buf=new StringBuffer(logger.length() + msg.length() + 40);
+  long now_us=event_queue.now_us();
+  if (now_us == -1)   buf.append("XXXXXX.XXX");
+ else   buf.append(time_format.format(now_us / 1000000.0));
+  buf.append(" ");
+  NodeId node_id=event_queue.current_node_id();
+  if (node_id == null) {
+    buf.append("SIMULATOR: ");
+  }
+ else {
+    buf.append(event_queue.current_node_id());
+    buf.append(" ");
+    buf.append(logger);
+    buf.append(": ");
+  }
+  buf.append(msg);
+  System.out.println(buf);
+}

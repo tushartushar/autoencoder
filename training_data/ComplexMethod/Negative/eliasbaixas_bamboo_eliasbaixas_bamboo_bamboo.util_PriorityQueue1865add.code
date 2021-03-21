@@ -1,0 +1,23 @@
+/** 
+ * Adds an object with the given priority.
+ */
+public final boolean add(Value o,Priority p){
+  if (prio.isEmpty()) {
+    prio.add(p);
+  }
+ else {
+    Priority min=prio.elementAt(0);
+    if (min == null || p.compareTo(min) < 0)     prio.setElementAt(p,0);
+  }
+  int i=++heap_size;
+  heap.setSize(i + 1);
+  prio.setSize(i + 1);
+  while (i > 1 && (prio.elementAt(i / 2).compareTo(p) > 0)) {
+    heap.setElementAt(heap.elementAt(i / 2),i);
+    prio.setElementAt(prio.elementAt(i / 2),i);
+    i=i / 2;
+  }
+  heap.setElementAt(o,i);
+  prio.setElementAt(p,i);
+  return true;
+}

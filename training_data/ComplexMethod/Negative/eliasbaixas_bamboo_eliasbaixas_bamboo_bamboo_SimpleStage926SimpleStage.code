@@ -1,0 +1,8 @@
+/** 
+ * Constructor <br> Calling the constructor of our super class, register  all events we want to listen to.<br> You should also register your own payloads here.
+ */
+public SimpleStage() throws Exception {
+  super();
+  ostore.util.TypeTable.register_type(Payload.class);
+  event_types=new Class[]{StagesInitializedSignal.class,BambooRouteDeliver.class,Alarm.class};
+}

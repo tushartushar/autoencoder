@@ -1,0 +1,3 @@
+@Column(name="description",nullable=false) public String getDescription(){
+  return description;
+}

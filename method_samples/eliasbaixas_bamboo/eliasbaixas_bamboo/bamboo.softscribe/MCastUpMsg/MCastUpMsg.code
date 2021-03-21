@@ -1,0 +1,15 @@
+public MCastUpMsg(NodeId srcid,BigInteger dstguid,QuickSerializable o){
+  this.srcid=srcid;
+  this.dstguid=dstguid;
+  this.o=o;
+}
+public MCastUpMsg(MCastUpMsg other){
+  srcid=other.srcid;
+  dstguid=other.dstguid;
+  o=other.o;
+}
+public MCastUpMsg(InputBuffer buffer) throws QSException {
+  srcid=(NodeId)buffer.nextObject();
+  dstguid=buffer.nextBigInteger();
+  o=buffer.nextObject();
+}

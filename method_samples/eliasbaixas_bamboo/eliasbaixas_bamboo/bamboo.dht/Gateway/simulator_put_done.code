@@ -1,0 +1,11 @@
+protected void simulator_put_done(Dht.PutReq req,Dht.PutResp resp,final GatewayClient client,NodeId client_id,final int xact_id,final long start_ms,byte[] value_hash){
+  log_put_resp.run(new Integer(xact_id),req,resp,client_id.toString(),new Long(start_ms),value_hash,"sim","sim");
+  int size=4;
+  long lat=Network.msg_latency_us(my_node_id,client_id,size) / 1000;
+  simulator.event_queue.register_timer(client_id,lat,new EventQueue.Callback(){
+    public void call(    Object not_used){
+      client.put_done(xact_id,0);
+    }
+  }
+,null);
+}

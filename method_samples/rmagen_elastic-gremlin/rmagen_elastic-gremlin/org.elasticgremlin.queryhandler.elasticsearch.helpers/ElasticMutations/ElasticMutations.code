@@ -1,0 +1,5 @@
+public ElasticMutations(Boolean bulk,Client client,TimingAccessor timing){
+  if (bulk)   bulkRequest=client.prepareBulk();
+  this.timing=timing;
+  this.client=client;
+}

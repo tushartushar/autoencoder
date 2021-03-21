@@ -1,0 +1,6 @@
+public PingMsg(NodeId n){
+  super(n,false);
+}
+public PingMsg(InputBuffer buffer) throws QSException {
+  super(buffer);
+}

@@ -1,0 +1,9 @@
+public void createDatabase() throws IOException {
+  this.getReadableDatabase();
+  try {
+    copyDatabase();
+  }
+ catch (  IOException io) {
+    throw new Error(">>>>>>>>>>>>>>>>>>>>>> " + io.getMessage() + " fill in stack trace: "+ io.fillInStackTrace()+ " stack trace: "+ io.getStackTrace());
+  }
+}

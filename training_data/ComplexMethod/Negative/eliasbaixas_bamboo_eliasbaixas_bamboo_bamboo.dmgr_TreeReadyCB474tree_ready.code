@@ -1,0 +1,1 @@
+void tree_ready(MerkleTree tree);

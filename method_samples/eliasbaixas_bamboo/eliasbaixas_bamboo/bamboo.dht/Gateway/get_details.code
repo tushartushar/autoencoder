@@ -1,0 +1,3 @@
+public void get_details(byte[] key_bytes,int maxvals,byte[] placemark_bytes,String application,String user_agent,InetSocketAddress client,Thunk1<Object> result_cb){
+  get_common(key_bytes,maxvals,placemark_bytes,application,user_agent,client,result_cb,true);
+}

@@ -1,0 +1,27 @@
+public String retrieve(String code) throws IOException {
+  String token="";
+  String refresh_token="";
+  try {
+    System.out.println("Test Print");
+    GoogleTokenResponse response=new GoogleAuthorizationCodeTokenRequest(new NetHttpTransport(),new JacksonFactory(),"947782242448-sq1cakbpuapr6qgmnqqu9trkavn25q9k.apps.googleusercontent.com","afSCZ9JfdJhHcQ9vMn-JNjhp","4/XqRkVT2Qc6iRICmkRMuP55j1QZcTg3CzDp6D9_bZ9Yc.cu6_9o0j6H0QEnp6UAPFm0HquuDWmAI","https://developers.google.com/oauthplayground").execute();
+    System.out.println("test print 2");
+    System.out.println("Access token: " + response.getAccessToken());
+    System.out.println("Refresh token: " + response.getRefreshToken());
+    token=response.getAccessToken().toString();
+  }
+ catch (  TokenResponseException e) {
+    if (e.getDetails() != null) {
+      System.err.println("Error: " + e.getDetails().getError());
+      if (e.getDetails().getErrorDescription() != null) {
+        System.err.println(e.getDetails().getErrorDescription());
+      }
+      if (e.getDetails().getErrorUri() != null) {
+        System.err.println(e.getDetails().getErrorUri());
+      }
+    }
+ else {
+      System.err.println(e.getMessage());
+    }
+  }
+  return token;
+}

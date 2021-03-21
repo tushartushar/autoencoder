@@ -1,0 +1,273 @@
+protected void create_menus(BasicFrame frame){
+  JMenuBar menu_bar=frame.getJMenuBar();
+  JMenu menu=menu_bar.getMenu(0);
+  JMenuItem item=new JMenuItem("Dump Leaf Set RTTs");
+  menu.insert(item,0);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      dumpLeafSetRTTsDialog();
+    }
+  }
+);
+  menu=new JMenu("Nodes");
+  menu.setMnemonic(KeyEvent.VK_H);
+  menu_bar.add(menu);
+  item=new JMenuItem("Add Node");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      add_node_dialog();
+    }
+  }
+);
+  item=new JMenuItem("Set Check Period");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      set_check_period_dialog();
+    }
+  }
+);
+  menu=new JMenu("View");
+  menu.setMnemonic(KeyEvent.VK_V);
+  menu_bar.add(menu);
+  item=new JMenuItem("Fit In Window");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      fit_in_window();
+    }
+  }
+);
+  menu.addSeparator();
+  item=new JMenuItem("Swap Ring Mode");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      ring_mode=!ring_mode;
+      redraw_all();
+      fit_in_window();
+      update_transform();
+      resize_scrollbars();
+    }
+  }
+);
+  menu.addSeparator();
+  item=new JMenuItem("Change Dot Radius");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      change_dot_radius_dialog();
+    }
+  }
+);
+  menu.addSeparator();
+  item=new JMenuItem("Find a Node");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      find_node_dialog();
+    }
+  }
+);
+  item=new JMenuItem("Find Nodes...");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      find_nodes_dialog();
+    }
+  }
+);
+  item=new JMenuItem("Reset Node Colors");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      reset_node_colors();
+    }
+  }
+);
+  menu.addSeparator();
+  item=new JMenuItem("Show Path");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      show_path_dialog();
+    }
+  }
+);
+  item=new JMenuItem("Hide Path");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      for_all_nodes(new ForNodeFn(){
+        public void for_node(        BambooNode node){
+          node.hide_path();
+        }
+      }
+);
+    }
+  }
+);
+  menu.addSeparator();
+  item=new JMenuItem("Show GUIDs");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      for_all_nodes(new ForNodeFn(){
+        public void for_node(        BambooNode node){
+          node.show_guid();
+        }
+      }
+);
+    }
+  }
+);
+  item=new JMenuItem("Hide GUIDs");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      for_all_nodes(new ForNodeFn(){
+        public void for_node(        BambooNode node){
+          node.hide_guid();
+        }
+      }
+);
+    }
+  }
+);
+  menu.addSeparator();
+  item=new JMenuItem("Show leaf sets");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      for_all_nodes(new ForNodeFn(){
+        public void for_node(        BambooNode node){
+          node.show_leaf_set();
+        }
+      }
+);
+    }
+  }
+);
+  item=new JMenuItem("Hide leaf sets");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      for_all_nodes(new ForNodeFn(){
+        public void for_node(        BambooNode node){
+          node.hide_leaf_set();
+        }
+      }
+);
+    }
+  }
+);
+  menu.addSeparator();
+  item=new JMenuItem("Show routing tables");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      for_all_nodes(new ForNodeFn(){
+        public void for_node(        BambooNode node){
+          node.show_rt();
+        }
+      }
+);
+    }
+  }
+);
+  item=new JMenuItem("Hide routing tables");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      for_all_nodes(new ForNodeFn(){
+        public void for_node(        BambooNode node){
+          node.hide_rt();
+        }
+      }
+);
+    }
+  }
+);
+  menu.addSeparator();
+  item=new JMenuItem("Show storage distribution");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Iterator i=FNIT.get_all_nodes();
+      show_color_storage=true;
+      show_color_uptime=false;
+      while (i.hasNext()) {
+        ((BambooNode)i.next()).show_color_storage();
+      }
+    }
+  }
+);
+  item=new JMenuItem("Hide storage distribution");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Iterator i=FNIT.get_all_nodes();
+      show_color_storage=false;
+      show_color_uptime=false;
+      while (i.hasNext()) {
+        ((BambooNode)i.next()).hide_color_storage();
+      }
+    }
+  }
+);
+  menu.addSeparator();
+  item=new JMenuItem("Show relative uptimes");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Iterator i=FNIT.get_all_nodes();
+      show_color_storage=false;
+      show_color_uptime=true;
+      while (i.hasNext()) {
+        ((BambooNode)i.next()).show_color_uptime();
+      }
+    }
+  }
+);
+  item=new JMenuItem("Hide relative uptimes");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      Iterator i=FNIT.get_all_nodes();
+      show_color_storage=false;
+      show_color_uptime=false;
+      while (i.hasNext()) {
+        ((BambooNode)i.next()).hide_color_uptime();
+      }
+    }
+  }
+);
+  menu=new JMenu("Help");
+  menu.setMnemonic(KeyEvent.VK_V);
+  menu_bar.add(menu);
+  item=new JMenuItem("Find a Node");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      show_help_find_node();
+    }
+  }
+);
+  item=new JMenuItem("Find Nodes...");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      show_help_find_nodes();
+    }
+  }
+);
+  item=new JMenuItem("Storage distribution");
+  menu.add(item);
+  item.addActionListener(new ActionListener(){
+    public void actionPerformed(    ActionEvent e){
+      show_help_storage();
+    }
+  }
+);
+}

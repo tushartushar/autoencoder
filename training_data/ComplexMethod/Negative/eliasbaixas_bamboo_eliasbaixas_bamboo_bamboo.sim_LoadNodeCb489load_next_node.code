@@ -1,0 +1,38 @@
+void load_next_node(){
+  try {
+    while (tok.ttype == StreamTokenizer.TT_EOL) {
+      tok.nextToken();
+      lineno++;
+    }
+    if (tok.ttype == StreamTokenizer.TT_EOF)     return;
+    if (tok.ttype != StreamTokenizer.TT_WORD) {
+      System.err.println("Expected node id on line " + lineno + ": "+ tok);
+      System.exit(1);
+    }
+    next_node_id=new NodeId(tok.sval);
+    tok.nextToken();
+    if (tok.ttype != StreamTokenizer.TT_WORD) {
+      System.err.println("Expected cfg file name on line " + lineno + ": "+ tok);
+      System.exit(1);
+    }
+    next_cfg_filename=tok.sval;
+    tok.nextToken();
+    if (tok.ttype != StreamTokenizer.TT_WORD) {
+      System.err.println("Expected start time on line " + lineno + ": "+ tok);
+      System.exit(1);
+    }
+    next_start_time_us=Long.parseLong(tok.sval) * 1000;
+    tok.nextToken();
+    if (tok.ttype != StreamTokenizer.TT_WORD) {
+      System.err.println("Expected stop time on line " + lineno + ": "+ tok);
+      System.exit(1);
+    }
+    next_stop_time_us=Long.parseLong(tok.sval) * 1000;
+    tok.nextToken();
+  }
+ catch (  Exception e) {
+    System.err.println("Caught " + e + " parsing line "+ lineno+ " of "+ tok);
+    System.exit(1);
+  }
+  event_queue.register_timer(next_start_time_us - event_queue.now_us(),this,null);
+}

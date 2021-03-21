@@ -1,0 +1,5 @@
+public InputBuffer subBuffer(int length){
+  byte[] data=new byte[length];
+  bb.get(data,0,length);
+  return new ByteArrayInputBuffer(data);
+}

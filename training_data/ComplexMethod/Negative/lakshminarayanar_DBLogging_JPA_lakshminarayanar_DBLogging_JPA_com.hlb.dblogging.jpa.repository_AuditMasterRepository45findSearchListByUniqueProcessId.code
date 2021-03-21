@@ -1,0 +1,1 @@
+@Query("select e from AuditMaster e where UniqueProcessID = ? order by id asc") List<AuditMaster> findSearchListByUniqueProcessId(String uniqueProcessId);

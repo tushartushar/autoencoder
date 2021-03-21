@@ -1,0 +1,4 @@
+public GuidRange(BigInteger l,BigInteger h){
+  low=l;
+  high=h;
+}

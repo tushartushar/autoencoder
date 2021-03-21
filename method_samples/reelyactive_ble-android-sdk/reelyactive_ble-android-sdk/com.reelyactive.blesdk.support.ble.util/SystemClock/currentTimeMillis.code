@@ -1,0 +1,6 @@
+/** 
+ * @return current time in milliseconds
+ */
+@Override public long currentTimeMillis(){
+  return System.currentTimeMillis();
+}

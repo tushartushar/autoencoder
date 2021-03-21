@@ -1,0 +1,11 @@
+protected byte[] data_hash(ByteBuffer data){
+  MessageDigest md=null;
+  try {
+    md=MessageDigest.getInstance("SHA");
+  }
+ catch (  Exception e) {
+  }
+  byte[] bytes=data.array();
+  md.update(data.array(),data.arrayOffset(),data.limit());
+  return md.digest();
+}

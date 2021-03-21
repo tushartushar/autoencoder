@@ -1,0 +1,7 @@
+public boolean has_children(){
+  if (level == 0)   return false;
+  for (Iter i=children(); i.hasNext(); ) {
+    if (i.next() != null)     return true;
+  }
+  return false;
+}

@@ -1,0 +1,12 @@
+public void redraw_guid(){
+  undraw_guid();
+  if (!show_guid)   return;
+  int pie=(int)((decimal() + 1.0 / 16.0) * 8);
+  if (pie >= guid_anchors.length)   pie=0;
+  guid_label=new LabelFigure("0x" + GuidTools.guid_to_string(guid) + ", "+ node_id.address().getHostName()+ ":"+ node_id.port()+ "\nStoring: "+ current_storage+ "MBs"+ "\nUptime: "+ uptime_string);
+  guid_label.setAnchor(guid_anchors[pie]);
+  Point2D pt=CanvasUtilities.getLocation(dot.getBounds(),CanvasUtilities.reverseDirection(guid_anchors[pie]));
+  guid_label.translateTo(pt);
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  layer.add(guid_label);
+}

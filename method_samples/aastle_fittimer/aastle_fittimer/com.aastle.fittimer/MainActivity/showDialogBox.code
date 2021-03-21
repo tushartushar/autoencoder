@@ -1,0 +1,3 @@
+private void showDialogBox(CharSequence about){
+  new AlertDialog.Builder(this).setMessage(about).setPositiveButton("OK",null).show();
+}

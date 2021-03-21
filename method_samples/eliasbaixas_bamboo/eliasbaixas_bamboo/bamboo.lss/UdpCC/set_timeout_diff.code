@@ -1,0 +1,4 @@
+public void set_timeout_diff(double value){
+  timeout_diff=value;
+  logger.info("timeout_diff=" + timeout_diff);
+}

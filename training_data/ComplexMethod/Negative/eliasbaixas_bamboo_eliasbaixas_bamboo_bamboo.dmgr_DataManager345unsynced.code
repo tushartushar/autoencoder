@@ -1,0 +1,11 @@
+protected void unsynced(GuidRange range,InetSocketAddress neighbor){
+  LinkedHashMap<InetSocketAddress,Long> s=synced_ranges.get(range);
+  if (s == null) {
+    if (logger.isDebugEnabled())     logger.debug("still unsynced with " + addrToString(neighbor) + " over "+ range);
+  }
+ else {
+    if (logger.isDebugEnabled())     logger.debug("unsynced with " + addrToString(neighbor) + " over "+ range);
+    s.remove(neighbor);
+    if (s.isEmpty())     synced_ranges.remove(range);
+  }
+}

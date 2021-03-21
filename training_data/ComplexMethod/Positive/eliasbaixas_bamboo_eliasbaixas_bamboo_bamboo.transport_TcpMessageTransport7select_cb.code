@@ -1,0 +1,187 @@
+public void select_cb(SelectionKey skey,Object user_data){
+  if (skey.isAcceptable()) {
+    SocketChannel sc=null;
+    try {
+      sc=ssock_channel.accept();
+    }
+ catch (    IOException e) {
+      BUG(e);
+    }
+    if (sc == null)     return;
+    Socket s=sc.socket();
+    if (logger.isInfoEnabled()) {
+      StringBuffer buf=new StringBuffer(45);
+      buf.append("got connection from ");
+      buf.append(s.getInetAddress().getHostAddress());
+      buf.append(":");
+      buf.append(s.getPort());
+      logger.info(buf);
+    }
+    try {
+      sc.configureBlocking(false);
+    }
+ catch (    IOException e) {
+      BUG(e);
+    }
+    ChannelState state=new ChannelState();
+    state.channel=sc;
+    try {
+      state.skey=acore.register_selectable(state.channel,SelectionKey.OP_READ,state,null);
+    }
+ catch (    ClosedChannelException e) {
+      BUG(e);
+    }
+    InetSocketAddress addr=new InetSocketAddress(s.getInetAddress(),s.getPort());
+    server_channels.put(addr,state);
+  }
+}
+public void select_cb(SelectionKey skey,Object user_data){
+  ChannelState state=(ChannelState)user_data;
+  logger.debug("select_cb");
+  if ((skey.readyOps() & skey.interestOps() & SelectionKey.OP_CONNECT) != 0) {
+    logger.debug("op_connect");
+    try {
+      if (channel.finishConnect()) {
+        if (waiting.isEmpty())         skey.interestOps(SelectionKey.OP_READ);
+ else         skey.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+      }
+    }
+ catch (    Exception e) {
+      BUG(e);
+    }
+  }
+  if ((skey.readyOps() & skey.interestOps() & SelectionKey.OP_WRITE) != 0) {
+    logger.debug("op_write");
+    while (true) {
+      if ((write_buf != null) && (write_buf.position() < write_buf.limit())) {
+        if (logger.isDebugEnabled()) {
+          logger.debug("sending:\n" + ostore.util.ByteUtils.print_bytes(write_buf.array(),write_buf.arrayOffset() + write_buf.position(),write_buf.limit() - write_buf.position()));
+        }
+        try {
+          channel.write(write_buf);
+        }
+ catch (        IOException e) {
+          BUG(e);
+        }
+        if (write_buf.position() < write_buf.limit())         break;
+        if (logger.isDebugEnabled()) {
+          logger.debug((write_buf.limit() - write_buf.position()) + " bytes remaining");
+        }
+      }
+      if (waiting.isEmpty() && (acks_to_send == 0)) {
+        skey.interestOps(skey.interestOps() & ~SelectionKey.OP_WRITE);
+        break;
+      }
+      if (!waiting.isEmpty()) {
+        assert client;
+        SendState ss=(SendState)waiting.removeFirst();
+        CountBuffer cb=new CountBuffer();
+        cb.add(ss.payload);
+        int msg_size=cb.size() + 4 + 4+ 2;
+        if ((write_buf == null) || (write_buf.capacity() < msg_size)) {
+          write_buf=ByteBuffer.allocate(msg_size);
+        }
+ else {
+          write_buf.clear();
+        }
+        write_buf.putInt(msg_size - 4);
+        write_buf.put(my_addr.getAddress().getAddress(),0,4);
+        write_buf.putShort((short)my_addr.getPort());
+        NioOutputBuffer ob=new NioOutputBuffer(write_buf);
+        ob.add(ss.payload);
+        write_buf.flip();
+        inflight.addLast(ss);
+      }
+      if (acks_to_send > 0) {
+        assert !client;
+        if ((write_buf == null) || (write_buf.capacity() < acks_to_send)) {
+          write_buf=ByteBuffer.allocate(acks_to_send);
+        }
+ else {
+          write_buf.clear();
+        }
+        for (int i=0; i < acks_to_send; ++i)         write_buf.put((byte)0xbe);
+        write_buf.flip();
+        acks_to_send=0;
+      }
+    }
+  }
+  if ((skey.readyOps() & skey.interestOps() & SelectionKey.OP_READ) != 0) {
+    logger.debug("op_read");
+    if (client) {
+      logger.debug("client");
+      while (true) {
+        ByteBuffer read_buf=ByteBuffer.allocate(10);
+        int count=0;
+        try {
+          count=channel.read(read_buf);
+        }
+ catch (        IOException e) {
+          BUG(e);
+        }
+        assert count >= 0;
+        if (count == 0)         break;
+        if (logger.isDebugEnabled())         logger.debug("count=" + count);
+        for (int i=0; i < count; ++i) {
+          assert !inflight.isEmpty();
+          SendState ss=(SendState)inflight.removeFirst();
+          ss.cb.send_done_cb(ss.user_data);
+        }
+      }
+    }
+ else {
+      logger.debug("server");
+      while (true) {
+        ByteBuffer read_buf=ByteBuffer.allocate(1500);
+        int count=0;
+        try {
+          count=channel.read(read_buf);
+        }
+ catch (        IOException e) {
+          BUG(e);
+        }
+        assert count >= 0;
+        if (count > 0) {
+          read_buf.flip();
+          ib.add_packet(read_buf);
+        }
+        if (logger.isDebugEnabled())         logger.debug("next_read_size=" + next_read_size + " ib.size="+ ib.size());
+        if (next_read_size == -1) {
+          if (ib.size() < 4)           break;
+          next_read_size=ib.nextInt();
+        }
+        if (logger.isDebugEnabled())         logger.debug("next_read_size=" + next_read_size + " ib.size="+ ib.size());
+        if (ib.size() < next_read_size)         break;
+        byte[] addrb=new byte[4];
+        ib.nextBytes(addrb,0,4);
+        InetAddress addr=null;
+        try {
+          addr=InetAddress.getByAddress(addrb);
+        }
+ catch (        UnknownHostException e) {
+          assert false : e;
+        }
+        int port=ib.nextShort() & 0xffff;
+        InetSocketAddress src=new InetSocketAddress(addr,port);
+        QuickSerializable payload=null;
+        try {
+          payload=ib.nextObject();
+        }
+ catch (        Exception e) {
+          assert false;
+        }
+        RecvMsgCb cb=(RecvMsgCb)recv_cbs.get(payload.getClass());
+        if (logger.isDebugEnabled())         logger.debug("received " + payload + " from "+ src.getAddress().getHostAddress()+ ":"+ src.getPort());
+        if (cb == null) {
+          if (logger.isDebugEnabled())           logger.debug("no recv handler for type " + payload.getClass().getName());
+        }
+ else {
+          cb.recv_msg_cb(src,payload);
+        }
+        ++acks_to_send;
+        skey.interestOps(skey.interestOps() | SelectionKey.OP_WRITE);
+        next_read_size=-1;
+      }
+    }
+  }
+}

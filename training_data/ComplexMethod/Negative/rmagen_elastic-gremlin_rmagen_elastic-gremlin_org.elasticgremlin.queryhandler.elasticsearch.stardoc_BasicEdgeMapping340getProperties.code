@@ -1,0 +1,3 @@
+@Override public Object[] getProperties(Map<String,Object> entries){
+  return new Object[0];
+}

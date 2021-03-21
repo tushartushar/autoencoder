@@ -1,0 +1,8 @@
+public void maybeShowPopup(MouseEvent e){
+  Object src=e.getSource();
+  if (e.isPopupTrigger() && src == imgDisplay) {
+    menuImage_ViewPlainText.setEnabled(!prevText.isEmpty());
+    menuImage_SaveImage.setEnabled(generated_image != null);
+    menuImage.show(imgDisplay,e.getX(),e.getY());
+  }
+}

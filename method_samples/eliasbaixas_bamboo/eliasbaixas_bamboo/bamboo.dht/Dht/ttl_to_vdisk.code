@@ -1,0 +1,8 @@
+protected int ttl_to_vdisk(int ttl_sec){
+  assert ttl_sec <= ttl_sec_ranges[ttl_sec_ranges.length - 1];
+  int i=0;
+  while (ttl_sec > ttl_sec_ranges[i]) {
+    ++i;
+  }
+  return i;
+}

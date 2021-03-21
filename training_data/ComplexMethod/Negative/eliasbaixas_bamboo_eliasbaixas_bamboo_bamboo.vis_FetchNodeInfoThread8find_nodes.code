@@ -1,0 +1,25 @@
+public LinkedList find_nodes(String s){
+  LinkedList bad_input=new LinkedList();
+  bad_input.addLast(stub_vis.return_new_node(null,null,null));
+  if (s == null) {
+    return bad_input;
+  }
+  LinkedList tokens=new LinkedList();
+  if (!tokenize(s,tokens)) {
+    return bad_input;
+  }
+  BambooNode current_node;
+  LinkedList matching_nodes=new LinkedList();
+  Iterator IT=get_all_nodes();
+  while (IT.hasNext()) {
+    current_node=(BambooNode)IT.next();
+    int node_result=interpret_tokens(0,tokens,current_node);
+    if (node_result == MATCHING_NODE) {
+      matching_nodes.addLast(current_node);
+    }
+ else     if (node_result == INCORRECT_INPUT) {
+      return bad_input;
+    }
+  }
+  return matching_nodes;
+}

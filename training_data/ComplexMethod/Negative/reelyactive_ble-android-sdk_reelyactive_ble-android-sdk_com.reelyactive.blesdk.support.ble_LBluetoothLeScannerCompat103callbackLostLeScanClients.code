@@ -1,0 +1,14 @@
+private void callbackLostLeScanClients(String address,ScanResult result){
+  for (  ScanClient client : callbacksMap.values()) {
+    int wantAny=client.settings.getCallbackType() & ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
+    int wantLost=client.settings.getCallbackType() & ScanSettings.CALLBACK_TYPE_MATCH_LOST;
+    if (client.addressesSeen.remove(address) && (wantAny | wantLost) != 0) {
+      try {
+        client.callback.onScanResult(ScanSettings.CALLBACK_TYPE_MATCH_LOST,result);
+      }
+ catch (      Exception e) {
+        Logger.logError("Failure while sending 'lost' scan result to listener",e);
+      }
+    }
+  }
+}

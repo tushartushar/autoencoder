@@ -1,0 +1,4 @@
+@Override public List<UserToAccessRights> findAll(){
+  List<UserToAccessRights> userToAccessRightsList=userToAccessRightsRepository.findByIsDeleted(0);
+  return userToAccessRightsList;
+}

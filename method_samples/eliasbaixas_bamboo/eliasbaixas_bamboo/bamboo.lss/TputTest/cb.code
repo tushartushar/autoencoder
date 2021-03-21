@@ -1,0 +1,8 @@
+public void cb(Object user_data,boolean success){
+  if (!success) {
+    System.err.println("send failed");
+    System.exit(1);
+  }
+  ++cnt;
+  send_new_msg();
+}

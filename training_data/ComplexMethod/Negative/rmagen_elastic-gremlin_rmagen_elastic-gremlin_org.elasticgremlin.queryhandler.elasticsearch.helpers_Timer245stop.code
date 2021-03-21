@@ -1,0 +1,7 @@
+public void stop(){
+  sw.suspend();
+  long time=sw.getTime() - lastRun;
+  if (time > longestRun)   longestRun=time;
+  lastRun=time;
+  numOfRuns++;
+}

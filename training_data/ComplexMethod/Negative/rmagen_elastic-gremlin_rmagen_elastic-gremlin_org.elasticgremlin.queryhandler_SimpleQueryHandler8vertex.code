@@ -1,0 +1,3 @@
+@Override public BaseVertex vertex(Object vertexId,String vertexLabel,Edge edge,Direction direction){
+  return elasticDocVertexHandler.vertex(vertexId,vertexLabel,edge,direction);
+}

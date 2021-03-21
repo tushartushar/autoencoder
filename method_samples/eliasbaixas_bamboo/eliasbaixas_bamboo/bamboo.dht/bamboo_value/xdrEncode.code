@@ -1,0 +1,3 @@
+public void xdrEncode(XdrEncodingStream xdr) throws OncRpcException, IOException {
+  xdr.xdrEncodeDynamicOpaque(value);
+}

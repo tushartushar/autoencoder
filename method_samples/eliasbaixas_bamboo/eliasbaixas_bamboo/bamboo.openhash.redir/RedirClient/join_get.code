@@ -1,0 +1,15 @@
+protected void join_get(JoinState state){
+  BigInteger key=rendevous_point(state.key,state.namespace,state.current_level);
+  if (logger.isDebugEnabled())   logger.debug("namespace=0x" + GuidTools.guid_to_string(state.namespace) + " current_level="+ state.current_level+ " rendevous_point=0x"+ GuidTools.guid_to_string(key));
+  bamboo_get_args get_args=new bamboo_get_args();
+  get_args.application=state.application;
+  get_args.key=new bamboo_key();
+  get_args.key.value=bi2bytes(key);
+  get_args.maxvals=Integer.MAX_VALUE;
+  get_args.placemark=new bamboo_placemark();
+  get_args.placemark.value=new byte[]{};
+  state.found=false;
+  Object[] pair={state,get_args};
+  if (logger.isDebugEnabled())   logger.debug("doing join get 0x" + GuidTools.guid_to_string(key));
+  client.get(get_args,join_get_done_cb,pair);
+}

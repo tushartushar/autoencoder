@@ -1,0 +1,10 @@
+public StorageTree(long low,long high,long rate){
+  this.rate=rate;
+  range=high - low;
+  branching=2;
+  root=new Node();
+  root.low=low;
+  root.high=high;
+  root.children=new Node[branching];
+  root.create_children();
+}

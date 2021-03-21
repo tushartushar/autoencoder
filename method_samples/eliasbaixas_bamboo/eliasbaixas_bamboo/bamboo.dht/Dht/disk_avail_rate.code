@@ -1,0 +1,4 @@
+protected double disk_avail_rate(int ttl_sec){
+  int i=ttl_to_vdisk(ttl_sec);
+  return fill_rates[i];
+}

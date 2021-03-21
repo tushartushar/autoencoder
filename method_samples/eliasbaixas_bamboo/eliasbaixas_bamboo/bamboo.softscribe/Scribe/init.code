@@ -1,0 +1,8 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  int debug_level=config.getInt("debug_level");
+  if (debug_level > 0) {
+    DEBUG=true;
+    Debug.printtagln(tag,"DDDDD Scribe DEBUG true");
+  }
+}

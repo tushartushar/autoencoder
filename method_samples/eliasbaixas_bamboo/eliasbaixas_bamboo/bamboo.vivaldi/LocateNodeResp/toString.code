@@ -1,0 +1,3 @@
+public String toString(){
+  return new String("(LocateNodeResp peer=" + peer + " inbound="+ inbound+ " coordinate="+ _located_coord+ ")");
+}

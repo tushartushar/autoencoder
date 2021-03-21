@@ -1,0 +1,14 @@
+protected void try_next_gateway(){
+  if (skey != null) {
+    acore.unregister_selectable(skey);
+    skey=null;
+    channel=null;
+    gateway=null;
+  }
+  boolean sleep_first=(gnid != null) && gnid.equals(last_gw);
+  if (sleep_first) {
+    logger.info("Waiting five seconds before connecting");
+    acore.register_timer(5000,try_next_gateway_cb);
+  }
+ else   try_next_gateway_cb.run();
+}

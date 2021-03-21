@@ -1,0 +1,3 @@
+protected VirtualVertex(Object id,String label,ElasticGraph graph,Object[] keyValues){
+  super(id,label,graph,keyValues,null);
+}

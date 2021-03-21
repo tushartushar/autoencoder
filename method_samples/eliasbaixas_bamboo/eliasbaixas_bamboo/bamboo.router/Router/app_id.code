@@ -1,0 +1,6 @@
+/** 
+ * Computes an app_id based on the class name for convenience.  
+ */
+public static final long app_id(Class clazz){
+  return ostore.util.ByteUtils.bytesToLong((new SHA1Hash(clazz.getName())).bytes(),new int[1]);
+}

@@ -1,0 +1,74 @@
+public void get_done_cb(bamboo_get_res get_res,Object user_data){
+  Object[] pair=(Object[])user_data;
+  JoinState state=(JoinState)pair[0];
+  if (get_res.values.length == 0) {
+    if (logger.isDebugEnabled())     logger.debug(state.found ? "no more values" : "no values");
+    join_put(state);
+    return;
+  }
+  state.found=true;
+  for (int i=0; i < get_res.values.length; ++i) {
+    BigInteger hash=bytes2bi(digest.digest(get_res.values[i].value));
+    if (hash.compareTo(state.key) < 0) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("found predecessor 0x" + GuidTools.guid_to_string(hash));
+      }
+      state.done=true;
+      join_put(state);
+      return;
+    }
+  }
+  if (get_res.placemark.value.length == 0) {
+    if (logger.isDebugEnabled())     logger.debug("empty placemark--no more values");
+    join_put(state);
+  }
+ else {
+    if (logger.isDebugEnabled())     logger.debug("no predecessor yet: pl.len=" + get_res.placemark.value.length);
+    bamboo_get_args get_args=(bamboo_get_args)pair[1];
+    get_args.placemark=get_res.placemark;
+    client.get(get_args,this,pair);
+  }
+}
+public void get_done_cb(bamboo_get_res get_res,Object user_data){
+  Object[] pair=(Object[])user_data;
+  LookupState state=(LookupState)pair[0];
+  if (get_res.values.length == 0) {
+    if (state.succ_hash == null) {
+      if (logger.isDebugEnabled())       logger.debug("no values");
+      lookup_no_successor(state);
+    }
+ else {
+      if (logger.isDebugEnabled())       logger.debug("no more values");
+      lookup_result(state,state.succ_addr,state.succ_hash);
+    }
+    return;
+  }
+  for (int i=0; i < get_res.values.length; ++i) {
+    BigInteger hash=bytes2bi(digest.digest(get_res.values[i].value));
+    InetSocketAddress addr=bytes2addr(get_res.values[i].value);
+    if (hash.compareTo(state.key) > 0) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("found successor 0x" + GuidTools.guid_to_string(hash) + ", "+ addr.getAddress().getHostAddress()+ ":"+ addr.getPort());
+      }
+      if ((state.succ_hash == null) || (hash.compareTo(state.succ_hash) < 0)) {
+        state.succ_hash=hash;
+        state.succ_addr=addr;
+      }
+    }
+    if ((state.min_hash == null) || (hash.compareTo(state.min_hash) < 0)) {
+      state.min_hash=hash;
+      state.min_addr=addr;
+    }
+  }
+  if (get_res.placemark.value.length == 0) {
+    if (logger.isDebugEnabled())     logger.debug("empty placemark--no more values");
+    if (state.succ_hash == null)     lookup_no_successor(state);
+ else     lookup_result(state,state.succ_addr,state.succ_hash);
+  }
+ else {
+    if (logger.isDebugEnabled())     logger.debug("looking for more successors");
+    bamboo_get_args get_args=(bamboo_get_args)pair[1];
+    get_args.placemark=get_res.placemark;
+    client.get(get_args,this,pair);
+  }
+}

@@ -1,0 +1,15 @@
+public RpcGetResp(LinkedList<Pair<Key,ByteBuffer>> v,boolean a){
+  values=v;
+  allRead=a;
+}
+public RpcGetResp(InputBuffer buffer) throws QSException {
+  int count=buffer.nextInt();
+  values=new LinkedList<Pair<Key,ByteBuffer>>();
+  while (count-- > 0) {
+    Key k=new Key(buffer);
+    byte[] vb=new byte[buffer.nextInt()];
+    buffer.nextBytes(vb,0,vb.length);
+    values.addLast(Pair.create(k,ByteBuffer.wrap(vb)));
+  }
+  allRead=buffer.nextBoolean();
+}

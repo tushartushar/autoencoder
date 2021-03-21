@@ -1,0 +1,3 @@
+public ProbePingCB(NeighborInfo n){
+  ni=n;
+}

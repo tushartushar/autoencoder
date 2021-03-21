@@ -1,0 +1,3 @@
+@Column(name="CREATEDDATETIME",nullable=true) public Date getCreatedDateTime(){
+  return CreatedDateTime;
+}

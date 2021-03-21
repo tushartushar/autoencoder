@@ -1,0 +1,37 @@
+public TcpMsgChannel(ASyncCore a,InetSocketAddress peer){
+  acore=a;
+  this.peer=peer;
+  try {
+    channel=SocketChannel.open();
+    channel.configureBlocking(false);
+  }
+ catch (  IOException e) {
+    assert false;
+  }
+  try {
+    channel.socket().setKeepAlive(true);
+  }
+ catch (  SocketException e) {
+  }
+  try {
+    channel.connect(peer);
+    acore.registerSelectable(channel,OP_CONNECT,connect);
+  }
+ catch (  IOException e) {
+    assert false;
+  }
+}
+/** 
+ * Build with an already-connected channel.
+ */
+public TcpMsgChannel(ASyncCore a,SocketChannel c){
+  if (c == null)   throw new NullPointerException();
+  acore=a;
+  channel=c;
+  peer=(InetSocketAddress)channel.socket().getRemoteSocketAddress();
+  try {
+    channel.socket().setKeepAlive(true);
+  }
+ catch (  SocketException e) {
+  }
+}

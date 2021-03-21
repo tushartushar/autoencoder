@@ -1,0 +1,19 @@
+public IterGetReq(BigInteger k,int m,Key p,long s,VirtualCoordinate v,NodeId c){
+  key=k;
+  maxvals=m;
+  placemark=p;
+  seq=s;
+  vc=v;
+  client=c;
+  assert (placemark != null);
+}
+public IterGetReq(InputBuffer buffer) throws QSException {
+  key=buffer.nextBigInteger();
+  maxvals=buffer.nextInt();
+  if (maxvals <= 0)   throw new QSException("maxvals <= 0");
+  if (buffer.nextBoolean())   placemark=new Key(buffer);
+ else   placemark=ZERO_KEY;
+  seq=buffer.nextLong();
+  if (buffer.nextBoolean())   vc=new VirtualCoordinate(buffer);
+  client=new NodeId(buffer);
+}

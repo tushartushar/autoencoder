@@ -1,0 +1,4 @@
+protected BaseVertex(Object id,String label,ElasticGraph graph,Object[] keyValues,ElasticMutations elasticMutations){
+  super(id,label,graph,keyValues);
+  this.elasticMutations=elasticMutations;
+}

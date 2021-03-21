@@ -1,0 +1,14 @@
+/** 
+ * Request matching records in the scanner's list.
+ * @param filters Filters which will apply
+ * @return The list of matching {@link ScanResult}
+ */
+public List<ScanResult> getMatchingRecords(List<ScanFilter> filters){
+  ArrayList<ScanResult> results=new ArrayList<ScanResult>();
+  for (  Object res : getRecentScanResults().toArray()) {
+    if (matchesAnyFilter(filters,(ScanResult)res)) {
+      results.add((ScanResult)res);
+    }
+  }
+  return results;
+}

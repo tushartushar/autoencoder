@@ -1,0 +1,15 @@
+public static String getCommonRoad(String road1,String road2){
+  String[] partsRoad1=road1.split("[+]");
+  String[] partsRoad2=road2.split("[+]");
+  int street1=Traffic.getAvenueOrStreetNumber(partsRoad1[0]);
+  int street2=Traffic.getAvenueOrStreetNumber(partsRoad2[0]);
+  if (street1 == street2) {
+    return partsRoad1[0].trim();
+  }
+ else {
+    int av1=Traffic.getAvenueOrStreetNumber(partsRoad1[1]);
+    int av2=Traffic.getAvenueOrStreetNumber(partsRoad2[1]);
+    if (av1 == av2)     return partsRoad1[1].trim();
+ else     return null;
+  }
+}

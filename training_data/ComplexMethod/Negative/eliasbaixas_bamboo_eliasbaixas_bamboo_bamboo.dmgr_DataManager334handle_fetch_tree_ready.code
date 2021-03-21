@@ -1,0 +1,19 @@
+protected void handle_fetch_tree_ready(MerkleTree tree,FetchMerkleTreeNodeReq req){
+  MerkleTree.Node node=tree.node(req.level,req.low_time);
+  if (node == null) {
+    dispatch(new FetchMerkleTreeNodeReject(req.peer,FetchMerkleTreeNodeReject.NO_SUCH_NODE,req.seq));
+    return;
+  }
+  boolean leaf=node.children_are_leaves();
+  LinkedList children=null;
+  if ((!leaf) && (!Arrays.equals(node.hash(),req.expected_hash))) {
+    children=new LinkedList();
+    MerkleTree.Node.Iter i=node.children();
+    while (i.hasNext()) {
+      MerkleTree.Node child=i.next();
+      children.addLast(child.hash());
+    }
+  }
+  FetchMerkleTreeNodeResp resp=new FetchMerkleTreeNodeResp(req.peer,node.hash(),leaf,children,req.seq);
+  dispatch(resp);
+}

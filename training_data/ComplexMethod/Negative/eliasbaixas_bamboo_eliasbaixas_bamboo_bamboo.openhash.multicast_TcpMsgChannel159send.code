@@ -1,0 +1,13 @@
+public void send(QuickSerializable msg){
+  if (msg == null)   throw new NullPointerException();
+  if (channel == null)   throw new IllegalStateException();
+ else {
+    try {
+      acore.registerSelectable(channel,OP_WRITE,write);
+    }
+ catch (    ClosedChannelException e) {
+      error();
+    }
+    outq.addLast(msg);
+  }
+}

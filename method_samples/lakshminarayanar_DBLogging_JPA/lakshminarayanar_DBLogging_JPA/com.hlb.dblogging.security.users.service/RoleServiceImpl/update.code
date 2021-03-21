@@ -1,0 +1,21 @@
+@Override @Transactional(rollbackFor={Exception.class,BSLException.class}) public Role update(Role role){
+  try {
+    Role roleToBeUpdated=roleRepository.findOne(role.getId());
+    if (roleToBeUpdated != null) {
+      roleToBeUpdated.setId(role.getId());
+      roleToBeUpdated.setRole(role.getRole());
+      roleToBeUpdated.setDescription(role.getDescription());
+      roleToBeUpdated.setLastModifiedBy(role.getLastModifiedBy());
+      roleToBeUpdated.setLastModifiedTime(new Date());
+      Set<AccessRights> accessRightsSet=new HashSet<AccessRights>();
+      accessRightsSet.addAll(role.getAccessRights());
+      roleToBeUpdated.setAccessRights(accessRightsSet);
+      roleRepository.saveAndFlush(roleToBeUpdated);
+    }
+    return roleToBeUpdated;
+  }
+ catch (  Exception e) {
+    log.error("Error while updating Role :" + role.getRole(),e);
+    throw new BSLException("err.role.update",e);
+  }
+}

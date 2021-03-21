@@ -1,0 +1,43 @@
+public void select_cb(SelectionKey skey,Object user_data){
+  logger.debug("select_cb");
+  if ((skey.readyOps() & skey.interestOps() & SelectionKey.OP_WRITE) != 0) {
+    logger.debug("op_write");
+    while (true) {
+      if (waiting.isEmpty()) {
+        skey.interestOps(skey.interestOps() & ~SelectionKey.OP_WRITE);
+        break;
+      }
+      ByteBuffer pkt=(ByteBuffer)waiting.getFirst();
+      int n=0;
+      try {
+        n=channel.send(pkt,i3_addr);
+      }
+ catch (      IOException e) {
+        BUG(e);
+      }
+      if (n == 0)       break;
+      waiting.removeFirst();
+      assert pkt.position() == pkt.limit();
+      if (logger.isDebugEnabled()) {
+        pkt.flip();
+        logger.debug("sent bytes:\n" + ByteUtils.print_bytes(pkt.array(),pkt.arrayOffset(),pkt.limit() - pkt.position()));
+      }
+    }
+  }
+  if ((skey.readyOps() & skey.interestOps() & SelectionKey.OP_READ) != 0) {
+    logger.debug("op_read");
+    while (true) {
+      read_buf.clear();
+      InetSocketAddress src=null;
+      try {
+        src=(InetSocketAddress)channel.receive(read_buf);
+      }
+ catch (      IOException e) {
+        BUG(e);
+      }
+      if (src == null)       break;
+      read_buf.flip();
+      handle_inb_pkt(src,read_buf);
+    }
+  }
+}

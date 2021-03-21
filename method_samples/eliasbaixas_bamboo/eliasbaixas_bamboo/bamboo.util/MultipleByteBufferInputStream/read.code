@@ -1,0 +1,16 @@
+public int read(){
+  if (buffers.isEmpty())   return -1;
+  if (remaining == 0)   return -1;
+  ByteBuffer bb=(ByteBuffer)buffers.getFirst();
+  int result=((int)bb.get()) & 0xff;
+  if (bb.position() == bb.limit())   buffers.removeFirst();
+  --size;
+  if (remaining != -1)   --remaining;
+  return result;
+}
+public int read(byte[] output){
+  return read(output,0,output.length);
+}
+public int read(byte[] output,int offset,int length){
+  return read_skip_impl(output,offset,length);
+}

@@ -1,0 +1,11 @@
+private void handleMCastJoin(MCastJoin j){
+  if (DEBUG)   Debug.printtagln(tag,"handleMCastJoin got " + j);
+  if (j.join && !(myLocalGroups.contains(j.groupguid))) {
+    myLocalGroups.add(j.groupguid);
+    MCastJoinMsg m=new MCastJoinMsg(my_node_id,j.groupguid);
+    dispatch(new BambooRouteInit(j.groupguid,app_id,true,false,m));
+  }
+ else   if (!j.join && (myLocalGroups.contains(j.groupguid))) {
+    myLocalGroups.remove(j.groupguid);
+  }
+}

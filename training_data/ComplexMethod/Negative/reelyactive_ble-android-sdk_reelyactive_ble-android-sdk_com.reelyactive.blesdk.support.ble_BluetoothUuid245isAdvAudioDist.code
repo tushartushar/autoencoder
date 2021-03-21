@@ -1,0 +1,3 @@
+public static boolean isAdvAudioDist(ParcelUuid uuid){
+  return uuid.equals(AdvAudioDist);
+}

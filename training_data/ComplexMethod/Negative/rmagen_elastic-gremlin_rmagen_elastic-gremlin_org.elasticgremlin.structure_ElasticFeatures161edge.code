@@ -1,0 +1,3 @@
+@Override public EdgeFeatures edge(){
+  return elasticEdgeFeatures;
+}

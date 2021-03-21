@@ -1,0 +1,14 @@
+/** 
+ * Sets currentTimeLastStop to time.
+ * @param time
+ */
+private void setClockIsNotRunning(Long time){
+  currentTimeLastStop=time;
+  isRunning=false;
+}
+/** 
+ * Sets currentTimeLastStop to the time now.
+ */
+private void setClockIsNotRunning(){
+  setClockIsNotRunning(time());
+}

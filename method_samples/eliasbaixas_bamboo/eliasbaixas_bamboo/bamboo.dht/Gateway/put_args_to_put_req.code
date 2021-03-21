@@ -1,0 +1,8 @@
+protected Dht.PutReq put_args_to_put_req(bamboo_put_args put_args,InetAddress client){
+  return new Dht.PutReq(byte_array_to_big_int(put_args.key.value),ByteBuffer.wrap(put_args.value.value),null,true,my_sink,null,ttl(put_args.ttl_sec),client);
+}
+protected Dht.PutReq put_args_to_put_req(bamboo_put_arguments put_args,InetAddress client){
+  byte[] secret_hash=null;
+  if (put_args.secret_hash.hash.length > 0)   secret_hash=put_args.secret_hash.hash;
+  return new Dht.PutReq(byte_array_to_big_int(put_args.key.value),ByteBuffer.wrap(put_args.value.value),secret_hash,null,true,my_sink,null,ttl(put_args.ttl_sec),client);
+}

@@ -1,0 +1,18 @@
+public void join(BigInteger groupname,int ttl_s,String app,ASyncCore.TimerCB cb,Object user_data){
+  if (natted) {
+    NattedMulticastClient c=nattedClients.get(groupname);
+    if (c == null) {
+      c=new NattedMulticastClient(acore,client,seed++,groupname,total_levels,ccall);
+      nattedClients.put(groupname,c);
+    }
+  }
+ else {
+    PublicMulticastClient c=publicClients.get(groupname);
+    if (c == null) {
+      c=new PublicMulticastClient(my_node_id,seed++,total_levels,replication,client,acore);
+      publicClients.put(groupname,c);
+    }
+    c.join(groupname,ttl_s,app,cb,user_data);
+    parent.addGroup(groupname);
+  }
+}

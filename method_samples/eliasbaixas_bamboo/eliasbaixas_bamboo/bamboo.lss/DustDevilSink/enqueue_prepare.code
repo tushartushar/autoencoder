@@ -1,0 +1,6 @@
+public Object enqueue_prepare(QueueElementIF[] e) throws SinkException {
+  check_thread();
+  Long key=new Long(next_key++);
+  prepares.put(key,e);
+  return key;
+}

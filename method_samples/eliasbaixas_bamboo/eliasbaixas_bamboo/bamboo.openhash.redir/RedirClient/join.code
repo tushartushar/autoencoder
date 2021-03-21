@@ -1,0 +1,8 @@
+public Object join(InetSocketAddress addr,BigInteger key,BigInteger namespace,int levels,int ttl_s,String application,JoinCb cb,Object user_data){
+  if (logger.isInfoEnabled()) {
+    logger.info("joining addr=" + addr.getAddress().getHostAddress() + ":"+ addr.getPort()+ " key=0x"+ GuidTools.guid_to_string(key)+ " namespace=0x"+ GuidTools.guid_to_string(namespace)+ " levels="+ levels+ " ttl_s="+ ttl_s);
+  }
+  JoinState state=new JoinState(addr,key,namespace,levels,ttl_s,application,cb,user_data);
+  join_get(state);
+  return state;
+}

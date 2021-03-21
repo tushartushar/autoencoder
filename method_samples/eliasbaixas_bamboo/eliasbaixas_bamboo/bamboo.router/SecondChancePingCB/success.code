@@ -1,0 +1,3 @@
+public void success(){
+  generic_msg_success(ni);
+}

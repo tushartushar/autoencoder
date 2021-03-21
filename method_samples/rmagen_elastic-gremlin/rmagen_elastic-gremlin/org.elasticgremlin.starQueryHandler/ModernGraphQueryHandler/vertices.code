@@ -1,0 +1,18 @@
+@Override public Iterator<? extends Vertex> vertices(){
+  final Iterator<Vertex> starVertices=(Iterator<Vertex>)starHandler.vertices();
+  final Iterator<Vertex> docVertices=docVertexHandler.vertices();
+  return new ConcatIterator<>(starVertices,docVertices);
+}
+@Override public Iterator<? extends Vertex> vertices(Object[] vertexIds){
+  final Iterator<Vertex> starVertices=(Iterator<Vertex>)starHandler.vertices(vertexIds);
+  final Iterator<Vertex> docVertices=(Iterator<Vertex>)docVertexHandler.vertices(vertexIds);
+  return new ConcatIterator<>(starVertices,docVertices);
+}
+@Override public Iterator<? extends Vertex> vertices(Predicates predicates){
+  String label=extractLabel(predicates.hasContainers);
+  if (label == null) {
+    Iterator<? extends Vertex> vertices=vertices();
+    return testPredicatesLocal(predicates,vertices);
+  }
+  return vertexHandlers.get(label).vertices(predicates);
+}

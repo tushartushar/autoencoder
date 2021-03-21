@@ -1,0 +1,8 @@
+protected void handle_rt_changed(BambooRoutingTableChanged msg){
+  Iterator i=apps.keySet().iterator();
+  while (i.hasNext()) {
+    Long app_id=(Long)i.next();
+    Application app=(Application)apps.get(app_id);
+    if (app.rt_cb != null)     app.rt_cb.routing_table_changed(msg.added,msg.removed,app.rt_ud);
+  }
+}

@@ -1,0 +1,6 @@
+public BaseEdge(final Object id,final String label,Object[] keyValues,Vertex outVertex,Vertex inVertex,final ElasticGraph graph){
+  super(id,label,graph,keyValues);
+  this.outVertex=outVertex;
+  this.inVertex=inVertex;
+  ElementHelper.validateLabel(label);
+}

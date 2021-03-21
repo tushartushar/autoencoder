@@ -1,0 +1,3 @@
+public BigInteger calc_dist(BigInteger a,BigInteger b){
+  return GuidTools.calc_dist(a,b,MODULUS);
+}

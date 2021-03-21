@@ -1,0 +1,74 @@
+public void run(){
+  connect.run();
+}
+public void run(){
+  byte noise[]=new byte[20];
+  rand.nextBytes(noise);
+  id=bytes2bi(noise);
+  logger.info("using id 0x" + GuidTools.guid_to_string(id));
+  doGet.run(new Integer(maxLevel));
+}
+public void run(Integer lev){
+  int level=lev.intValue();
+  BigInteger key=rendezvous_point(id,group,level);
+  bamboo_get_args args=new bamboo_get_args();
+  args.application=APPLICATION;
+  args.key=new bamboo_key();
+  args.key.value=bi2bytes(key);
+  args.maxvals=Integer.MAX_VALUE;
+  args.placemark=new bamboo_placemark();
+  args.placemark.value=new byte[0];
+  client.get(args,curry(getDone,new Integer(level - 1)));
+}
+public void run(Integer lev,bamboo_get_res result){
+  int level=lev.intValue();
+  if (result.values.length > 0) {
+    int which=rand.nextInt(result.values.length);
+    InetSocketAddress udp=bytes2addr(result.values[which].value);
+    InetSocketAddress parent=new InetSocketAddress(udp.getAddress(),udp.getPort() + 1);
+    logger.info("trying parent " + parent.getAddress().getHostAddress() + ":"+ parent.getPort());
+    channel=new TcpMsgChannel(acore,parent);
+    channel.setReceiveHandler(recv);
+    channel.setFailureHandler(fail);
+    Group msg=new Group(group);
+    inflight.addFirst(msg);
+    channel.send(msg);
+  }
+ else   if (level < 0) {
+    logger.info("no parents available");
+    acore.registerTimer(60 * 1000,connect);
+    return;
+  }
+ else {
+    doGet.run(new Integer(level - 1));
+  }
+}
+public void run(){
+  logger.info("connection failed");
+  if (!inflight.isEmpty() && (inflight.getFirst() instanceof Group)) {
+    inflight.removeFirst();
+  }
+  for (  QuickSerializable msg : waiting)   inflight.addLast(msg);
+  waiting=inflight;
+  inflight=new LinkedList<QuickSerializable>();
+  channel=null;
+  acore.registerTimer(1000,connect);
+}
+public void run(QuickSerializable msg){
+  if (msg instanceof Ack) {
+    QuickSerializable first=inflight.removeFirst();
+    if (first instanceof Group) {
+      logger.info("successful join");
+      assert inflight.isEmpty();
+      for (      QuickSerializable m : waiting)       channel.send(m);
+      inflight=waiting;
+      waiting=new LinkedList<QuickSerializable>();
+    }
+  }
+ else   if (msg instanceof MulticastMessage) {
+    upcall.run((MulticastMessage)msg);
+  }
+ else {
+    logger.warn("unknown msg type: " + msg.getClass().getName());
+  }
+}

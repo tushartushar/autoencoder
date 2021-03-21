@@ -1,0 +1,9 @@
+protected MessageDigest new_digest(){
+  try {
+    return (MessageDigest)dont_use.clone();
+  }
+ catch (  CloneNotSupportedException e) {
+    assert false;
+    return null;
+  }
+}

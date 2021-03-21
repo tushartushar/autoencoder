@@ -1,0 +1,53 @@
+public Object send(final QuickSerializable msg,final InetSocketAddress d,final long timeoutSeconds,final Thunk1<Boolean> callback){
+  NodeId peer=(NodeId)d;
+  long dst_failure_time_us=simulator.event_queue.failure_time_us(peer);
+  int src=simulator.node_id_to_graph_index(my_node_id);
+  int dst=simulator.node_id_to_graph_index(peer);
+  NetworkModel.RouteInfo ri=simulator.network_model.compute_route_info(src,dst);
+  CountBuffer cb=new CountBuffer();
+  cb.add(msg);
+  int msg_size=cb.size() + header_size;
+  long route_lat_us=msg_latency_us(ri,msg_size);
+  assert route_lat_us >= 0 : "Bad route info from " + my_node_id + " to "+ peer;
+  long recv_time_us=simulator.event_queue.now_us() + route_lat_us;
+  if (recv_time_us < dst_failure_time_us) {
+    final QuickSerializable qs=QSClone.qs_clone(msg);
+    if (qs instanceof NetworkMessage) {
+      NetworkMessage nm=(NetworkMessage)qs;
+      nm.peer=my_node_id;
+      nm.inbound=true;
+      nm.est_rtt_ms=route_lat_us * 1000;
+    }
+    final Thunk2<QuickSerializable,InetSocketAddress> recv_cb=(Thunk2<QuickSerializable,InetSocketAddress>)((Network)instance(peer)).receivers.get(msg.getClass());
+    if (recv_cb != null) {
+      simulator.event_queue.register_timer(peer,route_lat_us,new EventQueue.Callback(){
+        public void call(        Object notUsed){
+          recv_cb.run(qs,my_node_id);
+        }
+      }
+,null);
+    }
+ else {
+      assert msg instanceof NetworkMessage : "non-NetworkMessage type " + msg.getClass().getName() + " sent via send() without registered receiver";
+      SinkIF dst_sink=(SinkIF)sinks.get(peer);
+      simulator.event_queue.register_timer(peer,route_lat_us,new EnqueueCb((NetworkMessage)qs,dst_sink),null);
+    }
+    long ack_time_us=route_lat_us + msg_latency_us(ri,ack_size);
+    simulator.event_queue.register_timer(my_node_id,ack_time_us,new EventQueue.Callback(){
+      public void call(      Object notUsed){
+        callback.run(new Boolean(true));
+      }
+    }
+,null);
+  }
+ else {
+    long total_timeout=timeoutSeconds * 1000 * 1000;
+    simulator.event_queue.register_timer(my_node_id,total_timeout,new EventQueue.Callback(){
+      public void call(      Object notUsed){
+        callback.run(new Boolean(false));
+      }
+    }
+,null);
+  }
+  return bogusToken;
+}

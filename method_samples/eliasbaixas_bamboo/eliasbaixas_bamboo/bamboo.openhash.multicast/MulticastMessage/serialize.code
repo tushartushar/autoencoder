@@ -1,0 +1,11 @@
+public void serialize(OutputBuffer buffer){
+  buffer.add(group);
+  buffer.add(sender_id);
+  buffer.add(est_rtt);
+  buffer.add(begin_time);
+  buffer.add(rtt_times);
+  buffer.add(transit_times);
+  buffer.add(prev_time);
+  buffer.add(hops);
+  buffer.add(payload);
+}

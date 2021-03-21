@@ -1,0 +1,3 @@
+public void setAccessRights(Set<AccessRights> accessRights){
+  this.accessRights=accessRights;
+}

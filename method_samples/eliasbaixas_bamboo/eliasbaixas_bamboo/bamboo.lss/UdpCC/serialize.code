@@ -1,0 +1,4 @@
+/** 
+ * Called to serialize the given <code>msg</code> into the provided <code>buf</code>; the inverse of <code>deserialize</code>.
+ */
+void serialize(Object msg,ByteBuffer buf);

@@ -1,0 +1,3 @@
+public void join_cb(Object user_data){
+  acore.register_timer(lookup_delay_ms,start_lookups_cb,null);
+}

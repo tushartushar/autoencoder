@@ -1,0 +1,4 @@
+public SrcAndMsgId(InetSocketAddress s,long m){
+  src=s;
+  msg_id=m;
+}

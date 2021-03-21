@@ -1,0 +1,1 @@
+AccessRights findById(int id);

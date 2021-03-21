@@ -1,0 +1,5 @@
+public boolean idle(){
+synchronized (work_queue) {
+    return idle;
+  }
+}

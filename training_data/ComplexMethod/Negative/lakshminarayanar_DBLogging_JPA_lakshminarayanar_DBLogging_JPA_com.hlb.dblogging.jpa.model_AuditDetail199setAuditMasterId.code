@@ -1,0 +1,3 @@
+public void setAuditMasterId(long auditMasterId){
+  this.auditMasterId=auditMasterId;
+}

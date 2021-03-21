@@ -1,0 +1,4 @@
+public void show_rt(){
+  show_rt=true;
+  redraw_rt();
+}

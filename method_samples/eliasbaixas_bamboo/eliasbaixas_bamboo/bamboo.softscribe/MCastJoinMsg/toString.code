@@ -1,0 +1,3 @@
+public String toString(){
+  return "(MCastJoinMsg srcid=" + srcid + " dstguid="+ GuidTools.guid_to_string(dstguid)+ ")";
+}

@@ -1,0 +1,7 @@
+private void printLocalGroups(){
+  String s="printLocalGroups // ";
+  for (Enumeration e=myLocalGroups.elements(); e.hasMoreElements(); ) {
+    s+=GuidTools.guid_to_string((BigInteger)e.nextElement()) + " // ";
+  }
+  Debug.printtagln(tag,s);
+}

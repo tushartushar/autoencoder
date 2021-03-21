@@ -1,0 +1,6 @@
+private boolean isValidCallbackType(int callbackType){
+  if (callbackType == CALLBACK_TYPE_ALL_MATCHES || callbackType == CALLBACK_TYPE_FIRST_MATCH || callbackType == CALLBACK_TYPE_MATCH_LOST) {
+    return true;
+  }
+  return callbackType == (CALLBACK_TYPE_FIRST_MATCH | CALLBACK_TYPE_MATCH_LOST);
+}

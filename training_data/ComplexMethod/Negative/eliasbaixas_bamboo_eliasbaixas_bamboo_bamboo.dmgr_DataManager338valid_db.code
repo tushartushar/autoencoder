@@ -1,0 +1,14 @@
+protected boolean valid_db(NodeId peer,BigInteger peer_guid,BigInteger low,BigInteger high){
+  if (preds == null)   return false;
+  BambooNeighborInfo other=new BambooNeighborInfo(peer,peer_guid,0.0);
+  GuidRange range=new GuidRange(low,high);
+  SortedSet choices=calc_shared_dbs(other);
+  if (choices != null) {
+    logger.debug("valid range");
+    return choices.contains(range);
+  }
+ else {
+    logger.debug("invalid range");
+    return false;
+  }
+}

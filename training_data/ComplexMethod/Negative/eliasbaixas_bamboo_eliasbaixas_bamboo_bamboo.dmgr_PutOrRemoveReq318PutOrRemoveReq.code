@@ -1,0 +1,12 @@
+public PutOrRemoveReq(long t,int tt,BigInteger g,ByteBuffer v,byte[] sh,byte[] vh,boolean p,InetAddress c,SinkIF q,Object u){
+  time_usec=t;
+  ttl_sec=tt;
+  guid=g;
+  value=v;
+  secret_hash=sh;
+  value_hash=vh;
+  put=p;
+  client_id=c;
+  completion_queue=q;
+  user_data=u;
+}

@@ -1,0 +1,3 @@
+public int matching_digits(BigInteger guid){
+  return calc_first_diff(guid_to_digits(guid));
+}

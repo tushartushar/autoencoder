@@ -1,0 +1,57 @@
+protected SortedSet calc_shared_dbs(BambooNeighborInfo other){
+  if (logger.isDebugEnabled())   logger.debug("calc_shared_dbs (" + GuidTools.guid_to_string(my_guid) + ", "+ GuidTools.guid_to_string(other.guid)+ ")");
+  if (logger.isDebugEnabled())   logger.debug("calc_shared_dbs (" + my_node_id + ", "+ other.node_id+ ")");
+  boolean is_succ=false;
+  int succ_idx=0;
+  for (int i=0; i < succs.length; ++i) {
+    if (succs[i].equals(preds[preds.length - 1])) {
+      if (logger.isDebugEnabled())       logger.debug("whole space shared");
+      GuidRange db_range=new GuidRange(MIN_GUID,MAX_GUID);
+      SortedSet result=new TreeSet();
+      result.add(db_range);
+      return result;
+    }
+    if (succs[i].equals(other)) {
+      is_succ=true;
+      succ_idx=i;
+    }
+  }
+  int low_idx=0;
+  int high_idx=0;
+  if (is_succ) {
+    if (succ_idx == succs.length - 1)     low_idx=0;
+ else     low_idx=-1 * (preds.length - succ_idx - 1);
+    high_idx=succs.length;
+  }
+ else {
+    int pred_idx=-1;
+    for (int i=0; i < preds.length; ++i) {
+      if (preds[i].equals(other)) {
+        pred_idx=i;
+        break;
+      }
+    }
+    if (pred_idx == -1) {
+      return null;
+    }
+    if (pred_idx == preds.length - 1)     high_idx=0;
+ else     high_idx=(succs.length - pred_idx - 1);
+    low_idx=-1 * preds.length;
+  }
+  SortedSet result=new TreeSet();
+  for (int i=low_idx; i < high_idx; ++i) {
+    BambooNeighborInfo one=null, two=null;
+    if (i == 0)     one=my_neighbor_info;
+ else     if (i < 0)     one=preds[-1 * i - 1];
+ else     one=succs[i - 1];
+    if (i + 1 == 0)     two=my_neighbor_info;
+ else     if (i + 1 < 0)     two=preds[-1 * (i + 1) - 1];
+ else     two=succs[(i + 1) - 1];
+    BigInteger second=two.guid.subtract(BigInteger.ONE);
+    if (second.equals(NEG_ONE))     second=MAX_GUID;
+    GuidRange db_range=new GuidRange(one.guid,second);
+    if (logger.isDebugEnabled())     logger.debug("share range [" + GuidTools.guid_to_string(one.guid) + ", "+ GuidTools.guid_to_string(second)+ "]");
+    result.add(db_range);
+  }
+  return result;
+}

@@ -1,0 +1,5 @@
+@Override public void mouseClicked(MouseEvent e){
+  if (e.getButton() == MouseEvent.BUTTON3) {
+    cancelCapture();
+  }
+}

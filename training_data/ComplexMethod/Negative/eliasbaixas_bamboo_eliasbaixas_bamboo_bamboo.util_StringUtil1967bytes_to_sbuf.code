@@ -1,0 +1,21 @@
+public static void bytes_to_sbuf(byte[] data,int offset,int length,StringBuffer buf){
+  bytes_to_sbuf(data,offset,length,false,buf);
+}
+public static void bytes_to_sbuf(byte[] data,int offset,int length,boolean pretty,StringBuffer buf){
+  int size=2 * length;
+  size+=(size / 8) + (size / 64);
+  int low_mask=0x0f;
+  int high_mask=0xf0;
+  byte b;
+  int j=0;
+  for (int i=offset; i < (offset + length); ++i) {
+    b=data[i];
+    buf.append(digits[(high_mask & b) >> 4]);
+    buf.append(digits[(low_mask & b)]);
+    if (pretty) {
+      if (j % 4 == 3)       buf.append(' ');
+      if (j % 32 == 31)       buf.append('\n');
+    }
+    ++j;
+  }
+}

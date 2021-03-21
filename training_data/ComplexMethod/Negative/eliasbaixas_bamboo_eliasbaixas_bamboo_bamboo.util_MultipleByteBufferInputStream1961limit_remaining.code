@@ -1,0 +1,4 @@
+public int limit_remaining(){
+  assert remaining >= 0;
+  return remaining;
+}

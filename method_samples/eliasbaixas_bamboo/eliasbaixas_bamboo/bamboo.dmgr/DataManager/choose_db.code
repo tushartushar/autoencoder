@@ -1,0 +1,12 @@
+protected void choose_db(BambooNeighborInfo other){
+  SortedSet choices=calc_shared_dbs(other);
+  int which=rand.nextInt(choices.size());
+  int orig=which;
+  Iterator i=choices.iterator();
+  while (which-- > 0)   i.next();
+  GuidRange range=(GuidRange)i.next();
+  ae_state.low_guid=range.low;
+  ae_state.high_guid=range.high;
+  ae_state.guid_range=range;
+  if (logger.isDebugEnabled())   logger.debug("which=" + orig + " chose range ["+ GuidTools.guid_to_string(range.low)+ ", "+ GuidTools.guid_to_string(range.high)+ "]");
+}

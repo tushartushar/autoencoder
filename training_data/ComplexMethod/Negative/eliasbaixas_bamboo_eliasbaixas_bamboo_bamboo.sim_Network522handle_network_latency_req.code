@@ -1,0 +1,10 @@
+protected void handle_network_latency_req(NetworkLatencyReq req){
+  long rtt_ms=(2 * network_latency_us(my_node_id,req.node_id) / 1000);
+  NetworkLatencyResp resp=new NetworkLatencyResp(true,rtt_ms,req.user_data);
+  try {
+    req.comp_q.enqueue(resp);
+  }
+ catch (  SinkException e) {
+    BUG("SinkException " + e);
+  }
+}

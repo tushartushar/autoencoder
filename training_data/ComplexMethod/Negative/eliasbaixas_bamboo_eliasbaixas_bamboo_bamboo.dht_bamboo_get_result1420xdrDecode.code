@@ -1,0 +1,10 @@
+public void xdrDecode(XdrDecodingStream xdr) throws OncRpcException, IOException {
+{
+    int $size=xdr.xdrDecodeInt();
+    values=new bamboo_get_value[$size];
+    for (int $idx=0; $idx < $size; ++$idx) {
+      values[$idx]=new bamboo_get_value(xdr);
+    }
+  }
+  placemark=new bamboo_placemark(xdr);
+}

@@ -1,0 +1,3 @@
+public final long sum(){
+  return value + offset;
+}

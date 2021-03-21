@@ -1,0 +1,10 @@
+public BambooRouteDeliver(BigInteger s,BigInteger d,NodeId i,long a,int att,long w,long e,QuickSerializable p){
+  src=s;
+  dest=d;
+  immediate_src=i;
+  app_id=a;
+  tries=att;
+  wait_ms=w;
+  est_rtt_ms=e;
+  payload=p;
+}

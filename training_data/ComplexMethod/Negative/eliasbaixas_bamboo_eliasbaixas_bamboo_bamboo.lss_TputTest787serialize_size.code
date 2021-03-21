@@ -1,0 +1,4 @@
+public int serialize_size(Object msg){
+  ByteBuffer buf=(ByteBuffer)msg;
+  return buf.limit();
+}

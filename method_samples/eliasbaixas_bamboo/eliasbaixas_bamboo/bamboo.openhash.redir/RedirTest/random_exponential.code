@@ -1,0 +1,4 @@
+protected static double random_exponential(double mean,Random rand){
+  double u=rand.nextDouble();
+  return (0 - (mean * Math.log(1.0 - u)));
+}

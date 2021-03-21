@@ -1,0 +1,22 @@
+public NeighborInfo closest_node(BigInteger guid){
+  if (cache.isEmpty())   return null;
+  if (cache.containsKey(guid))   return ((Node)cache.get(guid)).ni;
+  SortedMap hm=cache.headMap(guid);
+  SortedMap tm=null;
+  if (hm.isEmpty() || (tm=cache.tailMap(guid)).isEmpty()) {
+    BigInteger largest_key=(BigInteger)cache.lastKey();
+    BigInteger smallest_key=(BigInteger)cache.firstKey();
+    BigInteger largest_dist=calc_dist(guid,largest_key);
+    BigInteger smallest_dist=calc_dist(guid,smallest_key);
+    if (largest_dist.compareTo(smallest_dist) < 0)     return ((Node)cache.get(largest_key)).ni;
+ else     return ((Node)cache.get(smallest_key)).ni;
+  }
+ else {
+    BigInteger largest_key=(BigInteger)tm.firstKey();
+    BigInteger smallest_key=(BigInteger)hm.lastKey();
+    BigInteger largest_dist=calc_dist(guid,largest_key);
+    BigInteger smallest_dist=calc_dist(guid,smallest_key);
+    if (largest_dist.compareTo(smallest_dist) < 0)     return ((Node)tm.get(largest_key)).ni;
+ else     return ((Node)hm.get(smallest_key)).ni;
+  }
+}

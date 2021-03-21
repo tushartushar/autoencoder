@@ -1,0 +1,31 @@
+private void saveImage(){
+  JFileChooser fc=new JFileChooser();
+  fc.setFileFilter(new FileFilter(){
+    public boolean accept(    File f){
+      return f.getName().toLowerCase().endsWith(".png") || f.isDirectory();
+    }
+    public String getDescription(){
+      return "PNG Image (*.png)";
+    }
+  }
+);
+  fc.setCurrentDirectory(new File(prevPath));
+  fc.setDialogType(JFileChooser.SAVE_DIALOG);
+  if (generated_image != null) {
+    if (fc.showDialog(this,"Save Image") == JFileChooser.APPROVE_OPTION) {
+      String filename=fc.getSelectedFile().getPath();
+      if (!filename.endsWith(".png"))       filename+=".png";
+      File file=new File(filename);
+      try {
+        ImageIO.write(generated_image,"png",file);
+      }
+ catch (      IOException e) {
+        JOptionPane.showMessageDialog(this,"Failed to save image");
+      }
+      prevPath=fc.getCurrentDirectory().getPath();
+    }
+  }
+ else {
+    JOptionPane.showMessageDialog(this,"No image to save");
+  }
+}

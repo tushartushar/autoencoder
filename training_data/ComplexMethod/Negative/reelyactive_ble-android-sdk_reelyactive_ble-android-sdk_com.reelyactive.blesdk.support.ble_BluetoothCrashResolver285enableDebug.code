@@ -1,0 +1,6 @@
+/** 
+ * Enable debug logging.  By default no debug lines are logged.
+ */
+public void enableDebug(){
+  debugEnabled=true;
+}

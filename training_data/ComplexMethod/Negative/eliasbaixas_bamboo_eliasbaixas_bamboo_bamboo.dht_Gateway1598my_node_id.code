@@ -1,0 +1,3 @@
+public NodeId my_node_id(){
+  return my_node_id;
+}

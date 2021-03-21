@@ -1,0 +1,18 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  instances.put(my_node_id,this);
+  desired_replicas=configGetInt(config,"desired_replicas",Integer.MAX_VALUE - 1);
+  assert (desired_replicas & 0x1) == 0;
+  iterative_routing=config_get_boolean(config,"iterative_routing");
+  expansion=config_get_int(config,"merkle_tree_expansion");
+  if (expansion <= 0)   expansion=5;
+  ae_period=config_get_int(config,"ae_period");
+  if (ae_period == -1)   ae_period=1;
+  ae_period*=1000;
+  required_acks=config_get_int(config,"required_acks");
+  if (required_acks == -1)   required_acks=Integer.MAX_VALUE;
+  put_retry_time=config_get_int(config,"put_retry_time");
+  if (put_retry_time == -1)   put_retry_time=60 * 1000;
+  put_give_up_time=config_get_int(config,"put_give_up_time");
+  if (put_give_up_time == -1)   put_give_up_time=60 * 1000;
+}

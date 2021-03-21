@@ -1,0 +1,42 @@
+public void handleEvent(QueueElementIF item){
+  if (DEBUG)   Debug.printtagln(tag,"handleEvent got " + item);
+  if (item instanceof seda.sandStorm.api.StagesInitializedSignal) {
+    dispatch(new BambooRouterAppRegReq(app_id,false,false,false,my_sink));
+  }
+ else   if (item instanceof BambooRouterAppRegResp) {
+    BambooRouterAppRegResp resp=(BambooRouterAppRegResp)item;
+    my_guid=resp.node_guid;
+    my_guid_sh=GuidTools.big_integer_to_secure_hash(my_guid);
+{
+      byte[] noise=my_guid_sh.bytes();
+      int seed=ostore.util.ByteUtils.bytesToInt(noise,new int[1]);
+      rand=new Random(seed);
+    }
+    initialized=true;
+    while (!wait_q.isEmpty())     handleEvent((QueueElementIF)wait_q.removeFirst());
+    classifier.dispatch_later(new ParentAlarm(),PARENT_ALARM_INTERVAL + rand.nextInt(PARENT_ALARM_VARIATION));
+    classifier.dispatch_later(new ChildAlarm(),CHILD_ALARM_INTERVAL + rand.nextInt(CHILD_ALARM_VARIATION));
+  }
+ else   if (!initialized) {
+    wait_q.addLast(item);
+  }
+ else {
+    if (item instanceof BambooRouteUpcall) {
+      BambooRouteUpcall msg=(BambooRouteUpcall)item;
+      if (msg.payload instanceof MCastJoinMsg)       handleMCastJoinMsg(msg,(MCastJoinMsg)msg.payload);
+ else       BUG("Scribe got unexpected upcall: " + item + ".");
+    }
+ else     if (item instanceof BambooRouteDeliver) {
+      BambooRouteDeliver msg=(BambooRouteDeliver)item;
+      if (msg.payload instanceof MCastUpMsg)       handleMCastUpMsg((MCastUpMsg)msg.payload);
+ else       if (msg.payload instanceof MCastJoinMsg)       handleMCastJoinMsg(null,(MCastJoinMsg)msg.payload);
+ else       BUG("Scribe got unexpected deliver: " + item + ".");
+    }
+ else     if (item instanceof ParentAlarm)     handleParentAlarm((ParentAlarm)item);
+ else     if (item instanceof ChildAlarm)     handleChildAlarm((ChildAlarm)item);
+ else     if (item instanceof MCastDownMsg)     handleMCastDownMsg((MCastDownMsg)item);
+ else     if (item instanceof MCastUp)     handleMCastUp((MCastUp)item);
+ else     if (item instanceof MCastJoin)     handleMCastJoin((MCastJoin)item);
+ else     BUG("got event of unexpected type: " + item + ".");
+  }
+}

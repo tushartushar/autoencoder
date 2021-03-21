@@ -1,0 +1,1 @@
+@Query("select u from Users u where username=? and deleted=1") Users findPreviouslyExistingUser(String username);

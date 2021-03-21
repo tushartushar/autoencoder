@@ -1,0 +1,5 @@
+public IBGCont(Dbt k,BigInteger h,Dbc c){
+  key=k;
+  high=h;
+  cursor=c;
+}

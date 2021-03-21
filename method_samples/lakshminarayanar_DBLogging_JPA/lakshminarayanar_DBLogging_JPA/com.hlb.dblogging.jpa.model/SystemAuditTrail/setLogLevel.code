@@ -1,0 +1,3 @@
+public void setLogLevel(String logLevel){
+  this.logLevel=logLevel;
+}

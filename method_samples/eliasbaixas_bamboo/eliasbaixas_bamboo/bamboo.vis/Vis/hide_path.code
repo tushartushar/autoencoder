@@ -1,0 +1,7 @@
+public void hide_path(){
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  while (!path_connectors.isEmpty()) {
+    Figure conn=(Figure)path_connectors.removeFirst();
+    layer.remove(conn);
+  }
+}

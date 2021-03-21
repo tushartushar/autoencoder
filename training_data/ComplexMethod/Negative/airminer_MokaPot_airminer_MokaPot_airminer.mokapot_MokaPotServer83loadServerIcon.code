@@ -1,0 +1,6 @@
+@Override public CachedServerIcon loadServerIcon(File file) throws IllegalArgumentException, Exception {
+  throw new NotImplementedException();
+}
+@Override public CachedServerIcon loadServerIcon(BufferedImage image) throws IllegalArgumentException, Exception {
+  throw new NotImplementedException();
+}

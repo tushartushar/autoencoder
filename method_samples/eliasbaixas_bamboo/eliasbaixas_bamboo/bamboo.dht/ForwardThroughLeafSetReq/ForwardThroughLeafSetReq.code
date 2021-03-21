@@ -1,0 +1,8 @@
+public ForwardThroughLeafSetReq(NetworkMessage p){
+  payload=p;
+}
+public ForwardThroughLeafSetReq(InputBuffer buffer) throws QSException {
+  payload=(NetworkMessage)buffer.nextObject();
+  payload.inbound=false;
+  payload.peer=new NodeId(buffer);
+}

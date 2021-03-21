@@ -1,0 +1,8 @@
+private String extractLabel(ArrayList<HasContainer> hasContainers){
+  for (  HasContainer hasContainer : hasContainers) {
+    if (hasContainer.getKey().equals(T.label.getAccessor())) {
+      return hasContainer.getValue().toString();
+    }
+  }
+  return null;
+}

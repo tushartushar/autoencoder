@@ -1,0 +1,1 @@
+Role findByRole(String role);

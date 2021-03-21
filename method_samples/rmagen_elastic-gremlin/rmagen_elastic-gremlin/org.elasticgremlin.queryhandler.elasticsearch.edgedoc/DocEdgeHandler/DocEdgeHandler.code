@@ -1,0 +1,9 @@
+public DocEdgeHandler(ElasticGraph graph,Client client,ElasticMutations elasticMutations,String indexName,int scrollSize,boolean refresh,TimingAccessor timing){
+  this.graph=graph;
+  this.client=client;
+  this.elasticMutations=elasticMutations;
+  this.indexName=indexName;
+  this.scrollSize=scrollSize;
+  this.refresh=refresh;
+  this.timing=timing;
+}

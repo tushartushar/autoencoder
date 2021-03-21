@@ -1,0 +1,10 @@
+public RoutingNeighborAnnounce(NodeId dest,BigInteger g,boolean a){
+  super(dest,false);
+  guid=g;
+  add=a;
+}
+public RoutingNeighborAnnounce(InputBuffer buffer) throws QSException {
+  super(buffer);
+  guid=buffer.nextBigInteger();
+  add=buffer.nextBoolean();
+}

@@ -1,0 +1,3 @@
+public String toString(){
+  return "(RouteMsg " + super.toString() + " src="+ bamboo.util.GuidTools.guid_to_string(src)+ " dest="+ bamboo.util.GuidTools.guid_to_string(dest)+ " app_id="+ Long.toHexString(app_id)+ " intermediate_upcall="+ intermediate_upcall+ " peer_guid="+ bamboo.util.GuidTools.guid_to_string(peer_guid)+ " payload="+ payload+ ")";
+}

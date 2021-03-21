@@ -1,0 +1,1 @@
+public BaseVertex vertex(Object vertexId,String vertexLabel,Edge edge,Direction direction);

@@ -1,0 +1,8 @@
+/** 
+ * Closes this encoding XDR stream and releases any system resources associated with this stream. The general contract of <code>close</code> is that it closes the encoding XDR stream. A closed XDR stream cannot perform encoding operations and cannot be reopened.
+ * @throws OncRpcException if an ONC/RPC error occurs.
+ * @throws IOException if an I/O error occurs.
+ */
+public void close() throws OncRpcException, IOException {
+  buffer=null;
+}

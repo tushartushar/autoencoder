@@ -1,0 +1,7 @@
+/** 
+ * Returns the buffer holding encoded data.
+ * @return Buffer with encoded data.
+ */
+public ByteBuffer getXdrData(){
+  return buffer;
+}

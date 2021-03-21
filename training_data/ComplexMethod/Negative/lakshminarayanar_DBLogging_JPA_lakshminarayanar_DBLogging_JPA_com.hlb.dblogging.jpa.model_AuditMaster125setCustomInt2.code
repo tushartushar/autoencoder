@@ -1,0 +1,3 @@
+public void setCustomInt2(int customInt2){
+  CustomInt2=customInt2;
+}

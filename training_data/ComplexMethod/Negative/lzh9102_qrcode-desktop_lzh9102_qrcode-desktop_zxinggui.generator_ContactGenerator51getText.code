@@ -1,0 +1,12 @@
+public String getText() throws GeneratorException {
+  String format=cbFormat.getSelectedItem().toString();
+  if (format == FORMAT_VCARD) {
+    return encodeVCard();
+  }
+ else   if (format == FORMAT_MECARD) {
+    return encodeMeCard();
+  }
+ else {
+    throw new GeneratorException("Unknown contact format.",cbFormat);
+  }
+}

@@ -1,0 +1,3 @@
+public static GatewayClient instance(InetSocketAddress addr){
+  return instances.get(addr);
+}

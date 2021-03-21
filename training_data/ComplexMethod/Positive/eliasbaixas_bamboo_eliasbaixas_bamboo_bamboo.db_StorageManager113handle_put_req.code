@@ -1,0 +1,173 @@
+protected void handle_put_req(PutReq req){
+  DbTxn xact=null;
+  if (logger.isDebugEnabled())   logger.debug("doing put, key=" + req.key);
+  try {
+    xact=env.txnBegin(null,Db.DB_TXN_NOSYNC);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  Key inval_put_key=null;
+  ByteBuffer inval_put_data=null;
+  Key inval_rm_key=null;
+  ByteBuffer inval_rm_data=null;
+  Dbc cursor=open_cursor(by_guid_and_data_hash,xact,"handle_put_req");
+  Dbt skey=null;
+{
+    byte[] buf=new byte[60];
+    guid_to_bytes(req.key.guid,buf,0);
+    System.arraycopy(req.key.secret_hash,0,buf,20,20);
+    System.arraycopy(req.key.data_hash,0,buf,40,20);
+    skey=new Dbt(buf);
+    skey.setSize(buf.length);
+  }
+  boolean do_put=true;
+  Dbt pkey=new Dbt();
+  Dbt data=new Dbt();
+  int retval=0;
+  try {
+    retval=cursor.get(skey,pkey,data,Db.DB_SET);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  if (retval == Db.DB_NOTFOUND) {
+    if (logger.isDebugEnabled())     logger.debug("no existing keys with same guid and data hash");
+  }
+ else {
+    assert retval == 0 : retval;
+    Key k=new Key(pkey);
+    if (logger.isDebugEnabled())     logger.debug("existing tuple key=" + k);
+    assert k.guid.equals(req.key.guid);
+    assert Arrays.equals(req.key.data_hash,k.data_hash);
+    if (req.key.compareTo(k) == 0) {
+      do_put=false;
+    }
+ else {
+      if (req.key.put && k.put) {
+        if (req.key.expiryTime() <= k.expiryTime()) {
+          do_put=false;
+          inval_put_key=req.key;
+          inval_put_data=req.data;
+        }
+ else {
+          inval_put_key=k;
+          inval_put_data=ByteBuffer.wrap(data.getData(),data.getOffset(),data.getSize());
+          try {
+            cursor.delete(0);
+          }
+ catch (          DbException e) {
+            BUG(e);
+          }
+          storage_changed(false,inval_put_key,data.getSize(),xact);
+        }
+      }
+ else       if (req.key.put && (!k.put)) {
+        do_put=false;
+        inval_put_key=req.key;
+        inval_put_data=req.data;
+      }
+ else       if ((!req.key.put) && (!k.put)) {
+        if (req.key.expiryTime() <= k.expiryTime()) {
+          do_put=false;
+          inval_rm_key=req.key;
+          inval_rm_data=req.data;
+        }
+ else {
+          inval_rm_key=k;
+          inval_rm_data=ByteBuffer.wrap(data.getData(),data.getOffset(),data.getSize());
+          try {
+            cursor.delete(0);
+          }
+ catch (          DbException e) {
+            BUG(e);
+          }
+          storage_changed(false,inval_rm_key,data.getSize(),xact);
+        }
+      }
+ else       if ((!req.key.put) && k.put) {
+        inval_put_key=k;
+        inval_put_data=ByteBuffer.wrap(data.getData(),data.getOffset(),data.getSize());
+        try {
+          cursor.delete(0);
+        }
+ catch (        DbException e) {
+          BUG(e);
+        }
+        storage_changed(false,inval_put_key,data.getSize(),xact);
+      }
+    }
+    try {
+      retval=cursor.get(skey,pkey,data,Db.DB_NEXT_DUP);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    assert retval == Db.DB_NOTFOUND;
+  }
+  close_cursor(cursor);
+  assert !((inval_put_key != null) && (inval_rm_key != null));
+  if (do_put) {
+    ByteBuffer kbuf=ByteBuffer.allocate(Key.SIZE);
+    req.key.to_byte_buffer(kbuf);
+    Dbt key=new Dbt(kbuf.array(),kbuf.arrayOffset(),kbuf.limit());
+    key.setSize(kbuf.limit());
+    if (req.data.hasArray()) {
+      data=new Dbt(req.data.array(),req.data.arrayOffset(),req.data.limit());
+    }
+ else {
+      byte[] ary=new byte[req.data.limit()];
+      req.data.get(ary,0,ary.length);
+      data=new Dbt(ary);
+    }
+    data.setSize(req.data.limit());
+    try {
+      retval=by_time.put(xact,key,data,0);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    storage_changed(true,req.key,data.getSize(),xact);
+    assert retval == 0;
+    if (logger.isInfoEnabled()) {
+      int len=100 + ((inval_put_key == null) ? 0 : 50) + ((inval_rm_key == null) ? 0 : 50);
+      StringBuffer buf=new StringBuffer(len);
+      if (req.key.put)       buf.append("put key=0x");
+ else       buf.append("rem key=0x");
+      buf.append(GuidTools.guid_to_string(req.key.guid));
+      buf.append(" time_usec=0x");
+      buf.append(Long.toHexString(req.key.time_usec));
+      buf.append(" ttl=");
+      buf.append(req.key.ttl_sec);
+      buf.append(" client_id=");
+      buf.append(req.key.client_id.getHostAddress());
+      buf.append(" secret_hash=0x");
+      buf.append(bytes_to_str(req.key.secret_hash,0,4));
+      buf.append(" data_hash=0x");
+      buf.append(bytes_to_str(req.key.data_hash,0,4));
+      buf.append(" size=");
+      buf.append(data.getSize());
+      if (inval_put_key != null) {
+        buf.append(" overwrites old put secret_hash=0x");
+        buf.append(bytes_to_str(inval_put_key.secret_hash,0,4));
+        buf.append(" data_hash=0x");
+        buf.append(bytes_to_str(inval_put_key.data_hash,0,4));
+      }
+ else       if (inval_rm_key != null) {
+        buf.append(" overwrites old rem secret_hash=0x");
+        buf.append(bytes_to_str(inval_rm_key.secret_hash,0,4));
+        buf.append(" data_hash=0x");
+        buf.append(bytes_to_str(inval_rm_key.data_hash,0,4));
+      }
+      logger.info(buf);
+    }
+  }
+  try {
+    xact.commit(Db.DB_TXN_NOSYNC);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  PutResp resp=new PutResp(inval_put_key,inval_put_data,inval_rm_key,inval_rm_data,req.user_data);
+  application_enqueue(req.comp_q,resp);
+}

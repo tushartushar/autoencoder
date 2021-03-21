@@ -1,0 +1,3 @@
+public EdgeMapping getMapping(){
+  return mapping;
+}

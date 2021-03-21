@@ -1,0 +1,16 @@
+@Override public void stopScan(ScanCallback callback){
+  android.bluetooth.le.ScanCallback osCallback=callbacksMap.get(callback);
+  if (osCallback != null) {
+    try {
+      Logger.logInfo("Stopping BLE 'L' hardware scan");
+      if (osScanner != null) {
+        osScanner.stopScan(osCallback);
+      }
+    }
+ catch (    Exception e) {
+      Logger.logError("Exception caught calling 'L' BluetoothLeScanner.stopScan()",e);
+    }
+    callbacksMap.remove(callback);
+    updateRepeatingAlarm();
+  }
+}

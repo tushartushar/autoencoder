@@ -1,0 +1,14 @@
+@Override @Transactional(rollbackFor=Exception.class) public AccessRights delete(int id){
+  try {
+    AccessRights accessRights=accessRightsRepository.findOne(id);
+    if (accessRights != null) {
+      accessRights.setDeleted(true);
+      accessRightsRepository.save(accessRights);
+    }
+    return accessRights;
+  }
+ catch (  Exception e) {
+    log.error("Error while deleting new Access Right :" + id,e);
+    throw new BSLException("err.accessRights.delete",e);
+  }
+}

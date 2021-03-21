@@ -1,0 +1,3 @@
+@Override public PluginCommand getPluginCommand(String name){
+  throw new NotImplementedException();
+}

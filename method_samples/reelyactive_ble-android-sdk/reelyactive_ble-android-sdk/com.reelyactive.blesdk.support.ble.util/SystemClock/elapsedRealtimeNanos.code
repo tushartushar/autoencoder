@@ -1,0 +1,6 @@
+/** 
+ * @return time since the device was booted, in nanoseconds
+ */
+@Override @TargetApi(VERSION_CODES.JELLY_BEAN_MR1) public long elapsedRealtimeNanos(){
+  return android.os.SystemClock.elapsedRealtimeNanos();
+}

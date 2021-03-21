@@ -1,0 +1,3 @@
+public void handleEvents(QueueElementIF element_array[]) throws EventHandlerException {
+  for (int i=0; i < element_array.length; ++i)   handleEvent(element_array[i]);
+}

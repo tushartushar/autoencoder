@@ -1,0 +1,80 @@
+protected void handle_get_by_guid_req(GetByGuidReq req){
+  Key k=req.placemark;
+  if ((k == null) || (k.equals(ZERO_KEY))) {
+    k=new Key(0L,0,req.guid,ZERO_HASH,false,ZERO_CLIENT);
+  }
+  byte[] buf=new byte[Key.SIZE];
+  k.to_byte_buffer(ByteBuffer.wrap(buf));
+  primary_key_to_recycling_key(buf);
+  Dbt key=new Dbt(buf);
+  key.setSize(buf.length);
+  if (req.primary) {
+    DbTxn xact=null;
+    try {
+      xact=env.txnBegin(null,Db.DB_TXN_NOSYNC);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    Dbc cursor=open_cursor(by_guid,xact,"handle_get_by_guid_req");
+    Dbt pkey=new Dbt();
+    Dbt data=new Dbt();
+    int r=0;
+    try {
+      r=cursor.get(key,pkey,data,Db.DB_SET_RANGE);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    GBGCont cont=new GBGCont(req.guid,key,true,req.placemark);
+    while (!finish_get_by_guid(cont,xact,cursor,pkey,data,r,req.comp_q,req.user_data)) {
+      try {
+        r=cursor.get(cont.key,pkey,data,Db.DB_NEXT);
+      }
+ catch (      DbException e) {
+        BUG(e);
+      }
+    }
+    close_cursor(cursor);
+    try {
+      xact.commit(Db.DB_TXN_NOSYNC);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+  }
+ else {
+    DbTxn xact=null;
+    try {
+      xact=env.txnBegin(null,Db.DB_TXN_NOSYNC);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    Dbc cursor=open_cursor(recycling,xact,"handle_get_by_guid_req");
+    Dbt data=new Dbt();
+    int r=0;
+    try {
+      r=cursor.get(key,data,Db.DB_SET_RANGE);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    GBGCont cont=new GBGCont(req.guid,key,false,req.placemark);
+    while (!finish_get_by_guid_recycling(cont,xact,cursor,data,r,req.comp_q,req.user_data)) {
+      try {
+        r=cursor.get(cont.key,data,Db.DB_NEXT);
+      }
+ catch (      DbException e) {
+        BUG(e);
+      }
+    }
+    close_cursor(cursor);
+    try {
+      xact.commit(Db.DB_TXN_NOSYNC);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+  }
+}

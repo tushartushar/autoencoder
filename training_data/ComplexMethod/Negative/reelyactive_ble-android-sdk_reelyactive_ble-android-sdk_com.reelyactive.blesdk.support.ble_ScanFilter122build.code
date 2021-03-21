@@ -1,0 +1,7 @@
+/** 
+ * Build  {@link ScanFilter}.
+ * @throws IllegalArgumentException If the filter cannot be built.
+ */
+public ScanFilter build(){
+  return new ScanFilter(mDeviceName,mDeviceAddress,mServiceUuid,mUuidMask,mServiceDataUuid,mServiceData,mServiceDataMask,mManufacturerId,mManufacturerData,mManufacturerDataMask);
+}

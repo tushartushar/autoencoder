@@ -1,0 +1,28 @@
+protected void handle_get_by_key_req(GetByKeyReq req){
+  byte[] buf=new byte[Key.SIZE];
+  req.key.to_byte_buffer(ByteBuffer.wrap(buf));
+  Dbt key=new Dbt(buf);
+  key.setSize(buf.length);
+  Dbt data=new Dbt();
+  if (key_expired(req.key)) {
+    if (logger.isDebugEnabled())     logger.debug("dropping in handle_get_by_key_req");
+    the_real_handle_event(new DiscardReq(req.key,false));
+    application_enqueue(req.comp_q,new GetByKeyResp(req.key,(ByteBuffer)null,req.user_data));
+    return;
+  }
+  int retval=0;
+  try {
+    retval=by_time.get(null,key,data,0);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  ByteBuffer dbuf=null;
+  if (retval == 0) {
+    dbuf=ByteBuffer.wrap(data.getData(),data.getOffset(),data.getSize());
+  }
+ else {
+    assert retval == Db.DB_NOTFOUND : retval;
+  }
+  application_enqueue(req.comp_q,new GetByKeyResp(req.key,dbuf,req.user_data));
+}

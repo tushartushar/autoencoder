@@ -1,0 +1,11 @@
+public Tree(long n,long r,long c){
+  now=n;
+  rate=r;
+  capacity=c;
+}
+public Tree(Tree other){
+  now=other.now;
+  rate=other.rate;
+  capacity=other.capacity;
+  root=other.root;
+}

@@ -1,0 +1,3 @@
+@Column(name="SEGMENT",nullable=false,length=255) public String getSegment(){
+  return Segment;
+}

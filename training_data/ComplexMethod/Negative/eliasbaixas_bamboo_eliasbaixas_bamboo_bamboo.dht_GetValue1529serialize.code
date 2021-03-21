@@ -1,0 +1,10 @@
+public void serialize(OutputBuffer buf){
+  buf.add(value.limit() - value.position());
+  buf.add(value.array(),value.arrayOffset() + value.position(),value.limit() - value.position());
+  buf.add(ttlRemaining);
+  byte[] str=hashAlgorithm.getBytes();
+  buf.add(str.length);
+  buf.add(str);
+  buf.add(secretHash.length);
+  buf.add(secretHash);
+}

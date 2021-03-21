@@ -1,0 +1,2 @@
+public void updateBeacons(List<ScanResult> closestBeacon){
+}

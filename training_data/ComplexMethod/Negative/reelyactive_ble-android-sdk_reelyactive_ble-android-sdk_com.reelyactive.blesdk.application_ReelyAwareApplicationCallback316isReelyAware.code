@@ -1,0 +1,8 @@
+/** 
+ * Find out if an  {@link Activity} implements {@link ReelyAwareActivity}
+ * @param activity The {@link Activity}
+ * @return true if the {@link Activity} implements {@link ReelyAwareActivity}, false if not.
+ */
+protected static boolean isReelyAware(Activity activity){
+  return activity != null && ReelyAwareActivity.class.isInstance(activity);
+}

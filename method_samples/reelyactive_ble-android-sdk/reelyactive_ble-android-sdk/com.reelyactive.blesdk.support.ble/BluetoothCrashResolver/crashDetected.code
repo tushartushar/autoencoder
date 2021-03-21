@@ -1,0 +1,20 @@
+public void crashDetected(){
+  if (android.os.Build.VERSION.SDK_INT < 18) {
+    if (isDebugEnabled())     Log.d(TAG,"Ignoring crashes before SDK 18, because BLE is unsupported.");
+    return;
+  }
+  Log.w(TAG,"BluetoothService crash detected");
+  if (distinctBluetoothAddresses.size() > 0) {
+    if (isDebugEnabled())     Log.d(TAG,"Distinct bluetooth devices seen at crash: " + distinctBluetoothAddresses.size());
+  }
+  long nowTimestamp=new Date().getTime();
+  lastBluetoothCrashDetectionTime=nowTimestamp;
+  detectedCrashCount++;
+  if (recoveryInProgress) {
+    if (isDebugEnabled())     Log.d(TAG,"Ignoring bluetooth crash because recovery is already in progress.");
+  }
+ else {
+    startRecovery();
+  }
+  processStateChange();
+}

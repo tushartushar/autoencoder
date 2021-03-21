@@ -1,0 +1,4 @@
+public final BigInteger leaf_set_high(){
+  if (leaf_succ_count == 0)   return my_guid;
+ else   return leaf_succs[leaf_succ_count - 1].guid;
+}

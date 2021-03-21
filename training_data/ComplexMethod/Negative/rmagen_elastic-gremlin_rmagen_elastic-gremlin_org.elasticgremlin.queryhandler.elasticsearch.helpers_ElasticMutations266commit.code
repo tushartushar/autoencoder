@@ -1,0 +1,6 @@
+public void commit(){
+  if (bulkRequest == null)   return;
+  timing.start("bulk");
+  bulkRequest.execute().actionGet();
+  timing.stop("bulk");
+}

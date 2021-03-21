@@ -1,0 +1,3 @@
+public DuplicateTypeException(Class t){
+  type=t;
+}

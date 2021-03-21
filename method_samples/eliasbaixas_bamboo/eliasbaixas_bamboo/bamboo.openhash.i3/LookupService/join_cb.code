@@ -1,0 +1,4 @@
+public void join_cb(Object user_data){
+  logger.info("joined");
+  stabilize_cb.timer_cb(null);
+}

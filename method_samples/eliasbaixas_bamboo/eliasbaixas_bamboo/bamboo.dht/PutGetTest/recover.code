@@ -1,0 +1,77 @@
+protected void recover(String put_log_path){
+  File old_log_file=new File(put_log_path);
+  if (old_log_file.exists()) {
+    File new_log_file=new File(put_log_path + ".recover");
+    if (new_log_file.exists()) {
+      if (!new_log_file.delete()) {
+        logger.fatal("could not delete " + new_log_file);
+        System.exit(1);
+      }
+    }
+    PrintWriter new_log=null;
+    try {
+      new_log=new PrintWriter(new BufferedWriter(new FileWriter(new_log_file)));
+    }
+ catch (    IOException e) {
+      logger.fatal("couldn't open " + new_log_file + " for writing");
+      logger.fatal(e);
+      System.exit(1);
+    }
+    LineNumberReader old_log=null;
+    try {
+      old_log=new LineNumberReader(new BufferedReader(new FileReader(old_log_file)));
+    }
+ catch (    FileNotFoundException e) {
+      logger.fatal("couldn't open " + old_log_file + " for reading");
+      logger.fatal(e);
+      System.exit(1);
+    }
+    int lineno=1;
+    while (true) {
+      String line=null;
+      try {
+        line=old_log.readLine();
+      }
+ catch (      IOException e) {
+        logger.fatal("can't read on line " + lineno);
+        logger.fatal(e);
+        System.exit(1);
+      }
+      if (line == null)       break;
+      lineno++;
+      String rem=line;
+      int space=rem.indexOf(" ");
+      BigInteger key=new BigInteger(rem.substring(0,space),16);
+      rem=rem.substring(space + 1,rem.length());
+      space=rem.indexOf(" ");
+      long expiry_time_ms=Long.parseLong(rem.substring(0,space));
+      rem=rem.substring(space + 1,rem.length());
+      int size=Integer.parseInt(rem);
+      if (expiry_time_ms > now_ms()) {
+        PutInfo pi=new PutInfo(bi2bytes(key),expiry_time_ms,size);
+        total_storage+=size;
+        puts.add(pi);
+        log_put(pi,new_log);
+      }
+    }
+    new_log.close();
+    try {
+      old_log.close();
+    }
+ catch (    IOException e) {
+      BUG(e);
+    }
+    if (!new_log_file.renameTo(old_log_file)) {
+      logger.fatal("couldn't rename " + new_log_file + " to "+ old_log_file);
+      System.exit(1);
+    }
+  }
+  try {
+    log=new PrintWriter(new BufferedWriter(new FileWriter(old_log_file,true)));
+  }
+ catch (  IOException e) {
+    logger.fatal("couldn't open " + old_log_file + " for reading");
+    logger.fatal(e);
+    System.exit(1);
+  }
+}

@@ -1,0 +1,57 @@
+protected final void handle_readable(){
+  outer:   while (true) {
+    ByteBuffer bb=alloc_bb(MAX_MSG_SIZE);
+    InetSocketAddress src=null;
+    try {
+      src=(InetSocketAddress)channel.receive(bb);
+    }
+ catch (    SocketException e) {
+      return;
+    }
+catch (    IOException e) {
+      BUG(e);
+    }
+    if (bb.position() == 0)     return;
+    bb.flip();
+    in_pkts+=1;
+    in_bytes+=bb.limit() + 20;
+    int protocol_version=bb.getInt();
+    if (protocol_version == 0) {
+      if (mac != null) {
+        logger.info("un-MAC'ed message from " + src.getAddress().getHostAddress());
+        continue;
+      }
+      if (bb.limit() < 12) {
+        logger.info("message < 12 bytes from " + src.getAddress().getHostAddress());
+        continue;
+      }
+      if (bb.limit() == 12)       handle_ack(new Long(bb.getLong()));
+ else       handle_inb_msg(bb,src);
+    }
+ else     if (protocol_version == 1) {
+      if (bb.limit() < 32) {
+        logger.info("message < 32 bytes from " + src.getAddress().getHostAddress());
+        continue;
+      }
+      if (mac != null) {
+        assert bb.hasArray();
+        mac.update(bb.array(),bb.arrayOffset(),bb.limit() - 20);
+        byte[] macbytes=mac.doFinal();
+        int j=bb.arrayOffset() + bb.limit() - 20;
+        for (int i=0; i < 20; ++i) {
+          if (macbytes[i] != bb.array()[j++]) {
+            logger.info("macs don't match addr=" + src.getAddress().getHostAddress());
+            continue outer;
+          }
+        }
+      }
+      if (bb.limit() == 32)       handle_ack(new Long(bb.getLong()));
+ else       handle_inb_msg(bb,src);
+    }
+ else {
+      logger.info("unknown protocol 0x" + Integer.toHexString(protocol_version) + " from "+ src.getAddress().getHostAddress());
+      continue;
+    }
+    if (closed)     return;
+  }
+}

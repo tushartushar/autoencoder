@@ -1,0 +1,4 @@
+public EnqueueEvent(SinkIF s,QueueElementIF i){
+  sink=s;
+  item=i;
+}

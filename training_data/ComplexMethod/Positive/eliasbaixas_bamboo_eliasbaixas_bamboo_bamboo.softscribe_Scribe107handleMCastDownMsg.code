@@ -1,0 +1,29 @@
+private void handleMCastDownMsg(MCastDownMsg mm){
+  if (DEBUG) {
+    Debug.printtagln(tag,"entered handleMCastDownMsg arg is " + mm);
+    printLocalGroups();
+  }
+  boolean weSubscribed=myLocalGroups.contains(mm.srcguid);
+  Vector sendQueue=new Vector();
+  if (weSubscribed) {
+    MCastDown m=new MCastDown(true,mm.srcguid,mm.o);
+    if (DEBUG)     Debug.printtagln(tag,"D handleMCastDownMsg will send local event " + m + " with payload as string of "+ mm.o);
+    sendQueue.add(m);
+  }
+  HashMap h=(HashMap)allChildGroups.get(mm.srcguid);
+  if (h != null) {
+    Iterator nodes=h.keySet().iterator();
+    while (nodes.hasNext()) {
+      NodeId n=(NodeId)nodes.next();
+      MCastDownMsg mnew=new MCastDownMsg(mm.srcguid,mm.srcid,n,mm.o);
+      if (DEBUG)       Debug.printtagln(tag,"handleMCastDownMsg will send " + mnew);
+      sendQueue.add(mnew);
+    }
+  }
+  for (Enumeration e=sendQueue.elements(); e.hasMoreElements(); ) {
+    Object o=e.nextElement();
+    if (o instanceof MCastDown)     dispatch((MCastDown)o);
+ else     if (o instanceof MCastDownMsg)     dispatch((MCastDownMsg)o);
+ else     BUG("handleMCastDownMsg dispatch non-MCast{Down,DownMsg}?");
+  }
+}

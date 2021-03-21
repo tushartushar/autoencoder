@@ -1,0 +1,3 @@
+@Override public void onScanResult(int callbackType,ScanResult result){
+  notifyEvent(callbackType != ScanSettings.CALLBACK_TYPE_MATCH_LOST ? Event.IN_REGION : Event.OUT_REGION,result);
+}

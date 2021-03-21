@@ -1,0 +1,35 @@
+public GetRespMsg(NodeId dest,long s,BigInteger k,LinkedList v,StorageManager.Key o,StorageManager.Key n){
+  super(dest,false);
+  seq=s;
+  key=k;
+  values=v;
+  orig_placemark=o;
+  new_placemark=n;
+  assert new_placemark != null;
+}
+public GetRespMsg(InputBuffer buffer) throws QSException {
+  super(buffer);
+  seq=buffer.nextLong();
+  key=buffer.nextBigInteger();
+  int count=buffer.nextInt();
+  boolean getValues=false;
+  if (count < 0) {
+    getValues=true;
+    count*=-1;
+  }
+  values=new LinkedList();
+  while (count-- > 0) {
+    if (getValues) {
+      GetValue value=new GetValue(buffer);
+      values.addLast(value);
+    }
+ else {
+      int len=buffer.nextInt();
+      byte[] data=new byte[len];
+      buffer.nextBytes(data,0,len);
+      values.addLast(ByteBuffer.wrap(data));
+    }
+  }
+  orig_placemark=new StorageManager.Key(buffer);
+  new_placemark=new StorageManager.Key(buffer);
+}

@@ -1,0 +1,8 @@
+private EdgeMapping getEdgeMapping(String label,Direction direction){
+  for (  EdgeMapping mapping : edgeMappings) {
+    if (mapping.getLabel().equals(label) && mapping.getDirection().equals(direction)) {
+      return mapping;
+    }
+  }
+  return null;
+}

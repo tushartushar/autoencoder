@@ -1,0 +1,4 @@
+public int hashCode(){
+  if (snum == -1)   return dom;
+ else   return (dom << 16) ^ (dnn << 8) ^ snum;
+}

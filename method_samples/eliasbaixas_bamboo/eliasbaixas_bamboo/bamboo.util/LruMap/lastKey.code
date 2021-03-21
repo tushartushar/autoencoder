@@ -1,0 +1,4 @@
+public Object lastKey(){
+  if (last == null)   throw new NoSuchElementException();
+  return last.key;
+}

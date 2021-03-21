@@ -1,0 +1,26 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  TypeTable.register_type(I3Msg.class);
+  TypeTable.register_type(PredMsg.class);
+  my_addr=new InetSocketAddress(my_node_id.address(),my_node_id.port());
+  logger.debug("my_node_id=" + my_node_id);
+  logger.debug("my_addr=" + my_addr);
+  byte[] my_addr_bytes=RedirClient.addr2bytes(my_addr);
+  MessageDigest digest=MessageDigest.getInstance("SHA");
+  my_id=RedirClient.bytes2bi(digest.digest(my_addr_bytes));
+  logger.info("my_id=0x" + GuidTools.guid_to_string(my_id));
+  levels=config_get_int(config,"levels");
+  String namespace_str=config_get_string(config,"namespace");
+  namespace=RedirClient.bytes2bi(digest.digest(namespace_str.getBytes()));
+  String client_stg_name=config_get_string(config,"client_stage_name");
+  client=(RedirClient)lookup_stage(config,client_stg_name);
+  channel=DatagramChannel.open();
+  DatagramSocket sock=channel.socket();
+  int port=config_get_int(config,"i3_port");
+  InetSocketAddress addr=new InetSocketAddress(port);
+  sock.bind(addr);
+  channel.configureBlocking(false);
+  skey=acore.register_selectable(channel,SelectionKey.OP_READ,select_cb,null);
+  acore.register_timer(0,ready_cb,null);
+  udpcc=new UdpCC(acore,my_addr,serializer,sink);
+}

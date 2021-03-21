@@ -1,0 +1,4 @@
+public boolean equals(Object rhs){
+  NeighborInfo other=(NeighborInfo)rhs;
+  return node_id.equals(other.node_id) && guid.equals(other.guid);
+}

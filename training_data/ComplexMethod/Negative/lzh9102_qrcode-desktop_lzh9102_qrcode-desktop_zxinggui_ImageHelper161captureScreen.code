@@ -1,0 +1,7 @@
+public static BufferedImage captureScreen() throws Exception {
+  Dimension screenSize=Toolkit.getDefaultToolkit().getScreenSize();
+  Rectangle screenRectangle=new Rectangle(screenSize);
+  Robot robot=new Robot();
+  BufferedImage image=robot.createScreenCapture(screenRectangle);
+  return image;
+}

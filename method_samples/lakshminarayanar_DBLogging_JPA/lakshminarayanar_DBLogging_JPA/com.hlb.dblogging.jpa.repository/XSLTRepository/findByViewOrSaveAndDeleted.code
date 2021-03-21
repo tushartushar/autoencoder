@@ -1,0 +1,1 @@
+@Query("select r from XSLT r where vieworsave = ? and transtype= ? and deleted= ?") XSLT findByViewOrSaveAndDeleted(String type,String transtype,boolean deleted);

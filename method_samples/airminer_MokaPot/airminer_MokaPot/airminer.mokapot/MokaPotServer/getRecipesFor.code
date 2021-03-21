@@ -1,0 +1,3 @@
+@Override public List<Recipe> getRecipesFor(ItemStack result){
+  throw new NotImplementedException();
+}

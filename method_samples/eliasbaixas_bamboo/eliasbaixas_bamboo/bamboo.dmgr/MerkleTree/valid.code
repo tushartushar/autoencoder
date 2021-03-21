@@ -1,0 +1,6 @@
+/** 
+ * Is the hash of this node up to date? Have any of this node's progeny expired?
+ */
+public boolean valid(long now_ms){
+  return ((hash != null) && (earliest_expiry_usec >= (now_ms * 1000)));
+}

@@ -1,0 +1,5 @@
+private SetLuaState(){
+}
+public static void setLuaState(LuaState luaState){
+  instance=luaState;
+}

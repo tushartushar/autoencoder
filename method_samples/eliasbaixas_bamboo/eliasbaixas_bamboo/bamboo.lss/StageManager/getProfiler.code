@@ -1,0 +1,6 @@
+/** 
+ * Returns a handle to the system profiler. 
+ */
+public ProfilerIF getProfiler(){
+  throw new IllegalArgumentException();
+}

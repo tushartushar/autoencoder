@@ -1,0 +1,7 @@
+public void lookup(BigInteger key,BigInteger namespace,int levels,String application,LookupCb cb,Object user_data){
+  if (logger.isDebugEnabled()) {
+    logger.debug("looking up key=0x" + GuidTools.guid_to_string(key) + " namespace=0x"+ GuidTools.guid_to_string(namespace)+ " levels="+ levels);
+  }
+  LookupState state=new LookupState(key,namespace,levels,application,cb,user_data);
+  lookup_get(state);
+}

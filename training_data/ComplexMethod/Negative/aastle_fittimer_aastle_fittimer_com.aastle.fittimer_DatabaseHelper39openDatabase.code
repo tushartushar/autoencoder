@@ -1,0 +1,5 @@
+public void openDatabase() throws SQLException {
+  sb.delete(0,sb.length());
+  sb.append(DB_PATH).append(DB_NAME);
+  thisDataBase=SQLiteDatabase.openDatabase(sb.toString(),null,SQLiteDatabase.OPEN_READWRITE);
+}

@@ -1,0 +1,22 @@
+protected static Node balance(Node n){
+  if ((n == null) || n.leaf() || n.balanced())   return n;
+  Node result=null;
+  if (n.left.height > n.right.height) {
+    if (n.left.left.height > n.left.right.height) {
+      result=rotate_right(n);
+    }
+ else {
+      result=rotate_right(new Node(n.offset,rotate_left(n.left),n.right));
+    }
+  }
+ else {
+    if (n.right.right.height > n.right.left.height) {
+      result=rotate_left(n);
+    }
+ else {
+      result=rotate_left(new Node(n.offset,n.left,rotate_right(n.right)));
+    }
+  }
+  assert result.balanced();
+  return result;
+}

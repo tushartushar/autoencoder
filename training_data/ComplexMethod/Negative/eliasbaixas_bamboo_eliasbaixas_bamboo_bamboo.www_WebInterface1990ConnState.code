@@ -1,0 +1,3 @@
+public ConnState(SocketChannel c){
+  channel=c;
+}

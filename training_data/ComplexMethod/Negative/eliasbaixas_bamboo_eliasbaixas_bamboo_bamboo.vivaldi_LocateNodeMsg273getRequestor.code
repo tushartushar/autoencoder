@@ -1,0 +1,7 @@
+/** 
+ * Returns the id of the node who orginally made this request.
+ * @return The sender's node id.
+ */
+public NodeId getRequestor(){
+  return _requestor;
+}

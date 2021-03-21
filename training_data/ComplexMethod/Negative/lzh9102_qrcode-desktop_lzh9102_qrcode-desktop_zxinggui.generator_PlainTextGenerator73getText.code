@@ -1,0 +1,5 @@
+@Override public String getText() throws GeneratorException {
+  String text=textarea.getText();
+  if (text.isEmpty())   throw new GeneratorException("Text cannot be empty.",textarea);
+  return text;
+}

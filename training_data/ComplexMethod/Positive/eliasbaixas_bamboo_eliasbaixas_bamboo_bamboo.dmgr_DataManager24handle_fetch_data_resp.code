@@ -1,0 +1,48 @@
+protected void handle_fetch_data_resp(FetchDataResp resp){
+  if (ae_state == null) {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " unexpected " + resp);
+    return;
+  }
+  if (resp.data == null) {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " no data in " + resp);
+    return;
+  }
+  if (ae_state.fetched_data.remove(resp.key) && ((resp.key.expiryTime()) > ((long)now_ms() * 1000))) {
+    boolean valid=true;
+    if (!resp.key.put) {
+      byte[] secretHash=md.digest(resp.data.array());
+      if (!Arrays.equals(resp.key.secret_hash,secretHash)) {
+        StringBuffer buf=new StringBuffer(200);
+        buf.append("got bad remove ");
+        resp.key.toStringBuffer(buf);
+        buf.append(" hash(data)=0x");
+        bytes_to_sbuf(secretHash,0,4,buf);
+        buf.append(" from neighbor ");
+        addr_to_sbuf(resp.peer,buf);
+        logger.warn(buf);
+        valid=false;
+      }
+    }
+    if (valid) {
+      if (logger.isInfoEnabled()) {
+        StringBuffer buf=new StringBuffer(200);
+        buf.append("got ");
+        resp.key.toStringBuffer(buf);
+        buf.append(" size=");
+        buf.append(resp.data.limit());
+        buf.append(" from neighbor ");
+        addr_to_sbuf(resp.peer,buf);
+        logger.info(buf);
+      }
+      unsynced(ae_state.guid_range,ae_state.ni.node_id);
+      db_put(resp.key,resp.data,null);
+    }
+  }
+ else {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " unrecognized key");
+    return;
+  }
+  if (ae_state.fetched_keys.isEmpty() && ae_state.fetched_data.isEmpty()) {
+    goto_next_node();
+  }
+}

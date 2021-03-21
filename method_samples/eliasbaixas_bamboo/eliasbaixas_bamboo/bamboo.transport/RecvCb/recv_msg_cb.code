@@ -1,0 +1,3 @@
+public void recv_msg_cb(InetSocketAddress src,QuickSerializable msg){
+  logger.info("received " + msg);
+}

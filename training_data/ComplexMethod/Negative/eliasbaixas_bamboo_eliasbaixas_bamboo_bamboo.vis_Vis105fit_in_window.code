@@ -1,0 +1,16 @@
+protected void fit_in_window(){
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  Rectangle2D allpoints=null;
+  for (Iterator i=layer.figures(); i.hasNext(); ) {
+    Figure f=(Figure)i.next();
+    if (allpoints == null)     allpoints=f.getBounds();
+ else     allpoints.add(f.getBounds());
+  }
+  x_scrollbar.setValue((int)Math.round(allpoints.getX() + 0.5 * allpoints.getWidth()));
+  y_scrollbar.setValue((int)Math.round(allpoints.getY() + 0.5 * allpoints.getHeight()));
+  Dimension2D d=(Dimension2D)canvas.getSize();
+  double xscale=d.getWidth() / allpoints.getWidth();
+  double yscale=d.getHeight() / allpoints.getHeight();
+  double desired_zoom=Math.min(xscale,yscale) * 0.8;
+  zoom_slider.setValue(zoom_to_slider(desired_zoom));
+}

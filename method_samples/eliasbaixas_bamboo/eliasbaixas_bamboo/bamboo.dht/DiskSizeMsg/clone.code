@@ -1,0 +1,11 @@
+public Object clone() throws CloneNotSupportedException {
+  DiskSizeMsg result=(DiskSizeMsg)super.clone();
+  result.ttls=new int[ttls.length];
+  result.sizes=new double[sizes.length];
+  for (int i=0; i < ttls.length; ++i) {
+    result.ttls[i]=ttls[i];
+    result.sizes[i]=sizes[i];
+  }
+  result.reply=reply;
+  return result;
+}

@@ -1,0 +1,1 @@
+@Query("select e.content from AuditDetail e where UniqueProcessID = :uniqueProcessID") String findMessageContentByUniqueProcessID(@Param("uniqueProcessID") String uniqueProcessID);

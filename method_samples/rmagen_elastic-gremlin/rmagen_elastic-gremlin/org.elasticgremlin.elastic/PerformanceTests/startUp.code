@@ -1,0 +1,5 @@
+@Before public void startUp() throws InstantiationException, IOException, ExecutionException, InterruptedException {
+  ElasticGraphGraphProvider elasticGraphProvider=new ElasticGraphGraphProvider();
+  final Configuration configuration=elasticGraphProvider.newGraphConfiguration("testGraph",this.getClass(),"performanceTests",LoadGraphWith.GraphData.MODERN);
+  this.graph=elasticGraphProvider.openTestGraph(configuration);
+}

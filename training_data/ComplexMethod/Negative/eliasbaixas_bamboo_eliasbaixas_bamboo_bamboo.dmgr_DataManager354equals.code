@@ -1,0 +1,4 @@
+public boolean equals(Object rhs){
+  GuidRange other=(GuidRange)rhs;
+  return low.equals(other.low) && high.equals(other.high);
+}

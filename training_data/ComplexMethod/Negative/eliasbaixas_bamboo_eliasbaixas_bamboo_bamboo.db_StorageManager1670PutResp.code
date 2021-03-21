@@ -1,0 +1,7 @@
+public PutResp(Key ipk,ByteBuffer ipd,Key irk,ByteBuffer ird,Object ud){
+  inval_put_key=ipk;
+  inval_put_data=ipd;
+  inval_rm_key=ipk;
+  inval_rm_data=ipd;
+  user_data=ud;
+}

@@ -1,0 +1,5 @@
+public static BoolFilterBuilder createFilterBuilder(List<HasContainer> hasContainers){
+  BoolFilterBuilder boolFilter=FilterBuilders.boolFilter();
+  if (hasContainers != null)   hasContainers.forEach(has -> addFilter(boolFilter,has));
+  return boolFilter;
+}

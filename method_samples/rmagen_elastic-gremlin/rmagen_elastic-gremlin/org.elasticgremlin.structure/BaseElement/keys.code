@@ -1,0 +1,3 @@
+@Override public Set<String> keys(){
+  return this.properties.keySet();
+}

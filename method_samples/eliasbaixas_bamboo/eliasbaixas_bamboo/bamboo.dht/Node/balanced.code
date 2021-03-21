@@ -1,0 +1,3 @@
+public final boolean balanced(){
+  return leaf() || (Math.abs(left.height - right.height) <= 1);
+}

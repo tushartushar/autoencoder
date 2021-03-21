@@ -1,0 +1,14 @@
+private Iterator<Vertex> testPredicatesLocal(Predicates predicates,Iterator<? extends Vertex> vertices){
+  List<Vertex> passedVertices=new ArrayList<>();
+  vertices.forEachRemaining(vertex -> {
+    boolean passed=true;
+    for (    HasContainer has : predicates.hasContainers) {
+      passed=passed && has.test(vertex);
+    }
+    if (passed) {
+      passedVertices.add(vertex);
+    }
+  }
+);
+  return passedVertices.iterator();
+}

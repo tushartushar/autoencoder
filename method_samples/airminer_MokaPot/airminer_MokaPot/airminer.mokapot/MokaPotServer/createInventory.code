@@ -1,0 +1,12 @@
+@Override public Inventory createInventory(InventoryHolder owner,InventoryType type){
+  throw new NotImplementedException();
+}
+@Override public Inventory createInventory(InventoryHolder owner,InventoryType type,String title){
+  throw new NotImplementedException();
+}
+@Override public Inventory createInventory(InventoryHolder owner,int size) throws IllegalArgumentException {
+  throw new NotImplementedException();
+}
+@Override public Inventory createInventory(InventoryHolder owner,int size,String title) throws IllegalArgumentException {
+  throw new NotImplementedException();
+}

@@ -1,0 +1,9 @@
+public void serialize(OutputBuffer buffer){
+  buffer.add(values.size());
+  for (  Pair<Key,ByteBuffer> p : values) {
+    p.first.serialize(buffer);
+    buffer.add(p.second.limit() - p.second.position());
+    buffer.add(p.second.array(),p.second.arrayOffset() + p.second.position(),p.second.limit() - p.second.position());
+  }
+  buffer.add(allRead);
+}

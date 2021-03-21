@@ -1,0 +1,28 @@
+@Override public Edge addEdge(Object edgeId,String label,Vertex outV,Vertex inV,Object[] properties){
+  boolean out=shouldContainEdge(outV,Direction.OUT,label,properties);
+  boolean in=shouldContainEdge(inV,Direction.IN,label,properties);
+  StarVertex containerVertex;
+  Vertex otherVertex;
+  if (out) {
+    containerVertex=(StarVertex)outV;
+    otherVertex=inV;
+  }
+ else   if (in) {
+    containerVertex=(StarVertex)inV;
+    otherVertex=outV;
+  }
+ else {
+    throw new UnsupportedOperationException("Neither the in nor the out vertices can contain the edge. Either their mapping is incompatible or they are not of type StarVertex");
+  }
+  List<Object> keyValues=new ArrayList<>();
+  containerVertex.properties().forEachRemaining(property -> {
+    keyValues.add(property.key());
+    keyValues.add(property.value());
+  }
+);
+  EdgeMapping mapping=getEdgeMapping(label,out ? Direction.OUT : Direction.IN);
+  containerVertex.addInnerEdge(mapping,edgeId,label,otherVertex,keyValues.toArray());
+  Predicates predicates=new Predicates();
+  predicates.hasContainers.add(new HasContainer(T.id.getAccessor(),P.within(edgeId)));
+  return containerVertex.edges(mapping.getDirection(),new String[]{label},predicates).next();
+}

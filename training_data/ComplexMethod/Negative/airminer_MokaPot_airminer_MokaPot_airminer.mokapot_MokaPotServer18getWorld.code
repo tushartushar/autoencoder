@@ -1,0 +1,6 @@
+@Override public World getWorld(String name){
+  throw new NotImplementedException();
+}
+@Override public World getWorld(UUID uid){
+  throw new NotImplementedException();
+}

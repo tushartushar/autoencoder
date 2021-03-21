@@ -1,0 +1,4 @@
+public Simulator(){
+  assert instance == null;
+  instance=this;
+}

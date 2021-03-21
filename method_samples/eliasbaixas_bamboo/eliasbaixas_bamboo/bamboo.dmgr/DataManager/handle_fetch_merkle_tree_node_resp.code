@@ -1,0 +1,30 @@
+protected void handle_fetch_merkle_tree_node_resp(final FetchMerkleTreeNodeResp resp){
+  if (ae_state == null) {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " not expecting " + resp);
+    return;
+  }
+  if (!resp.peer.equals(ae_state.ni.node_id)) {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " " + resp+ " has bad peer != "+ ae_state.ni);
+    return;
+  }
+  if (resp.seq != ae_state.fetch_node_seq) {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " " + resp+ " has bad seq != "+ ae_state.fetch_node_seq);
+    return;
+  }
+  ae_state.last_activity_ms=timer_ms();
+  TreeState ts=tree_state(ae_state.low_guid,ae_state.high_guid);
+  if (ts.tree.root().valid(now_ms())) {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " tree is ready");
+    handle_ae_tree_ready_resp(ts.tree,resp);
+  }
+ else {
+    if (logger.isDebugEnabled())     logger.debug(ae_state + " getting tree ready");
+    ts.wait_for_ready(new TreeReadyCB(){
+      public FetchMerkleTreeNodeResp r=resp;
+      public void tree_ready(      MerkleTree tree){
+        handle_ae_tree_ready_resp(tree,r);
+      }
+    }
+);
+  }
+}

@@ -1,0 +1,1 @@
+String getMessageContentFormatted(String messageFormat,String uniqueProcessID,String transType);

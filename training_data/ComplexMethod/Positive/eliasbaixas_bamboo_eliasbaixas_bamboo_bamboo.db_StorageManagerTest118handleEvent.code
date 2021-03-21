@@ -1,0 +1,49 @@
+public void handleEvent(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("got " + item);
+  if (item instanceof StagesInitializedSignal) {
+    now=now_ms() * 1000;
+    small_guid=random_guid();
+    BigInteger large_guid=random_guid();
+    if (small_guid.compareTo(large_guid) > 0) {
+      BigInteger tmp=small_guid;
+      small_guid=large_guid;
+      large_guid=tmp;
+    }
+    ByteBuffer data=random_data(4096);
+    StorageManager.Key key=new StorageManager.Key(now,3660,small_guid,ZERO_HASH,data_hash(data),true,StorageManager.ZERO_CLIENT);
+    dispatch(new StorageManager.PutReq(key,data,my_sink,null));
+    data=random_data(4096);
+    key=new StorageManager.Key(now,3660,large_guid,ZERO_HASH,data_hash(data),true,StorageManager.ZERO_CLIENT);
+    dispatch(new StorageManager.PutReq(key,data,my_sink,null));
+    data=random_data(4096);
+    key=new StorageManager.Key(now + 1,3660,small_guid,ZERO_HASH,data_hash(data),true,StorageManager.ZERO_CLIENT);
+    dispatch(new StorageManager.PutReq(key,data,my_sink,null));
+  }
+ else   if (item instanceof StorageManager.PutResp) {
+    ++count;
+    if (count == 3) {
+      StorageManager.PutResp resp=(StorageManager.PutResp)item;
+      StorageManager.GetByGuidReq req=new StorageManager.GetByGuidReq(small_guid,true,null,my_sink,null);
+      dispatch(req);
+    }
+  }
+ else   if (item instanceof StorageManager.GetByGuidResp) {
+    StorageManager.GetByGuidResp resp=(StorageManager.GetByGuidResp)item;
+    if (resp.continuation == null) {
+      StorageManager.GetByTimeReq req=new StorageManager.GetByTimeReq(now,now + 1,my_sink,null);
+      dispatch(req);
+    }
+ else {
+      dispatch(new StorageManager.GetByGuidCont(resp.continuation,my_sink,null));
+    }
+  }
+ else   if (item instanceof StorageManager.GetByTimeResp) {
+    StorageManager.GetByTimeResp resp=(StorageManager.GetByTimeResp)item;
+    if (resp.continuation != null) {
+      dispatch(new StorageManager.GetByTimeCont(resp.continuation,my_sink,null));
+    }
+  }
+ else {
+    throw new IllegalArgumentException(item.getClass().getName());
+  }
+}

@@ -1,0 +1,25 @@
+protected void drop_expired_data(DbTxn xact,Dbc cursor,Key k,int size){
+  try {
+    cursor.delete(0);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  storage_changed(false,k,size,xact);
+  if (logger.isInfoEnabled()) {
+    StringBuffer sbuf=new StringBuffer(105);
+    sbuf.append("dropping expired key=0x");
+    sbuf.append(GuidTools.guid_to_string(k.guid));
+    sbuf.append(" time_usec=0x");
+    sbuf.append(Long.toHexString(k.time_usec));
+    sbuf.append(" ttl=");
+    sbuf.append(k.ttl_sec);
+    sbuf.append("s client_id=");
+    sbuf.append(k.client_id.getHostAddress());
+    sbuf.append(" data_hash=0x");
+    sbuf.append(ByteUtils.print_bytes(k.data_hash,0,4));
+    sbuf.append("size=");
+    sbuf.append(size);
+    logger.info(sbuf);
+  }
+}

@@ -1,0 +1,4 @@
+public BleScanResultAdapter(Context context){
+  items=new HashMap<String,ScanResult>();
+  mContext=context;
+}

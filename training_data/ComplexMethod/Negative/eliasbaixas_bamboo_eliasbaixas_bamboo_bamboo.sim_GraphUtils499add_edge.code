@@ -1,0 +1,4 @@
+public final void add_edge(Edge e){
+  e.next=edges;
+  edges=e;
+}

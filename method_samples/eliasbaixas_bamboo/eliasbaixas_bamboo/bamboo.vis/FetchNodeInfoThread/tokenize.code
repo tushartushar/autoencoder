@@ -1,0 +1,29 @@
+protected boolean tokenize(String input_string,LinkedList tokens){
+  int index_first=-1;
+  char input_chars[]=input_string.toCharArray();
+  for (int index=0; index < input_string.length(); index++) {
+    char current_char=input_chars[index];
+    if (current_char == ' ' || current_char == '\n' || current_char == '\t') {
+      if (index_first != -1) {
+        char[] new_token=new char[index - index_first];
+        input_string.getChars(index_first,index,new_token,0);
+        tokens.addLast(new_token);
+      }
+      index_first=-1;
+    }
+ else {
+      if (index_first == -1) {
+        index_first=index;
+      }
+    }
+  }
+  if (index_first != -1) {
+    char[] new_token=new char[input_string.length() - index_first];
+    input_string.getChars(index_first,input_string.length(),new_token,0);
+    tokens.addLast(new_token);
+  }
+  if (tokens.size() < 2) {
+    return false;
+  }
+  return true;
+}

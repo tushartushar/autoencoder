@@ -1,0 +1,16 @@
+public static String[] getUncommonRoads(String road1,String road2,String commonPart){
+  String[] uncommon=new String[2];
+  String[] partsRoad1=road1.split("[+]");
+  String[] partsRoad2=road2.split("[+]");
+  if (commonPart != null) {
+    if (partsRoad1[0].trim().compareTo(commonPart.trim()) == 0) {
+      uncommon[0]=partsRoad1[1].trim();
+      uncommon[1]=partsRoad2[1].trim();
+    }
+ else {
+      uncommon[0]=partsRoad1[0].trim();
+      uncommon[1]=partsRoad2[0].trim();
+    }
+  }
+  return uncommon;
+}

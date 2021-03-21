@@ -1,0 +1,3 @@
+@Column(name="XSLTFILE",nullable=false) public String getXsltFile(){
+  return xsltFile;
+}

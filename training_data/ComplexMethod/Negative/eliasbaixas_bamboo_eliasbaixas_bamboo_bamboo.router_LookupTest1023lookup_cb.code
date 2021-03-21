@@ -1,0 +1,6 @@
+public void lookup_cb(BigInteger lookup_id,BigInteger closest_id,NodeId closest_addr,Object user_data){
+  long finish_time=timer_ms();
+  long start_time=((Long)user_data).longValue();
+  long latency_ms=finish_time - start_time;
+  logger.info("found 0x" + GuidTools.guid_to_string(lookup_id) + " on 0x"+ GuidTools.guid_to_string(closest_id)+ ", "+ closest_addr+ " in "+ latency_ms+ " ms.");
+}

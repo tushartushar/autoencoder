@@ -1,0 +1,1 @@
+@Query("select count(*) from XSLT r where vieworsave in ('VIEW','SAVE') and transtype= ?") Integer findCountOfViewOrSaveOfTransType(String transtype);

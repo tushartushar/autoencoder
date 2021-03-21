@@ -1,0 +1,7 @@
+@Override public int hashCode(){
+  int result=hasContainers != null ? hasContainers.hashCode() : 0;
+  result=31 * result + (int)(limitLow ^ (limitLow >>> 32));
+  result=31 * result + (int)(limitHigh ^ (limitHigh >>> 32));
+  result=31 * result + (labels != null ? labels.hashCode() : 0);
+  return result;
+}

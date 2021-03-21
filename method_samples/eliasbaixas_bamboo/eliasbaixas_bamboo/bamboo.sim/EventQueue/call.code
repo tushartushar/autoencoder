@@ -1,0 +1,8 @@
+void call(Object user_data);
+public void call(Object user_data){
+  NodeId node_id=(NodeId)user_data;
+  NodeInfo ninfo=nodes_by_node_id.get(node_id);
+  ninfo.cleanup_cb.call(ninfo.cleanup_user_data);
+  if (logger.isDebugEnabled())   logger.debug("removing " + node_id + " from nodes");
+  nodes_by_node_id.remove(node_id);
+}

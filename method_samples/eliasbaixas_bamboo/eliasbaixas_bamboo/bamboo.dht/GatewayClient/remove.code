@@ -1,0 +1,3 @@
+public void remove(bamboo_rm_arguments args,Thunk1<Integer> resp){
+  req(3,4,args,resp);
+}

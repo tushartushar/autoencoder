@@ -1,0 +1,4 @@
+@Override public List<Role> findRoleByRoleName(String role){
+  String roleSearchTerm="%" + role + "%";
+  return roleRepository.findByRoleLike(roleSearchTerm);
+}

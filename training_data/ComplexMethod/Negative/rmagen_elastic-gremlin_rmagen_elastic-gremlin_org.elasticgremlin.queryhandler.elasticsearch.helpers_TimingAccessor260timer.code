@@ -1,0 +1,10 @@
+public Timer timer(String name){
+  if (timers.containsKey(name))   return timers.get(name);
+  Timer timer=new Timer(name);
+  timers.put(name,timer);
+  return timer;
+}
+public Timer(String name){
+  this.name=name;
+  sw.reset();
+}

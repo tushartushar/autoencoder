@@ -1,0 +1,8 @@
+protected static BigInteger rendezvous_point(BigInteger key,BigInteger groupname,int level){
+  BigInteger two2thel=TWO.pow(level);
+  BigInteger partition_width=MOD.divide(two2thel);
+  BigInteger group_offset=groupname.mod(partition_width);
+  BigInteger partition_number=key.divide(partition_width);
+  BigInteger low=partition_number.multiply(partition_width);
+  return low.add(group_offset);
+}

@@ -1,0 +1,13 @@
+/** 
+ * This method sends a scan request to the  {@link BleService}.
+ * @return True if the service has started, false otherwise.
+ */
+protected boolean startScan(){
+  if (isBound() && hasScanPermissions() && shouldStartScan()) {
+    updateScanType(getScanType());
+    updateScanFilter(getScanFilter());
+    getBleService().startScan();
+    return true;
+  }
+  return false;
+}

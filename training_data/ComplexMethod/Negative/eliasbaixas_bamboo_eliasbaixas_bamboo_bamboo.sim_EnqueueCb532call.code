@@ -1,0 +1,10 @@
+public void call(Object user_data){
+  try {
+    sink.enqueue(item);
+  }
+ catch (  SinkException e) {
+    System.err.println("SinkException " + e);
+    e.printStackTrace();
+    System.exit(1);
+  }
+}

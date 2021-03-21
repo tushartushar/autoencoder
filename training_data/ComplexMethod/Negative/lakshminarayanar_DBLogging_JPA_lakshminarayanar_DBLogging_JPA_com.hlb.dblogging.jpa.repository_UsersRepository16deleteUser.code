@@ -1,0 +1,1 @@
+@Modifying @Query("update Users u set deleted=0 where username=?") int deleteUser(String username);

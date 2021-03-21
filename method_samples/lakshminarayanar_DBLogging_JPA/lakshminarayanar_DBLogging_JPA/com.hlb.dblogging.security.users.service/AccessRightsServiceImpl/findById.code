@@ -1,0 +1,5 @@
+@Override @Transactional public AccessRights findById(int id){
+  AccessRights accessRights=accessRightsRepository.findOne(id);
+  if (accessRights == null)   throw new BSLException("No AccessRight Found");
+  return accessRights;
+}

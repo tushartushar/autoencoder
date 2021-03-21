@@ -1,0 +1,4 @@
+public RoutingEntry(NeighborInfo n,double r){
+  ni=n;
+  rtt_ms=r;
+}

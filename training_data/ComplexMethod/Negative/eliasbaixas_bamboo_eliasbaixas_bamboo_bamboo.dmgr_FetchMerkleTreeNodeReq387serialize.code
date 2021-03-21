@@ -1,0 +1,12 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  buffer.add(peer_guid);
+  buffer.add(low_guid);
+  buffer.add(high_guid);
+  buffer.add(expansion);
+  buffer.add(level);
+  buffer.add(low_time);
+  buffer.add(expected_hash.length);
+  buffer.add(expected_hash);
+  buffer.add(seq);
+}

@@ -1,0 +1,7 @@
+protected void undraw_rt(){
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  while (!rt_connectors.isEmpty()) {
+    Figure conn=(Figure)rt_connectors.removeFirst();
+    layer.remove(conn);
+  }
+}

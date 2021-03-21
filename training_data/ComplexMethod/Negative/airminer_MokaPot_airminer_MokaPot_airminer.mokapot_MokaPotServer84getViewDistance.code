@@ -1,0 +1,3 @@
+@Override public int getViewDistance(){
+  throw new NotImplementedException();
+}

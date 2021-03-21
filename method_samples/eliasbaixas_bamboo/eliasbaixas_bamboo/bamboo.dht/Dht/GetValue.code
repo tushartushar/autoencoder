@@ -1,0 +1,21 @@
+public GetValue(ByteBuffer v,int t,byte[] s){
+  value=v;
+  ttlRemaining=t;
+  secretHash=s;
+  if (s == null)   hashAlgorithm="";
+ else   hashAlgorithm="SHA";
+}
+public GetValue(InputBuffer buf){
+  int len=buf.nextInt();
+  byte[] tmp=new byte[len];
+  buf.nextBytes(tmp,0,len);
+  value=ByteBuffer.wrap(tmp);
+  ttlRemaining=buf.nextInt();
+  len=buf.nextInt();
+  byte[] str=new byte[len];
+  buf.nextBytes(str,0,len);
+  hashAlgorithm=new String(str);
+  len=buf.nextInt();
+  secretHash=new byte[len];
+  buf.nextBytes(secretHash,0,len);
+}

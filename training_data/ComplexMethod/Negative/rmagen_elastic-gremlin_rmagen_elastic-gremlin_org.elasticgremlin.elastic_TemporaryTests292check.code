@@ -1,0 +1,6 @@
+private void check(GraphTraversal traversal){
+  System.out.println("pre-strategy:" + traversal);
+  traversal.hasNext();
+  System.out.println("post-strategy:" + traversal);
+  while (traversal.hasNext())   System.out.println(traversal.next());
+}

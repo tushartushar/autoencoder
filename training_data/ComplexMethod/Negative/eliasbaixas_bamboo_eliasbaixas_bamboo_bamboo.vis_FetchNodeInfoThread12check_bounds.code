@@ -1,0 +1,8 @@
+protected boolean check_bounds(int index,LinkedList list){
+  if (index < list.size()) {
+    return true;
+  }
+ else {
+    return false;
+  }
+}

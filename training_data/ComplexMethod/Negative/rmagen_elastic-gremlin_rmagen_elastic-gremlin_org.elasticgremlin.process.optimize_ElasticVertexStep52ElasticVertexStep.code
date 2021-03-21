@@ -1,0 +1,6 @@
+public ElasticVertexStep(VertexStep originalStep,Predicates predicates){
+  super(originalStep.getTraversal(),originalStep.getReturnClass(),originalStep.getDirection(),originalStep.getEdgeLabels());
+  originalStep.getLabels().forEach(label -> this.addLabel(label.toString()));
+  predicates.labels.forEach(this::addLabel);
+  this.predicates=predicates;
+}

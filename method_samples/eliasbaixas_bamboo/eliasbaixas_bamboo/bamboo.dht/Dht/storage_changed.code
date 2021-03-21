@@ -1,0 +1,30 @@
+public void storage_changed(boolean added,InetAddress client_id,long size){
+  Long usage=(Long)client_to_usage.get(client_id);
+  long new_usage=-1;
+  if (added) {
+    total_usage+=size;
+    if (usage == null)     usage=new Long(0);
+    new_usage=usage.longValue() + size;
+    client_to_usage.put(client_id,new Long(new_usage));
+  }
+ else {
+    total_usage-=size;
+    assert total_usage >= 0;
+    assert usage != null;
+    new_usage=usage.longValue() - size;
+    assert new_usage >= 0;
+    if (new_usage == 0)     client_to_usage.remove(client_id);
+ else     client_to_usage.put(client_id,new Long(new_usage));
+  }
+  if (logger.isInfoEnabled()) {
+    StringBuffer buf=new StringBuffer(100);
+    buf.append("client ");
+    buf.append(client_id.getHostAddress());
+    buf.append(" usage now ");
+    StringUtil.byte_cnt_to_sbuf(new_usage,buf);
+    buf.append(" of ");
+    StringUtil.byte_cnt_to_sbuf(total_usage,buf);
+    buf.append(" total.");
+    logger.info(buf.toString());
+  }
+}

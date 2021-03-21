@@ -1,0 +1,3 @@
+@Override public String getExternalVertexLabel(){
+  return externalVertexLabel;
+}

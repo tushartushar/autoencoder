@@ -1,0 +1,16 @@
+/** 
+ * Start the clock to tick. Can be called multiple times, it just set the state to running.
+ */
+public void startClock(){
+  if (isRunning)   return;
+  if (clockReseted) {
+    this.setBase(time());
+  }
+ else {
+    long time=getRestoreTime();
+    this.setBase(time);
+  }
+  this.start();
+  isRunning=true;
+  clockReseted=false;
+}

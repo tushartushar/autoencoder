@@ -1,0 +1,46 @@
+protected final boolean send_probe(Connection conn){
+  long seq=-1L;
+  Object msg=conn.probe_q.getFirst();
+  if (DEBUG)   debugln("sending probe");
+  long ack=-1L;
+  if (!conn.ack_q.isEmpty()) {
+    ack=((Long)conn.ack_q.getFirst()).longValue();
+    if (DEBUG)     debugln("piggybacking ack " + ack);
+  }
+  int sz=serializer.serialize_size(msg) + 28;
+  if (sz > MAX_MSG_SIZE) {
+    BUG("size=" + sz + " is greater than max size="+ MAX_MSG_SIZE+ " for msg "+ msg);
+  }
+  long now_ms=System.currentTimeMillis();
+  ByteBuffer bb=null;
+  if (mac == null) {
+    bb=alloc_bb(sz);
+    bb.putInt(0);
+  }
+ else {
+    bb=alloc_bb(sz + 20);
+    bb.putInt(1);
+  }
+  bb.putLong(ack);
+  bb.putLong(seq);
+  bb.putInt((int)0);
+  bb.putInt((int)(conn.sa >> 3));
+  serializer.serialize(msg,bb);
+  bb.rewind();
+  int n=0;
+  try {
+    n=channel.send(bb,conn.addr);
+  }
+ catch (  IOException e) {
+    BUG(e);
+  }
+  if (n == 0) {
+    if (DEBUG)     debugln("send failed, will retry later");
+    return false;
+  }
+  if (ack != -1)   conn.ack_q.removeFirst();
+  out_pkts+=1;
+  out_bytes+=bb.limit() + 20;
+  conn.probe_q.removeFirst();
+  return true;
+}

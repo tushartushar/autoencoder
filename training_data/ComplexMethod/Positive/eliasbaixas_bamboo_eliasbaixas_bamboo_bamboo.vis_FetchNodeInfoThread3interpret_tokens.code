@@ -1,0 +1,297 @@
+protected int interpret_tokens(int index,LinkedList tokens,BambooNode node){
+  String token1, token2, token3, token4;
+  double token1_float=Double.NaN;
+  double token3_float=Double.NaN;
+  int this_result;
+  int token1_type=TYPE_NOTHING;
+  int token3_type=TYPE_NOTHING;
+  if (!check_bounds(index + 2,tokens)) {
+    return INCORRECT_INPUT;
+  }
+  token1=String.valueOf((char[])tokens.get(index));
+  token2=String.valueOf((char[])tokens.get(index + 1));
+  token3=String.valueOf((char[])tokens.get(index + 2));
+  index+=3;
+  if (token1.equalsIgnoreCase("build")) {
+    token1_type=TYPE_NODE_VALUE_FLOAT;
+    token1_float=Double.valueOf(String.valueOf(node.build));
+  }
+ else   if (token1.equalsIgnoreCase("hostname")) {
+    token1_type=TYPE_NODE_VALUE_STRING;
+    token1=node.hostname;
+  }
+ else   if (token1.equalsIgnoreCase("ip")) {
+    token1_type=TYPE_NODE_VALUE_STRING;
+    token1=node.IP;
+  }
+ else   if (token1.equalsIgnoreCase("port")) {
+    token1_type=TYPE_NODE_VALUE_FLOAT;
+    token1_float=Double.valueOf(String.valueOf(node.port));
+  }
+ else   if (token1.equalsIgnoreCase("id")) {
+    token1_type=TYPE_NODE_VALUE_STRING;
+    token1=node.ID;
+  }
+ else   if (token1.equalsIgnoreCase("uptime")) {
+    token1_type=TYPE_NODE_VALUE_FLOAT;
+    token1_float=Double.valueOf(String.valueOf(node.uptime_number));
+  }
+ else   if (token1.equalsIgnoreCase("storage")) {
+    token1_type=TYPE_NODE_VALUE_FLOAT;
+    token1_float=Double.valueOf(String.valueOf(node.current_storage));
+  }
+ else   if (token1.equalsIgnoreCase("x_coord")) {
+    token1_type=TYPE_NODE_VALUE_FLOAT;
+    token1_float=((node.coordinates == null) ? 0.0 : node.coordinates[0]);
+  }
+ else   if (token1.equalsIgnoreCase("y_coord")) {
+    token1_type=TYPE_NODE_VALUE_FLOAT;
+    token1_float=((node.coordinates == null) ? 0.0 : node.coordinates[1]);
+  }
+ else   if (token1.equalsIgnoreCase("estimate")) {
+    token1_type=TYPE_NODE_VALUE_FLOAT;
+    token1_float=Double.valueOf(String.valueOf(node.estimate));
+  }
+ else {
+    token1_type=TYPE_LITERAL;
+  }
+  if (token3.equalsIgnoreCase("build")) {
+    token3_type=TYPE_NODE_VALUE_FLOAT;
+    token3_float=Double.valueOf(String.valueOf(node.build));
+  }
+ else   if (token3.equalsIgnoreCase("hostname")) {
+    token3_type=TYPE_NODE_VALUE_STRING;
+    token3=node.hostname;
+  }
+ else   if (token3.equalsIgnoreCase("ip")) {
+    token3_type=TYPE_NODE_VALUE_STRING;
+    token3=node.IP;
+  }
+ else   if (token3.equalsIgnoreCase("port")) {
+    token3_type=TYPE_NODE_VALUE_FLOAT;
+    token3_float=Double.valueOf(String.valueOf(node.port));
+  }
+ else   if (token3.equalsIgnoreCase("id")) {
+    token3_type=TYPE_NODE_VALUE_STRING;
+    token3=node.ID;
+  }
+ else   if (token3.equalsIgnoreCase("uptime")) {
+    token3_type=TYPE_NODE_VALUE_FLOAT;
+    token3_float=Double.valueOf(String.valueOf(node.uptime_number));
+  }
+ else   if (token3.equalsIgnoreCase("storage")) {
+    token3_type=TYPE_NODE_VALUE_FLOAT;
+    token3_float=Double.valueOf(String.valueOf(node.current_storage));
+  }
+ else   if (token3.equalsIgnoreCase("x_coord")) {
+    token3_type=TYPE_NODE_VALUE_FLOAT;
+    token3_float=((node.coordinates == null) ? 0.0 : node.coordinates[0]);
+  }
+ else   if (token3.equalsIgnoreCase("y_coord")) {
+    token3_type=TYPE_NODE_VALUE_FLOAT;
+    token3_float=((node.coordinates == null) ? 0.0 : node.coordinates[1]);
+  }
+ else   if (token3.equalsIgnoreCase("estimate")) {
+    token3_type=TYPE_NODE_VALUE_FLOAT;
+    token3_float=Double.valueOf(String.valueOf(node.estimate));
+  }
+ else {
+    token3_type=TYPE_LITERAL;
+  }
+  if (!(token1_type == TYPE_NODE_VALUE_FLOAT || token1_type == TYPE_NODE_VALUE_STRING || token3_type == TYPE_NODE_VALUE_FLOAT || token3_type == TYPE_NODE_VALUE_STRING)) {
+    return INCORRECT_INPUT;
+  }
+  if (token2.equalsIgnoreCase(">")) {
+    if ((token1_type != TYPE_LITERAL && token1_type != TYPE_NODE_VALUE_FLOAT) || (token3_type != TYPE_LITERAL && token3_type != TYPE_NODE_VALUE_FLOAT)) {
+      return INCORRECT_INPUT;
+    }
+    try {
+      if (token1_type == TYPE_LITERAL) {
+        token1_float=Double.parseDouble(token1);
+      }
+      if (token3_type == TYPE_LITERAL) {
+        token3_float=Double.parseDouble(token3);
+      }
+    }
+ catch (    NumberFormatException e) {
+      return INCORRECT_INPUT;
+    }
+    if (token1_float > token3_float) {
+      this_result=MATCHING_NODE;
+    }
+ else {
+      this_result=NOT_MATCHING_NODE;
+      ;
+    }
+  }
+ else   if (token2.equalsIgnoreCase(">=")) {
+    if ((token1_type != TYPE_LITERAL && token1_type != TYPE_NODE_VALUE_FLOAT) || (token3_type != TYPE_LITERAL && token3_type != TYPE_NODE_VALUE_FLOAT)) {
+      return INCORRECT_INPUT;
+    }
+    try {
+      if (token1_type == TYPE_LITERAL) {
+        token1_float=Double.parseDouble(token1);
+      }
+      if (token3_type == TYPE_LITERAL) {
+        token3_float=Double.parseDouble(token3);
+      }
+    }
+ catch (    NumberFormatException e) {
+      return INCORRECT_INPUT;
+    }
+    if (token1_float >= token3_float) {
+      this_result=MATCHING_NODE;
+    }
+ else {
+      this_result=NOT_MATCHING_NODE;
+      ;
+    }
+  }
+ else   if (token2.equalsIgnoreCase("<")) {
+    if ((token1_type != TYPE_LITERAL && token1_type != TYPE_NODE_VALUE_FLOAT) || (token3_type != TYPE_LITERAL && token3_type != TYPE_NODE_VALUE_FLOAT)) {
+      return INCORRECT_INPUT;
+    }
+    try {
+      if (token1_type == TYPE_LITERAL) {
+        token1_float=Double.parseDouble(token1);
+      }
+      if (token3_type == TYPE_LITERAL) {
+        token3_float=Double.parseDouble(token3);
+      }
+    }
+ catch (    NumberFormatException e) {
+      return INCORRECT_INPUT;
+    }
+    if (token1_float < token3_float) {
+      this_result=MATCHING_NODE;
+    }
+ else {
+      this_result=NOT_MATCHING_NODE;
+      ;
+    }
+  }
+ else   if (token2.equalsIgnoreCase("<=")) {
+    if ((token1_type != TYPE_LITERAL && token1_type != TYPE_NODE_VALUE_FLOAT) || (token3_type != TYPE_LITERAL && token3_type != TYPE_NODE_VALUE_FLOAT)) {
+      return INCORRECT_INPUT;
+    }
+    try {
+      if (token1_type == TYPE_LITERAL) {
+        token1_float=Double.parseDouble(token1);
+      }
+      if (token3_type == TYPE_LITERAL) {
+        token3_float=Double.parseDouble(token3);
+      }
+    }
+ catch (    NumberFormatException e) {
+      return INCORRECT_INPUT;
+    }
+    if (token1_float <= token3_float) {
+      this_result=MATCHING_NODE;
+    }
+ else {
+      this_result=NOT_MATCHING_NODE;
+      ;
+    }
+  }
+ else   if (token2.equalsIgnoreCase("=") || token2.equalsIgnoreCase("!=")) {
+    if (token1_type == TYPE_NODE_VALUE_STRING) {
+      if (token3_type == TYPE_NODE_VALUE_STRING || token3_type == TYPE_LITERAL) {
+        if (check_some_substring_matches(token1,token3)) {
+          this_result=MATCHING_NODE;
+        }
+ else {
+          this_result=NOT_MATCHING_NODE;
+        }
+      }
+ else {
+        return INCORRECT_INPUT;
+      }
+    }
+ else     if (token1_type == TYPE_NODE_VALUE_FLOAT) {
+      if (token3_type == TYPE_NODE_VALUE_FLOAT) {
+        if (token1_float == token3_float) {
+          this_result=MATCHING_NODE;
+        }
+ else {
+          this_result=NOT_MATCHING_NODE;
+        }
+      }
+ else       if (token3_type == TYPE_LITERAL) {
+        try {
+          token3_float=Double.parseDouble(token3);
+        }
+ catch (        NumberFormatException e) {
+          return INCORRECT_INPUT;
+        }
+        if (token1_float == token3_float) {
+          this_result=MATCHING_NODE;
+        }
+ else {
+          this_result=NOT_MATCHING_NODE;
+        }
+      }
+ else {
+        return INCORRECT_INPUT;
+      }
+    }
+ else     if (token1_type == TYPE_LITERAL) {
+      if (token3_type == TYPE_NODE_VALUE_FLOAT) {
+        try {
+          token1_float=Double.parseDouble(token1);
+        }
+ catch (        NumberFormatException e) {
+          return INCORRECT_INPUT;
+        }
+        if (token1_float == token3_float) {
+          this_result=MATCHING_NODE;
+        }
+ else {
+          this_result=NOT_MATCHING_NODE;
+        }
+      }
+ else       if (token3_type == TYPE_NODE_VALUE_STRING) {
+        if (check_some_substring_matches(token1,token3)) {
+          this_result=MATCHING_NODE;
+        }
+ else {
+          this_result=NOT_MATCHING_NODE;
+        }
+      }
+ else {
+        return INCORRECT_INPUT;
+      }
+    }
+ else {
+      return INCORRECT_INPUT;
+    }
+    if (token2.equalsIgnoreCase("!=")) {
+      if (this_result == MATCHING_NODE) {
+        this_result=NOT_MATCHING_NODE;
+      }
+ else {
+        this_result=MATCHING_NODE;
+      }
+    }
+  }
+ else   if (token2.equalsIgnoreCase("&")) {
+    return INCORRECT_INPUT;
+  }
+ else {
+    return INCORRECT_INPUT;
+  }
+  if (this_result == NOT_MATCHING_NODE) {
+    return NOT_MATCHING_NODE;
+  }
+ else   if (!check_bounds(index,tokens)) {
+    return this_result;
+  }
+ else {
+    token4=String.valueOf((char[])tokens.get(index));
+    if (token4.equalsIgnoreCase("&")) {
+      return interpret_tokens(index + 1,tokens,node);
+    }
+ else {
+      return INCORRECT_INPUT;
+    }
+  }
+}

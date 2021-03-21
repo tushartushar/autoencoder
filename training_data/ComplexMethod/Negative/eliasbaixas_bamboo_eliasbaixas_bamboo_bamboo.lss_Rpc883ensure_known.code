@@ -1,0 +1,11 @@
+protected void ensure_known(Class clazz){
+  if (!known_types.contains(clazz)) {
+    known_types.add(clazz);
+    try {
+      TypeTable.register_type(clazz);
+    }
+ catch (    Exception e) {
+      assert false : e;
+    }
+  }
+}

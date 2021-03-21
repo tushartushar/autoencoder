@@ -1,0 +1,3 @@
+@Override public Direction getDirection(){
+  return direction;
+}

@@ -1,0 +1,3 @@
+public void failure(){
+  generic_msg_failure(ni,retry);
+}

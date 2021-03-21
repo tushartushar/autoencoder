@@ -1,0 +1,6 @@
+public boolean contains(NeighborInfo ni){
+  if (ni.guid.equals(my_guid))   return false;
+  for (int i=0; i < leaf_pred_count; ++i)   if (leaf_preds[i].guid.equals(ni.guid))   return true;
+  for (int i=0; i < leaf_succ_count; ++i)   if (leaf_succs[i].guid.equals(ni.guid))   return true;
+  return false;
+}

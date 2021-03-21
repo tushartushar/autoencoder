@@ -1,0 +1,3 @@
+public UserToAccessRightsServiceImpl(){
+  ApplLogger.getLogger().info("=========Instance of UserToAccessRightsServiceImpl is created by Context...=======");
+}

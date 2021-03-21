@@ -1,0 +1,11 @@
+Project Name,Package Name,Type Name,NOF,NOPF,NOM,NOPM,LOC,WMC,NC,DIT,LCOM,FANIN,FANOUT,File path
+sohamm17_MapsTraffic,(default package),Routing,6,0,3,3,120,14,0,0,0.6666666666666666,1,1,/Users/Tushar/Documents/Workspace/autoencoder/repos/sohamm17_MapsTraffic/src/Routing.java
+sohamm17_MapsTraffic,(default package),MapsTrafficMain,1,0,4,4,98,15,0,0,1.0,0,4,/Users/Tushar/Documents/Workspace/autoencoder/repos/sohamm17_MapsTraffic/src/MapsTrafficMain.java
+sohamm17_MapsTraffic,(default package),GoogleOauth,1,1,2,2,63,8,0,0,1.0,1,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/sohamm17_MapsTraffic/src/GoogleOauth.java
+sohamm17_MapsTraffic,(default package),Traffic,15,12,9,8,156,33,0,0,0.3333333333333333,1,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/sohamm17_MapsTraffic/src/Traffic.java
+sohamm17_MapsTraffic,(default package),mainRoadway,10,9,2,2,25,3,0,0,0.0,0,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/sohamm17_MapsTraffic/src/Traffic.java
+sohamm17_MapsTraffic,(default package),crossFlow,8,8,1,1,13,1,0,0,0.0,0,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/sohamm17_MapsTraffic/src/Traffic.java
+sohamm17_MapsTraffic,(default package),RouteInfo,21,21,10,10,81,14,0,0,0.4,2,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/sohamm17_MapsTraffic/src/RouteInfo.java
+sohamm17_MapsTraffic,(default package),maneuvar,18,18,5,5,39,5,0,0,0.6,0,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/sohamm17_MapsTraffic/src/RouteInfo.java
+sohamm17_MapsTraffic,(default package),latlon,2,2,2,2,10,2,0,0,0.0,0,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/sohamm17_MapsTraffic/src/RouteInfo.java
+sohamm17_MapsTraffic,(default package),link,4,4,1,1,9,1,0,0,0.0,0,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/sohamm17_MapsTraffic/src/RouteInfo.java

@@ -1,0 +1,11 @@
+/** 
+ * Calculates the distance between this coordinate to the given destination.  This will be an estimate of the one-way network latencies between the two nodes in milliseconds.
+ * @param destination The coordinate to compare this object against.
+ * @return The distance between the coordinates, as expressed by one-way network latency in milliseconds.
+ */
+public double distance(VirtualCoordinate destination){
+  double result=0.0;
+  for (int i=0; i < _coordinate.length; i++)   result+=(_coordinate[i] - destination._coordinate[i]) * (_coordinate[i] - destination._coordinate[i]);
+  result=Math.sqrt(result);
+  return result;
+}

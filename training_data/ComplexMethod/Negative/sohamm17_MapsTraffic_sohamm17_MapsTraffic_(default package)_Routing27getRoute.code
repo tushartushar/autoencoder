@@ -1,0 +1,8 @@
+public RouteInfo getRoute(String source_string,String destination_string,double walkSpeed,String formattedDate) throws URISyntaxException {
+  RouteInfo.maneuvar.latlon src_latlon, dst_latlon;
+  src_latlon=getLatLong(source_string);
+  dst_latlon=getLatLong(destination_string);
+  String url="http://route.cit.api.here.com/routing/7.2/calculateroute.json";
+  URIBuilder builder=new URIBuilder(url).addParameter("app_id",APP_ID).addParameter("app_code",APP_CODE).addParameter("waypoint0","geo!" + src_latlon.toString()).addParameter("waypoint1","geo!" + dst_latlon.toString()).addParameter("mode","fastest;publicTransportTimeTable").addParameter("combineChange","true").addParameter("alternatives","5").addParameter("walkSpeed",String.valueOf(walkSpeed)).addParameter("departure",formattedDate).addParameter("instructionformat","text").addParameter("maneuverAttributes","trafficTime,waitTime,publicTransportLine,time,roadName,length,link,direction").addParameter("legAttributes","links,trafficTime,waypoint").addParameter("linkAttributes","roadName,maneuver,length,nextStopName,dynamicSpeedInfo,speedLimit,nextLink").addParameter("routeAttributes","lines").addParameter("metricSystem","metric");
+  return parseRoutingResponse(builder);
+}

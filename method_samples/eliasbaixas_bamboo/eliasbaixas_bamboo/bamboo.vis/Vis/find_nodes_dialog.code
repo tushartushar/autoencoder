@@ -1,0 +1,21 @@
+protected void find_nodes_dialog(){
+  String s=(String)JOptionPane.showInputDialog(frame,"Operands: >, >=, <, <=, =, !=, &\n" + "Fields: build, ip, port, id, uptime, storage, x_coord, y_coord, estimate","Find Nodes...",JOptionPane.PLAIN_MESSAGE,null,null,null);
+  show_color_storage=false;
+  show_color_uptime=false;
+  LinkedList matching_nodes=FNIT.find_nodes(s);
+  if (FetchNodeInfoThread.test_bad_find_nodes_input(matching_nodes)) {
+    JOptionPane.showMessageDialog(frame,"Incorrect input");
+  }
+ else {
+    reset_node_colors();
+    if (matching_nodes.size() == 0) {
+      JOptionPane.showMessageDialog(frame,"No matching nodes");
+    }
+ else {
+      Iterator i=matching_nodes.iterator();
+      while (i.hasNext()) {
+        ((BambooNode)i.next()).color_node(Color.RED);
+      }
+    }
+  }
+}

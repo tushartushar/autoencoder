@@ -1,0 +1,11 @@
+public void register(BaseVertex v,String indexName){
+  multiGetRequest.add(indexName,null,v.id().toString());
+  List<BaseVertex> vertices=idToVertices.get(v.id().toString());
+  if (vertices == null) {
+    vertices=new ArrayList();
+    idToVertices.put(v.id().toString(),vertices);
+  }
+  vertices.add(v);
+  this.vertices.add(v);
+  v.setSiblings(this.vertices);
+}

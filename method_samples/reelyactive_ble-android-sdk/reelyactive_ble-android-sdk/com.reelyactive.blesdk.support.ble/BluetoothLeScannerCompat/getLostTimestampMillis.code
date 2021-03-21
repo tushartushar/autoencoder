@@ -1,0 +1,10 @@
+/** 
+ * Compute the timestamp in the past which is the earliest that a sighting can have been seen; sightings last seen before this timestamp will be deemed to be too old. Then the Sandmen come.
+ * @VisibleForTesting
+ */
+long getLostTimestampMillis(){
+  if (scanLostOverrideMillis >= 0) {
+    return getClock().currentTimeMillis() - scanLostOverrideMillis;
+  }
+  return getClock().currentTimeMillis() - (SCAN_LOST_CYCLES * getScanCycleMillis());
+}

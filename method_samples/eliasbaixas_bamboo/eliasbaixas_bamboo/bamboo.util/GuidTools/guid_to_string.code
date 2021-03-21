@@ -1,0 +1,9 @@
+/** 
+ * Print only the high-order 8 hexedecimal digits.
+ */
+public static String guid_to_string(BigInteger i){
+  String result=i.toString(16);
+  while (result.length() < 40)   result="0" + result;
+  result=result.substring(0,8);
+  return result;
+}

@@ -1,0 +1,36 @@
+@Override public void onClick(View v){
+  if (!stopWatch.running()) {
+    saveTime(TABLE_NAME,getDate(),getTime(),"running",interval,session);
+    startOnCreate=false;
+    stopWatch.startClock();
+    buttonStopWatch.setText("PAUSE");
+    buttonStopWatch.setTextSize(50);
+    buttonStopWatch.setBackground(shapeStart);
+  }
+ else   if (stopWatch.running()) {
+    saveTime(TABLE_NAME,getDate(),getTime(),"paused",interval,session);
+    stopWatch.pauseClock();
+    buttonStopWatch.setText("RESUME");
+    buttonStopWatch.setTextSize(40);
+    buttonStopWatch.setBackground(shapePaused);
+    getInterval();
+  }
+}
+@Override public void onClick(View v){
+  if (stopWatch.running()) {
+    stopWatch.resetClock();
+    buttonStopWatch.setText("PAUSE");
+    buttonStopWatch.setTextSize(50);
+    buttonStopWatch.setBackground(shapeStart);
+    stopWatch.startClock();
+  }
+ else   if (!stopWatch.running()) {
+    stopWatch.resetClock();
+    buttonStopWatch.setText("START");
+    buttonStopWatch.setTextSize(50);
+    buttonStopWatch.setBackground(shapeStart);
+  }
+}
+@Override public void onClick(View v){
+  showDialogBox(getStats());
+}

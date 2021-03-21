@@ -1,0 +1,24 @@
+public IterRouteReq(IterRouteResp resp){
+  super(resp.next_hop.node_id,false);
+  src=resp.src;
+  dest=resp.dest;
+  app_id=resp.app_id;
+  payload=resp.payload;
+  intermediate_upcall=resp.intermediate_upcall;
+}
+public IterRouteReq(NodeId n,BigInteger s,BigInteger d,long a,boolean u,QuickSerializable p){
+  super(n,false);
+  src=s;
+  dest=d;
+  app_id=a;
+  payload=p;
+  intermediate_upcall=u;
+}
+public IterRouteReq(InputBuffer buffer) throws QSException {
+  super(buffer);
+  src=buffer.nextBigInteger();
+  dest=buffer.nextBigInteger();
+  app_id=buffer.nextLong();
+  intermediate_upcall=buffer.nextBoolean();
+  payload=buffer.nextObject();
+}

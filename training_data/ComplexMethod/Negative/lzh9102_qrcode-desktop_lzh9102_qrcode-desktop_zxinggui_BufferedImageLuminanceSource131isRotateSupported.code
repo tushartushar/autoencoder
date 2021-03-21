@@ -1,0 +1,7 @@
+/** 
+ * This is always true, since the image is a gray-scale image.
+ * @return true
+ */
+@Override public boolean isRotateSupported(){
+  return true;
+}

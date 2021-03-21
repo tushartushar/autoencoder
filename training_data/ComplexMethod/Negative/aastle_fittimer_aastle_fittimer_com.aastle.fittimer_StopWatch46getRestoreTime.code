@@ -1,0 +1,7 @@
+/** 
+ * Get restore time for clock, used for set base time.
+ * @return base time for clock.
+ */
+private long getRestoreTime(){
+  return this.getBase() + time() - currentTimeLastStop;
+}

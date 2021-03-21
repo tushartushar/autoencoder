@@ -1,0 +1,23 @@
+@Override public void onCreate(){
+  super.onCreate();
+  registerActivityLifecycleCallbacks(new ReelyAwareApplicationCallback(this){
+    @Override public boolean onBleEvent(    BleService.Event event,    Object data){
+      Log.d(TAG,"BLE Event " + event + " // "+ data);
+      return super.onBleEvent(event,data);
+    }
+    @Override protected boolean shouldStartScan(){
+      return isBound();
+    }
+    @Override public void onActivityCreated(    Activity activity,    Bundle bundle){
+    }
+    @Override public void onActivityStarted(    Activity activity){
+    }
+    @Override public void onActivityStopped(    Activity activity){
+    }
+    @Override public void onActivitySaveInstanceState(    Activity activity,    Bundle bundle){
+    }
+    @Override public void onActivityDestroyed(    Activity activity){
+    }
+  }
+);
+}

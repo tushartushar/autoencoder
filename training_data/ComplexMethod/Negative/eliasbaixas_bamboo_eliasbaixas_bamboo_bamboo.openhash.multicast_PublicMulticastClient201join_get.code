@@ -1,0 +1,13 @@
+protected void join_get(JoinState state){
+  BigInteger key=rendezvous_point(my_key,state.groupname,state.current_level);
+  bamboo_get_args get_args=new bamboo_get_args();
+  get_args.application=state.app;
+  get_args.key=new bamboo_key();
+  get_args.key.value=bi2bytes(key);
+  get_args.maxvals=Integer.MAX_VALUE;
+  get_args.placemark=new bamboo_placemark();
+  get_args.placemark.value=new byte[]{};
+  state.current_get=0;
+  Object[] pair={state,get_args};
+  client.get(get_args,new JoinGetDoneCb(),pair);
+}

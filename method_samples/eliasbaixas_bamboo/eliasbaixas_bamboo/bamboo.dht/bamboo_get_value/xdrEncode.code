@@ -1,0 +1,5 @@
+public void xdrEncode(XdrEncodingStream xdr) throws OncRpcException, IOException {
+  value.xdrEncode(xdr);
+  xdr.xdrEncodeInt(ttl_sec_rem);
+  secret_hash.xdrEncode(xdr);
+}

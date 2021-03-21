@@ -1,0 +1,10 @@
+@Override public BaseVertex addVertex(Object id,String label,Object[] properties){
+  BaseVertex v=new DocVertex(id,label,properties,graph,null,elasticMutations,indexName);
+  try {
+    elasticMutations.addElement(v,indexName,null,true);
+  }
+ catch (  DocumentAlreadyExistsException ex) {
+    throw Graph.Exceptions.vertexWithIdAlreadyExists(id);
+  }
+  return v;
+}

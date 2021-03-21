@@ -1,0 +1,56 @@
+/** 
+ * Does a top-k merge sort on the values received.
+ */
+protected Pair<LinkedList<GetValue>,Key> compileResponse(int maxvals,Map<NodeId,LinkedList<Pair<Key,ByteBuffer>>> responses,boolean allRead){
+  LinkedList<GetValue> values=new LinkedList<GetValue>();
+  int size=0;
+  maxvals=maxvals & MAXVALS_MASK;
+  Key max=ZERO_KEY;
+  while (values.size() < maxvals) {
+    Key min=null;
+    NodeId minReplica=null;
+    Iterator<NodeId> i=responses.keySet().iterator();
+    while (i.hasNext()) {
+      NodeId replica=i.next();
+      LinkedList<Pair<Key,ByteBuffer>> l=responses.get(replica);
+      if (l.isEmpty()) {
+        i.remove();
+        continue;
+      }
+      Key k=l.getFirst().first;
+      if (min == null) {
+        min=k;
+        minReplica=replica;
+      }
+ else {
+        int compare=k.compareTo(min);
+        if (compare < 0) {
+          min=k;
+          minReplica=replica;
+        }
+ else         if (compare == 0) {
+          l.removeFirst();
+          if (l.isEmpty())           i.remove();
+        }
+      }
+    }
+    if (min == null) {
+      break;
+    }
+ else {
+      LinkedList<Pair<Key,ByteBuffer>> l=responses.get(minReplica);
+      Pair<Key,ByteBuffer> p=l.getFirst();
+      GetValue gv=new GetValue(p.second,p.first.ttlRemaining(now_ms()),p.first.secret_hash);
+      CountBuffer cb=new CountBuffer();
+      gv.serialize(cb);
+      if (size + cb.size() > MAX_GET_RESP_SIZE)       break;
+      l.removeFirst();
+      if (l.isEmpty())       responses.remove(minReplica);
+      values.addLast(gv);
+      size+=cb.size();
+      max=p.first;
+    }
+  }
+  if (allRead && responses.isEmpty())   max=ZERO_KEY;
+  return Pair.create(values,max);
+}

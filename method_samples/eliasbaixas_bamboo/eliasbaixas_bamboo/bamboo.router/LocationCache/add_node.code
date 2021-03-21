@@ -1,0 +1,22 @@
+public void add_node(NeighborInfo ni){
+  if (capacity == 0)   return;
+  Node n=null;
+  if (cache.containsKey(ni.guid)) {
+    n=(Node)cache.get(ni.guid);
+    rem_n(n);
+  }
+ else {
+    if (cache.size() >= capacity) {
+      if (cache.remove(last.ni.guid) == null)       BUG("in ll but not in ts");
+      last=last.pred;
+      last.succ=null;
+    }
+    n=new Node(ni);
+    cache.put(ni.guid,n);
+  }
+  n.succ=first;
+  n.pred=null;
+  if (first != null)   first.pred=n;
+  first=n;
+  if (last == null)   last=first;
+}

@@ -1,0 +1,3 @@
+public String toString(){
+  return "(BambooAddToLocationCache guid=" + GuidTools.guid_to_string(guid) + " node_id="+ node_id+ ")";
+}

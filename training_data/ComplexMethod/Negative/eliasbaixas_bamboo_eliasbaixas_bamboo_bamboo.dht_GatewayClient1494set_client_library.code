@@ -1,0 +1,31 @@
+/** 
+ * Sets the client library field in the given request.
+ */
+private void set_client_library(Request req){
+  if (req.request instanceof bamboo_put_args) {
+    bamboo_put_args put=(bamboo_put_args)req.request;
+    put.client_library="bamboo.dht.GatewayClient $Revision: 1.16 $";
+    assert req.vers == 2 : req.vers;
+    assert req.proc == 2 : req.proc;
+  }
+ else   if (req.request instanceof bamboo_put_arguments) {
+    bamboo_put_arguments put=(bamboo_put_arguments)req.request;
+    put.client_library="bamboo.dht.GatewayClient $Revision: 1.16 $";
+    assert req.vers == 3 : req.vers;
+    assert req.proc == 2 : req.proc;
+  }
+ else   if (req.request instanceof bamboo_rm_arguments) {
+    bamboo_rm_arguments rm=(bamboo_rm_arguments)req.request;
+    rm.client_library="bamboo.dht.GatewayClient $Revision: 1.16 $";
+    assert req.vers == 3 : req.vers;
+    assert req.proc == 4 : req.proc;
+  }
+ else   if (req.request instanceof bamboo_get_args) {
+    bamboo_get_args get=(bamboo_get_args)req.request;
+    get.client_library="bamboo.dht.GatewayClient $Revision: 1.16 $";
+    assert req.proc == 3 : req.proc;
+  }
+ else {
+    assert false;
+  }
+}

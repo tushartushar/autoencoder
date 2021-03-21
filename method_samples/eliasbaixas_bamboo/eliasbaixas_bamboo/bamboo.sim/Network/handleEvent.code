@@ -1,0 +1,22 @@
+public void handleEvent(QueueElementIF item){
+  if (item instanceof NetworkMessage) {
+    NetworkMessage msg=(NetworkMessage)item;
+    if (msg.inbound) {
+      try {
+        classifier.dispatch(msg);
+      }
+ catch (      Exception e) {
+        assert false : e;
+      }
+    }
+ else {
+      handle_network_message(msg);
+    }
+  }
+ else   if (item instanceof NetworkLatencyReq) {
+    handle_network_latency_req((NetworkLatencyReq)item);
+  }
+ else {
+    throw new IllegalArgumentException(item.getClass().getName());
+  }
+}

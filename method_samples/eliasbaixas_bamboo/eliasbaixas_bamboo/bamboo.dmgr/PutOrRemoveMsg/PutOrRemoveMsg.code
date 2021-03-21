@@ -1,0 +1,43 @@
+public PutOrRemoveMsg(NodeId dest,long t,int tt,BigInteger g,ByteBuffer v,boolean p,InetAddress c,long s,byte[] vh,byte[] sh){
+  super(dest,false);
+  time_usec=t;
+  ttl_sec=tt;
+  guid=g;
+  value=v;
+  put=p;
+  seq=s;
+  client_id=c;
+  value_hash=vh;
+  secret_hash=sh;
+}
+public PutOrRemoveMsg(InputBuffer buffer) throws QSException {
+  super(buffer);
+  time_usec=buffer.nextLong();
+  ttl_sec=buffer.nextInt();
+  guid=buffer.nextBigInteger();
+  int len=buffer.nextInt();
+  if (len > MAX_SIZE)   throw new QSException("len=" + len);
+  byte[] tmp=new byte[len];
+  buffer.nextBytes(tmp,0,len);
+  value=ByteBuffer.wrap(tmp);
+  put=buffer.nextBoolean();
+  len=buffer.nextInt();
+  byte[] client_bytes=new byte[len];
+  buffer.nextBytes(client_bytes,0,len);
+  try {
+    client_id=InetAddress.getByAddress(client_bytes);
+  }
+ catch (  UnknownHostException e) {
+    assert false;
+  }
+  seq=buffer.nextLong();
+  if (!put) {
+    value_hash=new byte[20];
+    buffer.nextBytes(value_hash,0,20);
+  }
+  if ((time_usec & 0x8000000000000000L) != 0) {
+    secret_hash=new byte[20];
+    buffer.nextBytes(secret_hash,0,20);
+    time_usec&=0x7fffffffffffffffL;
+  }
+}

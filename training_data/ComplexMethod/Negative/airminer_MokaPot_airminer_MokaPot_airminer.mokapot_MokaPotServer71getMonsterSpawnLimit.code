@@ -1,0 +1,3 @@
+@Override public int getMonsterSpawnLimit(){
+  throw new NotImplementedException();
+}

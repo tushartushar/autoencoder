@@ -1,0 +1,11 @@
+private SearchBean trimInputSearchCriteria(SearchBean searchCriteria){
+  searchCriteria.setApplicationName(StringUtils.trimToNull(searchCriteria.getApplicationName()));
+  searchCriteria.setUniqueProcessId((StringUtils.trimToNull(searchCriteria.getUniqueProcessId())));
+  searchCriteria.setTransactionType(StringUtils.trimToNull(searchCriteria.getTransactionType()));
+  searchCriteria.setSegment(StringUtils.trimToNull(searchCriteria.getSegment()));
+  searchCriteria.setMessageFormat(StringUtils.trimToNull(searchCriteria.getMessageFormat()));
+  searchCriteria.setJournalSequence(StringUtils.trimToNull(searchCriteria.getJournalSequence()));
+  searchCriteria.setApplicationTransactionId(StringUtils.trimToNull(searchCriteria.getApplicationTransactionId()));
+  searchCriteria.setTransactionStartDateTime(getTimeWithOneSecondLess(searchCriteria.getTransactionStartDateTime()));
+  return searchCriteria;
+}

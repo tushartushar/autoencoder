@@ -1,0 +1,6 @@
+public void addItem(ScanResult result){
+  if (!items.containsKey(result.getDevice().getAddress())) {
+    items.put(result.getDevice().getAddress(),result);
+    notifyDataSetChanged();
+  }
+}

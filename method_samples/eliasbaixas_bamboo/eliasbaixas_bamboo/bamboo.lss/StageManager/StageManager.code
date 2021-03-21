@@ -1,0 +1,4 @@
+public StageManager(SandstormConfigIF config){
+  _config=config;
+  _stages=new HashMap();
+}

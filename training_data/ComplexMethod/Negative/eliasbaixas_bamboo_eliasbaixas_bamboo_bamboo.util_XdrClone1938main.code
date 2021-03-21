@@ -1,0 +1,10 @@
+/** 
+ * Test harness.
+ */
+public static void main(String[] args){
+  ByteBuffer b=ByteBuffer.allocate(100);
+  bamboo_value v=new bamboo_value();
+  v.value=new byte[10];
+  bamboo_value u=(bamboo_value)xdr_clone(v,b);
+  System.err.println("size=" + b.position());
+}

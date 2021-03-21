@@ -1,0 +1,165 @@
+public void run(){
+  if (totalStorage < storage_goal) {
+    Integer index=null;
+    BigInteger key=null;
+    byte[] keyBytes=null;
+    if (!puts.isEmpty() && (totalValues / puts.size() < desiredPutSetSize)) {
+      Set<PutInfo> pis=null;
+      for (int tries=0; tries < 10; ++tries) {
+        int which=rand.nextInt(puts.size());
+        Iterator<BigInteger> i=puts.keySet().iterator();
+        while (which-- > 0)         i.next();
+        key=i.next();
+        keyBytes=bi2bytes(key);
+        pis=puts.get(key);
+        int idx=randomIndex();
+        if ((pis.size() < maxPutSetSize) && !pis.contains(new PutInfo(keyBytes,idx,0))) {
+          index=new Integer(idx);
+          break;
+        }
+ else {
+          key=null;
+          keyBytes=null;
+        }
+      }
+    }
+    if (key == null) {
+      keyBytes=new byte[20];
+      rand.nextBytes(keyBytes);
+      key=bytes2bi(keyBytes);
+      index=new Integer(randomIndex());
+    }
+    bamboo_put_args putArgs=makePut(keyBytes,index.intValue());
+    logger.info("Doing a put with key=0x" + bytes_to_str(putArgs.key.value) + " index="+ index+ " data=0x"+ bytes_to_str(putArgs.value.value));
+    long start_time_ms=timer_ms();
+    Object token=acore.registerTimer(PUT_TIMEOUT_MS,curry(putTimeout,key,index));
+    client.put(putArgs,curry(putDone,putArgs,key,index,new Long(start_time_ms),token));
+  }
+  scheduleNextPut();
+}
+public void run(BigInteger key,Integer index){
+  logger.warn("Put timed out: key=0x" + guid_to_string(key) + " index="+ index);
+  if (die_on_failure)   System.exit(1);
+}
+public void run(bamboo_put_args put,BigInteger key,Integer index,Long start_time_ms,Object token,Integer put_res){
+  acore.cancelTimer(token);
+  long latency_ms=timer_ms() - start_time_ms.longValue();
+  if (put_res.intValue() != bamboo_stat.BAMBOO_OK) {
+    logger.info("Put failed: key=" + guid_to_string(key) + " index="+ index+ " lat="+ latency_ms+ " ms, reason="+ put_res);
+  }
+ else {
+    logger.info("Put successful: key=0x" + guid_to_string(key) + " index="+ index+ " lat="+ latency_ms+ " ms");
+    Set<PutInfo> pis=puts.get(key);
+    if (pis == null) {
+      pis=new TreeSet<PutInfo>();
+      puts.put(key,pis);
+    }
+    long expire_delay_ms=put.ttl_sec * 1000 - latency_ms;
+    PutInfo pi=new PutInfo(put.key.value,index.intValue(),now_ms() + expire_delay_ms);
+    if (pis.add(pi)) {
+      totalStorage+=putSize;
+      totalValues+=1;
+    }
+    if (log != null)     logPut(pi,log);
+    acore.registerTimer(expire_delay_ms - GET_SLOP_MS,curry(putExpired,key,pi));
+  }
+}
+public void run(BigInteger key,PutInfo pi){
+  logger.info("put expired: key=0x" + guid_to_string(key) + " index="+ pi.index);
+  Set<PutInfo> pis=puts.get(key);
+  pis.remove(pi);
+  totalStorage-=putSize;
+  totalValues-=1;
+  if (pis.isEmpty())   puts.remove(key);
+}
+public void run(){
+  int maxvals=nextType();
+  BigInteger key=null;
+  Set<PutInfo> pis=null;
+  if (!puts.isEmpty() && !bogus) {
+    int which=rand.nextInt(puts.size());
+    Iterator<BigInteger> i=puts.keySet().iterator();
+    while (which-- > 0)     i.next();
+    key=i.next();
+    pis=new TreeSet<PutInfo>();
+    pis.addAll(puts.get(key));
+  }
+  if (pis == null) {
+    byte[] kb=new byte[20];
+    rand.nextBytes(kb);
+    key=bytes2bi(kb);
+  }
+  bamboo_get_args get_args=new bamboo_get_args();
+  get_args.application="bamboo.dht.BetterPutGetTest $Revision: 1.4 $";
+  get_args.key=new bamboo_key();
+  get_args.key.value=bi2bytes(key);
+  get_args.placemark=new bamboo_placemark();
+  get_args.placemark.value=new byte[]{};
+  get_args.maxvals=maxvals;
+  logger.info("Doing a " + ((pis == null) ? "bogus" : "real") + " "+ getTypeNames.get(new Integer(maxvals))+ " get: key=0x"+ guid_to_string(key));
+  long start_time_ms=timer_ms();
+  GetInfo gi=new GetInfo(get_args,key,pis,start_time_ms);
+  Object token=acore.registerTimer(GET_TIMEOUT_MS,curry(getTimeout,gi));
+  client.get(get_args,curry(getDone,gi,token));
+  scheduleNextGet();
+}
+public void run(GetInfo gi){
+  logger.warn(((gi.pis == null) ? "Bogus" : "Real") + " " + gi.getTypeName()+ " get timed out: key=0x"+ guid_to_string(gi.key));
+  if (die_on_failure)   System.exit(1);
+}
+public void run(GetInfo gi,Object token,bamboo_get_res get_res){
+  acore.cancelTimer(token);
+  long latency_ms=timer_ms() - gi.start_time_ms;
+  if (gi.pis == null) {
+    if (get_res.values.length == 0) {
+      logger.info("Bogus " + gi.getTypeName() + " get successful: key=0x"+ guid_to_string(gi.key)+ " lat="+ latency_ms+ " ms");
+    }
+ else {
+      logger.warn("Bogus " + gi.getTypeName() + " get returned values?!?!: key=0x"+ guid_to_string(gi.key)+ " lat="+ latency_ms+ " ms");
+    }
+  }
+ else {
+    Set<PutInfo> missing=new TreeSet<PutInfo>();
+    Set<PutInfo> extra=new TreeSet<PutInfo>();
+    Set<PutInfo> bad=new TreeSet<PutInfo>();
+    missing.addAll(gi.pis);
+    for (int i=0; i < get_res.values.length; ++i) {
+      byte[] found=get_res.values[i].value;
+      int index=getIndex(found);
+      PutInfo tmp=new PutInfo(gi.get_args.key.value,index,0);
+      if (!missing.remove(tmp))       extra.add(tmp);
+ else       if (!verifyData(gi.get_args.key.value,index,found)) {
+        bad.add(tmp);
+      }
+    }
+    if (missing.isEmpty() && bad.isEmpty()) {
+      String estr="";
+      for (      PutInfo pi : extra)       estr+=pi.index + " ";
+      estr=estr.trim();
+      logger.info("Real " + gi.getTypeName() + " get successful: key=0x"+ guid_to_string(gi.key)+ " count="+ gi.pis.size()+ " lat="+ latency_ms+ " ms"+ (extra.isEmpty() ? "" : (", extras=[" + estr + "]")));
+    }
+ else {
+      String mstr="";
+      for (      PutInfo pi : missing)       mstr+=pi.index + " ";
+      mstr=mstr.trim();
+      String bstr="";
+      for (      PutInfo pi : bad)       bstr+=pi.index + " ";
+      bstr=bstr.trim();
+      int retry_time=gi.attempt * 10 * 1000;
+      retry_time=retry_time / 2 + rand.nextInt(retry_time);
+      if (timer_ms() + retry_time < gi.start_time_ms + MAX_GET_TIME_MS) {
+        logger.info("Real " + gi.getTypeName() + " get wrong: key=0x"+ guid_to_string(gi.key)+ (missing.isEmpty() ? "" : (" missing=[" + mstr + "]"))+ (bad.isEmpty() ? "" : (" bad=[" + bstr + "]"))+ ".  Trying again.");
+        acore.registerTimer(rand.nextInt(retry_time),curry(getAgain,gi));
+        ++gi.attempt;
+      }
+ else {
+        logger.warn("Real " + gi.getTypeName() + " get failed: key=0x"+ guid_to_string(gi.key)+ (missing.isEmpty() ? "" : (" missing=[" + mstr + "]"))+ (bad.isEmpty() ? "" : (" bad=[" + bstr + "]"))+ ".  Trying again.");
+        if (die_on_failure)         System.exit(1);
+      }
+    }
+  }
+}
+public void run(GetInfo gi){
+  Object token=acore.registerTimer(GET_TIMEOUT_MS,curry(getTimeout,gi));
+  client.get(gi.get_args,curry(getDone,gi,token));
+}

@@ -1,0 +1,59 @@
+protected void handle_put_or_remove_req(PutOrRemoveReq e){
+  if (logger.isDebugEnabled())   logger.debug("root, sending to leaf set");
+  Set pa=new TreeSet();
+  if (preds != null) {
+    int pred_max=preds.length - 1;
+    if (!in_range_mod(preds[0].guid,my_guid,e.guid)) {
+      --pred_max;
+    }
+    for (int i=pred_max; i >= 0; --i) {
+      if (logger.isDebugEnabled())       logger.debug("sending to " + preds[i].node_id);
+      pa.add(preds[i].node_id);
+    }
+  }
+  if (succs != null) {
+    int succ_max=succs.length;
+    if (!in_range_mod(my_guid,succs[0].guid,e.guid)) {
+      --succ_max;
+    }
+    for (int i=0; i < succ_max; ++i) {
+      if (logger.isDebugEnabled())       logger.debug("sending to " + succs[i].node_id);
+      pa.add(succs[i].node_id);
+    }
+  }
+  byte[] hash=e.value_hash;
+  if (e.put) {
+    md.update(e.value.array(),e.value.arrayOffset(),e.value.limit());
+    hash=md.digest();
+  }
+  Long seq=new Long(next_put_or_remove_seq++);
+  put_or_remove_acks.put(seq,new PutOrRemoveState(timer_ms(),pa,e,hash));
+  Key key=new Key(e.time_usec,e.ttl_sec,e.guid,e.secret_hash,hash,e.put,e.client_id);
+  if (!key.put) {
+    byte[] secretHash=md.digest(e.value.array());
+    if (!Arrays.equals(key.secret_hash,secretHash)) {
+      StringBuffer buf=new StringBuffer(200);
+      buf.append("got bad remove ");
+      key.toStringBuffer(buf);
+      buf.append(" hash(data)=0x");
+      bytes_to_sbuf(secretHash,0,4,buf);
+      buf.append(" as root");
+      logger.warn(buf);
+      return;
+    }
+  }
+  if (logger.isInfoEnabled()) {
+    StringBuffer buf=new StringBuffer(200);
+    buf.append("got ");
+    key.toStringBuffer(buf);
+    buf.append(" size=");
+    buf.append(e.value.limit());
+    buf.append(" as root");
+    logger.info(buf);
+  }
+  db_put(key,e.value,seq);
+  if (pa != null) {
+    Iterator i=pa.iterator();
+    while (i.hasNext())     dispatch(new PutOrRemoveMsg((NodeId)i.next(),e.time_usec,e.ttl_sec,e.guid,e.value,e.put,e.client_id,seq.longValue(),e.value_hash,e.secret_hash));
+  }
+}

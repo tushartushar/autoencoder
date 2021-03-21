@@ -1,0 +1,3 @@
+public void setLayout(Layout l){
+  layout=l;
+}

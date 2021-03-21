@@ -1,0 +1,37 @@
+public void redraw_rt(){
+  undraw_rt();
+  if (!show_rt)   return;
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  ConnectorTarget target=new PerimeterTarget();
+  Iterator j=routing_table.as_list().iterator();
+  while (j.hasNext()) {
+    ExtendedNeighborInfo other_ni=(ExtendedNeighborInfo)j.next();
+    BigInteger other_g=other_ni.guid;
+    BambooNode other=FNIT.nodes_by_id.get(other_g);
+    if (other == null)     continue;
+    Site a=target.getTailSite(dot,0.0,0.0);
+    Site b=target.getHeadSite(other.dot,0.0,0.0);
+    StraightConnector conn=new StraightConnector(a,b);
+    Rectangle2D.Double bounds=(Rectangle2D.Double)conn.getBounds();
+    double len=Math.sqrt(bounds.height * bounds.height + bounds.width * bounds.width) / 4.0;
+    Arrowhead arrow=new Arrowhead(b.getX(),b.getY(),b.getNormal());
+    arrow.setLength(Math.min(len,dot_radius * 3));
+    conn.setHeadEnd(arrow);
+    conn.setStrokePaint(Color.red);
+    layer.add(conn);
+    rt_connectors.add(conn);
+  }
+  PathFigure pf=new PathFigure(new Line2D.Double(0,ring_radius,0,-1.0 * ring_radius));
+  pf.setDashArray(new float[]{(float)5.0,(float)5.0});
+  layer.add(pf);
+  rt_connectors.add(pf);
+  for (int i=2; i < 32; i*=2) {
+    BigInteger dist=MODULUS.divide(BigInteger.valueOf(i));
+    BigInteger which=guid.divide(dist);
+    BigInteger dest=which.multiply(dist).add(dist.divide(BigInteger.valueOf(2)));
+    pf=new PathFigure(new Line2D.Double(0,0,x_pos_g(dest),y_pos_g(dest)));
+    pf.setDashArray(new float[]{(float)5.0,(float)5.0});
+    layer.add(pf);
+    rt_connectors.add(pf);
+  }
+}

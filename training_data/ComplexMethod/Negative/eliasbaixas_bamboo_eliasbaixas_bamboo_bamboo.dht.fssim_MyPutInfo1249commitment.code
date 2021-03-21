@@ -1,0 +1,3 @@
+public long commitment(){
+  return size * ttl_sec;
+}

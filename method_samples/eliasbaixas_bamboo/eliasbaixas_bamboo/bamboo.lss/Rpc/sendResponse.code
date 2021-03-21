@@ -1,0 +1,4 @@
+public void sendResponse(QuickSerializable resp,Object token){
+  Pair<InetSocketAddress,Long> pair=(Pair<InetSocketAddress,Long>)token;
+  network.send(new Msg(false,pair.second.longValue(),resp),pair.first);
+}

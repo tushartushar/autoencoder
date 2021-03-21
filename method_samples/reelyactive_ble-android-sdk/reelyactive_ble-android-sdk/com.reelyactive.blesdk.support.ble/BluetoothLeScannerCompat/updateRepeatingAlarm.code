@@ -1,0 +1,22 @@
+/** 
+ * Update the repeating alarm wake-up based on the period defined for the scanner If there are no clients, or a batch scan running, it will cancel the alarm.
+ */
+protected void updateRepeatingAlarm(){
+  setScanMode(getMaxPriorityScanMode());
+  if (!hasClients()) {
+    getAlarmManager().cancel(getAlarmIntent());
+    Logger.logInfo("Scan : No clients left, canceling alarm.");
+  }
+ else {
+    long alarmIntervalMillis=getScanIdleMillis();
+    if (Build.VERSION.SDK_INT > 22) {
+      getAlarmManager().setExact(AlarmManager.RTC_WAKEUP,System.currentTimeMillis() + alarmIntervalMillis,getAlarmIntent());
+    }
+ else     if (Build.VERSION.SDK_INT > 18) {
+      getAlarmManager().setExact(AlarmManager.RTC_WAKEUP,System.currentTimeMillis() + alarmIntervalMillis,getAlarmIntent());
+    }
+ else {
+      getAlarmManager().set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis() + alarmIntervalMillis,getAlarmIntent());
+    }
+  }
+}

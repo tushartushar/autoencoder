@@ -1,0 +1,13 @@
+private Cursor getLastSessionSqlite(){
+  Cursor cursor;
+  StringBuilder stringBuilder=new StringBuilder();
+  stringBuilder.append("SELECT _id, appstate,date,time,interval, session FROM ");
+  stringBuilder.append(TABLE_NAME);
+  stringBuilder.append(" WHERE date >= date() ");
+  stringBuilder.append(" AND appstate != 'started' ");
+  stringBuilder.append(" ORDER BY session DESC LIMIT 1");
+  DatabaseHelper databaseHelper=new DatabaseHelper(getBaseContext(),DATABASE_NAME,null,DATABASE_VERSION);
+  databaseHelper.setTableName(TABLE_NAME);
+  cursor=databaseHelper.getReadableDatabase().rawQuery(stringBuilder.toString(),null);
+  return cursor;
+}

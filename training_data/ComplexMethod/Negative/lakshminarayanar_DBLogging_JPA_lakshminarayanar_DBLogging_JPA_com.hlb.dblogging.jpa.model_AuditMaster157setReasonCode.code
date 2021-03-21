@@ -1,0 +1,3 @@
+public void setReasonCode(String reasonCode){
+  ReasonCode=reasonCode;
+}

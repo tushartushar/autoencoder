@@ -1,0 +1,6 @@
+@Override public <C extends GraphComputer>C compute(Class<C> graphComputerClass) throws IllegalArgumentException {
+  throw Exceptions.graphComputerNotSupported();
+}
+@Override public GraphComputer compute() throws IllegalArgumentException {
+  throw Exceptions.graphComputerNotSupported();
+}

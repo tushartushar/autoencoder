@@ -1,0 +1,3 @@
+@Override public <U>Iterator<Property<U>> properties(String... propertyKeys){
+  throw VertexProperty.Exceptions.multiPropertiesNotSupported();
+}

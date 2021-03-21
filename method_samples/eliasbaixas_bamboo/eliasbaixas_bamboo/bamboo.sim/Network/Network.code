@@ -1,0 +1,5 @@
+public Network(InetSocketAddress addr,ASyncCore ac) throws IOException {
+  super(addr,ac);
+  simulator=Simulator.instance();
+  if (simulator == null)   BUG("no simulator");
+}

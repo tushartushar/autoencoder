@@ -1,0 +1,11 @@
+public void run(Boolean success){
+  cb.cb(user_data,success.booleanValue());
+}
+public void run(){
+  for (  String key : byteCounts.keySet()) {
+    Pair<Integer,Integer> p=byteCounts.get(key);
+    logger.info("bytecount " + key + " "+ p.first+ " "+ p.second);
+  }
+  byteCounts.clear();
+  acore.registerTimer(10 * 1000,this);
+}

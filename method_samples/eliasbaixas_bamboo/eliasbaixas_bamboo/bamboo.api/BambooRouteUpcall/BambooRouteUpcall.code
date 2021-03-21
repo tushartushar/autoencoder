@@ -1,0 +1,11 @@
+public BambooRouteUpcall(BigInteger s,BigInteger d,NodeId i,long a,boolean it,int att,long w,long e,QuickSerializable p){
+  src=s;
+  dest=d;
+  immediate_src=i;
+  app_id=a;
+  iter=it;
+  tries=att;
+  wait_ms=w;
+  est_rtt_ms=e;
+  payload=p;
+}

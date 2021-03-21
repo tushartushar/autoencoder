@@ -1,0 +1,6 @@
+/** 
+ * Returns the filter set on the device name field of Bluetooth advertisement data.
+ */
+@Nullable public String getDeviceName(){
+  return mDeviceName;
+}

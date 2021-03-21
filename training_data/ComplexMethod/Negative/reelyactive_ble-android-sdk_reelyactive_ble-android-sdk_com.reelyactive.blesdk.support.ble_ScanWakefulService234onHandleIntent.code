@@ -1,0 +1,15 @@
+@Override protected void onHandleIntent(Intent intent){
+  if (intent == null) {
+    return;
+  }
+  Logger.logDebug("Running scancycle");
+  try {
+    BluetoothLeScannerCompat bleScanner=BluetoothLeScannerCompatProvider.getBluetoothLeScannerCompat(this,intent.getBooleanExtra(EXTRA_USE_LOLLIPOP_API,true));
+    if (bleScanner != null) {
+      bleScanner.onNewScanCycle();
+    }
+  }
+  finally {
+    ScanWakefulBroadcastReceiver.completeWakefulIntent(intent);
+  }
+}

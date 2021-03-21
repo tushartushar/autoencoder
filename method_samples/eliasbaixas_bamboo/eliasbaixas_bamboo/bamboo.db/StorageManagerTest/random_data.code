@@ -1,0 +1,5 @@
+protected ByteBuffer random_data(int size){
+  byte[] data_bytes=new byte[size];
+  rand.nextBytes(data_bytes);
+  return ByteBuffer.wrap(data_bytes);
+}

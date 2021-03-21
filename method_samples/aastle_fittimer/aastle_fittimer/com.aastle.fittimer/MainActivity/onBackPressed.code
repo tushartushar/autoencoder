@@ -1,0 +1,5 @@
+@Override public void onBackPressed(){
+  stopWatch.stop();
+  moveTaskToBack(false);
+  super.onBackPressed();
+}

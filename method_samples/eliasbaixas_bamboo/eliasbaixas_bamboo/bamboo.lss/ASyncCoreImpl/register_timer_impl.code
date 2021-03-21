@@ -1,0 +1,18 @@
+private Object register_timer_impl(long time_ms,Object cb,Object user_data){
+  if (logger.isDebugEnabled())   logger.debug("ASyncCore.register_timer");
+  TimerInfo result=new TimerInfo(cb,user_data);
+  boolean wakeup=false;
+synchronized (timers) {
+    long now_ms=nowMillis();
+    long this_timer=time_ms + now_ms;
+    if (timers.isEmpty())     wakeup=true;
+ else {
+      long first_timer=timers.getFirstPriority().longValue();
+      if (this_timer < first_timer)       wakeup=true;
+    }
+    timers.add(result,new Long(this_timer));
+  }
+  if (wakeup)   selector.wakeup();
+  if (logger.isDebugEnabled())   logger.debug("set timer time_ms=" + time_ms + " ti="+ result);
+  return result;
+}

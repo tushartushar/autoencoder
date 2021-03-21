@@ -1,0 +1,6 @@
+public String leavesToString(Node node,long aoff){
+  String result="";
+  PointList[] pl=leavesToPoints(node,aoff);
+  for (PointList i=pl[0]; i != null; i=i.next)   result+="(" + i.x + ", "+ i.y+ ") ";
+  return result;
+}

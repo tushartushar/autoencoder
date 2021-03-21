@@ -1,0 +1,3 @@
+public void to_byte_buffer(ByteBuffer buf){
+  serialize(new NioOutputBuffer(buf),true);
+}

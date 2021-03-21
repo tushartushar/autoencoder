@@ -1,0 +1,4 @@
+protected void set_dot_radius(double value){
+  dot_radius=value;
+  redraw_all();
+}

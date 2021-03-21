@@ -1,0 +1,62 @@
+/** 
+ * Returns the set of nodes in the DHT that should have replicas for the given key.
+ */
+public Set<NeighborInfo> replicas(BigInteger key,int desiredReplicas){
+  desiredReplicas=Math.min(desiredReplicas,leaf_pred_count + leaf_succ_count);
+  assert (desiredReplicas & 0x1) == 0;
+  Set<NeighborInfo> result=new LinkedHashSet<NeighborInfo>();
+  if (leaf_pred_count == 0) {
+    result.add(my_neighbor_info);
+  }
+ else {
+    int closestIndex=0;
+    BigInteger minDistance=calc_dist(my_guid,key);
+    for (int i=0; i < leaf_pred_count; ++i) {
+      BigInteger tmp=calc_dist(leaf_preds[i].guid,key);
+      if (tmp.compareTo(minDistance) < 0) {
+        closestIndex=(i + 1) * -1;
+        minDistance=tmp;
+      }
+    }
+    for (int i=0; i < leaf_succ_count; ++i) {
+      BigInteger tmp=calc_dist(leaf_succs[i].guid,key);
+      if (tmp.compareTo(minDistance) < 0) {
+        closestIndex=(i + 1);
+        minDistance=tmp;
+      }
+    }
+    int half=desiredReplicas / 2;
+    int start=0;
+    if (overlap || ((0 - closestIndex != leaf_pred_count) && (closestIndex != leaf_succ_count))) {
+      if (closestIndex == 0) {
+        if (in_range_mod(leaf_preds[0].guid,my_guid,key))         start=closestIndex - half;
+ else         start=closestIndex - half + 1;
+      }
+ else       if (closestIndex < 0) {
+        int i=-1 * closestIndex - 1;
+        if (in_range_mod(leaf_preds[i].guid,my_guid,key))         start=closestIndex - half + 1;
+ else         start=closestIndex - half;
+      }
+ else {
+        int i=closestIndex - 1;
+        if (in_range_mod(my_guid,leaf_succs[i].guid,key))         start=closestIndex - half;
+ else         start=closestIndex - half + 1;
+      }
+      int stop=start + desiredReplicas;
+      for (int i=start; i < stop; ++i) {
+        if (i == 0) {
+          result.add(my_neighbor_info);
+        }
+ else         if (i < 0) {
+          int j=-1 * i - 1;
+          if (j < leaf_pred_count)           result.add(leaf_preds[j]);
+        }
+ else {
+          int j=i - 1;
+          if (j < leaf_succ_count)           result.add(leaf_succs[j]);
+        }
+      }
+    }
+  }
+  return result;
+}

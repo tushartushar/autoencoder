@@ -1,0 +1,3 @@
+@Override public String toString(){
+  return "com.reelyactive.blesdk.support.ble.ScanRecord [mAdvertiseFlags=" + mAdvertiseFlags + ", mServiceUuids="+ mServiceUuids+ ", mManufacturerSpecificData="+ Utils.toString(mManufacturerSpecificData)+ ", mServiceData="+ Utils.toString(mServiceData)+ ", mTxPowerLevel="+ mTxPowerLevel+ ", mDeviceName="+ mDeviceName+ "]";
+}

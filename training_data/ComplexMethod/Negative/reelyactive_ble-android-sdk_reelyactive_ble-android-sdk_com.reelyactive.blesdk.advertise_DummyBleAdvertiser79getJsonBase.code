@@ -1,0 +1,9 @@
+private JSONObject getJsonBase(){
+  try {
+    return new JSONObject("        {" + "    \"event\": \"appearance\"," + "    \"tiraid\":{"+ "        \"identifier\":{"+ "            \"type\":\"ADVA-48\","+ "            \"value\":\"<MAC_ADDR>\","+ "            \"advHeader\": {"+ "              \"txAdd\": \"public\""+ "            },"+ "            \"advData\":{"+ "                \"complete128BitUUIDs\":\"<UUID>\""+ "            }"+ "        },"+ "        \"timestamp\":\"<DATE>\","+ "        \"radioDecodings\":["+ "        ]"+ "    }"+ "}");
+  }
+ catch (  JSONException e) {
+    e.printStackTrace();
+  }
+  return null;
+}

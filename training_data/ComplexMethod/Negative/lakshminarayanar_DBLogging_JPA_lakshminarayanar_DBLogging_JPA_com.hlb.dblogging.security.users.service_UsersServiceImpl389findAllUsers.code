@@ -1,0 +1,3 @@
+@Override public List<Users> findAllUsers(){
+  return usersRepository.findListofUsers();
+}

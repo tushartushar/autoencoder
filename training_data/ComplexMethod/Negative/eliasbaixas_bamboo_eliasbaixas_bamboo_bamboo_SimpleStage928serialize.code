@@ -1,0 +1,3 @@
+public void serialize(OutputBuffer b){
+  b.add(message);
+}

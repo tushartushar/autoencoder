@@ -1,0 +1,12 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  mean_wait_ms=config_get_int(config,"mean_wait_ms");
+  put_size=config_get_int(config,"put_size");
+  put_ttl_sec=config_get_int(config,"put_ttl_sec");
+  int seed=config_get_int(config,"seed");
+  rand=new Random(seed);
+  acore=DustDevil.acore_instance();
+  String client_stg_name=config_get_string(config,"client_stage_name");
+  client=(GatewayClient)lookup_stage(config,client_stg_name);
+  next_op();
+}

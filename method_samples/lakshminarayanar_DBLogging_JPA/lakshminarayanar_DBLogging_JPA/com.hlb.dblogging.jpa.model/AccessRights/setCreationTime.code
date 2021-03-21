@@ -1,0 +1,3 @@
+public void setCreationTime(Date creationTime){
+  this.creationTime=creationTime;
+}

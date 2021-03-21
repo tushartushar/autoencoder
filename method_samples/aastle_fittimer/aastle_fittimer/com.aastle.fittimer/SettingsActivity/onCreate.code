@@ -1,0 +1,14 @@
+@Override protected void onCreate(Bundle savedInstanceState){
+  super.onCreate(savedInstanceState);
+  addPreferencesFromResource(R.xml.preferences);
+  Preference button=(Preference)getPreferenceManager().findPreference("picpickerbutton");
+  if (button != null) {
+    button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(){
+      @Override public boolean onPreferenceClick(      Preference arg0){
+        launchImagePicker();
+        return true;
+      }
+    }
+);
+  }
+}

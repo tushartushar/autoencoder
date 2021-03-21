@@ -1,0 +1,6 @@
+private void handleMCastUpMsg(MCastUpMsg payload){
+  if (DEBUG)   Debug.printtagln(tag,"handleMCastUpMsg at root, incoming msg from " + payload);
+  MCastDownMsg m=new MCastDownMsg(payload.dstguid,my_node_id,my_node_id,payload.o);
+  if (DEBUG)   Debug.printtagln(tag,"handleMCastUpMsg we are root, about to dispatch " + m);
+  dispatch(m);
+}

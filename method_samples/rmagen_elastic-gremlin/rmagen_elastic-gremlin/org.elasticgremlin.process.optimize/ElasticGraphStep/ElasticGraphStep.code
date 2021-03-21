@@ -1,0 +1,8 @@
+public ElasticGraphStep(GraphStep originalStep,Predicates predicates,QueryHandler queryHandler){
+  super(originalStep.getTraversal(),originalStep.getReturnClass(),originalStep.getIds());
+  originalStep.getLabels().forEach(label -> this.addLabel(label.toString()));
+  predicates.labels.forEach(label -> this.addLabel(label.toString()));
+  this.predicates=predicates;
+  this.queryHandler=queryHandler;
+  this.setIteratorSupplier(() -> (Iterator<E>)(Vertex.class.isAssignableFrom(this.returnClass) ? this.vertices() : this.edges()));
+}

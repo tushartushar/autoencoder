@@ -1,0 +1,3 @@
+@Column(name="REASONCODE",nullable=true,length=5) public String getReasonCode(){
+  return ReasonCode;
+}

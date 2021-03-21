@@ -1,0 +1,4 @@
+public void destroy(){
+  super.destroy();
+  sinks.remove(my_node_id);
+}

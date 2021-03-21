@@ -1,0 +1,11 @@
+public Object register_timer(long time_ms,final TimerCB cb,final Object user_data){
+  return registerTimer(time_ms,new Runnable(){
+    public void run(){
+      cb.timer_cb(user_data);
+    }
+  }
+);
+}
+public Object register_timer(long delayMillis,Runnable cb){
+  return registerTimer(delayMillis,cb);
+}

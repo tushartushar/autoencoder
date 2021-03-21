@@ -1,0 +1,3 @@
+public void setApplName(String applName){
+  ApplName=applName;
+}

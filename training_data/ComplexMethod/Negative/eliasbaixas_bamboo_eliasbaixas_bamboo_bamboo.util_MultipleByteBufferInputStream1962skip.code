@@ -1,0 +1,4 @@
+public long skip(long n){
+  assert n <= Integer.MAX_VALUE;
+  return read_skip_impl(null,0,(int)n);
+}

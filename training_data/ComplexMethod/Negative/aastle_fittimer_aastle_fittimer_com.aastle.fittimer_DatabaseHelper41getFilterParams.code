@@ -1,0 +1,3 @@
+public String[] getFilterParams(String csvParameters){
+  return csvParameters.split(",");
+}

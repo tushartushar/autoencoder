@@ -1,0 +1,17 @@
+public void run(){
+  network=Network.instance(my_node_id);
+}
+public void run(NodeId dest,Integer level,Boolean success){
+  if (success.booleanValue())   dispatch_lat_req(dest,level.intValue());
+ else   remove_from_queue(dest,level.intValue());
+}
+public void run(Integer lev,MulticastMessage msg,Boolean sending,Boolean success){
+  if (!success.booleanValue()) {
+    int level=lev.intValue();
+    if (!queue[level].isEmpty()) {
+      queue[level].removeFirst();
+      if (sending.booleanValue())       dispatch_send(level,msg.payload);
+ else       dispatch_forward(level,msg);
+    }
+  }
+}

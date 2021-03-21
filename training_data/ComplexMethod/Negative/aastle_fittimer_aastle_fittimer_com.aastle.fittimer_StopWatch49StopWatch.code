@@ -1,0 +1,15 @@
+/** 
+ * A StopWatch with start, pause, reset functionality. Example usage: stopWatch = (StopWatch) findViewById(R.id.chronometer);
+ * @param context
+ */
+public StopWatch(Context context){
+  super(context);
+}
+/** 
+ * A StopWatch with start, pause, reset functionality. Example usage: stopWatch = (StopWatch) findViewById(R.id.chronometer);
+ * @param context
+ * @param attr
+ */
+public StopWatch(Context context,AttributeSet attr){
+  super(context,attr);
+}

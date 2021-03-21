@@ -1,0 +1,20 @@
+protected void handle_fetch_keys_check(StorageManager.GetByKeyResp resp){
+  if (ae_state == null) {
+    if (logger.isDebugEnabled())     logger.debug("ae_state == null, must have timed out: " + resp);
+    return;
+  }
+  if (ae_state.fetched_keys.remove(resp.key)) {
+    if (resp.data == null) {
+      ae_state.fetched_data.add(resp.key);
+      dispatch(new FetchDataReq(ae_state.ni.node_id,resp.key));
+    }
+ else {
+    }
+  }
+ else {
+    logger.debug("unexpected GetByKeyResp");
+  }
+  if (ae_state.fetched_keys.isEmpty() && ae_state.fetched_data.isEmpty()) {
+    goto_next_node();
+  }
+}

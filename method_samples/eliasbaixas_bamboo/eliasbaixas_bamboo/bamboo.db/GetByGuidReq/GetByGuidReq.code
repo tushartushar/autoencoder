@@ -1,0 +1,14 @@
+public GetByGuidReq(BigInteger g,boolean p,Key pl,SinkIF s,Object ud){
+  guid=g;
+  primary=p;
+  placemark=pl;
+  comp_q=s;
+  user_data=ud;
+}
+public GetByGuidReq(BigInteger g,boolean p,Key pl,SinkIF s,Object ud){
+  guid=g;
+  primary=p;
+  placemark=pl;
+  comp_q=s;
+  user_data=ud;
+}

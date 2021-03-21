@@ -1,0 +1,4 @@
+public LazyGetter(Client client,TimingAccessor timing){
+  this.client=client;
+  this.timing=timing;
+}

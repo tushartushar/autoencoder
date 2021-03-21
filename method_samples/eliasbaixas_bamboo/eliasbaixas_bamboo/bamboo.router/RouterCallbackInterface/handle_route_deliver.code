@@ -1,0 +1,4 @@
+protected void handle_route_deliver(BambooRouteDeliver msg){
+  Application app=(Application)apps.get(new Long(msg.app_id));
+  app.deliver_cb.route_deliver(msg.src,msg.dest,msg.immediate_src,msg.app_id,msg.payload,app.deliver_ud);
+}

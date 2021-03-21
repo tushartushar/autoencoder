@@ -1,0 +1,4 @@
+public final Priority getFirstPriority(){
+  if (heap_size < 1)   throw new NoSuchElementException();
+  return prio.elementAt(1);
+}

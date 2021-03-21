@@ -1,0 +1,25 @@
+protected void handle_join_resp(JoinResp resp){
+  NeighborInfo my_root=(NeighborInfo)resp.path.getLast();
+  if (!my_root.node_id.equals(resp.peer)) {
+    logger.warn("my_root=" + my_root + ", but join resp.peer="+ resp.peer+ ".  Retrying join.");
+    return;
+  }
+  add_to_rt(my_root);
+  add_to_ls(my_root);
+  location_cache.add_node(my_root);
+  for (Iterator i=resp.leaf_set.iterator(); i.hasNext(); ) {
+    NeighborInfo ni=(NeighborInfo)i.next();
+    if (!ni.node_id.equals(my_node_id)) {
+      add_to_ls(ni);
+      if (!initialized)       add_to_rt(ni);
+    }
+  }
+  if (!initialized) {
+    logger.info("Joined through gateway " + resp.path.getFirst());
+    set_initialized();
+    for (Iterator i=resp.path.iterator(); i.hasNext(); ) {
+      NeighborInfo ni=(NeighborInfo)i.next();
+      add_to_rt(ni);
+    }
+  }
+}

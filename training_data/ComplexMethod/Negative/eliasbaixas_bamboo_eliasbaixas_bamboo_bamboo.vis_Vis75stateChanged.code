@@ -1,0 +1,4 @@
+public void stateChanged(ChangeEvent e){
+  zoom=slider_to_zoom(zoom_slider.getValue());
+  update_transform();
+}

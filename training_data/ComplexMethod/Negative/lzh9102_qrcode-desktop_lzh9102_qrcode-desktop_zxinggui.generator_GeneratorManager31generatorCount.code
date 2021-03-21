@@ -1,0 +1,3 @@
+public int generatorCount(){
+  return generators.size();
+}

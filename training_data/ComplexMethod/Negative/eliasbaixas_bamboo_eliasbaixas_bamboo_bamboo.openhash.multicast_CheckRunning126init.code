@@ -1,0 +1,8 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  NodeId node=new NodeId(config_get_string(config,"node"));
+  MulticastPingMessage outb=new MulticastPingMessage(node);
+  outb.comp_q=my_sink;
+  outb.timeout_sec=60;
+  dispatch(outb);
+}

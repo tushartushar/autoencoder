@@ -1,0 +1,3 @@
+protected boolean shouldAddProperty(String key){
+  return !key.equals("label") && !key.equals("id");
+}

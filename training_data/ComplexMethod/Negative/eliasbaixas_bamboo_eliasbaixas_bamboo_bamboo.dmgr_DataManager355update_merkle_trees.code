@@ -1,0 +1,4 @@
+protected void update_merkle_trees(StorageManager.PutResp resp){
+  if (resp.inval_put_key != null)   invalidate_merkle_trees(resp.inval_put_key.guid,resp.inval_put_key.time_usec);
+  if (resp.inval_rm_key != null)   invalidate_merkle_trees(resp.inval_rm_key.guid,resp.inval_rm_key.time_usec);
+}

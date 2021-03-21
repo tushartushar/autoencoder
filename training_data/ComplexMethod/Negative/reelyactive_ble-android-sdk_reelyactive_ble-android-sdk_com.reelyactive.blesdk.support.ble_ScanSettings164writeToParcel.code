@@ -1,0 +1,6 @@
+@Override public void writeToParcel(Parcel dest,int flags){
+  dest.writeInt(mScanMode);
+  dest.writeInt(mCallbackType);
+  dest.writeInt(mScanResultType);
+  dest.writeLong(mReportDelayMillis);
+}

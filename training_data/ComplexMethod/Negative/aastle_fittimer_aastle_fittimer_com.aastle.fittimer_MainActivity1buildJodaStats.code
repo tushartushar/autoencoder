@@ -1,0 +1,35 @@
+/** 
+ * Builds and displays exercise stats using the Jodatime library
+ * @param cursor cursor from Sqlite query
+ * @return string
+ */
+private String buildJodaStats(Cursor cursor){
+  ArrayList<DateTime> arrayList=new ArrayList<DateTime>();
+  DateTime[] arrayOfTimes=null;
+  int interval=0;
+  StringBuilder stringBuilder=new StringBuilder();
+  DateTime datePart=new DateTime();
+  DateTime timePart=new DateTime();
+  DateTimeFormatter formatterDateSqlite=DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+  DateTimeFormatter formatterTimeSqlite=DateTimeFormat.forPattern("HH:mm:ss");
+  DateTimeFormatter simpleHumanDateFormat=DateTimeFormat.forPattern("MMMM d',' yyyy");
+  DateTimeFormatter simpleHumanTimeFormat=DateTimeFormat.forPattern("H:mm:ss");
+  cursor.moveToFirst();
+  DateTime firstDate=formatterDateSqlite.parseDateTime(cursor.getString(cursor.getColumnIndex("date")));
+  cursor.moveToLast();
+  DateTime lastDate=formatterDateSqlite.parseDateTime(cursor.getString(cursor.getColumnIndex("date")));
+  DateTime dateDiff=lastDate.minusHours(firstDate.get(DateTimeFieldType.hourOfDay())).minusMinutes(firstDate.get(DateTimeFieldType.minuteOfHour())).minusSeconds(firstDate.get(DateTimeFieldType.secondOfMinute()));
+  stringBuilder.append("Date: ");
+  stringBuilder.append(dateDiff.toString(simpleHumanDateFormat));
+  stringBuilder.append("\n\n");
+  stringBuilder.append("Total time exercised:\n");
+  stringBuilder.append(dateDiff.toString(simpleHumanTimeFormat));
+  stringBuilder.append("\n\n");
+  if (dateDiff.getHourOfDay() != 0)   stringBuilder.append(dateDiff.toString(DateTimeFormat.forPattern("H"))).append(" hours, ");
+  if (dateDiff.getMinuteOfHour() != 0)   stringBuilder.append(dateDiff.toString(DateTimeFormat.forPattern("m"))).append(" minutes, ");
+  if (dateDiff.getSecondOfMinute() != 0)   stringBuilder.append(dateDiff.toString(DateTimeFormat.forPattern("s"))).append(" seconds");
+ else {
+    stringBuilder.append("0");
+  }
+  return stringBuilder.toString();
+}

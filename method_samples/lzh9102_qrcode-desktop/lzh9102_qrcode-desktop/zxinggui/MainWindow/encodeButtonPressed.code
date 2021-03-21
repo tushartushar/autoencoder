@@ -1,0 +1,26 @@
+/** 
+ * Called when the encode button is pressed. This function encodes the information from the current generator and displays the resulting qrcode on the right panel.
+ */
+private void encodeButtonPressed(){
+  int size=outputSizes[cbSelectSize.getSelectedIndex()];
+  imgDisplay.setImage(null);
+  generated_image=null;
+  final int encoding_index=cbSelectEncoding.getSelectedIndex();
+  Hashtable<EncodeHintType,String> options=new Hashtable<EncodeHintType,String>();
+  options.put(EncodeHintType.CHARACTER_SET,encodings[encoding_index]);
+  String text=new String();
+  try {
+    text=currentGenerator().getText();
+    BitMatrix matrix=writer.encode(text,BarcodeFormat.QR_CODE,size,size,options);
+    BufferedImage image=ImageHelper.toBufferedImage(matrix);
+    imgDisplay.setImage(image);
+    generated_image=image;
+  }
+ catch (  WriterException e) {
+    JOptionPane.showMessageDialog(this,e.getMessage());
+  }
+catch (  GeneratorException e) {
+    JOptionPane.showMessageDialog(this,e.getMessage());
+  }
+  prevText=text;
+}

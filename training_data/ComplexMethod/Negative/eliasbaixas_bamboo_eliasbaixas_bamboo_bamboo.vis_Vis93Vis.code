@@ -1,0 +1,77 @@
+public Vis(){
+}
+public Vis(BigInteger mod) throws IOException {
+  FNIT=new FetchNodeInfoThread(fetch_succeeded,fetch_failed,this);
+  MODULUS=mod;
+  JPanel xpanel=new JPanel();
+  xpanel.setOpaque(true);
+  xpanel.setLayout(new BoxLayout(xpanel,BoxLayout.X_AXIS));
+  canvas=new JCanvas();
+  graphicsPane=(GraphicsPane)canvas.getCanvasPane();
+  xpanel.add(canvas);
+  y_offset=0.0;
+  y_scrollbar=new JScrollBar(SwingConstants.VERTICAL,0,100,-300,300);
+  y_scrollbar.setBlockIncrement(60);
+  y_scrollbar.setUnitIncrement(10);
+  y_scrollbar.addAdjustmentListener(new AdjustmentListener(){
+    public void adjustmentValueChanged(    AdjustmentEvent e){
+      y_offset=-1.0 * y_scrollbar.getValue();
+      update_transform();
+    }
+  }
+);
+  xpanel.add(y_scrollbar);
+  JPanel panel=new JPanel();
+  panel.setOpaque(true);
+  panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+  panel.add(xpanel);
+  x_offset=0.0;
+  x_scrollbar=new JScrollBar(SwingConstants.HORIZONTAL,0,100,-300,300);
+  x_scrollbar.setBlockIncrement(60);
+  x_scrollbar.setUnitIncrement(10);
+  x_scrollbar.addAdjustmentListener(new AdjustmentListener(){
+    public void adjustmentValueChanged(    AdjustmentEvent e){
+      x_offset=-1.0 * x_scrollbar.getValue();
+      update_transform();
+    }
+  }
+);
+  panel.add(x_scrollbar);
+  JPanel count_and_scroll=new JPanel();
+  count_and_scroll.setOpaque(true);
+  count_and_scroll.setLayout(new BoxLayout(count_and_scroll,BoxLayout.X_AXIS));
+  count_and_scroll.add(new JLabel("     "));
+  node_count_label=new JLabel("");
+  update_node_count();
+  count_and_scroll.add(node_count_label);
+  count_and_scroll.add(new JLabel("     "));
+  count_and_scroll.add(new JLabel("Zoom:"));
+  count_and_scroll.add(new JLabel("     "));
+  zoom=1.0;
+  zoom_slider=new JSlider(SwingConstants.HORIZONTAL,-100,100,0);
+  zoom_slider.addChangeListener(new ChangeListener(){
+    public void stateChanged(    ChangeEvent e){
+      zoom=slider_to_zoom(zoom_slider.getValue());
+      update_transform();
+    }
+  }
+);
+  count_and_scroll.add(zoom_slider);
+  count_and_scroll.add(new JLabel("     "));
+  panel.add(count_and_scroll);
+  bamboo_node_interactor=new SelectionInteractor();
+  SelectionDragger dragger=new SelectionDragger(graphicsPane);
+  dragger.addSelectionInteractor(bamboo_node_interactor);
+  frame=new BasicFrame("Bamboo Visualizer");
+  frame.setSize(500,400);
+  frame.getContentPane().setLayout(new BorderLayout());
+  frame.getContentPane().add(panel);
+  create_menus(frame);
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  if (ring_mode) {
+    the_ring=new BasicEllipse(-1.0 * ring_radius,-1.0 * ring_radius,2.0 * ring_radius,2.0 * ring_radius);
+    layer.add(the_ring);
+  }
+  update_transform();
+  frame.setVisible(true);
+}

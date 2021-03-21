@@ -1,0 +1,13 @@
+public AccessRights(int id,String accessRights,String description,String createdBy,Date creationTime,String lastModifiedBy,Date lastModifiedTime,boolean isDeleted){
+  super();
+  this.id=id;
+  this.accessRights=accessRights;
+  this.description=description;
+  this.createdBy=createdBy;
+  this.creationTime=creationTime;
+  this.lastModifiedBy=lastModifiedBy;
+  this.lastModifiedTime=lastModifiedTime;
+  this.isDeleted=isDeleted;
+}
+public AccessRights(){
+}

@@ -1,0 +1,4 @@
+public static int getAvenueOrStreetNumber(String roadName){
+  if (roadName.replaceAll("[\\D]","").compareTo("") == 0)   return -1;
+  return Integer.parseInt(roadName.replaceAll("[\\D]",""));
+}

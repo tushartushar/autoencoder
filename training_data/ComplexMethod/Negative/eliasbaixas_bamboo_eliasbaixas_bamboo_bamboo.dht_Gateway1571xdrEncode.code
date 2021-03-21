@@ -1,0 +1,4 @@
+public void xdrEncode(XdrEncodingStream xdr) throws OncRpcException, java.io.IOException {
+  xdr.xdrEncodeInt(2);
+  xdr.xdrEncodeInt(2);
+}

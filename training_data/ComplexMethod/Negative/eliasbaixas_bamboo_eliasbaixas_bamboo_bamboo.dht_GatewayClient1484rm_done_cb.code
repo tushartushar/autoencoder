@@ -1,0 +1,1 @@
+void rm_done_cb(int rm_res,Object user_data);

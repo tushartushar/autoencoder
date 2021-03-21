@@ -1,0 +1,17 @@
+public double getFreeFlowSpeed(String flowRoadName,String direction,String[] crossingRoads){
+  double totalSpd=0;
+  int crossRoadCount=0;
+  for (  mainRoadway eachRW : roadways) {
+    if (eachRW.description.contains(flowRoadName)) {
+      for (      mainRoadway.crossFlow eachCF : eachRW.crossingRoads) {
+        if (contains(crossingRoads,eachCF.description) && eachCF.direction.compareTo(direction) == 0) {
+          crossRoadCount++;
+          totalSpd+=eachCF.freeFlowSpeed;
+        }
+      }
+      break;
+    }
+  }
+  if (crossRoadCount > 0)   return (totalSpd / crossRoadCount);
+ else   return -1;
+}

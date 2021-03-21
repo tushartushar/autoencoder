@@ -1,0 +1,13 @@
+public void set_sockbuf_size(int value){
+  if ((value > 0) && (value <= SOCKBUF_MAX)) {
+    try {
+      sock.setReceiveBufferSize(value);
+      int rxsize=sock.getReceiveBufferSize();
+      logger.info("set rcv sobuf " + value + "; got "+ rxsize);
+    }
+ catch (    SocketException e) {
+      logger.fatal("could not set socket buffer size " + value,e);
+      System.exit(1);
+    }
+  }
+}

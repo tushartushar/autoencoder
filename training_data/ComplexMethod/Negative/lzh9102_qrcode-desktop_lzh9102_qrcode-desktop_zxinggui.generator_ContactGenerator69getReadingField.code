@@ -1,0 +1,4 @@
+private String getReadingField() throws GeneratorException {
+  String reading=txtReading.getText();
+  return reading;
+}

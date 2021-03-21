@@ -1,0 +1,15 @@
+public MCastUp(boolean inbound,BigInteger dstguid,QuickSerializable o){
+  this.inbound=inbound;
+  this.dstguid=dstguid;
+  this.o=o;
+}
+public MCastUp(MCastUp other){
+  inbound=other.inbound;
+  dstguid=other.dstguid;
+  o=other.o;
+}
+public MCastUp(InputBuffer buffer) throws QSException {
+  inbound=buffer.nextBoolean();
+  dstguid=buffer.nextBigInteger();
+  o=buffer.nextObject();
+}

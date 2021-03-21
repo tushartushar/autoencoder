@@ -1,0 +1,10 @@
+/** 
+ * Create a new sink that sends all events to the given <code>EventHandlerIF</code>; the thread <code>t</code> is a guard--the functions of this class may not be called from any other thread. This restriction prevents programming errors.  This constructor is not thread safe; since these objects should only be created within the <code>DustDevil</code>, that shouldn't be a problem.
+ */
+public DustDevilSink(EventHandlerIF h,Thread t){
+  if (h == null)   throw new IllegalArgumentException("h==null");
+  if (t == null)   throw new IllegalArgumentException("t==null");
+  hash_code=next_hash_code++;
+  handler=h;
+  thread=t;
+}

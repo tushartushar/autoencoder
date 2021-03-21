@@ -1,0 +1,13 @@
+public RpcGetReq(BigInteger k,int m,Key p){
+  key=k;
+  maxvals=m;
+  placemark=p;
+  assert (placemark != null);
+}
+public RpcGetReq(InputBuffer buffer) throws QSException {
+  key=buffer.nextBigInteger();
+  maxvals=buffer.nextInt();
+  if (maxvals <= 0)   throw new QSException("maxvals <= 0");
+  if (buffer.nextBoolean())   placemark=new Key(buffer);
+ else   placemark=ZERO_KEY;
+}

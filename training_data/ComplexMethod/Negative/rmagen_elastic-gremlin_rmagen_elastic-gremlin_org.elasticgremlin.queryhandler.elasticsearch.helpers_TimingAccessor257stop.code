@@ -1,0 +1,10 @@
+public void stop(String name){
+  timer(name).stop();
+}
+public void stop(){
+  sw.suspend();
+  long time=sw.getTime() - lastRun;
+  if (time > longestRun)   longestRun=time;
+  lastRun=time;
+  numOfRuns++;
+}

@@ -1,0 +1,3 @@
+public void unregister_selectable(SelectionKey skey){
+  throw new NoSuchMethodError("running under simulator");
+}

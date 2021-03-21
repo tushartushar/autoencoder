@@ -1,0 +1,3 @@
+@Column(name="MESSAGEFORMAT",nullable=false,length=10) public String getMessageFormat(){
+  return MessageFormat;
+}

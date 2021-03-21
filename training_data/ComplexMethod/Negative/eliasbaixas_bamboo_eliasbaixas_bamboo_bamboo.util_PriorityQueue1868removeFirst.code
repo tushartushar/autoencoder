@@ -1,0 +1,27 @@
+public final Value removeFirst(){
+  if (heap_size < 1)   throw new NoSuchElementException();
+  Value result=heap.elementAt(1);
+  heap.setElementAt(heap.elementAt(heap_size),1);
+  heap.setElementAt(null,heap_size);
+  prio.setElementAt(prio.elementAt(heap_size),1);
+  prio.setElementAt(null,heap_size);
+  --heap_size;
+  int l, r, smallest, parent=1;
+  while (true) {
+    l=parent * 2;
+    r=parent * 2 + 1;
+    if (l <= heap_size && prio.elementAt(l).compareTo(prio.elementAt(parent)) < 0)     smallest=l;
+ else     smallest=parent;
+    if (r <= heap_size && prio.elementAt(r).compareTo(prio.elementAt(smallest)) < 0)     smallest=r;
+    if (smallest == parent)     break;
+    Value temp_o=heap.elementAt(parent);
+    Priority temp_p=prio.elementAt(parent);
+    heap.setElementAt(heap.elementAt(smallest),parent);
+    prio.setElementAt(prio.elementAt(smallest),parent);
+    heap.setElementAt(temp_o,smallest);
+    prio.setElementAt(temp_p,smallest);
+    parent=smallest;
+  }
+  if (heap_size == 0)   prio.setElementAt(null,0);
+  return result;
+}

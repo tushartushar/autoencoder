@@ -1,0 +1,3 @@
+@Column(name="UPDATEDBY",nullable=true,length=50) public String getUpdatedBy(){
+  return UpdatedBy;
+}

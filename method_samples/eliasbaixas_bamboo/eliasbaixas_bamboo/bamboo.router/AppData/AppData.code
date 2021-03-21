@@ -1,0 +1,6 @@
+public AppData(SinkIF s,boolean ls,boolean rt,boolean rrt){
+  sink=s;
+  want_leaf_set_updates=ls;
+  want_routing_table_updates=rt;
+  want_reverse_routing_table_updates=rrt;
+}

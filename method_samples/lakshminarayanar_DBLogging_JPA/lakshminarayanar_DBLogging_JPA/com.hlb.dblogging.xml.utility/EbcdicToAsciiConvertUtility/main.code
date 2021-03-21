@@ -1,0 +1,9 @@
+public static void main(String[] args){
+  try {
+    new EbcdicToAsciiConvertUtility().convert(hexToCharacter(EBCDIC_STRING));
+    ApplLogger.getLogger().info("Successfully Converted...!!!");
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+  }
+}

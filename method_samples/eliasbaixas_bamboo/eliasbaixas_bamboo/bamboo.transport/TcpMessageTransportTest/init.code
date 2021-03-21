@@ -1,0 +1,14 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  String transport_stg_name=config_get_string(config,"transport_stage_name");
+  transport=(TcpMessageTransport)lookup_stage(config,transport_stg_name);
+  boolean sender=config_get_boolean(config,"sender");
+  if (sender) {
+    NodeId d=new NodeId(config_get_string(config,"dst"));
+    dst=new InetSocketAddress(d.address(),d.port());
+    acore.register_timer(1000,new SendCb(),null);
+  }
+ else {
+    transport.register_recv_cb(QSString.class,new RecvCb());
+  }
+}

@@ -1,0 +1,11 @@
+/** 
+ * Sets the Bluetooth LE scan cycle overriding values set on individual scans from {@link ScanSettings}. <p/> This is an extension of the "L" Platform API. <p/>
+ * @param scanMillis               duration in milliseconds for the scan to be active, or -1 to remove, 0 topause.  Ignored by hardware and truncated batch scanners.
+ * @param idleMillis               duration in milliseconds for the scan to be idle.  Ignored by hardwareand truncated batch scanners.
+ * @param serialScanDurationMillis duration in milliseconds of the on-demand serial scanlaunched opportunistically by the truncated batch mode scanner.  Ignored by non-truncated scanners.
+ */
+public void setCustomScanTiming(int scanMillis,int idleMillis,long serialScanDurationMillis){
+  overrideScanActiveMillis=scanMillis;
+  overrideScanIdleMillis=idleMillis;
+  updateRepeatingAlarm();
+}

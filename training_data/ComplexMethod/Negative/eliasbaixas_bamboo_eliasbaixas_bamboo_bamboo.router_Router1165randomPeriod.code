@@ -1,0 +1,3 @@
+protected long randomPeriod(int mean){
+  return mean / 2 + rand.nextInt(mean);
+}

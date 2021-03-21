@@ -1,0 +1,51 @@
+public void timer_cb(Object not_used){
+  int pass=1;
+  while (!slop.isEmpty()) {
+    Object[] head=(Object[])slop.getFirst();
+    BambooRouteDeliver msg=(BambooRouteDeliver)head[0];
+    PutReqPayload payload=(PutReqPayload)head[1];
+    int storage_size=storage_size(payload);
+    if (disk_space_avail(storage_size,payload.ttl_sec)) {
+      add_to_disk(storage_size,payload.ttl_sec);
+      int i=ttl_to_vdisk(payload.ttl_sec);
+      slop_size[i]-=storage_size;
+      slop.removeFirst();
+      Long l=(Long)slop_usage[i].get(payload.client_id);
+      if (l.longValue() - storage_size == 0) {
+        slop_usage[i].remove(payload.client_id);
+      }
+ else {
+        slop_usage[i].put(payload.client_id,new Long(l.longValue() - storage_size));
+      }
+      if (logger.isDebugEnabled()) {
+        logger.debug("removed " + payload + " from slop, size="+ slop_size[i]);
+      }
+      PutOrRemoveReq outb=new PutOrRemoveReq(payload.time_usec,payload.ttl_sec,payload.key,payload.value,payload.secret_hash,payload.value_hash,payload.put,payload.client_id,my_sink,msg);
+      dispatch(outb);
+    }
+ else {
+      double rate=disk_avail_rate(payload.ttl_sec);
+      long wait_ms=Math.min(1000,Math.round(Math.ceil(storage_size / rate)));
+      acore.register_timer(wait_ms,slop_to_disk_cb,null);
+      if ((pass == 1) && logger.isDebugEnabled()) {
+        logger.debug("bad slop wait, needed extra " + wait_ms + " ms, size="+ storage_size);
+      }
+ else       if (logger.isDebugEnabled())       logger.debug("waiting " + wait_ms + " ms to retry");
+      break;
+    }
+    ++pass;
+  }
+}
+public void timer_cb(Object user_data){
+  Long seq=(Long)user_data;
+  Object[] pair=(Object[])active_puts.get(seq);
+  if (pair != null) {
+    PutReq req=(PutReq)pair[0];
+    PutReqPayload payload=(PutReqPayload)pair[1];
+    payload.retried=true;
+    BambooRouteInit outb=new BambooRouteInit(req.key,app_id,false,iterative_routing,payload);
+    logger.info("resending put, key=0x" + GuidTools.guid_to_string(req.key));
+    dispatch(outb);
+    acore.register_timer(PUT_TIMEOUT,this,seq);
+  }
+}

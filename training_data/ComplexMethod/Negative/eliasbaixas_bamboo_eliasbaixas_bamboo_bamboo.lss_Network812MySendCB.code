@@ -1,0 +1,4 @@
+public MySendCB(SinkIF c,Object u){
+  comp_q=c;
+  user_data=u;
+}

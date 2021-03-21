@@ -1,0 +1,20 @@
+protected byte[] makeData(byte[] key,int index){
+  ByteBuffer seed=ByteBuffer.allocate(key.length + 4);
+  seed.put(key);
+  seed.putInt(index);
+  SecureRandom srand=null;
+  try {
+    srand=SecureRandom.getInstance("SHA1PRNG");
+  }
+ catch (  Exception e) {
+    assert false : e;
+  }
+  srand.setSeed(seed.array());
+  byte[] tail=new byte[putSize - 4];
+  srand.nextBytes(tail);
+  byte[] result=new byte[putSize];
+  ByteBuffer bb=ByteBuffer.wrap(result);
+  bb.putInt(index);
+  bb.put(tail);
+  return result;
+}

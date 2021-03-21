@@ -1,0 +1,11 @@
+public String toString(){
+  String result="(BambooReverseRoutingTableChanged added=(";
+  if (added != null) {
+    for (int i=added.length - 1; i >= 0; --i)     result+=added[i] + ((i == 0) ? "" : " ");
+  }
+  result+=") removed=(";
+  if (removed != null) {
+    for (int i=removed.length - 1; i >= 0; --i)     result+=removed[i] + ((i == 0) ? "" : " ");
+  }
+  return result + "))";
+}

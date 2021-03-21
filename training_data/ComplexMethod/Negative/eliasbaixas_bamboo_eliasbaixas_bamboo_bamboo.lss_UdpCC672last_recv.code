@@ -1,0 +1,8 @@
+/** 
+ * Returns the number of milliseconds since the epoch of the last time we received an acknowledgement from this peer, or 0 if we have yet to receive an acknowledgement from them.
+ */
+public long last_recv(InetSocketAddress peer){
+  Connection conn=(Connection)conns.get(peer);
+  if (conn == null)   return 0;
+ else   return conn.lastrcv;
+}

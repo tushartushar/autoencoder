@@ -1,0 +1,7 @@
+/** 
+ * Access the application  {@link Context}.
+ * @return The application {@link Context}.
+ */
+protected Context getContext(){
+  return context;
+}

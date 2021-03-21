@@ -1,0 +1,6 @@
+public void deleteElement(Element element,String index,String routing){
+  DeleteRequestBuilder deleteRequestBuilder=client.prepareDelete(index,element.label(),element.id().toString()).setRouting(routing);
+  if (bulkRequest != null)   bulkRequest.add(deleteRequestBuilder);
+ else   deleteRequestBuilder.execute().actionGet();
+  revision++;
+}

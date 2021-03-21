@@ -1,0 +1,3 @@
+public void setXsltFile(String xsltFile){
+  this.xsltFile=xsltFile;
+}

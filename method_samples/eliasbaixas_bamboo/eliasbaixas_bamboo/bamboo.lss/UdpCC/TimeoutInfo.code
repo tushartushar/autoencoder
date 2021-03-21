@@ -1,0 +1,21 @@
+public TimeoutInfo(TimeoutInfo other){
+  msg=other.msg;
+  conn=other.conn;
+  send_ms=other.send_ms;
+  attempt=other.attempt;
+  timeout_ms=other.timeout_ms;
+  cut_ssthresh=other.cut_ssthresh;
+  send_cb=other.send_cb;
+  msg_id=other.msg_id;
+}
+public TimeoutInfo(Connection c,Object m,long n,long to,long i,Thunk1<Boolean> scb){
+  cut_ssthresh=true;
+  conn=c;
+  msg=m;
+  attempt=0;
+  start_ms=n;
+  timeout_ms=to;
+  msg_id=i;
+  send_ms=0;
+  send_cb=scb;
+}

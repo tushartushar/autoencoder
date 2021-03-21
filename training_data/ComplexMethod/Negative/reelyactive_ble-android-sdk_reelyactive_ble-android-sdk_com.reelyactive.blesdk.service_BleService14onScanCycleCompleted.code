@@ -1,0 +1,3 @@
+@Override public void onScanCycleCompleted(){
+  notifyEvent(Event.CYCLE_COMPLETED);
+}

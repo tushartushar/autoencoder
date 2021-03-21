@@ -1,0 +1,10 @@
+public LookupRespMsg(NodeId dest,BigInteger l,BigInteger o){
+  super(dest,false);
+  lookup_id=l;
+  owner_id=o;
+}
+public LookupRespMsg(InputBuffer buffer) throws QSException {
+  super(buffer);
+  lookup_id=buffer.nextBigInteger();
+  owner_id=buffer.nextBigInteger();
+}

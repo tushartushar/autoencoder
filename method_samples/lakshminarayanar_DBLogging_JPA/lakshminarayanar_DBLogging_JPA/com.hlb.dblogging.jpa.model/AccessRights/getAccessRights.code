@@ -1,0 +1,3 @@
+@Column(name="accessRights",nullable=false,length=45) public String getAccessRights(){
+  return accessRights;
+}

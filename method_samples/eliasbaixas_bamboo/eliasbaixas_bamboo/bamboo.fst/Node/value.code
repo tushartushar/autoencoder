@@ -1,0 +1,4 @@
+public final long value(){
+  assert valid;
+  return value;
+}

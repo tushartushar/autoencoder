@@ -1,0 +1,11 @@
+public void remove_from_queue(NodeId peer,int level){
+  PriorityQueue tmp_queue=new PriorityQueue(10);
+  for (int i=1; i <= queue[level].size(); i++) {
+    NodeId nid=(NodeId)queue[level].getIndex(i);
+    if (!nid.equals(peer)) {
+      tmp_queue.add(nid,queue[level].getIndexPriority(i));
+    }
+  }
+  queue[level]=tmp_queue;
+  if (logger.isDebugEnabled())   logger.debug("Removing node: " + peer + "; queue["+ level+ "]="+ queue[level]);
+}

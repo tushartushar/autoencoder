@@ -1,0 +1,1 @@
+List<Role> findRoleByRoleName(String role);

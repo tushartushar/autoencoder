@@ -1,0 +1,10 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  int debug_level=config.getInt("debug_level");
+  if (debug_level > 0)   DEBUG=true;
+  rand=new Random(my_node_id.hashCode());
+  to_put=config.getInt("to_put");
+  if (to_put == -1)   to_put=1;
+  put_size=config.getInt("put_size");
+  if (put_size == -1)   put_size=100;
+}

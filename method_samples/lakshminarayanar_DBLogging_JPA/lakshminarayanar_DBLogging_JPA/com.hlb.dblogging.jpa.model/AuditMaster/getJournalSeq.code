@@ -1,0 +1,3 @@
+@Column(name="JOURNALSEQ",nullable=true,length=10) public int getJournalSeq(){
+  return JournalSeq;
+}

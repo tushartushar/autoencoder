@@ -1,0 +1,6 @@
+private String getNumberField() throws GeneratorException {
+  String number=txtPhoneNumber.getText();
+  if (number.isEmpty())   throw new GeneratorException("Phone number cannot be empty.",txtPhoneNumber);
+  if (!Validator.isValidPhoneNumber(number))   throw new GeneratorException("Incorrect phone number.",txtPhoneNumber);
+  return number;
+}

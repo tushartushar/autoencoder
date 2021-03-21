@@ -1,0 +1,6 @@
+private boolean contains(String[] list,String word){
+  for (  String eachString : list) {
+    if (word.contains(eachString))     return true;
+  }
+  return false;
+}

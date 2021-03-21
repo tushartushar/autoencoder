@@ -1,0 +1,26 @@
+/** 
+ * Coninue a routing operation after an upcall.  See the comments for {@link #routeInit} for more information.
+ */
+public void routeContinue(final BigInteger src,final BigInteger dest,final NodeId immediateSource,final long applicationID,final boolean intermediateUpcall,final QuickSerializable payload){
+  if (!apps.containsKey(new Long(applicationID))) {
+    logger.error("routeContinue called with unknown application ID " + applicationID);
+    System.exit(1);
+  }
+  NeighborInfo next_hop=calc_next_hop(dest,true);
+  if (next_hop == my_neighbor_info) {
+    deliver(src,dest,immediateSource,applicationID,1,0L,0L,payload);
+  }
+ else {
+    RouteMsg outb=new RouteMsg(next_hop.node_id,src,dest,applicationID,intermediateUpcall,my_guid,payload);
+    outb.comp_q=my_sink;
+    outb.user_data=new RecursiveRouteCB(next_hop,new Runnable(){
+      public void run(){
+        routeContinue(src,dest,immediateSource,applicationID,intermediateUpcall,payload);
+      }
+    }
+);
+    if (no_rexmit_routes)     outb.timeout_sec=-1;
+ else     outb.timeout_sec=5;
+    dispatch(outb);
+  }
+}

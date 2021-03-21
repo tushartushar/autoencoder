@@ -1,0 +1,6 @@
+public Object next(){
+  if (current == null)   throw new NoSuchElementException();
+  Object result=current.value;
+  current=current.succ;
+  return result;
+}

@@ -1,0 +1,7 @@
+/** 
+ * Try to parse the text to fit in the generator's fields.
+ * @param text the text to be parsed
+ * @param write write the parsed data into the generator's fields
+ * @return If the text is recognized as the generator's format, it shouldreturn true; false otherwise.
+ */
+boolean parseText(String text,boolean write);

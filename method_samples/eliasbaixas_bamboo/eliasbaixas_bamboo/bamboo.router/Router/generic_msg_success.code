@@ -1,0 +1,6 @@
+protected void generic_msg_success(NeighborInfo ni){
+  removeFromPossiblyDown(ni);
+  if (down_nodes.remove(ni.node_id)) {
+    if (logger.isDebugEnabled())     logger.debug("removed " + ni.node_id + " from down_nodes");
+  }
+}

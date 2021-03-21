@@ -1,0 +1,8 @@
+public TcpMsgServer(ASyncCore acore,int port,Thunk1<TcpMsgChannel> cb) throws IOException {
+  this.acore=acore;
+  this.cb=cb;
+  channel=ServerSocketChannel.open();
+  channel.socket().bind(new InetSocketAddress(port));
+  channel.configureBlocking(false);
+  acore.register_selectable(channel,OP_ACCEPT,accept_cb);
+}

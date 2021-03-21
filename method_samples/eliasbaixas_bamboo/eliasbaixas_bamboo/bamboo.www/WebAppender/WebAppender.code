@@ -1,0 +1,3 @@
+public WebAppender(int m){
+  max_events=m;
+}

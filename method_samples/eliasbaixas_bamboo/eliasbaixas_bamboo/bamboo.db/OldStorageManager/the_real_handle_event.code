@@ -1,0 +1,57 @@
+/** 
+ * This function is only ever called from within the Berkeley DB thread launched from the init () function; as such, it can safely block.  To communicate with the main thread, this thread calls classifier.dispatch_later with a time of 0.
+ */
+protected void the_real_handle_event(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("handling " + item);
+  if (item instanceof PutReq) {
+    handle_put_req((PutReq)item);
+  }
+ else   if (item instanceof GetByKeyReq) {
+    handle_get_by_key_req((GetByKeyReq)item);
+  }
+ else   if (item instanceof GetByGuidReq) {
+    handle_get_by_guid_req((GetByGuidReq)item);
+  }
+ else   if (item instanceof GetByGuidCont) {
+    handle_get_by_guid_cont((GetByGuidCont)item);
+  }
+ else   if (item instanceof GetByTimeReq) {
+    handle_get_by_time_req((GetByTimeReq)item);
+  }
+ else   if (item instanceof GetByTimeCont) {
+    handle_get_by_time_cont((GetByTimeCont)item);
+  }
+ else   if (item instanceof IterateByGuidReq) {
+    handle_iterate_by_guid_req((IterateByGuidReq)item);
+  }
+ else   if (item instanceof IterateByGuidCont) {
+    handle_iterate_by_guid_cont((IterateByGuidCont)item);
+  }
+ else   if (item instanceof DiscardReq) {
+    handle_discard_req((DiscardReq)item);
+  }
+ else   if (item instanceof SyncAlarm) {
+    logger.info("starting checkpoint");
+    try {
+      env.txnCheckpoint(30 * 1024,0,0);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+    logger.info("checkpoint done");
+    classifier.dispatch_later(item,30 * 1000 + rand.nextInt(60 * 1000));
+  }
+ else   if (item instanceof Alarm) {
+    check_open_cursors();
+    classifier.dispatch_later(item,30 * 1000 + rand.nextInt(60 * 1000));
+  }
+ else   if (item instanceof AddMonitor) {
+    handle_add_monitor((AddMonitor)item);
+  }
+ else   if (item instanceof RemoveMonitor) {
+    handle_remove_monitor((RemoveMonitor)item);
+  }
+ else {
+    assert false : item.getClass().getName();
+  }
+}

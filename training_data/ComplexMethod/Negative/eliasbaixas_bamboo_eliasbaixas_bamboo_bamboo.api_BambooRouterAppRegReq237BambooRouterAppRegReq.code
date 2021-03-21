@@ -1,0 +1,7 @@
+public BambooRouterAppRegReq(long a,boolean ls,boolean rt,boolean rrt,SinkIF q){
+  app_id=a;
+  send_leaf_sets=ls;
+  send_rt=rt;
+  send_reverse_rt=rrt;
+  completion_queue=q;
+}

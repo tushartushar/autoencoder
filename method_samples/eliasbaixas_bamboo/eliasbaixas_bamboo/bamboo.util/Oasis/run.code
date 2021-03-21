@@ -1,0 +1,32 @@
+public void run(){
+  try {
+    SocketChannel sc=ssc.accept();
+    if (sc != null) {
+      sc.configureBlocking(false);
+      byte bytes[]=new byte[12];
+      OutputBuffer ob=new ByteArrayOutputBuffer(bytes);
+      ob.add(secret);
+      ob.add(1);
+      ob.add(10);
+      acore.registerSelectable(sc,OP_WRITE,curry(write,sc,ByteBuffer.wrap(bytes)));
+    }
+  }
+ catch (  IOException e) {
+    BUG(e);
+  }
+}
+public void run(SocketChannel sc,ByteBuffer resp){
+  while (true) {
+    try {
+      if (sc.write(resp) == 0)       break;
+      if (resp.position() == resp.limit()) {
+        done(sc);
+        return;
+      }
+    }
+ catch (    IOException e) {
+      done(sc);
+      return;
+    }
+  }
+}

@@ -1,0 +1,3 @@
+public int getScanMode(){
+  return mScanMode;
+}

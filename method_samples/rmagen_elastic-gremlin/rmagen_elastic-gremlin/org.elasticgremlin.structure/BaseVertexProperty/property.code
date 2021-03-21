@@ -1,0 +1,3 @@
+@Override public <U>Property<U> property(final String key,final U value){
+  throw VertexProperty.Exceptions.multiPropertiesNotSupported();
+}

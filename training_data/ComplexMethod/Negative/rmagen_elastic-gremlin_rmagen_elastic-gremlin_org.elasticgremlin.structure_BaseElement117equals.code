@@ -1,0 +1,3 @@
+@SuppressWarnings("EqualsWhichDoesntCheckParameterClass") @Override public boolean equals(final Object object){
+  return ElementHelper.areEqual(this,object);
+}

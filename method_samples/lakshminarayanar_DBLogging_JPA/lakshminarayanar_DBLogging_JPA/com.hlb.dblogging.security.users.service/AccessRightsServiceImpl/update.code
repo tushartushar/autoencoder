@@ -1,0 +1,18 @@
+@Override @Transactional(rollbackFor={Exception.class,BSLException.class}) public AccessRights update(AccessRights accessRights){
+  try {
+    AccessRights accessRightsToBeUpdated=accessRightsRepository.findOne(accessRights.getId());
+    if (accessRightsToBeUpdated != null) {
+      accessRightsToBeUpdated.setId(accessRights.getId());
+      accessRightsToBeUpdated.setAccessRights(accessRights.getAccessRights());
+      accessRightsToBeUpdated.setDescription(accessRights.getDescription());
+      accessRightsToBeUpdated.setLastModifiedBy(accessRights.getLastModifiedBy());
+      accessRightsToBeUpdated.setLastModifiedTime(new Date());
+      accessRightsRepository.save(accessRightsToBeUpdated);
+    }
+    return accessRightsToBeUpdated;
+  }
+ catch (  Exception e) {
+    log.error("Error while updating Access Right :" + accessRights.getAccessRights(),e);
+    throw new BSLException("err.accessRights.update",e);
+  }
+}

@@ -1,0 +1,12 @@
+protected static String values_to_string(Node n,long offset){
+  if (n.leaf()) {
+    return n.time() + " " + (n.offset + offset)+ "\n";
+  }
+ else {
+    return values_to_string(n.left,n.offset + offset) + values_to_string(n.right,n.offset + offset);
+  }
+}
+protected static String values_to_string(Node n){
+  if (n == null)   return "";
+ else   return values_to_string(n,0);
+}

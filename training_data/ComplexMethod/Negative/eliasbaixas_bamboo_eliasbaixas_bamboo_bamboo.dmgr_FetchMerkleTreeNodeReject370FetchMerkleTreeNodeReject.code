@@ -1,0 +1,11 @@
+public FetchMerkleTreeNodeReject(NodeId dest,int r,long s){
+  super(dest,false);
+  reason=r;
+  seq=s;
+}
+public FetchMerkleTreeNodeReject(InputBuffer buffer) throws QSException {
+  super(buffer);
+  reason=buffer.nextInt();
+  if (reason >= reason_to_string.length)   throw new QSException("unknown reason " + reason);
+  seq=buffer.nextLong();
+}

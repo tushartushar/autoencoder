@@ -1,0 +1,21 @@
+/** 
+ * Sets parameters for the various scan modes
+ * @param scanMode the ScanMode in BluetoothLeScanner Settings
+ */
+protected void setScanMode(int scanMode){
+switch (scanMode) {
+case ScanSettings.SCAN_MODE_LOW_LATENCY:
+    scanIdleMillis=LOW_LATENCY_IDLE_MILLIS;
+  scanActiveMillis=LOW_LATENCY_ACTIVE_MILLIS;
+break;
+case ScanSettings.SCAN_MODE_LOW_POWER:
+scanIdleMillis=LOW_POWER_IDLE_MILLIS;
+scanActiveMillis=LOW_POWER_ACTIVE_MILLIS;
+break;
+default :
+case ScanSettings.SCAN_MODE_BALANCED:
+scanIdleMillis=BALANCED_IDLE_MILLIS;
+scanActiveMillis=BALANCED_ACTIVE_MILLIS;
+break;
+}
+}

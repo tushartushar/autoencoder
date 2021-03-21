@@ -1,0 +1,4 @@
+public Iter(long s){
+  start=s;
+  position=-1;
+}

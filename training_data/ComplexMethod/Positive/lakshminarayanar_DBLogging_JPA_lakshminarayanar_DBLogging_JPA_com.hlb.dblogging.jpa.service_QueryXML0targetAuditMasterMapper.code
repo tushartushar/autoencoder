@@ -1,0 +1,134 @@
+private void targetAuditMasterMapper(String nodeName,AuditMaster aMaster,Object value){
+switch (nodeName.toUpperCase()) {
+case "LOGINTERFACE":
+    aMaster.setLogInterface(value.toString());
+  break;
+case "MESSAGEFORMAT":
+aMaster.setMessageFormat(value.toString());
+break;
+case "HOST":
+aMaster.setHost(value.toString());
+break;
+case "TRANSTYPE":
+{
+aMaster.setTransType(value.toString());
+}
+break;
+case "MESSAGEID":
+aMaster.setMessageID(value.toString());
+break;
+case "SERVICEID":
+aMaster.setServiceID(value.toString());
+break;
+case "APPLNAME":
+aMaster.setApplName(value.toString());
+break;
+case "APPLID":
+aMaster.setAppID(value.toString());
+break;
+case "APPLTRANSID":
+aMaster.setApplicationTransactionId(value.toString());
+break;
+case "UNIQUEPROCESSID":
+aMaster.setUniqueProcessID(value.toString());
+break;
+case "JOURNALSEQ":
+aMaster.setJournalSeq(Integer.valueOf(value.toString()));
+break;
+case "LOGLEVEL":
+aMaster.setLogLevel(value.toString());
+break;
+case "STATUSCODE":
+aMaster.setStatusCode(value.toString());
+break;
+case "ERRORCODE":
+aMaster.setErrorCode(value.toString());
+break;
+case "ERRORMESSAGE":
+aMaster.setErrorMessage(value.toString());
+break;
+case "REASONCODE":
+aMaster.setReasonCode(value.toString());
+break;
+case "TRANSDATETIME":
+{
+DateFormat df=new SimpleDateFormat("yyyyMMdd hhmmss");
+try {
+Date startDate=df.parse((String)value);
+aMaster.setTransDateTime(startDate);
+}
+ catch (ParseException e) {
+ApplLogger.getLogger().error("Error while converting TransDateTime string date to util date",e);
+}
+}
+break;
+case "UPDATEDDATETIME":
+{
+DateFormat df=new SimpleDateFormat("yyyyMMdd hhmmss");
+try {
+Date updatedDate=df.parse((String)value);
+aMaster.setUpdatedDateTime(updatedDate);
+}
+ catch (ParseException e) {
+ApplLogger.getLogger().error("Error while converting UpdatedDateTime string date to util date",e);
+}
+}
+break;
+case "CREATEDDATETIME":
+{
+DateFormat df=new SimpleDateFormat("yyyyMMdd hhmmss");
+try {
+Date createdDate=df.parse((String)value);
+aMaster.setCreatedDateTime(createdDate);
+}
+ catch (ParseException e) {
+ApplLogger.getLogger().error("Error while converting CreatedDateTime string date to util date",e);
+}
+}
+break;
+case "REQUESTDATETIME":
+{
+DateFormat df=new SimpleDateFormat("yyyyMMdd hhmmss");
+try {
+Date requestDate=df.parse((String)value);
+aMaster.setRequestDateTime(requestDate);
+}
+ catch (ParseException e) {
+ApplLogger.getLogger().error("Error while converting ReqDateTime string date to util date",e);
+}
+}
+break;
+case "CREATEDBY":
+aMaster.setCreatedBy(value.toString());
+break;
+case "UPDATEDBY":
+aMaster.setUpdatedBy(value.toString());
+break;
+case "CUSTOMSTRING1":
+aMaster.setCustomString1(value.toString());
+break;
+case "CUSTOMSTRING2":
+aMaster.setCustomString2(value.toString());
+break;
+case "SEGMENT":
+aMaster.setSegment(value.toString());
+break;
+case "CUSTOMINT1":
+aMaster.setCustomInt1(Integer.valueOf(value.toString()));
+break;
+case "CUSTOMINT2":
+aMaster.setCustomInt2(Integer.valueOf(value.toString()));
+break;
+case "CUSTOMINT3":
+aMaster.setCustomInt3(Integer.valueOf(value.toString()));
+break;
+case "CUSTOMDATE1":
+aMaster.setCustomDate1((Date)value);
+break;
+case "CUSTOMDATE2":
+aMaster.setCustomDate1((Date)value);
+break;
+default :
+break;
+}
+}

@@ -1,0 +1,3 @@
+public static boolean isAvrcpTarget(ParcelUuid uuid){
+  return uuid.equals(AvrcpTarget);
+}

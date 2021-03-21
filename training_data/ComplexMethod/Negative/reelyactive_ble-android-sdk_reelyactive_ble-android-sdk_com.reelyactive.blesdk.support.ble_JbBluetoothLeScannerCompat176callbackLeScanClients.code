@@ -1,0 +1,30 @@
+/** 
+ * Distribute each scan record to registered clients. When a "found" event occurs record the address in the client filter so we can later send the "lost" event to that same client. <p> This method will be called by the AIDL handler thread from onLeScan.
+ */
+private synchronized void callbackLeScanClients(String address,ScanResult result){
+  recentScanResults.put(address,result);
+  for (  ScanClient client : serialClients.values()) {
+    if (matchesAnyFilter(client.filtersList,result)) {
+      boolean seenItBefore=client.addressesSeen.contains(address);
+      int clientFlags=client.settings.getCallbackType();
+      int firstMatchBit=clientFlags & ScanSettings.CALLBACK_TYPE_FIRST_MATCH;
+      int allMatchesBit=clientFlags & ScanSettings.CALLBACK_TYPE_ALL_MATCHES;
+      if ((firstMatchBit | allMatchesBit) != 0) {
+        try {
+          if (!seenItBefore) {
+            client.callback.onScanResult(ScanSettings.CALLBACK_TYPE_FIRST_MATCH,result);
+          }
+ else           if (allMatchesBit != 0) {
+            client.callback.onScanResult(ScanSettings.CALLBACK_TYPE_ALL_MATCHES,result);
+          }
+        }
+ catch (        Exception e) {
+          Logger.logError("Failure while handling scan result",e);
+        }
+      }
+      if (!seenItBefore) {
+        client.addressesSeen.add(address);
+      }
+    }
+  }
+}

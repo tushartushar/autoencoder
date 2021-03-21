@@ -1,0 +1,6 @@
+public String toString(){
+  return "(GetByGuidResp key=" + key + " data length="+ (data == null ? 0 : data.limit())+ ")";
+}
+public String toString(){
+  return "(GetByGuidResp key=" + key + " data length="+ (data == null ? 0 : data.limit())+ ")";
+}

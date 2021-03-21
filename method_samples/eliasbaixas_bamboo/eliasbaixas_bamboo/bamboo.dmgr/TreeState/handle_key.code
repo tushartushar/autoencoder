@@ -1,0 +1,45 @@
+protected void handle_key(StorageManager.GetByTimeResp resp){
+  assert !waiting.isEmpty() : "fhs=" + fhs;
+  GuidRange p=new GuidRange(low_guid,high_guid);
+  if ((!merkle_trees.containsKey(p) || (merkle_trees.get(p) != this))) {
+    return;
+  }
+  if (resp.continuation == null) {
+    if (logger.isDebugEnabled())     logger.debug("all keys read");
+    fhs.leaves_below=keys.size();
+    Iterator i=keys.iterator();
+    long earliest_exp_usec=Long.MAX_VALUE;
+    while (i.hasNext()) {
+      StorageManager.Key k=(StorageManager.Key)i.next();
+      byte[] bytes=new byte[StorageManager.Key.SIZE];
+      k.to_byte_buffer(ByteBuffer.wrap(bytes,0,bytes.length));
+      long e=k.expiryTime();
+      if (e < earliest_exp_usec)       earliest_exp_usec=e;
+      md.update(bytes);
+    }
+    fhs.digest=md.digest();
+    fhs.earliest_expiry_usec=earliest_exp_usec;
+    fhs=tree.root().fill_holes(fhs,now_ms());
+    handle_fhs(tree);
+  }
+ else {
+    for (    StorageManager.Key k : resp.keys) {
+      if (in_range_mod(low_guid,high_guid,k.guid)) {
+        keys.addLast(k);
+      }
+    }
+    if (keys.size() > fhs.max_leaves_below) {
+      dispatch(new StorageManager.GetByTimeCont(resp.continuation,null,null));
+      if (logger.isDebugEnabled())       logger.debug("too many keys: size=" + keys.size() + " max="+ fhs.max_leaves_below);
+      fhs.leaves_below=keys.size();
+      fhs.digest=null;
+      fhs=tree.root().fill_holes(fhs,now_ms());
+      handle_fhs(tree);
+    }
+ else {
+      if (logger.isDebugEnabled())       logger.debug("fetching next key");
+      StorageManager.GetByTimeCont cont=new StorageManager.GetByTimeCont(resp.continuation,my_sink,this);
+      dispatch(cont);
+    }
+  }
+}

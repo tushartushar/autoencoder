@@ -1,0 +1,8 @@
+/** 
+ * Calculates the distance between this coordinate to the given destination.  This will be an estimate of the one-way network latencies between the two nodes in milliseconds.
+ * @param destination The coordinate to compare this object against.
+ * @return The distance between the coordinates, as expressed by one-way network latency in milliseconds.
+ */
+public double distance(VirtualCoordinate destination){
+  return withinPlaneDistance(destination) + toPlaneDistance(destination);
+}

@@ -1,0 +1,1 @@
+Boolean createNewXSLT(XSLT newXSLT);

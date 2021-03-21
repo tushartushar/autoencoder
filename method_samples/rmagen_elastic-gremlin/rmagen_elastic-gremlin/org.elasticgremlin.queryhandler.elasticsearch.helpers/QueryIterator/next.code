@@ -1,0 +1,4 @@
+@Override public E next(){
+  allowedRemaining--;
+  return hits.next();
+}

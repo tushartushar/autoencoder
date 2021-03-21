@@ -1,0 +1,6 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  String client_stg_name=config_get_string(config,"client_stage_name");
+  client=(GatewayClient)lookup_stage(config,client_stg_name);
+  digest=MessageDigest.getInstance("SHA");
+}

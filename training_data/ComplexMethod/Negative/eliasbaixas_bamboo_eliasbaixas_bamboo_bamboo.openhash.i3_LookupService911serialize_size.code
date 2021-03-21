@@ -1,0 +1,6 @@
+public int serialize_size(Object msg){
+  QuickSerializable qs=(QuickSerializable)msg;
+  CountBuffer cb=new CountBuffer();
+  cb.add(qs);
+  return cb.size();
+}

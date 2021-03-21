@@ -1,0 +1,6 @@
+public void success(){
+  if (logger.isDebugEnabled())   logger.debug("down_node " + node_id + " is up.");
+  if (down_nodes.remove(node_id)) {
+    if (logger.isDebugEnabled())     logger.debug("removed " + node_id + " from down_nodes");
+  }
+}

@@ -1,0 +1,6 @@
+@Override public void onResume(){
+  super.onResume();
+  if (!permissionChecked && ActivityCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},REQUEST_CODE_LOCATION);
+  }
+}

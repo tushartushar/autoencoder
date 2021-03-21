@@ -1,0 +1,4 @@
+public WebInterface() throws Exception {
+  DEBUG=false;
+  handlers.put("ping",new PingHandler());
+}

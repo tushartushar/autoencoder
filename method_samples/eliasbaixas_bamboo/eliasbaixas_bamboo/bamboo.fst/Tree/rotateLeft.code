@@ -1,0 +1,3 @@
+public static Node rotateLeft(Node n){
+  return makeParent(n.offset(),makeParent(0,n.left,incrementOffset(n.right.left,n.right.offset())),incrementOffset(n.right.right,n.right.offset()));
+}

@@ -1,0 +1,9 @@
+/** 
+ * Construct a new <code>XdrUdpDecodingStream</code> object and associate it with a buffer containing encoded XDR data.
+ * @param buffer Buffer containing encoded XDR data.
+ * @param encodedLength Length of encoded XDR data within the buffer.
+ * @throws IllegalArgumentException if <code>encodedLength</code> is nota multiple of four.
+ */
+public XdrInputBufferDecodingStream(InputBuffer buffer,int encodedLength){
+  setXdrData(buffer,encodedLength);
+}

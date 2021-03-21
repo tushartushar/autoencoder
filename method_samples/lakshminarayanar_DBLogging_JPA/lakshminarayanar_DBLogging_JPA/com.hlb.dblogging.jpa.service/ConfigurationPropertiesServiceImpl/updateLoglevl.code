@@ -1,0 +1,9 @@
+@Override public String updateLoglevl(String loglevel){
+  ConfigurationProperties configpropToBeUpdated=configurationRepo.findConfigurationPropertiesOfApplication();
+  if (configpropToBeUpdated != null) {
+    configpropToBeUpdated.setLogLevel(loglevel);
+    configurationRepo.save(configpropToBeUpdated);
+    ApplLogger.getLogger().info("Loglevel updated succesfully to : " + loglevel);
+  }
+  return null;
+}

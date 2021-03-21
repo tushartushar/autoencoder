@@ -1,0 +1,27 @@
+@Override public String getMessageContentFormatted(String messageFormat,String auditMasterId,String transType){
+  String content=aDetailRepository.findMessageContentByAuditDetailID(Long.parseLong(auditMasterId));
+  if ("XML".equalsIgnoreCase(messageFormat)) {
+    if (XSLTransformer.isViewEnabled) {
+      try {
+        ByteArrayOutputStream outputXML=new ByteArrayOutputStream();
+        Source xslt=null;
+        if (XSLTransformer.xsltMap.get(transType) != null)         xslt=new StreamSource(new ByteArrayInputStream(XSLTransformer.xsltMap.get(transType).getBytes(StandardCharsets.UTF_8)));
+ else         xslt=new StreamSource(new ByteArrayInputStream(XSLTransformer.xsltMap.get("ALL").getBytes(StandardCharsets.UTF_8)));
+        TransformerFactory factory=TransformerFactory.newInstance();
+        Source xmlInput=new StreamSource(new ByteArrayInputStream(content.getBytes()));
+        Transformer transformer=factory.newTransformer(xslt);
+        transformer.transform(xmlInput,new StreamResult(outputXML));
+        content=new String(outputXML.toByteArray(),StandardCharsets.UTF_8);
+      }
+ catch (      Exception e) {
+        e.printStackTrace();
+        return "Can't display content now, Error caught while applying XSLT on the message";
+      }
+    }
+    return prettyFormat(content);
+  }
+ else {
+    content=hexToCharacter(content);
+    return new EbcdicToAsciiConvertUtility().convert(content);
+  }
+}

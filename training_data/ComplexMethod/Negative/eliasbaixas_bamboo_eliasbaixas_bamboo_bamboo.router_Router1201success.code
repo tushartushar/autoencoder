@@ -1,0 +1,23 @@
+void success();
+public void success(){
+  periodic_pings.remove(ni);
+  generic_msg_success(ni);
+  dispatch(new NetworkLatencyReq(ni.node_id,my_sink,ni));
+}
+public void success(){
+  generic_msg_success(ni);
+}
+public void success(){
+  generic_msg_success(ni);
+}
+public void success(){
+  if (logger.isDebugEnabled())   logger.debug("down_node " + node_id + " is up.");
+  if (down_nodes.remove(node_id)) {
+    if (logger.isDebugEnabled())     logger.debug("removed " + node_id + " from down_nodes");
+  }
+}
+public void success(){
+  pings_in_flight.remove(ni);
+  generic_msg_success(ni);
+  dispatch(new NetworkLatencyReq(ni.node_id,my_sink,ni));
+}

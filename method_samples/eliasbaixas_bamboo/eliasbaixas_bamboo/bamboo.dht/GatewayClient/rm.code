@@ -1,0 +1,6 @@
+public void rm(bamboo_rm_args rm_args,RmDoneCb cb,Object user_data){
+  throw new NoSuchMethodError("no longer supported");
+}
+public void rm(bamboo_rm_args rm_args,final Thunk1<Integer> thunk){
+  throw new NoSuchMethodError("no longer supported");
+}

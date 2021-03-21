@@ -1,0 +1,9 @@
+public void serialize(OutputBuffer buffer){
+  buffer.add(key);
+  buffer.add(maxvals);
+  if (placemark == ZERO_KEY)   buffer.add(false);
+ else {
+    buffer.add(true);
+    placemark.serialize(buffer);
+  }
+}

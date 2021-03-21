@@ -1,0 +1,10 @@
+public GBTCont(Dbt k,long l,long h){
+  key=k;
+  low=l;
+  high=h;
+}
+public GBTCont(Dbt k,long l,long h){
+  key=k;
+  low=l;
+  high=h;
+}

@@ -1,0 +1,4 @@
+public static void addDelay(RouteInfo.maneuvar step){
+  int delay=rand.nextInt(10);
+  System.out.println("random delay:" + delay * 60);
+}

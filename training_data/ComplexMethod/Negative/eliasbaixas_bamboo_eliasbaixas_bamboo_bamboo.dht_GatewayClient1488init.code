@@ -1,0 +1,29 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  instances.put(my_node_id,this);
+  int cnt=config_get_int(config,"gateway_count");
+  if (cnt == -1) {
+    gateways.addLast(new NodeId(config_get_string(config,"gateway")));
+  }
+ else {
+    for (int i=0; i < cnt; ++i) {
+      gateways.addLast(new NodeId(config_get_string(config,"gateway_" + i)));
+    }
+  }
+  last_gw=gateways.getLast();
+  if (sim_running) {
+    gnid=gateways.getFirst();
+    logger.info("gid=" + gnid);
+    gway_inst=(Gateway)Gateway.instances.get(gnid);
+    if (gway_inst == null) {
+      logger.fatal("can't find gateway");
+      System.exit(1);
+    }
+    simulator=Simulator.instance();
+  }
+ else {
+    try_next_gateway();
+  }
+  SecureRandom rand=SecureRandom.getInstance("SHA1PRNG");
+  next_xact_id=rand.nextInt();
+}

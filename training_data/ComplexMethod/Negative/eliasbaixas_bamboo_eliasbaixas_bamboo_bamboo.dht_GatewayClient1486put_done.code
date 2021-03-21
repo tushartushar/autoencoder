@@ -1,0 +1,5 @@
+public void put_done(int xact_id,int result){
+  Request req=(Request)inflight.remove(new Integer(xact_id));
+  Integer resp=new Integer(result);
+  application_enqueue(req.completion_queue,new Response(resp,req.user_data));
+}

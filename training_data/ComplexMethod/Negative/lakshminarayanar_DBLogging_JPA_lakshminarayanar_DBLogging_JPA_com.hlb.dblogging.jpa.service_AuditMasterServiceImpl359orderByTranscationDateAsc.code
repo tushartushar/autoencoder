@@ -1,0 +1,7 @@
+/** 
+ * Returns an OrderSpecifier object which sorts person in ascending order by using the last name.
+ * @return
+ */
+private OrderSpecifier<Date> orderByTranscationDateAsc(){
+  return QAuditMaster.auditMaster.transDateTime.asc();
+}

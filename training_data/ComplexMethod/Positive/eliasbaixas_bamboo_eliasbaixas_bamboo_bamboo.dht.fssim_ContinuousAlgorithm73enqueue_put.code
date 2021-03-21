@@ -1,0 +1,33 @@
+public void enqueue_put(int c,int size,int ttl_sec,PutResultCb cb,Object user_data){
+  long now_ms=sim.now_ms();
+  if (DEBUG)   System.err.println(sim.now_ms() + ": got new put from client " + c);
+  client_count=max(client_count,c + 1);
+  Integer client=new Integer(c);
+  long commitment=ttl_sec * size;
+  long new_queue_size=queue_size(client) + commitment;
+  if (new_queue_size <= params.MAX_QUEUE) {
+    set_queue_size(client,new_queue_size);
+    long ff_time=FF_TO_SYS_TIME ? (virtual_time - params.BURSTY_ADVANTAGE) : 0;
+    if (ff_time > latest_finish_time(client)) {
+      if (DEBUG)       System.err.println(sim.now_ms() + ": fast forwarding client " + client);
+    }
+    long st=max(latest_finish_time(client),ff_time);
+    if (DEBUG)     System.err.println(sim.now_ms() + ": virtual time is " + virtual_time+ " start time is "+ st);
+    set_latest_finish_time(client,st + commitment);
+    MyPutInfo pi=new MyPutInfo(c,size,ttl_sec,cb,user_data,st);
+    LinkedList<MyPutInfo> ll=queue.get(client);
+    if (ll == null) {
+      ll=new LinkedList<MyPutInfo>();
+      queue.put(client,ll);
+    }
+    ll.addLast(pi);
+    if ((waiting_put == null) || (st < waiting_put.start_time)) {
+      waiting_put=null;
+      process_queue();
+    }
+  }
+ else {
+    if (DEBUG)     System.err.println(sim.now_ms() + ": rejecting put from client " + c);
+    cb.cb(false,false);
+  }
+}

@@ -1,0 +1,13 @@
+/** 
+ * Like now_ms, but uses GetTimeOfDayCC if it's available. Also works correctly under the Bamboo simulator and SOSS.
+ */
+protected long timer_ms(){
+  return timer_ms(my_node_id);
+}
+/** 
+ * Like now_ms, but uses GetTimeOfDayCC if it's available. Also works correctly under the Bamboo simulator and SOSS.
+ */
+public static long timer_ms(NodeId node_id){
+  if ((!sim_running) && GetTimeOfDayCC.available())   return GetTimeOfDayCC.currentTimeMillis();
+  return Clock.current_date(node_id).getTime();
+}

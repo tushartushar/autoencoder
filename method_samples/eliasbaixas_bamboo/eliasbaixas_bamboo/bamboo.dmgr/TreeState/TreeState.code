@@ -1,0 +1,5 @@
+public TreeState(BigInteger lg,BigInteger hg){
+  low_guid=lg;
+  high_guid=hg;
+  tree=new MerkleTree(expansion,md);
+}

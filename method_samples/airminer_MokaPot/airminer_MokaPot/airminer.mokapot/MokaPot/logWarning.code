@@ -1,0 +1,3 @@
+public static void logWarning(String s){
+  out.println(s);
+}

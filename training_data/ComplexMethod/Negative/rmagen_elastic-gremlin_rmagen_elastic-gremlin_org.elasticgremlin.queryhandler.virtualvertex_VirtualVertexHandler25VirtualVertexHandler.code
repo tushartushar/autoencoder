@@ -1,0 +1,5 @@
+public VirtualVertexHandler(ElasticGraph graph,String label){
+  this.graph=graph;
+  this.label=label;
+  this.vertices=new ArrayList<>();
+}

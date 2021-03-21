@@ -1,0 +1,4 @@
+public final long getIndexPriority(int i){
+  if (heap_size < i)   return 0;
+  return prio[i];
+}

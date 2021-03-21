@@ -1,0 +1,3 @@
+public static Network instance(InetSocketAddress addr){
+  return (Network)instances.get(addr);
+}

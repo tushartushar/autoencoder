@@ -1,0 +1,5 @@
+private void scheduleNextStatus(StatusAlarm trigger){
+  long delay=_status_period * 1000;
+  delay=delay - (now_ms() % delay);
+  classifier.dispatch_later(trigger,delay + 5000);
+}

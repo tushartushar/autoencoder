@@ -1,0 +1,4 @@
+public RoutingTableTest() throws Exception {
+  DEBUG=false;
+  event_types=new Class[]{StagesInitializedSignal.class,Alarm.class};
+}

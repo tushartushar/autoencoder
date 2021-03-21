@@ -1,0 +1,5 @@
+Project Name,Package Name,Type Name,NOF,NOPF,NOM,NOPM,LOC,WMC,NC,DIT,LCOM,FANIN,FANOUT,File path
+aastle_fittimer,com.aastle.fittimer,StopWatch,3,0,13,8,120,17,0,0,0.3076923076923077,1,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/aastle_fittimer/fittimer/src/main/java/com/aastle/fittimer/StopWatch.java
+aastle_fittimer,com.aastle.fittimer,MainActivity,20,0,28,8,302,46,0,0,0.17857142857142858,0,2,/Users/Tushar/Documents/Workspace/autoencoder/repos/aastle_fittimer/fittimer/src/main/java/com/aastle/fittimer/MainActivity.java
+aastle_fittimer,com.aastle.fittimer,DatabaseHelper,13,6,16,14,162,22,0,0,0.3125,1,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/aastle_fittimer/fittimer/src/main/java/com/aastle/fittimer/DatabaseHelper.java
+aastle_fittimer,com.aastle.fittimer,SettingsActivity,3,3,3,1,31,4,0,0,0.0,0,0,/Users/Tushar/Documents/Workspace/autoencoder/repos/aastle_fittimer/fittimer/src/main/java/com/aastle/fittimer/SettingsActivity.java

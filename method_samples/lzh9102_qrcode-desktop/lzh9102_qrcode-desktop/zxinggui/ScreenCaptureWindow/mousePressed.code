@@ -1,0 +1,5 @@
+@Override public void mousePressed(MouseEvent e){
+  if (e.getButton() == MouseEvent.BUTTON1) {
+    rect.setXY1(e.getX(),e.getY());
+  }
+}

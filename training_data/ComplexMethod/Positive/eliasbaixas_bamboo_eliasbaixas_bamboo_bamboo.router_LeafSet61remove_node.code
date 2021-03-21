@@ -1,0 +1,26 @@
+public int remove_node(NeighborInfo ni){
+  int result=0;
+  int i;
+  for (i=0; i < leaf_pred_count; ++i) {
+    if (leaf_preds[i].guid.equals(ni.guid))     break;
+  }
+  if (i != leaf_pred_count) {
+    result|=REMOVED_PREDECESSOR;
+    for (; i < leaf_pred_count - 1; ++i)     leaf_preds[i]=leaf_preds[i + 1];
+    --leaf_pred_count;
+  }
+  for (i=0; i < leaf_succ_count; ++i) {
+    if (leaf_succs[i].guid.equals(ni.guid))     break;
+  }
+  if (i != leaf_succ_count) {
+    result|=REMOVED_SUCCESSOR;
+    for (; i < leaf_succ_count - 1; ++i)     leaf_succs[i]=leaf_succs[i + 1];
+    --leaf_succ_count;
+  }
+  updateOverlap();
+  if (overlap) {
+    for (i=0; i < leaf_pred_count; ++i)     add_node(leaf_preds[i]);
+    for (i=0; i < leaf_succ_count; ++i)     add_node(leaf_succs[i]);
+  }
+  return result;
+}

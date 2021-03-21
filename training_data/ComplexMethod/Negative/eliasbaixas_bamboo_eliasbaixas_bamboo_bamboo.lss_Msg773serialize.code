@@ -1,0 +1,5 @@
+public void serialize(OutputBuffer buffer){
+  buffer.add(req);
+  buffer.add(xact_id);
+  buffer.add(payload);
+}

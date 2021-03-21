@@ -1,0 +1,4 @@
+/** 
+ * @return the name of the generator
+ */
+String getName();

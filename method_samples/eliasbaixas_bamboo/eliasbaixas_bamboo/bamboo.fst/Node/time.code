@@ -1,0 +1,4 @@
+public final long time(){
+  assert leaf();
+  return low;
+}

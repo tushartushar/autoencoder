@@ -1,0 +1,3 @@
+@Column(name="VIEWORSAVE",nullable=false) public String getViewOrSave(){
+  return viewOrSave;
+}

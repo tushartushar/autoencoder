@@ -1,0 +1,36 @@
+static public void main(String[] args) throws Exception {
+  String key_alg="RSA";
+  String sig_alg="SHA1withRSA";
+  QSString cert_value=new QSString("Hello, world!");
+  TypeTable.register_type(QSString.class);
+  TypeTable.register_type(Certificate.class);
+  KeyPairGenerator kgen=KeyPairGenerator.getInstance(key_alg);
+  kgen.initialize(1024);
+  KeyPair kp=kgen.generateKeyPair();
+  Certificate cert=new Certificate(sig_alg,cert_value,kp);
+  CountBuffer cb=new CountBuffer();
+  cb.add(cert_value);
+  System.err.println("payload size is " + cb.size() + " bytes");
+  cb=new CountBuffer();
+  cert.serialize(cb);
+  System.err.println("certificate size is " + cb.size() + " bytes");
+  byte[] bytes=new byte[cb.size()];
+  ByteArrayOutputBuffer ob=new ByteArrayOutputBuffer(bytes);
+  cert.serialize(ob);
+  ByteArrayInputBuffer ib=new ByteArrayInputBuffer(bytes);
+  cert=new Certificate(ib);
+  cert.signed_value();
+  bytes[bytes.length - 1]^=1;
+  ib=new ByteArrayInputBuffer(bytes);
+  cert=new Certificate(ib);
+  boolean failed=false;
+  try {
+    cert.signed_value();
+  }
+ catch (  InvalidException e) {
+    if (!e.getMessage().equals("signature didn't verify"))     throw e;
+    failed=true;
+  }
+  if (failed)   System.err.println("test passed");
+ else   System.err.println("bad signature verified!");
+}

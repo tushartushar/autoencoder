@@ -1,0 +1,9 @@
+public void call(Object not_used){
+  if (arg instanceof bamboo_put_args) {
+    gway_inst.do_put(id,(bamboo_put_args)arg,my_node_id,self);
+  }
+ else {
+    assert arg instanceof bamboo_get_args;
+    gway_inst.do_get(id,(bamboo_get_args)arg,my_node_id,self);
+  }
+}

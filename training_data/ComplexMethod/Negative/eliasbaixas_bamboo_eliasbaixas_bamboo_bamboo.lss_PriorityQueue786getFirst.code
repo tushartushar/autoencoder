@@ -1,0 +1,4 @@
+public final Object getFirst(){
+  if (heap_size < 1)   throw new NoSuchElementException();
+  return heap[1];
+}

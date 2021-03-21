@@ -1,0 +1,7 @@
+public void updateElement(Element element,String index,String routing,boolean upsert) throws ExecutionException, InterruptedException {
+  UpdateRequest updateRequest=new UpdateRequest(index,element.label(),element.id().toString()).doc(propertiesMap(element)).routing(routing);
+  if (upsert)   updateRequest.detectNoop(true).docAsUpsert(true);
+  if (bulkRequest != null)   bulkRequest.add(updateRequest);
+ else   client.update(updateRequest).actionGet();
+  revision++;
+}

@@ -1,0 +1,25 @@
+@TargetApi(17) private void startRecovery(){
+  recoveryAttemptCount++;
+  BluetoothAdapter adapter=BluetoothAdapter.getDefaultAdapter();
+  if (isDebugEnabled())   Log.d(TAG,"about to check if discovery is active");
+  if (!adapter.isDiscovering()) {
+    Log.w(TAG,"Recovery attempt started");
+    recoveryInProgress=true;
+    discoveryStartConfirmed=false;
+    if (isDebugEnabled())     Log.d(TAG,"about to command discovery");
+    if (!adapter.startDiscovery()) {
+      Log.w(TAG,"Can't start discovery.  Is bluetooth turned on?");
+    }
+    if (isDebugEnabled())     Log.d(TAG,"startDiscovery commanded.  isDiscovering()=" + adapter.isDiscovering());
+    if (TIME_TO_LET_DISCOVERY_RUN_MILLIS > 0) {
+      if (isDebugEnabled())       Log.d(TAG,"We will be cancelling this discovery in " + TIME_TO_LET_DISCOVERY_RUN_MILLIS + " milliseconds.");
+      discoveryCanceller.doInBackground();
+    }
+ else {
+      Log.d(TAG,"We will let this discovery run its course.");
+    }
+  }
+ else {
+    Log.w(TAG,"Already discovering.  Recovery attempt abandoned.");
+  }
+}

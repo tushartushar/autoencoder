@@ -1,0 +1,4 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  gateway=new NodeId(config.getString("gateway"));
+}

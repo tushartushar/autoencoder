@@ -1,0 +1,6 @@
+/** 
+ * Treat this as read-only or perish.
+ */
+public RoutingTable routingTable(){
+  return rt;
+}

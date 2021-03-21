@@ -1,0 +1,22 @@
+protected void notify_leaf_set_changed(){
+  notify_leaf_set_changed(null);
+}
+protected void notify_leaf_set_changed(ApplicationInfo onlyThisOne){
+  if (logger.isDebugEnabled())   logger.debug("notify_leaf_set_changed");
+  LinkedList ls=leaf_set.as_list();
+  if ((ls.size() < leaf_set_size * 2) && (ls.size() > 0)) {
+    if ((!ls.getFirst().equals(ls.getLast())) || (ls.size() % 2 != 0)) {
+      return;
+    }
+  }
+  BambooNeighborInfo preds[]=leaf_set.preds();
+  BambooNeighborInfo succs[]=leaf_set.succs();
+  if (onlyThisOne == null) {
+    for (    ApplicationInfo appInfo : apps.values()) {
+      if (appInfo.leafSetChanged != null)       appInfo.leafSetChanged.run(preds,succs);
+    }
+  }
+ else   if (onlyThisOne.leafSetChanged != null) {
+    onlyThisOne.leafSetChanged.run(preds,succs);
+  }
+}

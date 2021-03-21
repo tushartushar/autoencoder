@@ -1,0 +1,4 @@
+@Override public boolean onBleEvent(BleService.Event event,Object data){
+  Log.d(TAG,"BLE Event " + event + " // "+ data);
+  return super.onBleEvent(event,data);
+}

@@ -1,0 +1,7 @@
+/** 
+ * Returns the length of a single scan cycle, comprising both active and idle time.
+ * @VisibleForTesting
+ */
+long getScanCycleMillis(){
+  return getScanActiveMillis() + getScanIdleMillis();
+}

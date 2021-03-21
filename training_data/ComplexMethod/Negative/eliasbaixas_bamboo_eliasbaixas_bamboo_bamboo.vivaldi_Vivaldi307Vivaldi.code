@@ -1,0 +1,16 @@
+public Vivaldi() throws Exception {
+  _app_id=ByteUtils.bytesToLong((new SHA1Hash("bamboo.vivaldi.Vivaldi")).bytes(),new int[1]);
+  try {
+    ostore.util.TypeTable.register_type(bamboo.vivaldi.LocateNodeMsg.class);
+    ostore.util.TypeTable.register_type(bamboo.vivaldi.LocateNodeResp.class);
+    ostore.util.TypeTable.register_type(bamboo.vivaldi.PingVCResp.class);
+    ostore.util.TypeTable.register_type(bamboo.vivaldi.VirtualCoordinate.class);
+    ostore.util.TypeTable.register_type(bamboo.vivaldi.FiveDVC.class);
+    ostore.util.TypeTable.register_type(bamboo.vivaldi.SpecialVC.class);
+  }
+ catch (  Exception e) {
+    logger.error("Could not register types" + e);
+  }
+  event_types=new Class[]{seda.sandStorm.api.StagesInitializedSignal.class,bamboo.vivaldi.VivaldiAddSample.class,bamboo.vivaldi.VivaldiRequestVC.class,bamboo.vivaldi.Vivaldi.PingAlarm.class,bamboo.vivaldi.Vivaldi.StatusAlarm.class};
+  inb_msg_types=new Class[]{bamboo.vivaldi.LocateNodeResp.class,bamboo.router.PingMsg.class,bamboo.vivaldi.PingVCResp.class};
+}

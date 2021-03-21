@@ -1,0 +1,21 @@
+public void handleEvent(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug("got " + item);
+  if (item instanceof BambooRouterAppRegResp) {
+    handle_app_reg_resp((BambooRouterAppRegResp)item);
+  }
+ else   if (item instanceof BambooLeafSetChanged) {
+    handle_leaf_set_changed((BambooLeafSetChanged)item);
+  }
+ else   if (item instanceof BambooRoutingTableChanged) {
+    handle_rt_changed((BambooRoutingTableChanged)item);
+  }
+ else   if (item instanceof BambooRouteUpcall) {
+    handle_route_upcall((BambooRouteUpcall)item);
+  }
+ else   if (item instanceof BambooRouteDeliver) {
+    handle_route_deliver((BambooRouteDeliver)item);
+  }
+ else {
+    BUG(item.toString());
+  }
+}

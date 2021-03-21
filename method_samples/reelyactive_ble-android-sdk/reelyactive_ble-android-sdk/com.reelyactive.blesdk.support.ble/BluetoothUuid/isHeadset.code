@@ -1,0 +1,3 @@
+public static boolean isHeadset(ParcelUuid uuid){
+  return uuid.equals(HSP);
+}

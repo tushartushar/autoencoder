@@ -1,0 +1,3 @@
+public void clearFilters(){
+  throw new NoSuchMethodError();
+}

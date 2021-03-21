@@ -1,0 +1,26 @@
+/** 
+ * If the node is of no use as a neighbor, it is not added and null is returned; if it replaces an existing neighbor who is in turn removed, that neighbor is returned; if it is added, but does not replace any existing neighbor, then my_neigbor_info is returned.
+ */
+public NeighborInfo add(NeighborInfo ni,double rtt_ms,boolean pns,long now_ms){
+  int[] dest_digits=guid_to_digits(ni.guid);
+  int fd=calc_first_diff(dest_digits);
+  if (fd == GUID_DIGITS)   return null;
+  NeighborInfo result=null;
+  if (primary(fd,dest_digits[fd]) == null) {
+    RoutingEntry re=new RoutingEntry(ni,rtt_ms);
+    table[fd][dest_digits[fd]]=re;
+    ++size;
+    result=my_neighbor_info;
+  }
+ else   if (primary(fd,dest_digits[fd]).equals(ni)) {
+    primary_re(fd,dest_digits[fd]).rtt_ms=rtt_ms;
+  }
+ else   if (pns && (rtt_ms < SCALE * primary_re(fd,dest_digits[fd]).rtt_ms)) {
+    RoutingEntry re=new RoutingEntry(ni,rtt_ms);
+    RoutingEntry removed=table[fd][dest_digits[fd]];
+    table[fd][dest_digits[fd]]=re;
+    result=removed.ni;
+  }
+  if (fd > highest_level)   highest_level=fd;
+  return result;
+}

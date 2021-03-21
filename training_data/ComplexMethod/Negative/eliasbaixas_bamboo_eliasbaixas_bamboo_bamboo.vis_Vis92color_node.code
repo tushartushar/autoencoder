@@ -1,0 +1,3 @@
+public void color_node(Color C){
+  dot.setFillPaint(C);
+}

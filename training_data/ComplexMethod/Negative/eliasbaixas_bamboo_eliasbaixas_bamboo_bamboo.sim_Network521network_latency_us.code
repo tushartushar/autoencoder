@@ -1,0 +1,4 @@
+public static long network_latency_us(NodeId a,NodeId b){
+  NetworkModel.RouteInfo ri=route_info(a,b);
+  return (long)(ri.latency_us);
+}

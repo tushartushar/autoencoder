@@ -1,0 +1,10 @@
+/** 
+ * Note that calling this slightly violates the semantics of this method as defined in ManagerIF.  It does not remove all references to the stage, because the soss Main stage still has a reference to the node's classifier, which contains references to the sink, which has a reference to the EventHandler itself. So the stage won't completely disappear until the reference to the classifier is destroyed (see soss.core.Main.removeNode)
+ */
+public void destroyStage(String stagename) throws Exception {
+  if (stagename == null)   throw new NoSuchStageException("no such stage: null");
+  StageIF stage=(StageIF)_stages.get(stagename);
+  if (stage == null)   throw new NoSuchStageException("no such stage: " + stagename);
+  _stages.remove(stagename);
+  stage.destroy();
+}

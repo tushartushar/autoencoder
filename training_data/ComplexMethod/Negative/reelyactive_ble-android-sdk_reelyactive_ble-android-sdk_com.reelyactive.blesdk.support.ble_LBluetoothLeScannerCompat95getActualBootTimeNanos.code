@@ -1,0 +1,5 @@
+private static long getActualBootTimeNanos(){
+  long currentTimeNanos=TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis());
+  long elapsedRealtimeNanos=android.os.SystemClock.elapsedRealtimeNanos();
+  return currentTimeNanos - elapsedRealtimeNanos;
+}

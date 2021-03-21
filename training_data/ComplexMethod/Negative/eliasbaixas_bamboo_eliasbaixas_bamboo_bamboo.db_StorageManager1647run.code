@@ -1,0 +1,46 @@
+public void run(){
+  sm.storage_changed(added,client_id,size);
+}
+public void run(){
+  logger.info("shutdown hook checkpointing database");
+  try {
+    env.txnCheckpoint(0,0,Db.DB_FORCE);
+  }
+ catch (  DbException e) {
+    logger.fatal("caught exception",e);
+    return;
+  }
+  logger.info("shutdown hook checkpoint complete");
+}
+public void run(){
+  try {
+    while (true) {
+      QueueElementIF head=null;
+      int sz=0;
+synchronized (to_bdb_thread) {
+        while (to_bdb_thread.isEmpty()) {
+          try {
+            to_bdb_thread.wait();
+          }
+ catch (          InterruptedException e) {
+          }
+        }
+        head=(QueueElementIF)to_bdb_thread.removeFirst();
+        sz=to_bdb_thread.size();
+        last_dequeue_ms=timer_ms();
+      }
+      if (logger.isDebugEnabled())       logger.debug("to_bdb_thread.size()=" + sz);
+      the_real_handle_event(head);
+    }
+  }
+ catch (  OutOfMemoryError e) {
+    bamboo.lss.DustDevilSink.reserve=null;
+    System.gc();
+    logger.fatal("uncaught error",e);
+    System.exit(1);
+  }
+catch (  Throwable e) {
+    logger.fatal("uncaught exception",e);
+    System.exit(1);
+  }
+}

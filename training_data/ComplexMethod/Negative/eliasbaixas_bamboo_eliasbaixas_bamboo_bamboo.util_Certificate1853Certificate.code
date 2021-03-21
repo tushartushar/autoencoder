@@ -1,0 +1,52 @@
+public Certificate(String sa,QuickSerializable s,KeyPair p) throws InvalidException {
+  sig_alg=sa;
+  signed_value=s;
+  public_key=p.getPublic();
+  OutputBuffer ob=null;
+  for (int i=0; i < 2; ++i) {
+    if (i == 0)     ob=new CountBuffer();
+ else {
+      cert_bytes=new byte[((CountBuffer)ob).size()];
+      ob=new ByteArrayOutputBuffer(cert_bytes);
+    }
+    ob.add(sig_alg);
+    try {
+      public_key_to_buffer(ob,public_key);
+    }
+ catch (    NoSuchAlgorithmException ex1) {
+      throw new InvalidException("no such algorithm: " + public_key.getAlgorithm());
+    }
+catch (    InvalidKeySpecException ex) {
+      assert false;
+    }
+    ob.add(signed_value);
+  }
+  Signature sig=null;
+  try {
+    sig=Signature.getInstance(sig_alg);
+  }
+ catch (  NoSuchAlgorithmException ex1) {
+    throw new InvalidException("no such algorithm: " + sig_alg);
+  }
+  try {
+    sig.initSign(p.getPrivate());
+  }
+ catch (  InvalidKeyException ex3) {
+    throw new InvalidException("invalid key");
+  }
+  try {
+    sig.update(cert_bytes);
+    sig_bytes=sig.sign();
+  }
+ catch (  SignatureException ex2) {
+    throw new InvalidException("signature exception");
+  }
+}
+public Certificate(InputBuffer buffer){
+  int cert_len=buffer.nextInt();
+  cert_bytes=new byte[cert_len];
+  buffer.nextBytes(cert_bytes,0,cert_len);
+  int sig_len=buffer.nextInt();
+  sig_bytes=new byte[sig_len];
+  buffer.nextBytes(sig_bytes,0,sig_len);
+}

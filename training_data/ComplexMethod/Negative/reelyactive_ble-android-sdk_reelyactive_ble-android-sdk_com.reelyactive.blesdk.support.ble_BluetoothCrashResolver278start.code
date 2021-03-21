@@ -1,0 +1,11 @@
+/** 
+ * Starts looking for crashes of the Bluetooth LE system and taking proactive steps to stop crashes from happening.  Proactive steps require calls to notifyScannedDevice(Device device) so that crashes can be predicted ahead of time.
+ */
+public void start(){
+  IntentFilter filter=new IntentFilter();
+  filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+  filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+  filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+  context.registerReceiver(receiver,filter);
+  if (isDebugEnabled())   Log.d(TAG,"started listening for BluetoothAdapter events");
+}

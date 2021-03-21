@@ -1,0 +1,11 @@
+/** 
+ * The default behaviour is to check if any  {@link ReelyAwareActivity} is still running, and call a scan if so.<br/>See  {@link #startScan()} and {@link #getScanType()}
+ * @param activity The resumed {@link Activity}.
+ */
+@Override public void onActivityPaused(Activity activity){
+  current=null;
+  activityCount.decrementAndGet();
+  if (!startScan()) {
+    stopScan();
+  }
+}

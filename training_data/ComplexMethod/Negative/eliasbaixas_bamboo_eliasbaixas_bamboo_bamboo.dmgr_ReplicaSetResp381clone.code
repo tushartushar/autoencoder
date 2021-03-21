@@ -1,0 +1,6 @@
+public Object clone() throws CloneNotSupportedException {
+  ReplicaSetResp result=(ReplicaSetResp)super.clone();
+  result.nonce=nonce;
+  result.replica_set=replica_set;
+  return result;
+}

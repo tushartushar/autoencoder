@@ -1,0 +1,8 @@
+public FetchDataReq(NodeId dest,StorageManager.Key k){
+  super(dest,false);
+  key=k;
+}
+public FetchDataReq(InputBuffer buffer) throws QSException {
+  super(buffer);
+  key=new StorageManager.Key(buffer);
+}

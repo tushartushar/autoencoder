@@ -1,0 +1,20 @@
+protected void handle_discard_alarm(DiscardAlarm item){
+  if (ds != null) {
+    if ((ds.timeout_ms != -1) && (timer_ms() > ds.timeout_ms)) {
+      if (logger.isInfoEnabled()) {
+        StringBuffer buf=new StringBuffer(200);
+        buf.append("discard timeout on ");
+        ds.key.toStringBuffer(buf);
+        logger.info(buf);
+      }
+      dispatch(new StorageManager.GetByGuidCont(ds.cont,false,null,null));
+      ds=null;
+    }
+  }
+  if (ds == null) {
+    ds=new DiscardState();
+    ds.nonce=next_put_or_remove_seq++;
+    dispatch(new StorageManager.GetByGuidReq(GuidTools.random_guid(rand),false,null,my_sink,ds));
+  }
+  if (item.periodic)   classifier.dispatch_later(item,5000 + rand.nextInt(5000));
+}

@@ -1,0 +1,3 @@
+@Column(name="CREATEDBY",nullable=false) public String getCreatedBy(){
+  return createdBy;
+}

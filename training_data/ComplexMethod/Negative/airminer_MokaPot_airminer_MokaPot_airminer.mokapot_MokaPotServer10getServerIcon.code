@@ -1,0 +1,3 @@
+@Override public CachedServerIcon getServerIcon(){
+  throw new NotImplementedException();
+}

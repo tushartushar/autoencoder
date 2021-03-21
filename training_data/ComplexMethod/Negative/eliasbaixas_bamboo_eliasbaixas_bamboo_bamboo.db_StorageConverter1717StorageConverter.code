@@ -1,0 +1,3 @@
+public StorageConverter(){
+  event_types=new Class[]{PutResp.class,GetByTimeResp.class,GetByKeyResp.class};
+}

@@ -1,0 +1,44 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  if (sim_running)   return;
+  drop_prob=configGetDouble(config,"drop_prob",0.0);
+  if (drop_prob > 0.0)   rand=new Random(my_node_id.hashCode() ^ now_ms());
+  boolean separate_thread=config_get_boolean(config,"separate_thread");
+  if (separate_thread) {
+    udpcc_thread=new ASyncCoreImpl();
+    udpcc=new UdpCC(udpcc_thread,addr,this,this);
+  }
+ else {
+    udpcc=new UdpCC(main_acore,addr,this,this);
+  }
+  int i=config_get_int(config,"udpcc_debug_level");
+  if (i >= 0)   udpcc.set_debug_level(i);
+  i=config_get_int(config,"udpcc_rx_sockbuf_size");
+  if (i > 0)   udpcc.set_sockbuf_size(i);
+  double timeout_factor=config_get_double(config,"timeout_factor");
+  if (timeout_factor != -1.0)   udpcc.set_timeout_factor(timeout_factor);
+  double timeout_diff=config_get_double(config,"timeout_diff");
+  if (timeout_diff != -1.0)   udpcc.set_timeout_diff(timeout_diff);
+  String mackeyfile=config_get_string(config,"mac_key_file");
+  if (mackeyfile != null)   udpcc.set_mac_key(mackeyfile);
+  if (separate_thread) {
+    acore.register_timer(0,new ASyncCore.TimerCB(){
+      public void timer_cb(      Object user_data){
+        Thread t=new Thread(){
+          public void run(){
+            try {
+              udpcc_thread.async_main();
+            }
+ catch (            Throwable e) {
+              logger.fatal("uncaught exception",e);
+              System.exit(1);
+            }
+          }
+        }
+;
+        t.start();
+      }
+    }
+,null);
+  }
+}

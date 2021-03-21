@@ -1,0 +1,16 @@
+public void register_app(long app_id,LeafSetChangedCB lscb,Object ls_user_data,RoutingTableChangedCB rtcb,Object rt_user_data,RouteUpcallCB upcb,Object up_user_data,RouteDeliverCB delcb,Object del_user_data,ApplicationRegisteredCB regcb,Object user_data){
+  Application app=new Application();
+  app.ls_cb=lscb;
+  app.ls_ud=ls_user_data;
+  app.rt_cb=rtcb;
+  app.rt_ud=rt_user_data;
+  app.upcall_cb=upcb;
+  app.upcall_ud=up_user_data;
+  app.deliver_cb=delcb;
+  app.deliver_ud=del_user_data;
+  app.registered_cb=regcb;
+  app.registered_ud=user_data;
+  apps.put(new Long(app_id),app);
+  BambooRouterAppRegReq req=new BambooRouterAppRegReq(app_id,(lscb == null) ? false : true,(rtcb == null) ? false : true,false,my_sink);
+  dispatch(req);
+}

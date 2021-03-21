@@ -1,0 +1,6 @@
+public int hashCode(){
+  return guid.hashCode();
+}
+public int hashCode(){
+  return guid.hashCode();
+}

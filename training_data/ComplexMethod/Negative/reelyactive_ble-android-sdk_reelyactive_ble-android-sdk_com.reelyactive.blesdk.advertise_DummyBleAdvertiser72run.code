@@ -1,0 +1,6 @@
+@Override public void run(){
+  if (advertising) {
+    advertise();
+    worker.getHandler().postDelayed(runnable,5 * 1000);
+  }
+}

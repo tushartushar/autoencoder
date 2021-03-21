@@ -1,0 +1,5 @@
+public void serialize(OutputBuffer ob){
+  ob.add(key);
+  byte[] ip_bytes=RedirClient.addr2bytes(addr);
+  ob.add(ip_bytes);
+}

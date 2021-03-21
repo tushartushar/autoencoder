@@ -1,0 +1,3 @@
+public void setAccessLogId(int accessLogId){
+  this.accessLogId=accessLogId;
+}

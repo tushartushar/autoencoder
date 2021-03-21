@@ -1,0 +1,16 @@
+public void timer_cb(Object user_data){
+  if (hosts.isEmpty()) {
+    if (outstanding.isEmpty()) {
+      logger.info("all done");
+      System.exit(0);
+    }
+    return;
+  }
+  NodeId host=(NodeId)hosts.removeFirst();
+  outstanding.add(host);
+  PingMsg ping=new PingMsg(host);
+  ping.comp_q=my_sink;
+  ping.user_data=host;
+  ping.timeout_sec=60;
+  dispatch(ping);
+}

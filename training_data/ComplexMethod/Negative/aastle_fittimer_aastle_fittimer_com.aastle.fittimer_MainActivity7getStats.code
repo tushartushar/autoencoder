@@ -1,0 +1,4 @@
+private String getStats(){
+  Cursor statsCursor=getTimeFromSqlite();
+  return buildJodaStats(statsCursor);
+}

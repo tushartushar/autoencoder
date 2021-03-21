@@ -1,0 +1,23 @@
+public static void fill_holes(MerkleTree tree,SortedSet keys){
+  MerkleTree.FillHolesState state=null;
+  while (true) {
+    state=tree.root().fill_holes(state,System.currentTimeMillis());
+    if (state == null)     break;
+    StorageManager.Key low=new StorageManager.Key(state.range_low,0,min_guid,min_hash,min_hash,false,StorageManager.ZERO_CLIENT);
+    StorageManager.Key high=new StorageManager.Key(state.range_high,0,max_guid,max_hash,max_hash,true,StorageManager.MAX_CLIENT);
+    SortedSet under_me=keys.headSet(high).tailSet(low);
+    state.leaves_below=under_me.size();
+    if (state.leaves_below <= state.max_leaves_below) {
+      for (Iterator i=under_me.iterator(); i.hasNext(); ) {
+        StorageManager.Key k=(StorageManager.Key)i.next();
+        byte[] bytes=new byte[StorageManager.Key.SIZE];
+        k.to_byte_buffer(ByteBuffer.wrap(bytes,0,bytes.length));
+        md.update(bytes);
+      }
+      state.digest=md.digest();
+    }
+ else {
+      state.digest=null;
+    }
+  }
+}

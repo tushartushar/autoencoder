@@ -1,0 +1,8 @@
+public CoordReq(BigInteger i,VirtualCoordinate c){
+  srcID=i;
+  srcCoords=c;
+}
+public CoordReq(InputBuffer buffer) throws QSException {
+  srcID=buffer.nextBigInteger();
+  srcCoords=new VirtualCoordinate(buffer);
+}

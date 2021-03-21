@@ -1,0 +1,15 @@
+public ScreenCaptureWindow(ScreenCaptureListener listener){
+  Toolkit toolkit=Toolkit.getDefaultToolkit();
+  Dimension dim=toolkit.getScreenSize();
+  if (listener != null)   screen_capture_listener=listener;
+  setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+  setUndecorated(true);
+  setResizable(false);
+  setAlwaysOnTop(true);
+  setSize(dim.width,dim.height);
+  setExtendedState(JFrame.MAXIMIZED_BOTH);
+  setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+  addKeyListener(this);
+  addMouseListener(this);
+  addMouseMotionListener(this);
+}

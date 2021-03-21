@@ -1,0 +1,5 @@
+protected String config_get_string(ConfigDataIF config,String name){
+  String result=config.getString(name);
+  logger.info("config." + name + "="+ result);
+  return result;
+}

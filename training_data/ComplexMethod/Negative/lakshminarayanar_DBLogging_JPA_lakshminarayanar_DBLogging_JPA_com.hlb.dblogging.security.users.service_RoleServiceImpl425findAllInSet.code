@@ -1,0 +1,4 @@
+@Override public Set<Role> findAllInSet(){
+  Set<Role> resultSet=roleRepository.findAllInSet();
+  return resultSet;
+}

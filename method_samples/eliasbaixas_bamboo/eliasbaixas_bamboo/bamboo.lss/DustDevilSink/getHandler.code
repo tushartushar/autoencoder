@@ -1,0 +1,4 @@
+public EventHandlerIF getHandler(){
+  check_thread();
+  return handler;
+}

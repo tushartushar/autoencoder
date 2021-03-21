@@ -1,0 +1,3 @@
+public void setAccessRights(String accessRights){
+  this.accessRights=accessRights;
+}

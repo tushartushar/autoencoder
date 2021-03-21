@@ -1,0 +1,14 @@
+private LazyGetter getLazyGetter(){
+  if (defaultLazyGetter == null || !defaultLazyGetter.canRegister()) {
+    defaultLazyGetter=new LazyGetter(client,timing);
+  }
+  return defaultLazyGetter;
+}
+private LazyGetter getLazyGetter(Direction direction){
+  LazyGetter lazyGetter=lazyGetters.get(direction);
+  if (lazyGetter == null || !lazyGetter.canRegister()) {
+    lazyGetter=new LazyGetter(client,timing);
+    lazyGetters.put(direction,lazyGetter);
+  }
+  return lazyGetter;
+}

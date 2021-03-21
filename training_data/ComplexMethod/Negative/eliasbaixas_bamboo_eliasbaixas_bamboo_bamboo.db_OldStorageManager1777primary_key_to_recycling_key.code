@@ -1,0 +1,7 @@
+protected void primary_key_to_recycling_key(byte[] buf){
+  byte[] tmp=new byte[20];
+  System.arraycopy(buf,12,tmp,0,20);
+  System.arraycopy(buf,0,buf,20,8);
+  System.arraycopy(buf,8,buf,28,4);
+  System.arraycopy(tmp,0,buf,0,20);
+}

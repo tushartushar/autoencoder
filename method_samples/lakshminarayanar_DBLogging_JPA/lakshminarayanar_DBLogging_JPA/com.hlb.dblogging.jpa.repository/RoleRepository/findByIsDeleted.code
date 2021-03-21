@@ -1,0 +1,1 @@
+@Query("select r from Role r where isDeleted = ?") List<Role> findByIsDeleted(int x);

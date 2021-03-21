@@ -1,0 +1,12 @@
+public GetByTimeReq(long l,long h,SinkIF s,Object ud){
+  low=l;
+  high=h;
+  comp_q=s;
+  user_data=ud;
+}
+public GetByTimeReq(long l,long h,SinkIF s,Object ud){
+  low=l;
+  high=h;
+  comp_q=s;
+  user_data=ud;
+}

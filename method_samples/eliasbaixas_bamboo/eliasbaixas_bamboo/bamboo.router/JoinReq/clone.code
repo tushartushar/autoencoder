@@ -1,0 +1,9 @@
+public Object clone() throws CloneNotSupportedException {
+  JoinReq result=(JoinReq)super.clone();
+  result.node_id=node_id;
+  result.guid=guid;
+  result.rev_ttl=rev_ttl;
+  result.path=new LinkedList<NeighborInfo>();
+  for (Iterator i=path.iterator(); i.hasNext(); )   result.path.addLast((NeighborInfo)i.next());
+  return result;
+}

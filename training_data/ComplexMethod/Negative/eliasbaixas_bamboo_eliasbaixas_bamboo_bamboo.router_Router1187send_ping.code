@@ -1,0 +1,10 @@
+protected void send_ping(NeighborInfo ni){
+  if (!pings_in_flight.contains(ni)) {
+    pings_in_flight.add(ni);
+    PingMsg outb=new PingMsg(ni.node_id);
+    outb.comp_q=my_sink;
+    outb.user_data=new ProbePingCB(ni);
+    outb.timeout_sec=5;
+    dispatch(outb);
+  }
+}

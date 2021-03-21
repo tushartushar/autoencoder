@@ -1,0 +1,19 @@
+public RecurGetReq(BigInteger k,int m,Key p,long s,NodeId c,NodeId r){
+  key=k;
+  maxvals=m;
+  placemark=p;
+  seq=s;
+  client=c;
+  return_addr=r;
+  assert (placemark != null);
+}
+public RecurGetReq(InputBuffer buffer) throws QSException {
+  key=buffer.nextBigInteger();
+  maxvals=buffer.nextInt();
+  if (maxvals <= 0)   throw new QSException("maxvals <= 0");
+  if (buffer.nextBoolean())   placemark=new Key(buffer);
+ else   placemark=ZERO_KEY;
+  seq=buffer.nextLong();
+  client=new NodeId(buffer);
+  return_addr=new NodeId(buffer);
+}

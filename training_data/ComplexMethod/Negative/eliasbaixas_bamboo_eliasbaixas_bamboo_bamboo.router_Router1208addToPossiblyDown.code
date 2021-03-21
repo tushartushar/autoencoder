@@ -1,0 +1,28 @@
+public void addToPossiblyDown(NodeId n){
+  for (  NeighborInfo ni : leaf_set.as_list()) {
+    if (ni.node_id.equals(n)) {
+      addToPossiblyDown(ni);
+      return;
+    }
+  }
+  for (  NeighborInfo ni : rt.as_list()) {
+    if (ni.node_id.equals(n)) {
+      addToPossiblyDown(ni);
+      return;
+    }
+  }
+}
+public void addToPossiblyDown(NeighborInfo ni){
+  if (leaf_set.contains(ni) || rt.contains(ni) || reverse_rt.contains(ni)) {
+    if (!possibly_down.containsKey(ni)) {
+      possibly_down.put(ni,new Long(now_ms()));
+      possibly_down_helper.put(ni.node_id,ni);
+      if (logger.isDebugEnabled())       logger.debug("added " + ni + " to possibly down");
+      PingMsg outb=new PingMsg(ni.node_id);
+      outb.comp_q=my_sink;
+      outb.user_data=new SecondChancePingCB(ni);
+      outb.timeout_sec=60;
+      dispatch(outb);
+    }
+  }
+}

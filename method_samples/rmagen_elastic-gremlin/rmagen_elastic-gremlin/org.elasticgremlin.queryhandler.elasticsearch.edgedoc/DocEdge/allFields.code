@@ -1,0 +1,8 @@
+@Override public Map<String,Object> allFields(){
+  Map<String,Object> map=super.allFields();
+  map.put(DocEdge.InId,inVertex.id());
+  map.put(DocEdge.OutId,outVertex.id());
+  map.put(DocEdge.InLabel,inVertex.label());
+  map.put(DocEdge.OutLabel,outVertex.label());
+  return map;
+}

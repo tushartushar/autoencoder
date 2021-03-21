@@ -1,0 +1,3 @@
+public static boolean isAudioSink(ParcelUuid uuid){
+  return uuid.equals(AudioSink);
+}

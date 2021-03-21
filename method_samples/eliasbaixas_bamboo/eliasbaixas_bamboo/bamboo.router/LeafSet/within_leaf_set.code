@@ -1,0 +1,3 @@
+public final boolean within_leaf_set(BigInteger i){
+  return in_range_mod(leaf_set_low(),my_guid,i) || in_range_mod(my_guid,leaf_set_high(),i);
+}

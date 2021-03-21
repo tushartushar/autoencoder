@@ -1,0 +1,5 @@
+public void add_packet(ByteBuffer bb){
+  if (bb.position() == bb.limit())   throw new IllegalArgumentException();
+  buffers.addLast(bb);
+  size+=bb.limit() - bb.position();
+}

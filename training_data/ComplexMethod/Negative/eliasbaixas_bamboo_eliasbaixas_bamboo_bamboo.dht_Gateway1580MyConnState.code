@@ -1,0 +1,8 @@
+public MyConnState(SocketChannel sc){
+  this.sc=sc;
+  addr=sc.socket().getInetAddress();
+  client_string=addr.getHostAddress() + ":" + sc.socket().getPort();
+  last_activity_ms=timer_ms();
+  acore.register_timer(CONN_TIMEOUT,timeout_cb);
+  write_buf.limit(0);
+}

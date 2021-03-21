@@ -1,0 +1,9 @@
+/** 
+ * Constructor should be called only once per long-running process that does Bluetooth LE scanning.  Must call start() to make it do anything.
+ * @param context the Activity or Service that is doing the Bluetooth scanning
+ */
+public BluetoothCrashResolver(Context context){
+  this.context=context.getApplicationContext();
+  if (isDebugEnabled())   Log.d(TAG,"constructed");
+  loadState();
+}

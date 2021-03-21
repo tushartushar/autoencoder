@@ -1,0 +1,2 @@
+void storage_changed(boolean added,InetAddress client_id,long size);
+void storage_changed(boolean added,InetAddress client_id,long size);

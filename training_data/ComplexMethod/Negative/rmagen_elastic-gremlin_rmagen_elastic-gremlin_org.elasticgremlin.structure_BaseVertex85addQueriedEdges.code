@@ -1,0 +1,3 @@
+private void addQueriedEdges(EdgeQueryInfo queryInfo,Set<Edge> edges){
+  queriedEdges.put(queryInfo,edges);
+}

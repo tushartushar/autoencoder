@@ -1,0 +1,3 @@
+protected void handle_leaf_set_req(LeafSetReq req){
+  dispatch(new LeafSetChanged(req.peer,my_guid,leaf_set.as_list()));
+}

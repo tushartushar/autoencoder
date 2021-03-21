@@ -1,0 +1,6 @@
+public CoordResp(VirtualCoordinate c){
+  coords=c;
+}
+public CoordResp(InputBuffer buffer) throws QSException {
+  coords=new VirtualCoordinate(buffer);
+}

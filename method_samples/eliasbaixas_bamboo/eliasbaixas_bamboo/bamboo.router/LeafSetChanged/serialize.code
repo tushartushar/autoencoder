@@ -1,0 +1,7 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  buffer.add(guid);
+  buffer.add(leaf_set.size());
+  for (Iterator j=leaf_set.iterator(); j.hasNext(); )   ((NeighborInfo)j.next()).serialize(buffer);
+  buffer.add(want_reply);
+}

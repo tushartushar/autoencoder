@@ -1,0 +1,4 @@
+public void show_color_storage(){
+  float darkness=1 - (current_storage / FetchNodeInfoThread.biggestStorageFound);
+  dot.setFillPaint(new Color(darkness,darkness,darkness));
+}

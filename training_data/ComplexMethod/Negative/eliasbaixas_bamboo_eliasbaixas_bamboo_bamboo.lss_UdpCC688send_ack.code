@@ -1,0 +1,34 @@
+protected final boolean send_ack(Connection conn){
+  long now_ms=System.currentTimeMillis();
+  Long seq=(Long)conn.ack_q.getFirst();
+  if (DEBUG)   debugln("sending ack seq 0x" + Long.toHexString(seq.longValue()));
+  ByteBuffer bb=null;
+  if (mac == null) {
+    bb=alloc_bb(12);
+    bb.putInt(0);
+    bb.putLong(seq.longValue());
+    bb.rewind();
+  }
+ else {
+    bb=alloc_bb(32);
+    bb.putInt(1);
+    bb.putLong(seq.longValue());
+    mac.update(bb.array(),bb.arrayOffset(),bb.position());
+    byte[] macbytes=mac.doFinal();
+    bb.put(macbytes,0,20);
+    bb.rewind();
+  }
+  if (DEBUG)   debugln("acking " + seq);
+  int n=0;
+  try {
+    n=channel.send(bb,conn.addr);
+  }
+ catch (  IOException e) {
+    BUG(e);
+  }
+  if (n == 0)   return false;
+  out_pkts+=1;
+  out_bytes+=bb.limit() + 20;
+  conn.ack_q.removeFirst();
+  return true;
+}

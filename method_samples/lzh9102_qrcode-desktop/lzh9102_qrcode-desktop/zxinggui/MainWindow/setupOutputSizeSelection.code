@@ -1,0 +1,14 @@
+/** 
+ * Initialize the output size selection combobox.
+ */
+private void setupOutputSizeSelection(){
+  for (  final int size : outputSizes) {
+    Object item=new Object(){
+      public String toString(){
+        return "" + size + "x"+ size;
+      }
+    }
+;
+    cbSelectSize.addItem(item);
+  }
+}

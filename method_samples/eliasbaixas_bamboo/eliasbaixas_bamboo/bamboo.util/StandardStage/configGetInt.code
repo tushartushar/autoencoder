@@ -1,0 +1,6 @@
+protected int configGetInt(ConfigDataIF config,String name,int defaultValue){
+  int result=config.getInt(name);
+  if (result == -1)   result=defaultValue;
+  logger.info("config." + name + "="+ result);
+  return result;
+}

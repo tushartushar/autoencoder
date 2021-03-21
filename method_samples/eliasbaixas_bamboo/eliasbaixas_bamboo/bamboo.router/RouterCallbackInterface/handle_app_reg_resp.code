@@ -1,0 +1,4 @@
+protected void handle_app_reg_resp(BambooRouterAppRegResp resp){
+  Application app=(Application)apps.get(new Long(resp.app_id));
+  app.registered_cb.application_registered(resp.app_id,resp.success,resp.msg,resp.modulus,resp.guid_digits,resp.digit_values,resp.node_guid,app.registered_ud);
+}

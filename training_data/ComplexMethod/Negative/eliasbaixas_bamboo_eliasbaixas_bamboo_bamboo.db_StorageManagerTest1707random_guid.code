@@ -1,0 +1,3 @@
+public BigInteger random_guid(){
+  return GuidTools.random_guid(rand);
+}

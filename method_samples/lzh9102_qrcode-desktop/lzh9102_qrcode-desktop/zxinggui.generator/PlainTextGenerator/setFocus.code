@@ -1,0 +1,3 @@
+@Override public void setFocus(){
+  textarea.requestFocusInWindow();
+}

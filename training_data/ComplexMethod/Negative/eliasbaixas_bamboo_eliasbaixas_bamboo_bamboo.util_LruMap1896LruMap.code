@@ -1,0 +1,5 @@
+public LruMap(int cap,Map backing_map){
+  if (!backing_map.isEmpty())   throw new IllegalArgumentException("backing_map not empty");
+  capacity=cap;
+  map=backing_map;
+}

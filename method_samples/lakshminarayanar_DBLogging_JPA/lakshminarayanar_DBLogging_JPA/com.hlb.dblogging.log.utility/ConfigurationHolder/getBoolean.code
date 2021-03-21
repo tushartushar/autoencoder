@@ -1,0 +1,12 @@
+public static Boolean getBoolean(String key){
+  try {
+    if (config == null) {
+      init();
+    }
+    return config.getBoolean(key);
+  }
+ catch (  ConfigurationException e) {
+    e.printStackTrace();
+    return null;
+  }
+}

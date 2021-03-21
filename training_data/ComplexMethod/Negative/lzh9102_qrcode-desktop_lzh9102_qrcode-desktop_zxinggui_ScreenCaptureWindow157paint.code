@@ -1,0 +1,13 @@
+public void paint(Graphics g){
+  Graphics graphics=screen_buffer.getGraphics();
+  graphics.drawImage(screencapture,0,0,null);
+  graphics.setColor(Color.RED);
+  if (!rect.isEmpty()) {
+    drawThickRect(graphics,rect,SEL_BORDER_WIDTH);
+  }
+  graphics.setFont(msgfont);
+  FontMetrics fm=graphics.getFontMetrics();
+  Rectangle2D str_rect=fm.getStringBounds(message,graphics);
+  graphics.drawString(message,(getWidth() - (int)str_rect.getWidth()) / 2,(getHeight() - (int)str_rect.getHeight()) / 2);
+  g.drawImage(screen_buffer,0,0,null);
+}

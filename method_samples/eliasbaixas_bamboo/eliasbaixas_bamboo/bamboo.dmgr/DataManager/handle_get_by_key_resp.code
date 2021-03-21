@@ -1,0 +1,12 @@
+protected void handle_get_by_key_resp(StorageManager.GetByKeyResp resp){
+  if (resp.user_data instanceof AntiEntropyState) {
+    if (resp.user_data == ae_state)     handle_fetch_keys_check(resp);
+ else     ;
+  }
+ else   if (resp.user_data instanceof FetchDataReq) {
+    handle_fetch_data_req_have_data(resp);
+  }
+ else {
+    assert false : resp.user_data.getClass().getName();
+  }
+}

@@ -1,0 +1,6 @@
+public void cancelSend(Object token){
+  SendToken s=(SendToken)token;
+  inflight.remove(s.xact_id);
+  acore.cancelTimer(s.timerToken);
+  network.cancelSend(s.networkToken);
+}

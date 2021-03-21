@@ -1,0 +1,5 @@
+@Override public void applyLazyFields(MultiGetItemResponse response){
+  GetResponse getResponse=response.getResponse();
+  if (getResponse.isSourceEmpty())   return;
+  setFields(getResponse.getSource());
+}

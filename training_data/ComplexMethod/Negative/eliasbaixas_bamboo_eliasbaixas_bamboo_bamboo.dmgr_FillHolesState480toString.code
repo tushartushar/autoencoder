@@ -1,0 +1,3 @@
+public String toString(){
+  return "(FillHolesState digest=" + digest + ", range=["+ Long.toHexString(range_low)+ ", "+ Long.toHexString(range_high)+ "), "+ ", leaves_below="+ leaves_below+ ", max_leaves_below="+ max_leaves_below+ ")";
+}

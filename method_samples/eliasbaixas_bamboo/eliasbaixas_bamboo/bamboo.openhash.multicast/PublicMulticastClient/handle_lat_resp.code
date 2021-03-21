@@ -1,0 +1,19 @@
+public void handle_lat_resp(NodeId peer,int level,long rtt_ms){
+  assert peer != my_node_id;
+  if (queue[level].contains(peer)) {
+    PriorityQueue tmp_queue=new PriorityQueue(10);
+    for (int i=1; i <= queue[level].size(); i++) {
+      NodeId nid=(NodeId)queue[level].getIndex(i);
+      if (nid.equals(peer)) {
+        tmp_queue.add(peer,rtt_ms);
+      }
+ else {
+        tmp_queue.add(nid,queue[level].getIndexPriority(i));
+      }
+    }
+    queue[level]=tmp_queue;
+  }
+ else {
+    queue[level].add(peer,rtt_ms);
+  }
+}

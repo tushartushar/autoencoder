@@ -1,0 +1,19 @@
+public RoutingTableResp(NodeId dest,BigInteger g,LinkedList n){
+  super(dest,false);
+  peer_guid=g;
+  neighbors=n;
+}
+public RoutingTableResp(InputBuffer buffer) throws QSException {
+  super(buffer);
+  peer_guid=buffer.nextBigInteger();
+  int count=buffer.nextInt();
+  if (count <= 0)   return;
+ else   if (count > 16) {
+    System.err.println("Got RoutingTableResp with neighbors.size ()" + " = " + count);
+    throw new QSException("neighbors.size () = " + count);
+  }
+ else {
+    neighbors=new LinkedList();
+    while (count-- > 0)     neighbors.addLast(new NeighborInfo(buffer));
+  }
+}

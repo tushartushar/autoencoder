@@ -1,0 +1,8 @@
+public Network(InetSocketAddress addr,ASyncCore ac) throws IOException {
+  this.addr=addr;
+  main_acore=ac;
+  instances.put(addr,this);
+  event_types=new Class[]{NetworkLatencyReq.class};
+  outb_msg_types=new Class[]{NetworkMessage.class};
+  logger.info("Network " + addr.getAddress().getHostName() + " now listening on port "+ addr.getPort());
+}

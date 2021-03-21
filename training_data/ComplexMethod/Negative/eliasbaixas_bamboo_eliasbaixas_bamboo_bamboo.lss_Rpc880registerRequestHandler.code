@@ -1,0 +1,5 @@
+public <T extends QuickSerializable>void registerRequestHandler(Class<T> requestType,Thunk3<InetSocketAddress,T,Object> handler) throws DuplicateTypeException {
+  if (handlers.containsKey(requestType))   throw new DuplicateTypeException(requestType);
+  ensure_known(requestType);
+  handlers.put(requestType,(Thunk3<InetSocketAddress,QuickSerializable,Object>)handler);
+}

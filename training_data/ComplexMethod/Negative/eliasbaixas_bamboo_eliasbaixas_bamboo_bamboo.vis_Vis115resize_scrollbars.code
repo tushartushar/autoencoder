@@ -1,0 +1,26 @@
+public void resize_scrollbars(){
+  FigureLayer layer=graphicsPane.getForegroundLayer();
+  Rectangle2D allpoints=null;
+  for (Iterator i=layer.figures(); i.hasNext(); ) {
+    Figure f=(Figure)i.next();
+    if (allpoints == null)     allpoints=f.getBounds();
+ else     allpoints.add(f.getBounds());
+  }
+  double max_x_coor=allpoints.getX() + allpoints.getWidth();
+  double min_x_coor=allpoints.getX();
+  double max_y_coor=allpoints.getY() + allpoints.getHeight();
+  double min_y_coor=allpoints.getY();
+  y_scrollbar.setValues((int)Math.round(allpoints.getY() + 0.5 * allpoints.getHeight()),(int)Math.round(0.25 * allpoints.getHeight()),(int)Math.round((min_y_coor) - Math.abs(min_y_coor * 0.01)),(int)Math.round((max_y_coor) + Math.abs(max_y_coor * 0.01)));
+  x_scrollbar.setValues((int)Math.round(allpoints.getX() + 0.5 * allpoints.getWidth()),(int)Math.round(0.25 * allpoints.getWidth()),(int)Math.round((min_x_coor) - Math.abs(min_x_coor * 0.01)),(int)Math.round((max_x_coor) + Math.abs(max_x_coor * 0.01)));
+  int x_block_increment=(int)Math.round((max_x_coor - min_x_coor) / 10);
+  x_scrollbar.setBlockIncrement((x_block_increment > 10) ? x_block_increment : 10);
+  x_scrollbar.setUnitIncrement((x_block_increment > 40) ? (x_block_increment / 40) : 1);
+  int y_block_increment=(int)Math.round((max_y_coor - min_y_coor) / 10);
+  y_scrollbar.setBlockIncrement((y_block_increment > 10) ? y_block_increment : 10);
+  y_scrollbar.setUnitIncrement((y_block_increment > 40) ? (y_block_increment / 40) : 1);
+  Dimension2D d=(Dimension2D)canvas.getSize();
+  double xscale=d.getWidth() / allpoints.getWidth();
+  double yscale=d.getHeight() / allpoints.getHeight();
+  double desired_zoom=Math.min(xscale,yscale) * 0.8;
+  zoom_slider.setValue(zoom_to_slider(desired_zoom));
+}

@@ -1,0 +1,3 @@
+@Override public void pluginTo(final PluginAcceptor pluginAcceptor) throws PluginInitializationException, IllegalEnvironmentException {
+  pluginAcceptor.addImports(IMPORTS);
+}

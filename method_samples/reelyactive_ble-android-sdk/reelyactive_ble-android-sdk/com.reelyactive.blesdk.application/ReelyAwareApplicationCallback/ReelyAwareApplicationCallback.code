@@ -1,0 +1,9 @@
+/** 
+ * As soon as the component is created, we bindBleService to the  {@link BleService}
+ * @param context The application's {@link Context}
+ */
+public ReelyAwareApplicationCallback(Context context){
+  this.context=context;
+  this.serviceConnection=new BleServiceConnection();
+  bindBleService();
+}

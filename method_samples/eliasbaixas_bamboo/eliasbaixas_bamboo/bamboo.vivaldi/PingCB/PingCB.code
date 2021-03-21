@@ -1,0 +1,4 @@
+public PingCB(VirtualCoordinate remote,long send_time){
+  send_ms=send_time;
+  remote_coordinate=remote;
+}

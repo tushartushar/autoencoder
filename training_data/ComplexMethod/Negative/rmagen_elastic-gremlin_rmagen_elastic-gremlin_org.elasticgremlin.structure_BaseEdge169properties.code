@@ -1,0 +1,4 @@
+@Override public Iterator<Property> properties(String... propertyKeys){
+  checkRemoved();
+  return innerPropertyIterator(propertyKeys);
+}

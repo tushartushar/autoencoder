@@ -1,0 +1,12 @@
+public static String getString(String key){
+  try {
+    if (config == null) {
+      init();
+    }
+    return config.getString(key);
+  }
+ catch (  ConfigurationException e) {
+    e.printStackTrace();
+    return null;
+  }
+}

@@ -1,0 +1,10 @@
+public static byte[] getSystemIdBytes(ScanResult result){
+  if (result == null) {
+    return null;
+  }
+  ScanRecord record=result.getScanRecord();
+  if (record == null) {
+    return null;
+  }
+  return record.getServiceData(BluetoothUuid.parseUuidFrom(new byte[]{0x23,0x2a}));
+}

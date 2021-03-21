@@ -1,0 +1,9 @@
+private void printChildTable(){
+  String s="printChildTable // ";
+  Iterator groups=allChildGroups.keySet().iterator();
+  while (groups.hasNext()) {
+    BigInteger b=(BigInteger)groups.next();
+    s+=GuidTools.guid_to_string(b) + " " + allChildGroups.get(b)+ " // ";
+  }
+  Debug.printtagln(tag,s);
+}

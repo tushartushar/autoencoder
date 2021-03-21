@@ -1,0 +1,6 @@
+public int compareTo(Object rhs){
+  BambooNeighborInfo other=(BambooNeighborInfo)rhs;
+  int i;
+  if ((i=node_id.compareTo(other.node_id)) != 0)   return i;
+  return guid.compareTo(other.guid);
+}

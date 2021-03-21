@@ -1,0 +1,6 @@
+public Object clone() throws CloneNotSupportedException {
+  PingVCResp result=(PingVCResp)super.clone();
+  result.coordinate=coordinate;
+  result.version_number=version_number;
+  return result;
+}

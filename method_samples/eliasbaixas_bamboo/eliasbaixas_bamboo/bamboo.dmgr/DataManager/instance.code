@@ -1,0 +1,3 @@
+public static DataManager instance(InetSocketAddress addr){
+  return instances.get(addr);
+}

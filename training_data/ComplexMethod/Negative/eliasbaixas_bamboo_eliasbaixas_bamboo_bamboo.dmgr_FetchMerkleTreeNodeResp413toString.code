@@ -1,0 +1,24 @@
+public String toString(){
+  StringBuffer result=new StringBuffer(100 + ((children == null) ? 0 : 40 * children.size()));
+  result.append("(FetchMerkleTreeNodeResp super=");
+  result.append(super.toString());
+  result.append(" hash=");
+  result.append(ostore.util.ByteUtils.print_bytes(hash));
+  result.append(" leaf=");
+  result.append(leaf);
+  result.append(" children=(");
+  if (children != null) {
+    Iterator i=children.iterator();
+    while (i.hasNext()) {
+      byte[] child=(byte[])i.next();
+      result.append("<");
+      result.append(ostore.util.ByteUtils.print_bytes(child));
+      result.append(">");
+      if (i.hasNext())       result.append(" ");
+    }
+  }
+  result.append(") seq=");
+  result.append(seq);
+  result.append(")");
+  return result.toString();
+}

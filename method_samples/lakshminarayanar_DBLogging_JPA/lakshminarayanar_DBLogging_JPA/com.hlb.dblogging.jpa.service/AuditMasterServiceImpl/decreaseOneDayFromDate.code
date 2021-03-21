@@ -1,0 +1,6 @@
+private Date decreaseOneDayFromDate(Date date){
+  Calendar cal=Calendar.getInstance();
+  cal.setTime(date);
+  cal.add(Calendar.DATE,-1);
+  return cal.getTime();
+}

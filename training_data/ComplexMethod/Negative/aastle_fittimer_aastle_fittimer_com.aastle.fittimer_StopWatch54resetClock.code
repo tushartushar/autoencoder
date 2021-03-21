@@ -1,0 +1,10 @@
+/** 
+ * Reset the clock to time 00:00 and stop the clock. Do not ignore multiple reset.
+ */
+public void resetClock(){
+  this.setBase(time());
+  this.refreshDrawableState();
+  this.stop();
+  setClockIsNotRunning();
+  clockReseted=true;
+}

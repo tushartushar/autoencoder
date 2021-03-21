@@ -1,0 +1,5 @@
+protected int config_get_int(ConfigDataIF config,String name){
+  int result=config.getInt(name);
+  logger.info("config." + name + "="+ result);
+  return result;
+}

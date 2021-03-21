@@ -1,0 +1,12 @@
+public ClientThread(InetAddress h,int p,int seed){
+  rand=new Random(seed);
+  gateway_host=h;
+  gateway_port=p;
+  logger=Logger.getLogger(ClientThread.class);
+  try {
+    digest=MessageDigest.getInstance("SHA");
+  }
+ catch (  Exception e) {
+    assert false;
+  }
+}

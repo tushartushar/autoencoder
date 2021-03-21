@@ -1,0 +1,8 @@
+public Object registerTimer(long time_ms,final Runnable cb){
+  return event_queue.register_timer(event_queue.current_node_id(),time_ms * 1000,new EventQueue.Callback(){
+    public void call(    Object notUsed){
+      cb.run();
+    }
+  }
+,null);
+}

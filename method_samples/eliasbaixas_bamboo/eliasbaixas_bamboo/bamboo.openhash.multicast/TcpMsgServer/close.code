@@ -1,0 +1,7 @@
+public void close(){
+  try {
+    channel.close();
+  }
+ catch (  IOException e) {
+  }
+}

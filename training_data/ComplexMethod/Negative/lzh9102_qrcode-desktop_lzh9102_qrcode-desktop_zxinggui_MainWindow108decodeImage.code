@@ -1,0 +1,16 @@
+private void decodeImage(BufferedImage image){
+  LuminanceSource source=new BufferedImageLuminanceSource(image);
+  BinaryBitmap bitmap=new BinaryBitmap(new HybridBinarizer(source));
+  try {
+    Result result=reader.decode(bitmap);
+    imgDisplay.setImage(image);
+    generated_image=null;
+    prevText=result.getText();
+    int generator_index=generators.findTextHandlerIndex(prevText);
+    cbSelectGenerator.setSelectedIndex(generator_index);
+    generators.getGenerator(generator_index).parseText(prevText,true);
+  }
+ catch (  Exception e) {
+    JOptionPane.showMessageDialog(this,"Failed to decode the image");
+  }
+}

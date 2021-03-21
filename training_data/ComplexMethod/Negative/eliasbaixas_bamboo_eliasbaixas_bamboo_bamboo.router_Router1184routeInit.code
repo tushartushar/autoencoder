@@ -1,0 +1,26 @@
+/** 
+ * Initiate a routing operation to <code>dest</code>.  Place the message to be sent in <code>payload</code>.  To receive the message, the node responsible for <code>dest</code> must have registered an application (see <code>registerApplication</code>) with the given <code>applicationID</code>.  If <code>intermediateUpcall</code> is true, a the <code>routeUpcall</code> function object given in that call to <code>registerApplication</code> will be called on each intermediate node in the path.  To continue the routing operation, that node must call <code>routeContinue</code>.  Finally, the <code>routeDeliver</code> function object given in the call to <code>registerApplication</code> will be called once the message reaches the node responsible for <code>dest</code>.
+ */
+public void routeInit(final BigInteger dest,final long applicationID,final boolean intermediateUpcall,final QuickSerializable payload){
+  if (!apps.containsKey(new Long(applicationID))) {
+    logger.error("routeInit called with unknown application ID " + applicationID);
+    System.exit(1);
+  }
+  NeighborInfo next_hop=calc_next_hop(dest,true);
+  if (next_hop == my_neighbor_info) {
+    deliver(my_guid,dest,my_node_id,applicationID,1,0L,0L,payload);
+  }
+ else {
+    RouteMsg outb=new RouteMsg(next_hop.node_id,my_guid,dest,applicationID,intermediateUpcall,my_guid,payload);
+    outb.comp_q=my_sink;
+    outb.user_data=new RecursiveRouteCB(next_hop,new Runnable(){
+      public void run(){
+        routeInit(dest,applicationID,intermediateUpcall,payload);
+      }
+    }
+);
+    if (no_rexmit_routes)     outb.timeout_sec=-1;
+ else     outb.timeout_sec=5;
+    dispatch(outb);
+  }
+}

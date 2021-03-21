@@ -1,0 +1,48 @@
+public static void main(String args[]) throws Exception {
+  LineNumberReader reader=new LineNumberReader(new InputStreamReader(new FileInputStream(args[0])));
+  String line=null;
+  while (true) {
+    line=reader.readLine();
+    if (!line.startsWith("#"))     break;
+  }
+  String[] fields=line.trim().split("  *");
+  int maxTTL=Integer.parseInt(fields[0]);
+  int maxPut=Integer.parseInt(fields[1]);
+  int rateBps=Integer.parseInt(fields[2]);
+  int seed=1;
+  final ASyncCore acore=new ASyncCoreImpl();
+  FST fst=new FST(acore,rateBps,maxTTL * maxPut,maxPut,maxTTL * maxPut,maxTTL * maxPut);
+  LinkedList<Double> params=new LinkedList<Double>();
+  while ((line=reader.readLine()) != null) {
+    if (line.startsWith("#"))     continue;
+    fields=line.trim().split("  *");
+    for (int i=0; i < 3; ++i)     params.addLast(new Double(Double.parseDouble(fields[i])));
+  }
+  int fairPeriod=rateBps / maxPut * 1000 * (params.size() / 3);
+  final LinkedList<TestClient> clients=new LinkedList<TestClient>();
+  for (Iterator<Double> i=params.iterator(); i.hasNext(); ) {
+    int period=(int)(i.next().doubleValue() * fairPeriod);
+    int size=(int)i.next().doubleValue();
+    int ttl=(int)i.next().doubleValue();
+    assert size <= maxPut : "size " + size + " > maxPut";
+    assert ttl <= maxTTL : "ttl " + ttl + " > maxTTL";
+    clients.addLast(new TestClient(acore,fst,new Client(new byte[]{(byte)seed}),period,size,ttl,seed++));
+  }
+  for (  TestClient c : clients)   c.scheduleNextPut();
+  final long startTime=acore.nowMillis();
+  acore.registerTimer(10 * 1000,new Runnable(){
+    public void run(){
+      System.out.print(acore.nowMillis() - startTime);
+      for (      TestClient c : clients) {
+        System.out.print(" " + c.commitmentsGranted + " "+ c.bytesStored+ " "+ +c.totalWait+ " "+ c.accepts+ " "+ c.rejects);
+        c.totalWait=0;
+        c.accepts=0;
+        c.rejects=0;
+      }
+      System.out.println();
+      acore.registerTimer(10 * 1000,this);
+    }
+  }
+);
+  acore.async_main();
+}

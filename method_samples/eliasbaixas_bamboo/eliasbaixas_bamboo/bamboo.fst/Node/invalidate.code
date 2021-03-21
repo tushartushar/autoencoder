@@ -1,0 +1,4 @@
+public static final Node invalidate(Node old){
+  assert old != null;
+  return new Node(old.left,old.right,old.offset,old.value,old.low,old.high,old.height,false);
+}

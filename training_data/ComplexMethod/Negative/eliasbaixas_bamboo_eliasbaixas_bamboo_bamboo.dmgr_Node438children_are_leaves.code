@@ -1,0 +1,4 @@
+public boolean children_are_leaves(){
+  if (hash == null)   throw new IllegalStateException("not valid");
+  return (level == 0) || (!has_children());
+}

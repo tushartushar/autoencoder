@@ -1,0 +1,3 @@
+public boolean isEqual(maneuvar man){
+  return this.id == man.id;
+}

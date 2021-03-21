@@ -1,0 +1,5 @@
+public NetworkModel.RouteInfo compute_route_info(int src,int dst){
+  if (src <= 0 || src >= latencies.length)   throw new IllegalArgumentException("src=" + src);
+  if (dst <= 0 || dst >= latencies[src].length)   throw new IllegalArgumentException("dst=" + dst);
+  return new NetworkModel.RouteInfo(latencies[src][dst] * 1000,0);
+}

@@ -1,0 +1,3 @@
+public void unregisterClient(BleServiceCallback client){
+  mClients.remove(client);
+}

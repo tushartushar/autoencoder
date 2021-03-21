@@ -1,0 +1,14 @@
+public void toStringBuffer(StringBuffer buf){
+  buf.append("key=0x");
+  buf.append(GuidTools.guid_to_string(guid));
+  buf.append(" secret_hash=0x");
+  bytes_to_sbuf(secret_hash,0,4,buf);
+  buf.append(" data_hash=0x");
+  bytes_to_sbuf(data_hash,0,4,buf);
+  buf.append(" time_usec=0x");
+  buf.append(Long.toHexString(time_usec));
+  buf.append(" ttl=");
+  buf.append(ttl_sec);
+  buf.append(" client_id=");
+  buf.append(client_id.getHostAddress());
+}

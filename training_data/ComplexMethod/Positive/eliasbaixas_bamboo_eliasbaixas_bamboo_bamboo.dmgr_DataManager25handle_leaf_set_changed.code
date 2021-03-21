@@ -1,0 +1,72 @@
+protected void handle_leaf_set_changed(BambooLeafSetChanged msg){
+  if (msg.preds.length == 0) {
+    preds=null;
+    succs=null;
+    resp_low=MIN_GUID;
+    resp_high=MAX_GUID;
+    merkle_trees=new TreeMap();
+    return;
+  }
+  assert msg.preds.length == msg.succs.length : "\n" + bamboo.router.Router.instance(my_node_id).leafSet();
+  int len=min(msg.preds.length,desired_replicas / 2);
+  boolean new_ls_covers_all=false;
+  for (int i=0; i < len; ++i) {
+    if (msg.preds[i].equals(msg.succs[len - 1])) {
+      new_ls_covers_all=true;
+      break;
+    }
+  }
+  if (new_ls_covers_all) {
+    resp_low=MIN_GUID;
+    resp_high=MAX_GUID;
+  }
+ else {
+    resp_low=msg.preds[len - 1].guid;
+    resp_high=msg.succs[len - 1].guid.subtract(BigInteger.ONE);
+    if (resp_high.equals(NEG_ONE))     resp_high=MAX_GUID;
+  }
+  preds=new BambooNeighborInfo[len];
+  succs=new BambooNeighborInfo[len];
+  for (int i=0; i < len; ++i) {
+    preds[i]=msg.preds[i];
+    succs[i]=msg.succs[i];
+  }
+  if (logger.isDebugEnabled()) {
+    logger.debug("responsibility is [" + GuidTools.guid_to_string(resp_low) + ", "+ GuidTools.guid_to_string(resp_high)+ "]");
+  }
+  SortedSet db_ranges=new TreeSet();
+  if (new_ls_covers_all) {
+    GuidRange range=new GuidRange(MIN_GUID,MAX_GUID);
+    db_ranges.add(range);
+  }
+ else {
+    for (int i=-1 * preds.length; i < succs.length; ++i) {
+      BambooNeighborInfo one=null, two=null;
+      if (i == 0)       one=my_neighbor_info;
+ else       if (i < 0)       one=preds[-1 * i - 1];
+ else       one=succs[i - 1];
+      if (i + 1 == 0)       two=my_neighbor_info;
+ else       if (i + 1 < 0)       two=preds[-1 * (i + 1) - 1];
+ else       two=succs[(i + 1) - 1];
+      BigInteger second=two.guid.subtract(BigInteger.ONE);
+      if (second.equals(NEG_ONE))       second=MAX_GUID;
+      GuidRange range=new GuidRange(one.guid,second);
+      if (logger.isDebugEnabled())       logger.debug("share range [" + GuidTools.guid_to_string(one.guid) + ", "+ GuidTools.guid_to_string(second)+ "]");
+      db_ranges.add(range);
+    }
+  }
+  for (Iterator i=merkle_trees.keySet().iterator(); i.hasNext(); ) {
+    GuidRange r=(GuidRange)i.next();
+    if (!db_ranges.contains(r)) {
+      if (logger.isDebugEnabled())       logger.debug("discarding db " + r);
+      i.remove();
+    }
+  }
+  for (Iterator<GuidRange> i=synced_ranges.keySet().iterator(); i.hasNext(); ) {
+    GuidRange range=i.next();
+    if (!db_ranges.contains(range)) {
+      if (logger.isDebugEnabled())       logger.debug("no longer responsible for " + range);
+      i.remove();
+    }
+  }
+}

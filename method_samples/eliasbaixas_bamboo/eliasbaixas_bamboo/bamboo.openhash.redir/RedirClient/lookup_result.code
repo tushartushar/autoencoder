@@ -1,0 +1,7 @@
+protected void lookup_result(LookupState state,InetSocketAddress succ_addr,BigInteger succ_hash){
+  if (logger.isDebugEnabled()) {
+    if (succ_addr == null)     logger.debug("lookup returning null");
+ else     logger.debug("lookup returning 0x" + GuidTools.guid_to_string(succ_hash) + ", "+ succ_addr.getAddress().getHostAddress()+ ":"+ succ_addr.getPort());
+  }
+  state.cb.lookup_cb(state.key,succ_addr,succ_hash,state.gets,state.user_data);
+}

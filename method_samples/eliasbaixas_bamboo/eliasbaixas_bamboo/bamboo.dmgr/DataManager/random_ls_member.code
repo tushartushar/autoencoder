@@ -1,0 +1,23 @@
+protected BambooNeighborInfo random_ls_member(){
+  if (preds == null) {
+    if (logger.isDebugEnabled())     logger.debug("random_ls_member: no preds");
+    return null;
+  }
+  if (preds.length == 0) {
+    if (logger.isDebugEnabled())     logger.debug("random_ls_member: empty preds");
+    return null;
+  }
+  int which=preds.length;
+  for (int i=0; i < succs.length; ++i) {
+    if (succs[i].equals(preds[preds.length - 1]))     break;
+    ++which;
+  }
+  which=rand.nextInt(which);
+  if (which < preds.length) {
+    if (logger.isDebugEnabled())     logger.debug("random_ls_member: chose " + preds[which]);
+    return preds[which];
+  }
+  which-=preds.length;
+  if (logger.isDebugEnabled())   logger.debug("random_ls_member: chose " + succs[which]);
+  return succs[which];
+}

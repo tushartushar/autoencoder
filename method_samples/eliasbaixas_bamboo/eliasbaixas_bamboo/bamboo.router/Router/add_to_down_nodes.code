@@ -1,0 +1,12 @@
+protected void add_to_down_nodes(NodeId n){
+  if (down_nodes_cap > 0) {
+    down_nodes.remove(n);
+    down_nodes.add(n);
+    if (down_nodes.size() > down_nodes_cap) {
+      Iterator<NodeId> i=down_nodes.iterator();
+      assert i.hasNext();
+      i.next();
+      i.remove();
+    }
+  }
+}

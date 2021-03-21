@@ -1,0 +1,6 @@
+public String toString(){
+  return "(IterateByGuidReq low=" + GuidTools.guid_to_string(low) + " high="+ GuidTools.guid_to_string(high)+ " comp_q="+ comp_q+ ")";
+}
+public String toString(){
+  return "(IterateByGuidReq low=" + GuidTools.guid_to_string(low) + " high="+ GuidTools.guid_to_string(high)+ " comp_q="+ comp_q+ ")";
+}

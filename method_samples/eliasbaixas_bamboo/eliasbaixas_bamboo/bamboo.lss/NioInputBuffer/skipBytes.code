@@ -1,0 +1,4 @@
+public void skipBytes(int length){
+  if (bb.position() + length > bb.limit())   throw new IndexOutOfBoundsException();
+  bb.position(bb.position() + length);
+}

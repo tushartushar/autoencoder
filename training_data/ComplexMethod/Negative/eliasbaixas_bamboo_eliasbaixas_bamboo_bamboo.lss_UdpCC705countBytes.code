@@ -1,0 +1,15 @@
+protected void countBytes(String key,int size){
+  Pair<Integer,Integer> p=byteCounts.get(key);
+  int count=0, sum=0;
+  if (p != null) {
+    count=p.first.intValue();
+    sum=p.second.intValue();
+  }
+  byteCounts.put(key,Pair.create(new Integer(count + 1),new Integer(sum + size)));
+}
+protected void countBytes(Object msg,int size){
+  if (msg instanceof ByteCount) {
+    ByteCount cm=(ByteCount)msg;
+    if (cm.recordByteCount())     countBytes(cm.byteCountKey(),size);
+  }
+}

@@ -1,0 +1,4 @@
+@Override public <V>VertexProperty<V> property(final String key){
+  if (lazyGetter != null)   lazyGetter.execute();
+  return super.property(key);
+}

@@ -1,0 +1,3 @@
+@Column(name="actorUserId",nullable=false) public int getActorUserId(){
+  return actorUserId;
+}

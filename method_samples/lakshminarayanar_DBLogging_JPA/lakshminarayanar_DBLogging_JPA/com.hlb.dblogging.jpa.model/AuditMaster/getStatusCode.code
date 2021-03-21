@@ -1,0 +1,3 @@
+@Column(name="STATUSCODE",nullable=true,length=1) public String getStatusCode(){
+  return StatusCode;
+}

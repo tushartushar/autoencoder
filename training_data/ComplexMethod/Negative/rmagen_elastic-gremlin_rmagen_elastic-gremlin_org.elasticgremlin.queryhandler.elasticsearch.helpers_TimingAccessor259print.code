@@ -1,0 +1,3 @@
+public void print(){
+  timers.values().forEach((timer) -> timer.PrintStats());
+}

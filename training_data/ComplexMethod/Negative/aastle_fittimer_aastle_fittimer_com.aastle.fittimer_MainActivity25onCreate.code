@@ -1,0 +1,72 @@
+@Override protected void onCreate(Bundle savedInstanceState){
+  super.onCreate(savedInstanceState);
+  getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+  setContentView(R.layout.activity_main);
+  throb=checkThrobberPref();
+  startOnCreate=true;
+  interval=getLastInterval(getLastIntervalFromSqlite());
+  session=getThisSession(getLastSessionSqlite());
+  Log.e(TAG,"onCreate() session = " + session + " , interval = "+ interval);
+  stopWatch=(StopWatch)findViewById(R.id.stopwatch);
+  shapePaused=getResources().getDrawable(R.drawable.shape_circle_stop_start_paused);
+  shapeStart=getResources().getDrawable(R.drawable.shape_circle_stop_start);
+  shapeStats=getResources().getDrawable(R.drawable.shape_stats_circle);
+  linearLayout=(LinearLayout)findViewById(R.id.linearLayout);
+  pulse_start=(TransitionDrawable)getResources().getDrawable(R.drawable.pulse_color_start);
+  buttonStopWatch=(Button)findViewById(R.id.buttonStartStop);
+  buttonStopWatch.setOnClickListener(new OnClickListener(){
+    @Override public void onClick(    View v){
+      if (!stopWatch.running()) {
+        saveTime(TABLE_NAME,getDate(),getTime(),"running",interval,session);
+        startOnCreate=false;
+        stopWatch.startClock();
+        buttonStopWatch.setText("PAUSE");
+        buttonStopWatch.setTextSize(50);
+        buttonStopWatch.setBackground(shapeStart);
+      }
+ else       if (stopWatch.running()) {
+        saveTime(TABLE_NAME,getDate(),getTime(),"paused",interval,session);
+        stopWatch.pauseClock();
+        buttonStopWatch.setText("RESUME");
+        buttonStopWatch.setTextSize(40);
+        buttonStopWatch.setBackground(shapePaused);
+        getInterval();
+      }
+    }
+  }
+);
+  resetButton=(Button)findViewById(R.id.buttonReset);
+  resetButton.setOnClickListener(new OnClickListener(){
+    @Override public void onClick(    View v){
+      if (stopWatch.running()) {
+        stopWatch.resetClock();
+        buttonStopWatch.setText("PAUSE");
+        buttonStopWatch.setTextSize(50);
+        buttonStopWatch.setBackground(shapeStart);
+        stopWatch.startClock();
+      }
+ else       if (!stopWatch.running()) {
+        stopWatch.resetClock();
+        buttonStopWatch.setText("START");
+        buttonStopWatch.setTextSize(50);
+        buttonStopWatch.setBackground(shapeStart);
+      }
+    }
+  }
+);
+  stopWatch.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
+    @Override public void onChronometerTick(    Chronometer chronometer){
+      if (throb) {
+        colorThrobber();
+      }
+    }
+  }
+);
+  statsButton=(Button)findViewById(R.id.buttonStats);
+  statsButton.setOnClickListener(new OnClickListener(){
+    @Override public void onClick(    View v){
+      showDialogBox(getStats());
+    }
+  }
+);
+}

@@ -1,0 +1,4 @@
+@Override public void startAdvertising(String uuid,List<ScanResult> closestBeaconId,String fallbackUrl){
+  stopAdvertising();
+  advertiser.startAdvertising(new AdvertiseSettings.Builder().setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_BALANCED).build(),new AdvertiseData.Builder().addServiceUuid(ParcelUuid.fromString(uuid)).build(),callback);
+}

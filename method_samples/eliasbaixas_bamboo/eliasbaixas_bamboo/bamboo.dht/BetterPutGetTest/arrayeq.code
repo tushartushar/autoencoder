@@ -1,0 +1,8 @@
+protected static boolean arrayeq(byte[] a,int aOffset,int aLen,byte[] b,int bOffset,int bLen){
+  if (aLen != bLen)   return false;
+  int done=aOffset + aLen;
+  while (aOffset < done) {
+    if (a[aOffset++] != b[bOffset++])     return false;
+  }
+  return true;
+}

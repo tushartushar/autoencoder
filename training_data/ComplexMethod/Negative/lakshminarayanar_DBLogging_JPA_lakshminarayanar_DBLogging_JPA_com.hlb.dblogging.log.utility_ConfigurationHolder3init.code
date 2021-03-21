@@ -1,0 +1,4 @@
+private static void init() throws ConfigurationException {
+  DefaultConfigurationBuilder builder=new DefaultConfigurationBuilder("config/main.xml");
+  config=builder.getConfiguration(true);
+}

@@ -1,0 +1,28 @@
+protected void handle_iterate_by_guid_req(IterateByGuidReq req){
+  Key k=new Key(0L,0,req.low,ZERO_HASH,ZERO_HASH,false,ZERO_CLIENT);
+  byte[] kbuf=new byte[Key.SIZE];
+  ByteBuffer bb=ByteBuffer.wrap(kbuf);
+  k.to_byte_buffer(bb);
+  primary_key_to_recycling_key(kbuf);
+  Dbt key=new Dbt(kbuf);
+  key.setSize(kbuf.length);
+  Dbc cursor=open_cursor(by_guid,null,"handle_iterate_by_guid_req");
+  IBGCont cont=new IBGCont(key,req.low,req.high);
+  int retval=0;
+  Dbt pkey=new Dbt();
+  Dbt data=new Dbt();
+  try {
+    retval=cursor.get(key,pkey,data,Db.DB_SET_RANGE);
+  }
+ catch (  DbException e) {
+    BUG(e);
+  }
+  while (!finish_iterate_by_guid(cont,cursor,pkey,data,retval,req.comp_q,req.user_data)) {
+    try {
+      retval=cursor.get(key,pkey,data,Db.DB_NEXT);
+    }
+ catch (    DbException e) {
+      BUG(e);
+    }
+  }
+}

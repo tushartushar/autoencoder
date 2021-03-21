@@ -1,0 +1,8 @@
+public ConfigurationProperties(int id,String logLevel){
+  super();
+  this.id=id;
+  this.logLevel=logLevel;
+}
+public ConfigurationProperties(){
+  super();
+}

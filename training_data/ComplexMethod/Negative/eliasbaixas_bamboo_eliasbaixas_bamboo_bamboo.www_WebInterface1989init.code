@@ -1,0 +1,35 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  String build_file=config_get_string(config,"build_file");
+  if (build_file != null) {
+    try {
+      InputStream is=new FileInputStream(build_file);
+      Reader reader=new BufferedReader(new InputStreamReader(is));
+      StreamTokenizer tok=new StreamTokenizer(reader);
+      tok.eolIsSignificant(false);
+      tok.parseNumbers();
+      tok.nextToken();
+      if (tok.ttype == StreamTokenizer.TT_NUMBER)       build="" + (int)tok.nval;
+ else       logger.info("not a word");
+    }
+ catch (    Exception e) {
+      logger.warn("couldn't open build file");
+    }
+  }
+  instances.put(my_node_id,this);
+  if (config_get_boolean(config,"include_logs")) {
+    PatternLayout pl=new PatternLayout("%d{ISO8601} %-5p %c: %m\n");
+    web_appender=new WebAppender(25);
+    web_appender.setLayout(pl);
+    Logger.getRoot().addAppender(web_appender);
+  }
+  init_start_time_ms=now_ms();
+  listen_port=my_node_id.port() + 1;
+  latencies.put(my_node_id,new Long(0));
+  classifier.dispatch_later(new VivaldiRequestVC(my_sink,null),5000);
+  String sm_name=config_get_string(config,"storage_manager_stage");
+  StorageManager sm=(StorageManager)lookup_stage(config,sm_name);
+  sm.register_monitor(this);
+  hostname=my_node_id.address().getHostName();
+  acore.registerTimer(0,ready);
+}

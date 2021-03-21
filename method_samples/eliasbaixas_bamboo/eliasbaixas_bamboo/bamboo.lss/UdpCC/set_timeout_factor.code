@@ -1,0 +1,4 @@
+public void set_timeout_factor(double value){
+  timeout_factor=value;
+  logger.info("timeout_factor=" + timeout_factor);
+}

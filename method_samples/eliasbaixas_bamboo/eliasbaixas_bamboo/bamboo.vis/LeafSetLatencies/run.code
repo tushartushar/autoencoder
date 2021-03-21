@@ -1,0 +1,30 @@
+public void run(BambooNode node){
+  NodeInfo ninfo=node.ninfo;
+  for (int j=0; j < 2; ++j) {
+    Iterator i=((j == 0) ? ninfo.preds : ninfo.succs).iterator();
+    while (i.hasNext()) {
+      ExtendedNeighborInfo ni=(ExtendedNeighborInfo)i.next();
+      logger.info(ninfo.addr + " " + ni.node_id+ " "+ ni.rtt_ms);
+synchronized (already_probed) {
+        if (!already_probed.contains(ni.node_id)) {
+          already_probed.add(ni.node_id);
+          node.FNIT.add_work(nid2url(ni.node_id),null);
+        }
+      }
+    }
+  }
+}
+public void run(){
+  while (true) {
+    boolean all_idle=true;
+    if (!fetcher.idle())     all_idle=false;
+    if (all_idle)     System.exit(0);
+ else {
+      try {
+        sleep(1000);
+      }
+ catch (      Exception e) {
+      }
+    }
+  }
+}

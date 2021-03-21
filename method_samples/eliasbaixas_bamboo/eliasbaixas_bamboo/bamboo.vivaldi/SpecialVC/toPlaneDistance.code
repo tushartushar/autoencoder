@@ -1,0 +1,3 @@
+private double toPlaneDistance(VirtualCoordinate destination){
+  return Math.abs(_coordinate[_coordinate.length - 1]) + Math.abs(destination._coordinate[_coordinate.length - 1]);
+}

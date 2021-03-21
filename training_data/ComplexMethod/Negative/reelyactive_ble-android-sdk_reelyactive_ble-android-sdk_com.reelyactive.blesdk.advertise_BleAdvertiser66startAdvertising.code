@@ -1,0 +1,7 @@
+public abstract void startAdvertising(String uuid,List<ScanResult> closestBeacon,String fallbackUrl);
+public void startAdvertising(String uuid){
+  startAdvertising(uuid,null);
+}
+public void startAdvertising(String uuid,List<ScanResult> closestBeacon){
+  startAdvertising(uuid,closestBeacon,"http://www.hyperlocalcontext.com/events");
+}

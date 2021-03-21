@@ -1,0 +1,4 @@
+Project Name,Package Name,Type Name,Method Name,Implementation Smell,Cause of the Smell
+airminer_MokaPot,airminer.mokapot,MokaPot,loadPlugins,Long Statement,The length of the statement "Logger.getLogger(MokaPotServer.class.getName()).log(Level.SEVERE`ex.getMessage() + " initializing " + plugin.getDescription().getFullName()+ " (Is it up to date?)"`ex);" is 168.
+airminer_MokaPot,airminer.mokapot,LuaStateRegistry,getMetamethod,Missing default,The following switch statement is missing a default case: switch (metamethod) {
+airminer_MokaPot,airminer.mokapot,SetLuaState,getMetamethod,Missing default,The following switch statement is missing a default case: switch (metamethod) {

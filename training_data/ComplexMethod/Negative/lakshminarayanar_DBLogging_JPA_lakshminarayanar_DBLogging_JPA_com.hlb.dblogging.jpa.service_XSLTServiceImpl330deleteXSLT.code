@@ -1,0 +1,17 @@
+@Override public Boolean deleteXSLT(XSLT xslt){
+  try {
+    XSLT existingXsltBean=xsltRepository.findByViewOrSave(xslt.getViewOrSave(),xslt.getTransType());
+    if (existingXsltBean != null) {
+      existingXsltBean.setDeleted(xslt.isDeleted());
+      existingXsltBean.setLastModifiedBy(xslt.getLastModifiedBy());
+      existingXsltBean.setLastModifiedTime(xslt.getLastModifiedTime());
+      xsltRepository.save(existingXsltBean);
+      return Boolean.TRUE;
+    }
+  }
+ catch (  Exception e) {
+    ApplLogger.getLogger().error("Error caught while deleting  the xlsts from database ",e);
+    throw new RuntimeException(e.getMessage());
+  }
+  return Boolean.FALSE;
+}

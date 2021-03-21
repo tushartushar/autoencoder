@@ -1,0 +1,9 @@
+/** 
+ * Determine if the point is inside the rectangle area.
+ * @param x
+ * @param y
+ * @return
+ */
+public boolean containsXY(int x,int y){
+  return (getX1() < x && x < getX2()) && (getY1() < y && y < getY2());
+}

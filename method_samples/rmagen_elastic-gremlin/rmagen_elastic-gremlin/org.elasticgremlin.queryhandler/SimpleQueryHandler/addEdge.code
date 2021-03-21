@@ -1,0 +1,3 @@
+@Override public Edge addEdge(Object edgeId,String label,Vertex outV,Vertex inV,Object[] properties){
+  return docEdgeHandler.addEdge(edgeId,label,outV,inV,properties);
+}

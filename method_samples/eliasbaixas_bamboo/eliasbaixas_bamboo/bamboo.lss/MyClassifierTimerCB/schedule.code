@@ -1,0 +1,3 @@
+public Object schedule(long millis,QueueElementIF event){
+  return acore.register_timer(millis,classifier_alarm_cb,event);
+}

@@ -1,0 +1,16 @@
+public FetchKeysReq(NodeId dest,BigInteger lg,BigInteger hg,long lt,long ht,long s){
+  super(dest,false);
+  low_guid=lg;
+  high_guid=hg;
+  low_time=lt;
+  high_time=ht;
+  seq=s;
+}
+public FetchKeysReq(InputBuffer buffer) throws QSException {
+  super(buffer);
+  low_guid=buffer.nextBigInteger();
+  high_guid=buffer.nextBigInteger();
+  low_time=buffer.nextLong();
+  high_time=buffer.nextLong();
+  seq=buffer.nextLong();
+}

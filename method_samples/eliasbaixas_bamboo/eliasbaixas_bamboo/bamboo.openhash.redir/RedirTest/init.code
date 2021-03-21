@@ -1,0 +1,24 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  mean_period_ms=config_get_int(config,"mean_period_ms");
+  if (mean_period_ms == -1.0)   mean_period_ms=60.0 * 1000.0;
+  levels=config_get_int(config,"levels");
+  int seed=config_get_int(config,"seed");
+  if (seed == -1)   seed=((int)now_ms()) ^ my_node_id.hashCode();
+  rand=new Random(seed);
+  String namespace_str=config_get_string(config,"namespace");
+  MessageDigest digest=MessageDigest.getInstance("SHA");
+  my_addr=new InetSocketAddress(my_node_id.address(),my_node_id.port());
+  byte[] my_addr_bytes=RedirClient.addr2bytes(my_addr);
+  my_id=RedirClient.bytes2bi(digest.digest(my_addr_bytes));
+  assert !instances.containsKey(my_id);
+  instances.put(my_id,this);
+  namespace=RedirClient.bytes2bi(digest.digest(namespace_str.getBytes()));
+  String client_stg_name=config_get_string(config,"client_stage_name");
+  client=(RedirClient)lookup_stage(config,client_stg_name);
+  long join_delay_ms=config_get_int(config,"join_delay_ms");
+  if (join_delay_ms == -1)   join_delay_ms=0;
+  acore.register_timer(join_delay_ms,ready_cb,null);
+  lookup_delay_ms=config_get_int(config,"lookup_delay_ms");
+  if (lookup_delay_ms == -1)   lookup_delay_ms=0;
+}

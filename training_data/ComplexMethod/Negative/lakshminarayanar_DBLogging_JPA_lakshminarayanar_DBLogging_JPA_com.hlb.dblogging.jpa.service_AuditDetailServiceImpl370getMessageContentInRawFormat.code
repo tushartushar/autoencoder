@@ -1,0 +1,3 @@
+@Override public String getMessageContentInRawFormat(String messageFormat,String uniqueProcessID){
+  return aDetailRepository.findMessageContentByAuditDetailID(Long.parseLong(uniqueProcessID));
+}

@@ -1,0 +1,60 @@
+public static void main(String[] args) throws Exception {
+  GoogleOauth gO=new GoogleOauth();
+  Routing srcToDstRoute=new Routing();
+  double walkingSpeed=1.5;
+  System.out.println("\nPrinting walking speed: " + walkingSpeed);
+  DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+  @SuppressWarnings("deprecation") Date date=new Date(115,02,30,10,47,0);
+  System.out.println(dateFormat.format(date));
+  String source_string="7708 109 Street, Edmonton, Alberta, Canada";
+  String destination_string="University of Alberta, AB, Canada";
+  long rawRouteTime=System.nanoTime() / 1000000;
+  RouteInfo route=srcToDstRoute.getRoute(source_string,destination_string,walkingSpeed,dateFormat.format(date));
+  rawRouteTime=(System.nanoTime() / 1000000) - rawRouteTime;
+  System.out.println("\n" + route);
+  System.out.println("Route Calculation Time: " + rawRouteTime + "ms");
+  RouteInfo.maneuvar.latlon src_latlon, dst_latlon;
+  src_latlon=Routing.getLatLong(source_string);
+  dst_latlon=Routing.getLatLong(destination_string);
+  System.out.println(src_latlon);
+  System.out.println(dst_latlon);
+  Traffic realTimeTraffic=new Traffic(src_latlon,dst_latlon);
+  for (double ratio=3; ratio >= 3; ratio-=.25) {
+    route=srcToDstRoute.getRoute(source_string,destination_string,walkingSpeed,dateFormat.format(date));
+    double trafficModuleAvgSpdFF=realTimeTraffic.getFreeFlowSpeed("82 Av","+",new String[]{"111 St","112 St","109 St","114 St"});
+    double trafficModuleAvgSpdSU=trafficModuleAvgSpdFF / ratio;
+    int modifyingIndex=2;
+    double avgSpeedInFFTotal=((double)route.maneuvars.get(modifyingIndex).length / route.maneuvars.get(modifyingIndex).travelTime);
+    double avgSpeedInTraffic=trafficModuleAvgSpdSU * (avgSpeedInFFTotal / trafficModuleAvgSpdFF);
+    long overhead=System.nanoTime() / 1000000;
+    long trafficLength=0;
+    for (    RouteInfo.maneuvar eachMan : route.maneuvars) {
+      if (eachMan.type.compareTo("PublicTransportManeuverType") == 0) {
+        String source_bus_stop=eachMan.stopName;
+        double modifiedDuration=0;
+        double avgFFSpeed=((double)eachMan.length / eachMan.travelTime);
+        int i=0;
+        String commonRoad=null;
+        for (        RouteInfo.maneuvar.link eachLink : eachMan.interRoadAndStops) {
+          String interStop=eachLink.nextStopName;
+          double avgRealSpeed=Double.POSITIVE_INFINITY;
+          if (getCommonRoad(source_bus_stop,interStop) != null)           commonRoad=getCommonRoad(source_bus_stop,interStop);
+          realTimeTraffic.getAverageSpeedInTraffic(commonRoad,"+",getUncommonRoads(interStop,source_bus_stop,commonRoad));
+          if (i == 2 || i == 3 || i == 4) {
+            avgRealSpeed=avgFFSpeed / ratio;
+          }
+          if (avgRealSpeed < avgFFSpeed && (i == 2 || i == 3 || i == 4)) {
+            modifiedDuration+=((double)eachLink.length / avgRealSpeed);
+            trafficLength+=eachLink.length;
+          }
+ else           modifiedDuration+=((double)eachLink.length / avgFFSpeed);
+          i++;
+          source_bus_stop=interStop;
+        }
+        route.modifyManeuvarTime(eachMan,Math.round(modifiedDuration));
+      }
+    }
+    overhead=System.nanoTime() / 1000000 - overhead;
+    System.out.println(ratio + "\t" + route.getReachingTime()+ "\t");
+  }
+}

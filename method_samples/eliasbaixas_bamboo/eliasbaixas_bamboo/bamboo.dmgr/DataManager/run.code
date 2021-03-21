@@ -1,0 +1,11 @@
+public void run(GuidRange range,InetSocketAddress neighbor){
+  LinkedHashMap<InetSocketAddress,Long> s=synced_ranges.get(range);
+  if (s != null) {
+    Long exp=s.get(neighbor);
+    if ((exp != null) && timer_ms() >= exp) {
+      if (logger.isDebugEnabled())       logger.debug("sync with " + addrToString(neighbor) + " over "+ range+ " timed out");
+      s.remove(neighbor);
+      if (s.isEmpty())       synced_ranges.remove(s);
+    }
+  }
+}

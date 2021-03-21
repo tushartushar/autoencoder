@@ -1,0 +1,11 @@
+public DataManager() throws Exception {
+  ostore.util.TypeTable.register_type(ReplicaSetReq.class);
+  event_types=new Class[]{StagesInitializedSignal.class,PutOrRemoveReq.class,AntiEntropyAlarm.class,DiscardAlarm.class,BambooRouteDeliver.class};
+  inb_msg_types=new Class[]{PutOrRemoveMsg.class,PutOrRemoveAck.class,ReplicaSetResp.class,PutOrRemoveMsg.class,FetchMerkleTreeNodeReq.class,FetchMerkleTreeNodeResp.class,FetchMerkleTreeNodeReject.class,FetchKeysReq.class,FetchKeysResp.class,FetchDataReq.class,FetchDataResp.class};
+  try {
+    md=MessageDigest.getInstance("SHA");
+  }
+ catch (  Exception e) {
+    BUG(e);
+  }
+}

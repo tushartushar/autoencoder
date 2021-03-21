@@ -1,0 +1,3 @@
+public void setScanFilter(ScanFilter scanFilter){
+  nextFilter=scanFilter;
+}

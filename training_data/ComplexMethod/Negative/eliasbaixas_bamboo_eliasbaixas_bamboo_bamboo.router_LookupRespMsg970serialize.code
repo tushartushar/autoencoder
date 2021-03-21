@@ -1,0 +1,5 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  buffer.add(lookup_id);
+  buffer.add(owner_id);
+}

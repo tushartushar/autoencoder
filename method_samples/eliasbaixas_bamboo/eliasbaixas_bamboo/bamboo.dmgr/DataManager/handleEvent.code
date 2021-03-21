@@ -1,0 +1,76 @@
+public void handleEvent(QueueElementIF item){
+  if (logger.isDebugEnabled())   logger.debug(" got " + item);
+  if (item instanceof StagesInitializedSignal) {
+    dispatch(new BambooRouterAppRegReq(app_id,true,false,false,my_sink));
+  }
+ else   if (item instanceof BambooRouterAppRegResp) {
+    handle_app_reg_resp((BambooRouterAppRegResp)item);
+  }
+ else   if (!initialized) {
+    wait_q.addLast(item);
+  }
+ else {
+    if (item instanceof BambooLeafSetChanged) {
+      handle_leaf_set_changed((BambooLeafSetChanged)item);
+    }
+ else     if (item instanceof PutOrRemoveMsg) {
+      handle_pub_to_leaf_set((PutOrRemoveMsg)item);
+    }
+ else     if (item instanceof PutOrRemoveAck) {
+      handle_pub_to_leaf_set_ack((PutOrRemoveAck)item);
+    }
+ else     if (item instanceof PutOrRemoveReq) {
+      handle_put_or_remove_req((PutOrRemoveReq)item);
+    }
+ else     if (item instanceof StorageManager.PutResp) {
+      handle_put_resp((StorageManager.PutResp)item);
+    }
+ else     if (item instanceof StorageManager.GetByKeyResp) {
+      handle_get_by_key_resp((StorageManager.GetByKeyResp)item);
+    }
+ else     if (item instanceof StorageManager.GetByGuidResp) {
+      StorageManager.GetByGuidResp resp=(StorageManager.GetByGuidResp)item;
+      handle_discard_get_resp(resp);
+    }
+ else     if (item instanceof StorageManager.GetByTimeResp) {
+      handle_get_by_time_resp((StorageManager.GetByTimeResp)item);
+    }
+ else     if (item instanceof AntiEntropyAlarm) {
+      handle_ae_alarm((AntiEntropyAlarm)item);
+    }
+ else     if (item instanceof DiscardAlarm) {
+      handle_discard_alarm((DiscardAlarm)item);
+    }
+ else     if (item instanceof FetchMerkleTreeNodeReq) {
+      handle_fetch_merkle_tree_node_req((FetchMerkleTreeNodeReq)item);
+    }
+ else     if (item instanceof FetchMerkleTreeNodeResp) {
+      handle_fetch_merkle_tree_node_resp((FetchMerkleTreeNodeResp)item);
+    }
+ else     if (item instanceof FetchMerkleTreeNodeReject) {
+      handle_fetch_merkle_tree_node_reject((FetchMerkleTreeNodeReject)item);
+    }
+ else     if (item instanceof FetchKeysReq) {
+      handle_fetch_keys_req((FetchKeysReq)item);
+    }
+ else     if (item instanceof FetchKeysResp) {
+      handle_fetch_keys_resp((FetchKeysResp)item);
+    }
+ else     if (item instanceof FetchDataReq) {
+      handle_fetch_data_req((FetchDataReq)item);
+    }
+ else     if (item instanceof FetchDataResp) {
+      handle_fetch_data_resp((FetchDataResp)item);
+    }
+ else     if (item instanceof BambooRouteDeliver) {
+      BambooRouteDeliver deliver=(BambooRouteDeliver)item;
+      handle_replica_set_req((ReplicaSetReq)deliver.payload);
+    }
+ else     if (item instanceof ReplicaSetResp) {
+      handle_replica_set_resp((ReplicaSetResp)item);
+    }
+ else {
+      BUG("got event of unexpected type: " + item + ".");
+    }
+  }
+}

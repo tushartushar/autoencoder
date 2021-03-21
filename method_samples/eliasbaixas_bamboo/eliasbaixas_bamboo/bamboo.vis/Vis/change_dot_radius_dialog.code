@@ -1,0 +1,7 @@
+protected void change_dot_radius_dialog(){
+  String s=(String)JOptionPane.showInputDialog(frame,"Change dot radius:","Change Dot Radius",JOptionPane.PLAIN_MESSAGE,null,null,Double.toString(dot_radius));
+  if (s != null) {
+    double value=Double.parseDouble(s);
+    set_dot_radius(value);
+  }
+}

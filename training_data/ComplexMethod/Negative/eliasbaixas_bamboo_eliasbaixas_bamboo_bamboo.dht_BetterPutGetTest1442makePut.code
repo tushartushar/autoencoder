@@ -1,0 +1,10 @@
+protected bamboo_put_args makePut(byte[] key,int index){
+  bamboo_put_args put=new bamboo_put_args();
+  put.application="bamboo.dht.BetterPutGetTest $Revision: 1.4 $";
+  put.key=new bamboo_key();
+  put.key.value=key;
+  put.value=new bamboo_value();
+  put.value.value=makeData(key,index);
+  put.ttl_sec=putTTL;
+  return put;
+}

@@ -1,0 +1,9 @@
+@Override public boolean parseText(String text,boolean write){
+  String url=text;
+  if (!Validator.isValidURI(url)) {
+    url="http://" + url;
+    if (!Validator.isValidURI(url))     return false;
+  }
+  if (write)   txtUrl.setText(url);
+  return true;
+}

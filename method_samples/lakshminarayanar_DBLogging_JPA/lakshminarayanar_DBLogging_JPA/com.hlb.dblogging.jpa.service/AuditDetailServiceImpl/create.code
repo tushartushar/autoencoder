@@ -1,0 +1,12 @@
+@Transactional(rollbackFor={Exception.class}) public void create(AuditDetail adetail){
+  try {
+    AuditDetail auditDetailToBeCreated=adetail;
+    aDetailRepository.save(auditDetailToBeCreated);
+    ApplLogger.getLogger().info("AuditDetail is saved in Database...!!! :" + auditDetailToBeCreated.getUniqueProcessID());
+  }
+ catch (  Exception e) {
+    ApplLogger.getLogger().error("Error caught while saving the AuditDetail instance to Database",e);
+    if (aDetailRepository == null)     ApplLogger.getLogger().info("Repository is not instantiated by Spring container...");
+    throw new RuntimeException("Couldn't save AuditDetail data presently..");
+  }
+}

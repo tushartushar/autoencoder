@@ -1,0 +1,13 @@
+@Override public boolean startScan(List<ScanFilter> filters,ScanSettings settings,ScanCallback callback){
+  if (callback != null) {
+    try {
+      callbacksMap.put(callback,settings);
+      updateRepeatingAlarm();
+      return true;
+    }
+ catch (    Exception e) {
+      Logger.logError(e.getMessage(),e);
+    }
+  }
+  return false;
+}

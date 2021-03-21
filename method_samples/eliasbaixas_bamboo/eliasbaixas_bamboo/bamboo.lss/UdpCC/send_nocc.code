@@ -1,0 +1,14 @@
+/** 
+ * This is just a one-shot, minimal-delay send without an acknowledgement; <i>Do not use this function unless you are providing some application-level congestion control</i>.  Messages send with this function go into their own per-destination queue, separate from messages sent with  {@link
+     * #send(Object,InetSocketAddress,long,Thunk1<Boolean>)}
+ */
+public void send_nocc(Object msg,InetSocketAddress dst){
+  long now_ms=System.currentTimeMillis();
+  Connection conn=(Connection)conns.get(dst);
+  if (conn == null) {
+    conn=new Connection(dst,now_ms);
+    conns.put(dst,conn);
+  }
+  conn.probe_q.addLast(msg);
+  if (conn.writable())   add_to_rr(conn);
+}

@@ -1,0 +1,4 @@
+public void hide_rt(){
+  show_rt=false;
+  undraw_rt();
+}

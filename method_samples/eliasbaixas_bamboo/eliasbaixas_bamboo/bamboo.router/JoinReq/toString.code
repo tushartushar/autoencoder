@@ -1,0 +1,18 @@
+public String toString(){
+  StringBuffer result=new StringBuffer(50 + 70 * path.size());
+  result.append("(JoinReq super=");
+  result.append(super.toString());
+  result.append(" node_id=");
+  result.append(node_id);
+  result.append(" guid=0x");
+  result.append(bamboo.util.GuidTools.guid_to_string(guid));
+  result.append(" rev_ttl=");
+  result.append(rev_ttl);
+  result.append(" path=(");
+  for (Iterator i=path.iterator(); i.hasNext(); ) {
+    result.append((NeighborInfo)i.next());
+    if (i.hasNext())     result.append(", ");
+  }
+  result.append("))");
+  return result.toString();
+}

@@ -1,0 +1,28 @@
+public ArcConnector make_arc(BambooNode other,boolean exterior,Color color){
+  ConnectorTarget target=new PerimeterTarget();
+  Site a=null, b=null;
+  boolean succ=GuidTools.in_range_mod(guid,guid.add(MODULUS.divide(BigInteger.valueOf(2))),other.guid,MODULUS);
+  if (succ) {
+    a=target.getTailSite(exterior ? other.dot : dot,0.0,0.0);
+    b=target.getHeadSite(exterior ? dot : other.dot,0.0,0.0);
+  }
+ else {
+    a=target.getTailSite(exterior ? dot : other.dot,0.0,0.0);
+    b=target.getHeadSite(exterior ? other.dot : dot,0.0,0.0);
+  }
+  ArcConnector conn=new ArcConnector(a,b);
+  Rectangle2D.Double bounds=(Rectangle2D.Double)conn.getBounds();
+  double len=Math.sqrt(bounds.height * bounds.height + bounds.width * bounds.width) / 4.0;
+  Arrowhead arrow=new Arrowhead(b.getX(),b.getY(),b.getNormal());
+  arrow.setLength(Math.min(len,dot_radius * 3));
+  if (succ) {
+    if (exterior)     conn.setTailEnd(arrow);
+ else     conn.setHeadEnd(arrow);
+  }
+ else {
+    if (exterior)     conn.setHeadEnd(arrow);
+ else     conn.setTailEnd(arrow);
+  }
+  conn.setStrokePaint(color);
+  return conn;
+}

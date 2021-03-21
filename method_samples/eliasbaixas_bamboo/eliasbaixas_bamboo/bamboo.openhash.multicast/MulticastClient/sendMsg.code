@@ -1,0 +1,8 @@
+public void sendMsg(BigInteger group,QuickSerializable payload){
+  if (natted)   nattedClients.get(group).sendMsg(payload);
+ else {
+    publicClients.get(group).sendMsg(payload);
+    MulticastMessage mm=new MulticastMessage(group,my_node_id,0,timer_ms(),payload);
+    parent.sendMsg(mm);
+  }
+}

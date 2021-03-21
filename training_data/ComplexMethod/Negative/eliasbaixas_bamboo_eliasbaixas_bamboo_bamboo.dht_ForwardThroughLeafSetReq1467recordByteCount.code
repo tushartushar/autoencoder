@@ -1,0 +1,4 @@
+public boolean recordByteCount(){
+  if (payload instanceof ByteCount)   return ((ByteCount)payload).recordByteCount();
+ else   return false;
+}

@@ -1,0 +1,5 @@
+protected boolean outstanding(String url){
+synchronized (inflight) {
+    return waiting.containsKey(url) || inflight.containsKey(url);
+  }
+}

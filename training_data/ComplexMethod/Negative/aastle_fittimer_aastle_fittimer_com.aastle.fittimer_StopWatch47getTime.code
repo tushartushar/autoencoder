@@ -1,0 +1,11 @@
+/** 
+ * @return the displayed time in seconds
+ */
+public Long getTime(){
+  if (!isRunning) {
+    return currentTimeLastStop - this.getBase() / 1000;
+  }
+ else {
+    return (time() - this.getBase()) / 1000;
+  }
+}

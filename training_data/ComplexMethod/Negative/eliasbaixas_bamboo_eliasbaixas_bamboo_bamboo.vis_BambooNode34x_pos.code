@@ -1,0 +1,8 @@
+public final double x_pos(){
+  if (ring_mode) {
+    return Math.cos(theta()) * ring_radius - radius();
+  }
+ else {
+    return (coordinates == null) ? 0.0 : coordinates[0];
+  }
+}

@@ -1,0 +1,3 @@
+public String toString(){
+  return "(Dht.PutReqPayload time_usec=" + time_usec + " key="+ GuidTools.guid_to_string(key)+ " put="+ put+ " return_addr="+ return_addr+ " seq="+ seq+ " ttl="+ ttl_sec+ " retried="+ retried+ ")";
+}

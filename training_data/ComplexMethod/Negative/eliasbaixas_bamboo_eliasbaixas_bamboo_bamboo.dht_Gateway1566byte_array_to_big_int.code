@@ -1,0 +1,8 @@
+public BigInteger byte_array_to_big_int(byte[] origb){
+  if ((origb[0] & 0x80) == 0)   return new BigInteger(origb);
+ else {
+    byte[] keyb=new byte[origb.length + 1];
+    System.arraycopy(origb,0,keyb,1,origb.length);
+    return new BigInteger(keyb);
+  }
+}

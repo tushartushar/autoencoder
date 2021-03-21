@@ -1,0 +1,15 @@
+public void add(byte[] value,int offset,int length){
+  bb.put(value,offset,length);
+}
+public void add(byte value){
+  bb.put(value);
+}
+public void add(int value){
+  bb.putInt(value);
+}
+public void add(short value){
+  bb.putShort(value);
+}
+public void add(long value){
+  bb.putLong(value);
+}

@@ -1,0 +1,4 @@
+public Object schedule(long millis,QueueElementIF event){
+  if (logger.isDebugEnabled())   logger.debug("scheduling " + event);
+  return event_queue.register_timer(node_id,millis * 1000,classifier_alarm_cb,event);
+}

@@ -1,0 +1,10 @@
+@Override public Edge addEdge(Object edgeId,String label,Vertex outV,Vertex inV,Object[] properties){
+  DocEdge elasticEdge=new DocEdge(edgeId,label,properties,outV,inV,graph,elasticMutations,indexName);
+  try {
+    elasticMutations.addElement(elasticEdge,indexName,null,true);
+  }
+ catch (  DocumentAlreadyExistsException ex) {
+    throw Graph.Exceptions.edgeWithIdAlreadyExists(elasticEdge.id());
+  }
+  return elasticEdge;
+}

@@ -1,0 +1,11 @@
+protected NeighborInfo calcNextHop(BigInteger key,int maxvals){
+  return calcNextHop(key,maxvals,router.allNeighbors());
+}
+protected NeighborInfo calcNextHop(BigInteger key,int maxvals,Map<NeighborInfo,Long> neighbors){
+  if ((PROXIMITY_MASK & maxvals) == PNS_ONLY)   return router.calcNextHopGreedy(key,neighbors);
+ else   if ((PROXIMITY_MASK & maxvals) == PRS)   return router.calcNextHopPRS(key,neighbors);
+ else   if ((PROXIMITY_MASK & maxvals) == SCALED_PRS)   return router.calcNextHopScaledPRS(key,neighbors);
+ else   if ((PROXIMITY_MASK & maxvals) == SCALED_PRS_FD)   return router.calcNextHopScaledPRS(key,fdScaling,neighbors);
+ else   assert false;
+  return null;
+}

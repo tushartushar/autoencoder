@@ -1,0 +1,7 @@
+public PutOrRemoveState(long s,Set u,PutOrRemoveReq e,byte[] h){
+  start_time=s;
+  unacked=u;
+  event=e;
+  hash=h;
+  expected_ack_cnt=(u == null) ? 0 : u.size();
+}

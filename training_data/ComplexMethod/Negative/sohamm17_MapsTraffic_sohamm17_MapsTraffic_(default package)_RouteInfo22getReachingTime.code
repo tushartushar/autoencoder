@@ -1,0 +1,4 @@
+public Date getReachingTime(){
+  maneuvar lastMan=maneuvars.get(maneuvars.size() - 1);
+  return lastMan.time;
+}

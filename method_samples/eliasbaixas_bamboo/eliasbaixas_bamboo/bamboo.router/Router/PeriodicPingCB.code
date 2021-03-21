@@ -1,0 +1,3 @@
+public PeriodicPingCB(NeighborInfo n){
+  ni=n;
+}

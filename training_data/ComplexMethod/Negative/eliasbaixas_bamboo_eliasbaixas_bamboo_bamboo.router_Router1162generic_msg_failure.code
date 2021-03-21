@@ -1,0 +1,8 @@
+protected void generic_msg_failure(NeighborInfo ni,Runnable retry){
+  if (logger.isDebugEnabled())   logger.debug("failed on message send to " + ni + ".");
+  if (location_cache.remove_node(ni)) {
+    if (logger.isDebugEnabled())     logger.debug("taking " + ni + ".  Out of location cache.");
+  }
+  addToPossiblyDown(ni);
+  if (retry != null)   retry.run();
+}

@@ -1,0 +1,5 @@
+public BambooNeighborInfo[] succs(){
+  BambooNeighborInfo[] result=new BambooNeighborInfo[leaf_succ_count];
+  for (int j=0; j < leaf_succ_count; ++j)   result[j]=new BambooNeighborInfo(leaf_succs[j].node_id,leaf_succs[j].guid);
+  return result;
+}

@@ -1,0 +1,75 @@
+public void run(NodeId n,Long predictedRTT,Long startTimeMillis,IterGetResp resp){
+  if (done == null)   return;
+  outstanding.remove(n);
+  tried.add(n);
+  if (resp.replicas != null) {
+    StringBuffer sbuf=new StringBuffer(200);
+    sbuf.append("got iterative get resp key=0x");
+    sbuf.append(GuidTools.guid_to_string(key));
+    sbuf.append(" return addr=").append(my_node_id);
+    sbuf.append(" seq=").append(seq);
+    sbuf.append(" from ").append(n);
+    sbuf.append(" replicas=").append(resp.replicas);
+    sbuf.append(" synced=").append(resp.synced);
+    sbuf.append(" predicted RTT=").append(predictedRTT);
+    sbuf.append(" actual RTT=");
+    sbuf.append(timer_ms() - startTimeMillis.longValue());
+    logger.info(sbuf.toString());
+    if (replicas.isEmpty()) {
+      replicas=resp.replicas;
+      needed=min(replicas.size(),replicas.size() / 2 + 1);
+    }
+    responses.put(n,resp.values);
+    for (    NodeId m : resp.synced) {
+      if (!responses.containsKey(m)) {
+        responses.put(m,new LinkedList<Pair<Key,ByteBuffer>>());
+      }
+    }
+    if (!resp.allRead)     allRead=false;
+    Iterator<NodeId> i=outstanding.keySet().iterator();
+    while (i.hasNext()) {
+      NodeId m=i.next();
+      if (!replicas.contains(m)) {
+        Object token=outstanding.get(m);
+        if (token != null)         rpc.cancelSend(token);
+        i.remove();
+      }
+    }
+    if (responses.size() < needed) {
+      for (      NodeId m : replicas) {
+        if (!outstanding.containsKey(m) && !tried.contains(m)) {
+          sendReq(m,null,null);
+        }
+      }
+    }
+  }
+ else {
+    StringBuffer sbuf=new StringBuffer(200);
+    sbuf.append("got iterative get resp key=0x");
+    sbuf.append(GuidTools.guid_to_string(key));
+    sbuf.append(" return addr=").append(my_node_id);
+    sbuf.append(" seq=").append(seq);
+    sbuf.append(" from ").append(n);
+    sbuf.append(" neighbors=[");
+    Iterator<Pair<NeighborInfo,VirtualCoordinate>> i=resp.neighbors.iterator();
+    while (i.hasNext()) {
+      Pair<NeighborInfo,VirtualCoordinate> p=i.next();
+      sbuf.append(p.first);
+      if (i.hasNext())       sbuf.append(", ");
+      if (!nodes.containsKey(p.first) && !outstanding.containsKey(p.first.node_id) && !tried.contains(p.first.node_id)) {
+        nodes.put(p.first,p.second);
+      }
+    }
+    sbuf.append("]");
+    sbuf.append(" predicted RTT=").append(predictedRTT);
+    sbuf.append(" actual RTT=");
+    sbuf.append(timer_ms() - startTimeMillis.longValue());
+    logger.info(sbuf.toString());
+  }
+  advanceIterGetReq();
+}
+public void run(NodeId n){
+  outstanding.remove(n);
+  tried.add(n);
+  advanceIterGetReq();
+}

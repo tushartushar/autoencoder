@@ -1,0 +1,3 @@
+@Override public LuminanceSource crop(int left,int top,int width,int height){
+  return new BufferedImageLuminanceSource(image,this.left + left,this.top + top,width,height);
+}

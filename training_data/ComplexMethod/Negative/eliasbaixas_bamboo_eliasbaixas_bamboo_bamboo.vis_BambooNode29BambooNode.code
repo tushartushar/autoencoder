@@ -1,0 +1,5 @@
+public BambooNode(BigInteger g,NodeId n,double[] c){
+  guid=g;
+  node_id=n;
+  coordinates=c;
+}

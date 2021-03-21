@@ -1,0 +1,3 @@
+public void addFilter(Filter f){
+  throw new NoSuchMethodError();
+}

@@ -1,0 +1,11 @@
+public MainWindow(){
+  setupUI();
+  setupGenerators();
+  setupEncodings();
+  setupOutputSizeSelection();
+  setTitle("QRCode Desktop");
+  setSize(STARTUP_WIDTH,STARTUP_HEIGHT);
+  setMinimumSize(new Dimension(getWidth(),getHeight()));
+  setLocationRelativeTo(null);
+  setDefaultCloseOperation(EXIT_ON_CLOSE);
+}

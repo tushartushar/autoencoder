@@ -1,0 +1,10 @@
+private void init_widgets(){
+  JScrollPane panel=new JScrollPane(textarea);
+  BorderLayout layout=new BorderLayout();
+  this.setLayout(layout);
+  this.add(panel);
+  textarea.setEditable(false);
+  textarea.addKeyListener(this);
+  this.setSize(400,300);
+  if (parent != null)   this.setLocation(parent.getX(),parent.getY());
+}

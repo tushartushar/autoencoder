@@ -1,0 +1,3 @@
+public VirtualTimeAlgorithm(long p,long t){
+  super(p,t);
+}

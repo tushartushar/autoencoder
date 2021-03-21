@@ -1,0 +1,8 @@
+@Override public void onCreate(Bundle savedInstanceState){
+  super.onCreate(savedInstanceState);
+  setContentView(R.layout.fragment_ble_scan);
+  adapter=new BleScanResultAdapter(this);
+  findViewById(R.id.start_ble_scan_btn).setVisibility(View.GONE);
+  list=(ListView)findViewById(R.id.ble_scan_results);
+  list.setAdapter(adapter);
+}

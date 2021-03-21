@@ -1,0 +1,3 @@
+public void asyncMain(){
+  throw new NoSuchMethodError("running under simulator");
+}

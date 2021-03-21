@@ -1,0 +1,4 @@
+public void show_guid(){
+  show_guid=true;
+  redraw_guid();
+}

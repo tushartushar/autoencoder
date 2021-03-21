@@ -1,0 +1,15 @@
+protected void updateOverlap(){
+  if (leaf_pred_count == 0 || leaf_succ_count == 0) {
+    overlap=true;
+    return;
+  }
+  overlap=false;
+  for (int i=0; i < leaf_pred_count; ++i) {
+    for (int j=0; j < leaf_succ_count; ++j) {
+      if (leaf_preds[i].guid.equals(leaf_succs[j].guid)) {
+        overlap=true;
+        break;
+      }
+    }
+  }
+}

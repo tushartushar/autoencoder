@@ -1,0 +1,14 @@
+/** 
+ * Fills in the holes in the tree.  If all of the children of this node are valid, this function will compute the <code>hash</code> and <code>leaves_below</code> data members for this node correctly and return <code>null</code>.  Otherwise, it will discover a range of data for which it needs a hash and a count of the number of items before it can complete successfully.  In this case, it will return a <code>FillHoleState</code> to indicate the range it needs. The caller should perform the scan over the range <code>range_low</code> to <code>range_high</code> inclusive. If there are less than or equal to <code>max_leaves_below</code> items in the range, it should set <code>leaves_below</code> to the total number of items and store their digest in <code>digest</code>. Otherwise, it should set <code>leaves_below</code> to the number of items read and set <code>digest</code> to <code>null</code>.  It should not change <code>range_low</code>, <code>range_high</code>, or <code>max_leaves_below</code>.
+ */
+public FillHolesState fill_holes(FillHolesState state,long now_ms){
+  if (logger.isDebugEnabled())   logger.debug("fill_holes " + toString());
+  if (logger.isDebugEnabled())   logger.debug("state=" + state);
+  if (valid(now_ms)) {
+    if (logger.isDebugEnabled())     logger.debug("valid");
+    return null;
+  }
+  FillHolesState result=has_children() ? fill_holes_have_children(state,now_ms) : fill_holes_no_children(state,now_ms);
+  assert valid(now_ms) || (result != null) : "not valid at end of fill_holes";
+  return result;
+}

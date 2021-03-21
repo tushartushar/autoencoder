@@ -1,0 +1,3 @@
+public String toString(){
+  return "Payload with message: " + message;
+}

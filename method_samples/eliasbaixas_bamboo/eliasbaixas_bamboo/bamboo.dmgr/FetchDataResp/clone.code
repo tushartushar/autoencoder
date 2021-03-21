@@ -1,0 +1,6 @@
+public Object clone() throws CloneNotSupportedException {
+  FetchDataResp result=(FetchDataResp)super.clone();
+  result.key=key;
+  result.data=data;
+  return result;
+}

@@ -1,0 +1,6 @@
+/** 
+ * Returns a copy of the coordinate array.
+ */
+public double[] getCoordinates(){
+  return (double[])_coordinate.clone();
+}

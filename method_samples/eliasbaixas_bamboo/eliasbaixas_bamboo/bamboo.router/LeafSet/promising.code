@@ -1,0 +1,29 @@
+public boolean promising(NeighborInfo ni){
+  if (ni.guid.equals(my_guid))   return false;
+  if (leaf_pred_count == 0) {
+    return true;
+  }
+  boolean duplicate=false;
+  for (int i=0; i < leaf_pred_count; ++i)   if (leaf_preds[i].guid.equals(ni.guid))   duplicate=true;
+  if (!duplicate) {
+    int i=0;
+    for (i=0; i < leaf_pred_count; ++i) {
+      if (in_range_mod(leaf_preds[i].guid,my_guid,ni.guid))       return true;
+    }
+    if ((i == leaf_pred_count) && (leaf_pred_count < leaf_set_size)) {
+      return true;
+    }
+  }
+  duplicate=false;
+  for (int i=0; i < leaf_succ_count; ++i)   if (leaf_succs[i].guid.equals(ni.guid))   duplicate=true;
+  if (!duplicate) {
+    int i;
+    for (i=0; i < leaf_succ_count; ++i) {
+      if (in_range_mod(my_guid,leaf_succs[i].guid,ni.guid))       return true;
+    }
+    if ((i == leaf_succ_count) && (leaf_succ_count < leaf_set_size)) {
+      return true;
+    }
+  }
+  return false;
+}

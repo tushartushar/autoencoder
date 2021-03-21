@@ -1,0 +1,4 @@
+public void limit(int sz){
+  assert sz >= 0;
+  remaining=sz;
+}

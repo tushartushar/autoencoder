@@ -1,0 +1,4 @@
+public final Object getIndex(int i){
+  if (heap_size < i)   throw new NoSuchElementException();
+  return heap[i];
+}

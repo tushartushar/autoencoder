@@ -1,0 +1,27 @@
+@Override public Boolean createNewXSLT(XSLT newXSLT){
+  try {
+    Integer count=xsltRepository.findCountByViewOrSave(newXSLT.getViewOrSave(),newXSLT.getTransType());
+    if (count != null && count == 0) {
+      xsltRepository.save(newXSLT);
+      return Boolean.TRUE;
+    }
+ else     if (count == 1) {
+      XSLT existingXsltBean=xsltRepository.findByViewOrSaveAndDeleted(newXSLT.getViewOrSave(),newXSLT.getTransType(),true);
+      if (existingXsltBean != null) {
+        existingXsltBean.setName(newXSLT.getName());
+        existingXsltBean.setXsltFile(newXSLT.getXsltFile());
+        existingXsltBean.setEnabled(newXSLT.isEnabled());
+        existingXsltBean.setDeleted(newXSLT.isDeleted());
+        xsltRepository.save(existingXsltBean);
+        return Boolean.TRUE;
+      }
+ else       throw new DataIntegrityViolationException("XSLT already existed in the System");
+    }
+ else     throw new DataIntegrityViolationException("XSLT already existed in the System");
+  }
+ catch (  Exception e) {
+    if (e instanceof DataIntegrityViolationException)     throw new DataIntegrityViolationException("XSLT already existed in the System");
+    ApplLogger.getLogger().error("Error caught while inserting new xlst to database ",e);
+    throw new RuntimeException(e.getMessage());
+  }
+}

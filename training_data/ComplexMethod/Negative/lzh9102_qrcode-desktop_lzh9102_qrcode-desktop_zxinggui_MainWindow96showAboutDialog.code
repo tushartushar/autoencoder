@@ -1,0 +1,4 @@
+private void showAboutDialog(){
+  String msg="QRCode Desktop, Copyright 2012 Timothy Lin <lzh9102@gmail.com>\n" + "\n" + "This program is free software licensed under the \n"+ "Apache Lincense Version 2.\n\n"+ "For more information, please see the project page: \n"+ "http://code.google.com/p/qrcode-desktop/"+ "\n";
+  JOptionPane.showMessageDialog(this,msg,"QRCode Desktop",JOptionPane.INFORMATION_MESSAGE);
+}

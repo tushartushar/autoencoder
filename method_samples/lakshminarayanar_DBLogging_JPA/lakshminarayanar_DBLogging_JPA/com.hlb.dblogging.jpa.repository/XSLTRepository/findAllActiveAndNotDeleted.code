@@ -1,0 +1,1 @@
+@Query("select r from XSLT r where viewOrSave= ? and deleted = 0 and enabled = 1") List<XSLT> findAllActiveAndNotDeleted(String mode);

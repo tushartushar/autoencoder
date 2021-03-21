@@ -1,0 +1,132 @@
+public void run(){
+  if (total_storage < storage_goal) {
+    bamboo_put_args put=new bamboo_put_args();
+    put.application="bamboo.dht.PutGetTest $Revision: 1.17 $";
+    put.value=new bamboo_value();
+    put.value.value=new byte[put_sizes[rand.nextInt(put_sizes.length)]];
+    rand.nextBytes(put.value.value);
+    put.key=new bamboo_key();
+    put.key.value=digest.digest(put.value.value);
+    put.ttl_sec=ttl_values[rand.nextInt(ttl_values.length)];
+    logger.info("Doing a put: size=" + put.value.value.length + " key=0x"+ print_bytes(put.key.value,0,4)+ "ttl_sec="+ put.ttl_sec);
+    long start_time_ms=timer_ms();
+    Long seq=new Long(next_seq++);
+    client.put(put,curry(put_done_cb,put,new Long(start_time_ms),seq));
+    pending_puts.put(seq,put);
+    acore.register_timer(PUT_TIMEOUT_MS,curry(put_timeout_cb,seq));
+  }
+  next_put_op();
+}
+public void run(Long seq){
+  bamboo_put_args put=(bamboo_put_args)pending_puts.remove(seq);
+  if (put != null) {
+    logger.warn("Put timed out: size=" + put.value.value.length + " key=0x"+ print_bytes(put.key.value,0,20)+ "ttl_sec="+ put.ttl_sec);
+    if (die_on_failure)     System.exit(1);
+  }
+}
+public void run(){
+  PutInfo pi=null;
+  for (int tries=0; tries < 5; ++tries) {
+    if (puts.size() == 0)     break;
+    int which_one=rand.nextInt(puts.size());
+    Iterator i=puts.iterator();
+    while (i.hasNext()) {
+      pi=(PutInfo)i.next();
+      if (pi.expiry_time_ms < timer_ms() + MAX_GET_TIME_MS) {
+        i.remove();
+        total_storage-=pi.size;
+        pi=null;
+        continue;
+      }
+ else       if (which_one-- == 0) {
+        break;
+      }
+    }
+    if (pi != null)     break;
+  }
+  if (pi != null) {
+    puts.remove(pi);
+    bamboo_get_args get_args=new bamboo_get_args();
+    get_args.application="bamboo.dht.PutGetTest $Revision: 1.17 $";
+    get_args.key=new bamboo_key();
+    get_args.key.value=pi.key;
+    get_args.maxvals=1;
+    get_args.placemark=new bamboo_placemark();
+    get_args.placemark.value=new byte[]{};
+    logger.info("Doing a get: key=0x" + print_bytes(pi.key,0,4));
+    long start_time_ms=timer_ms();
+    Long seq=new Long(next_seq++);
+    GetInfo gi=new GetInfo(get_args,pi,start_time_ms,seq);
+    client.get(get_args,curry(get_done_cb,gi));
+    pending_gets.put(seq,gi);
+    acore.register_timer(GET_TIMEOUT_MS,curry(get_timeout_cb,seq));
+  }
+  next_get_op();
+}
+public void run(Long seq){
+  GetInfo gi=(GetInfo)pending_gets.remove(seq);
+  if (gi != null) {
+    logger.fatal("Get timed out: key=0x" + print_bytes(gi.get_args.key.value,0,20));
+    if (die_on_failure)     System.exit(1);
+    puts.add(gi.pi);
+  }
+}
+public void run(bamboo_put_args put,Long start_time_ms,Long seq,Integer put_res){
+  if (!pending_puts.containsKey(seq)) {
+    return;
+  }
+  pending_puts.remove(seq);
+  long latency_ms=timer_ms() - start_time_ms.longValue();
+  if (put_res.intValue() != bamboo_stat.BAMBOO_OK) {
+    logger.info("Put failed: size=" + put.value.value.length + " key="+ print_bytes(put.key.value,0,20)+ "ttl_sec="+ put.ttl_sec+ " lat="+ latency_ms+ " ms, reason="+ put_res);
+  }
+ else {
+    logger.info("Put successful: size=" + put.value.value.length + " key=0x"+ print_bytes(put.key.value,0,4)+ "ttl_sec="+ put.ttl_sec+ " lat="+ latency_ms+ " ms");
+    PutInfo pi=new PutInfo(put.key.value,timer_ms() - latency_ms + put.ttl_sec * 1000,put.value.value.length);
+    assert !puts.contains(pi);
+    total_storage+=pi.size;
+    puts.add(pi);
+    if (log != null)     log_put(pi,log);
+  }
+}
+public void run(GetInfo gi,bamboo_get_res get_res){
+  long latency_ms=timer_ms() - gi.start_time_ms;
+  if (!pending_gets.containsKey(gi.seq)) {
+    return;
+  }
+  pending_gets.remove(gi.seq);
+  if (get_res.values.length == 0) {
+    int retry_time=gi.attempt * 10 * 1000;
+    retry_time=retry_time / 2 + rand.nextInt(retry_time);
+    if (timer_ms() + retry_time < gi.start_time_ms + MAX_GET_TIME_MS) {
+      logger.info("Trying to get key=0x" + print_bytes(gi.pi.key,0,4) + "again");
+      acore.register_timer(rand.nextInt(retry_time),curry(get_again_cb,gi));
+      ++gi.attempt;
+      return;
+    }
+ else {
+      logger.info("Get failed: key=0x" + print_bytes(gi.pi.key,0,20) + "size="+ gi.pi.size+ " ttl remaining="+ (timer_ms() - gi.pi.expiry_time_ms)+ " ms");
+      if (die_on_failure)       System.exit(1);
+      puts.add(gi.pi);
+      return;
+    }
+  }
+ else {
+    PutInfo pi2=new PutInfo(digest.digest(get_res.values[0].value),0,0);
+    if (!gi.pi.equals(pi2)) {
+      logger.info("Get got bad data: key=0x" + print_bytes(gi.pi.key) + " value hash="+ print_bytes(pi2.key)+ " lat="+ latency_ms+ " ms");
+    }
+ else {
+      logger.info("Get successful: key=0x" + print_bytes(gi.pi.key,0,4) + "size="+ get_res.values[0].value.length+ " lat="+ latency_ms+ " ms");
+    }
+    puts.add(gi.pi);
+    return;
+  }
+}
+public void run(GetInfo gi){
+  Long seq=new Long(next_seq++);
+  gi.seq=seq;
+  client.get(gi.get_args,curry(get_done_cb,gi));
+  pending_gets.put(seq,gi);
+  acore.register_timer(GET_TIMEOUT_MS,curry(get_timeout_cb,seq));
+}

@@ -1,0 +1,3 @@
+@Column(name="RETRYPATH",nullable=false) public String getRetryPath(){
+  return retryPath;
+}

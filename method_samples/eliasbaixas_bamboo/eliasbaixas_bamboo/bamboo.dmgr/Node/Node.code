@@ -1,0 +1,4 @@
+public Node(int level,long low){
+  this.level=level;
+  this.low=low;
+}

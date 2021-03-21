@@ -1,0 +1,6 @@
+public void removeItem(ScanResult result){
+  if (items.containsKey(result.getDevice().getAddress())) {
+    items.remove(result.getDevice().getAddress());
+    notifyDataSetChanged();
+  }
+}

@@ -1,0 +1,3 @@
+public static boolean isMap(ParcelUuid uuid){
+  return uuid.equals(MAP);
+}

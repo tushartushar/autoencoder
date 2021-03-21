@@ -1,0 +1,4 @@
+protected void handle_fetch_data_req_have_data(StorageManager.GetByKeyResp resp){
+  FetchDataReq req=(FetchDataReq)resp.user_data;
+  dispatch(new FetchDataResp(req.peer,req.key,resp.data));
+}

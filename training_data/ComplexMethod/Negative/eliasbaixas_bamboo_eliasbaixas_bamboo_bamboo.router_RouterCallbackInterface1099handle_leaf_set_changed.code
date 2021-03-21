@@ -1,0 +1,8 @@
+protected void handle_leaf_set_changed(BambooLeafSetChanged msg){
+  Iterator i=apps.keySet().iterator();
+  while (i.hasNext()) {
+    Long app_id=(Long)i.next();
+    Application app=(Application)apps.get(app_id);
+    if (app.ls_cb != null)     app.ls_cb.leaf_set_changed(msg.preds,msg.succs,app.ls_ud);
+  }
+}

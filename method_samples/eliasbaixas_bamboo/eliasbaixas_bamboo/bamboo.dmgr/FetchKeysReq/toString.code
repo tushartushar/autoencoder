@@ -1,0 +1,17 @@
+public String toString(){
+  StringBuffer result=new StringBuffer(100);
+  result.append("(FetchKeysReq super=");
+  result.append(super.toString());
+  result.append(" low_guid=");
+  result.append(GuidTools.guid_to_string(low_guid));
+  result.append(" high_guid=");
+  result.append(GuidTools.guid_to_string(high_guid));
+  result.append(" low_time=");
+  result.append(Long.toHexString(low_time));
+  result.append(" high_time=");
+  result.append(Long.toHexString(high_time));
+  result.append(" seq=");
+  result.append(seq);
+  result.append(")");
+  return result.toString();
+}

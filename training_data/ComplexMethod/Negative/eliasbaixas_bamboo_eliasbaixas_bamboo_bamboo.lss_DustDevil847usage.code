@@ -1,0 +1,4 @@
+public static void usage(){
+  System.err.println("usage: [-l <log prefix>] <config file>");
+  System.exit(1);
+}

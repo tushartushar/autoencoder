@@ -1,0 +1,3 @@
+protected int config_get_seconds(ConfigDataIF config,String name,int default_value){
+  return configGetInt(config,name,default_value) * 1000;
+}

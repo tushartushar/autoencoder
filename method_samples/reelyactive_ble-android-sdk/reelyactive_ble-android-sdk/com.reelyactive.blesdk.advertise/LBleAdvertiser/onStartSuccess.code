@@ -1,0 +1,3 @@
+@Override public void onStartSuccess(AdvertiseSettings settingsInEffect){
+  super.onStartSuccess(settingsInEffect);
+}

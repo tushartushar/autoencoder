@@ -1,0 +1,3 @@
+public String toString(){
+  return "(" + node_id.address().getHostAddress() + ":"+ node_id.port()+ ", 0x"+ GuidTools.guid_to_string(guid)+ ")";
+}

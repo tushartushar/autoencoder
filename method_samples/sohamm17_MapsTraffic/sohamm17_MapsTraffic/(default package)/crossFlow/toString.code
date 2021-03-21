@@ -1,0 +1,3 @@
+public String toString(){
+  return description + " --> FreeFlow: " + freeFlowSpeed+ "km/h, Speed(In Traffic): "+ speedUncapped+ ", Jam Factor: "+ jamFactor+ ", Confidence:"+ confidence+ ", Dir: "+ direction;
+}

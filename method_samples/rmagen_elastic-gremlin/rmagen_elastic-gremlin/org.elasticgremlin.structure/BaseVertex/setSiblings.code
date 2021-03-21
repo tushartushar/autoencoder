@@ -1,0 +1,3 @@
+public void setSiblings(List<BaseVertex> siblings){
+  this.siblings=siblings;
+}

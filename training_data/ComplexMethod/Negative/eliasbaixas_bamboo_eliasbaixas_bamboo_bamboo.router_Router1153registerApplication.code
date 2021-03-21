@@ -1,0 +1,14 @@
+/** 
+ * Register an application (such as bamboo.dht.Dht) to use the Router.
+ * @param id A value to identify this application in route messages sentacross the network.
+ * @param leafSetChanged Called when the leaf set changes.  The firstarray is the new predecessor list; the second is the new successor list.
+ * @param routingTableChanged Called when the routing table changes.  Thefirst array is the nodes added to the routing table; the second is those removed from the routing table.
+ * @param reverseRoutingTableChanged Called when we are added to orremoved from some other node's routing table.  The first array is the nodes added to the routing table; the second is those removed from the routing table.
+ * @param routeUpcall Called when a message is routed through this node,and the source specified that it should upcall at nodes that are not the root of the destination ID.  The arguments are source ID, destination ID, immediate source IP:port, the queuing time before the message was forwarded, the estimated round trip time from the immediate source to this node, and the payload.
+ * @param routeDeliver Called when we are the root for a route message.The arguments are source ID, destination ID, immediate source IP:port, the queuing time before the message was forwarded, the estimated round trip time from the immediate source to this node, and the payload.
+ * @throws DuplicateApplicationException if<code>registerApplication</code> has already been called with this <code>id</code>
+ */
+public void registerApplication(long id,Thunk2<BambooNeighborInfo[],BambooNeighborInfo[]> leafSetChanged,Thunk2<BambooNeighborInfo[],BambooNeighborInfo[]> routingTableChanged,Thunk2<BambooNeighborInfo[],BambooNeighborInfo[]> reverseRoutingTableChanged,Thunk6<BigInteger,BigInteger,NodeId,Long,Long,QuickSerializable> routeUpcall,Thunk6<BigInteger,BigInteger,NodeId,Long,Long,QuickSerializable> routeDeliver) throws DuplicateApplicationException {
+  if (apps.containsKey(new Long(id)))   throw new DuplicateApplicationException("duplicate id " + id);
+  apps.put(new Long(id),new ApplicationInfo(leafSetChanged,routingTableChanged,reverseRoutingTableChanged,routeUpcall,routeDeliver));
+}

@@ -1,0 +1,29 @@
+protected final void handle_ack(Long seq){
+  TimeoutInfo tinfo=(TimeoutInfo)unacked.remove(seq);
+  long now_ms=System.currentTimeMillis();
+  if (tinfo == null) {
+    tinfo=(TimeoutInfo)second_chance.remove(seq);
+    if (tinfo == null) {
+      if (DEBUG)       debugln("got unexpected ack for seq 0x" + Long.toHexString(seq.longValue()));
+    }
+ else {
+      tinfo.conn.lastrcv=System.currentTimeMillis();
+      if (DEBUG_RTT)       debugln("2nd chance ack seq 0x" + Long.toHexString(seq.longValue()) + ", peer="+ tinfo.conn.addr+ ", rtt="+ (now_ms - tinfo.send_ms)+ ", now="+ now_ms);
+      tinfo.conn.add_rtt_meas(System.currentTimeMillis() - tinfo.send_ms);
+    }
+    return;
+  }
+  Connection conn=tinfo.conn;
+  conn.time_to_ack+=(now_ms - tinfo.start_ms);
+  conn.time_to_ack_cnt+=1;
+  conn.lastrcv=now_ms;
+  if (DEBUG)   debugln("got ack for seq 0x" + Long.toHexString(seq.longValue()));
+  conn.add_rtt_meas(System.currentTimeMillis() - tinfo.send_ms);
+  conn.inf.remove(seq);
+  if (DEBUG)   debugln("conn=" + conn.addr + " cwnd="+ ((int)conn.cwnd)+ " inf="+ conn.inf.size());
+  tinfo.conn.consecutive_timeouts=0;
+  if (conn.writable())   add_to_rr(conn);
+  if ((!cancelled.remove(new Long(tinfo.msg_id))) && (tinfo.send_cb != null)) {
+    tinfo.send_cb.run(new Boolean(true));
+  }
+}

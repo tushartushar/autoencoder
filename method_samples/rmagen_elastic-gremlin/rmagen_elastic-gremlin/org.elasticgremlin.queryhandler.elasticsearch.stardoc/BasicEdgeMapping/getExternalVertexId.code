@@ -1,0 +1,3 @@
+@Override public Object getExternalVertexId(Map<String,Object> entries){
+  return entries.get(externalVertexField);
+}

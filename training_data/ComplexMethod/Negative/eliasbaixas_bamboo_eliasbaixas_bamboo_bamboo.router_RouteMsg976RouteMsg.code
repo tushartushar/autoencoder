@@ -1,0 +1,18 @@
+public RouteMsg(NodeId n,BigInteger s,BigInteger d,long a,boolean u,BigInteger g,QuickSerializable p){
+  super(n,false);
+  src=s;
+  dest=d;
+  app_id=a;
+  payload=p;
+  peer_guid=g;
+  intermediate_upcall=u;
+}
+public RouteMsg(InputBuffer buffer) throws QSException {
+  super(buffer);
+  src=buffer.nextBigInteger();
+  dest=buffer.nextBigInteger();
+  app_id=buffer.nextLong();
+  intermediate_upcall=buffer.nextBoolean();
+  peer_guid=buffer.nextBigInteger();
+  payload=buffer.nextObject();
+}

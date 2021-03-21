@@ -1,0 +1,16 @@
+protected void accept_put(final PutInfo pi){
+  pi.cb=null;
+  pi.user_data=null;
+  Integer client=new Integer(pi.client);
+  Long count=(Long)storage_by_client.get(client);
+  if (count == null)   count=new Long(pi.size);
+ else   count=new Long(count.longValue() + pi.size);
+  storage_by_client.put(client,count);
+  ++total_puts;
+  sim.register_event(pi.ttl_sec * 1000,new Simulator.EventCb(){
+    public void cb(    Object not_used){
+      remove_put(pi);
+    }
+  }
+,null);
+}

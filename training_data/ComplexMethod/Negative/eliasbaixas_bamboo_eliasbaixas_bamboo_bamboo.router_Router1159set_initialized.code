@@ -1,0 +1,28 @@
+protected void set_initialized(){
+  System.out.println("Tapestry: ready");
+  initialized=true;
+  try {
+    while (!waitq.isEmpty())     handleEvent(waitq.removeFirst());
+  }
+ catch (  Exception e) {
+    e.printStackTrace();
+    BUG("Caught " + e);
+  }
+  acore.registerTimer(randomPeriod(ls_alarm_period),leafSetAlarm);
+  if (partition_check_alarm_period != 0) {
+    long wait=0;
+    if (!immediate_join) {
+      wait=randomPeriod(partition_check_alarm_period);
+    }
+    acore.registerTimer(wait,partitionCheckAlarm);
+  }
+  if (near_rt_alarm_period != 0) {
+    acore.registerTimer(randomPeriod(near_rt_alarm_period),nearRoutingTableAlarm);
+  }
+  if (far_rt_alarm_period != 0) {
+    acore.registerTimer(randomPeriod(far_rt_alarm_period),farRoutingTableAlarm);
+  }
+  if (lookup_rt_alarm_period != 0) {
+    DustDevil.acore_instance().registerTimer(randomPeriod(lookup_rt_alarm_period),lookupRoutingTableAlarm);
+  }
+}

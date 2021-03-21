@@ -1,0 +1,9 @@
+public Router() throws Exception {
+  registerApplication(0,null,null,null,null,null);
+  ostore.util.TypeTable.register_type(LookupReqPayload.class);
+  ostore.util.TypeTable.register_type(NeighborInfo.class);
+  ostore.util.TypeTable.register_type(CoordReq.class);
+  ostore.util.TypeTable.register_type(CoordResp.class);
+  event_types=new Class[]{BambooAddToLocationCache.class,BambooRouteContinue.class,BambooRouteInit.class,BambooRouterAppRegReq.class};
+  inb_msg_types=new Class[]{PingMsg.class,JoinReq.class,JoinResp.class,LeafSetReq.class,LeafSetChanged.class,LookupRespMsg.class,RouteMsg.class,RoutingTableReq.class,RoutingTableResp.class,RoutingNeighborAnnounce.class};
+}

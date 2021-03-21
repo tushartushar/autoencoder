@@ -1,0 +1,4 @@
+private String getMemoField() throws GeneratorException {
+  String memo=txtMemo.getText();
+  return memo;
+}

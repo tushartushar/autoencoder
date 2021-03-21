@@ -1,0 +1,3 @@
+public void hide_color_storage(){
+  color_node_default();
+}

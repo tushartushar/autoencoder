@@ -1,0 +1,17 @@
+@Transactional public void log(SystemAuditTrailActivity systemAuditTrailActivity,SystemAuditTrailLevel systemAuditTrailLevel,int userId,String username,String description){
+  if (ConfigurationHolder.getBoolean("audit.enabled")) {
+    SystemAuditTrailLevel configuredLevel=SystemAuditTrailLevel.valueOf(ConfigurationHolder.getString("audit.minimumlevel"));
+    if (configuredLevel.getLevelInt() <= systemAuditTrailLevel.getLevelInt()) {
+      SystemAuditTrail systemAuditTrail=new SystemAuditTrail();
+      Date currentDate=new Date();
+      systemAuditTrail.setDate(currentDate);
+      systemAuditTrail.setActivity(systemAuditTrailActivity.getActivity());
+      systemAuditTrail.setLogLevel(systemAuditTrailLevel.getLevel());
+      systemAuditTrail.setActorUsername(username);
+      systemAuditTrail.setActorUserId(userId);
+      systemAuditTrail.setDescription(description);
+      systemAuditTrail.setDeleted(false);
+      systemAuditTrailRecordService.create(systemAuditTrail);
+    }
+  }
+}

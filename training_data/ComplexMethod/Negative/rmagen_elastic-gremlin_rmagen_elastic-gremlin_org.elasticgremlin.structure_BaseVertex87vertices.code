@@ -1,0 +1,12 @@
+@Override public Iterator<Vertex> vertices(Direction direction,String... edgeLabels){
+  return vertices(direction,edgeLabels,new Predicates());
+}
+public Iterator<Vertex> vertices(Direction direction,String[] edgeLabels,Predicates predicates){
+  checkRemoved();
+  Iterator<Edge> edgeIterator=edges(direction,edgeLabels,predicates);
+  ArrayList<Vertex> vertices=new ArrayList<>();
+  if (edgeIterator != null) {
+    edgeIterator.forEachRemaining(edge -> vertices.add(vertexToVertex(this,edge,direction)));
+  }
+  return vertices.iterator();
+}

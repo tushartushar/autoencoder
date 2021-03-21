@@ -1,0 +1,8 @@
+/** 
+ * Serializes this object.
+ */
+public void serialize(OutputBuffer buffer){
+  buffer.add(_version_number);
+  buffer.add(_requestor);
+  buffer.add(_coordinate);
+}

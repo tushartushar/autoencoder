@@ -1,0 +1,23 @@
+protected void handle_accept_ready(){
+  SocketChannel channel=null;
+  try {
+    channel=svr_ch.accept();
+    if (channel == null)     return;
+    channel.configureBlocking(false);
+    ConnState state=new ConnState(channel);
+    InetSocketAddress remote=(InetSocketAddress)channel.socket().getRemoteSocketAddress();
+    logger.info("got connection from " + remote.getAddress().getHostAddress() + ":"+ remote.getPort());
+    state.skey=acore.register_selectable(channel,SelectionKey.OP_READ,new ASyncCore.SelectableCB(){
+      public void select_cb(      SelectionKey skey,      Object ud){
+        if (((skey.interestOps() & SelectionKey.OP_READ) != 0) && skey.isReadable())         handle_read_ready(skey,(ConnState)ud);
+        if (skey.isValid() && ((skey.interestOps() & SelectionKey.OP_WRITE) != 0) && skey.isWritable())         handle_write_ready(skey,(ConnState)ud);
+      }
+    }
+,state);
+    handle_read_ready(state.skey,state);
+    acore.register_timer(60 * 1000,conn_timeout_cb,state);
+  }
+ catch (  IOException e) {
+    BUG(e);
+  }
+}

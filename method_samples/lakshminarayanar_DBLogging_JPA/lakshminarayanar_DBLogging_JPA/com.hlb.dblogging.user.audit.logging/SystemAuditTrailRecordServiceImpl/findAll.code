@@ -1,0 +1,4 @@
+@Override public List<SystemAuditTrail> findAll(){
+  List<SystemAuditTrail> l=systemAuditTrailRecordRepository.findByisDeleted(0);
+  return l;
+}

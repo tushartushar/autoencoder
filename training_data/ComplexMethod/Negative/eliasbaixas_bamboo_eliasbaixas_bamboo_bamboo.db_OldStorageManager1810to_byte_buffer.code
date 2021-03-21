@@ -1,0 +1,10 @@
+public void to_byte_buffer(ByteBuffer buf){
+  buf.putLong(time_usec);
+  buf.putInt(ttl_sec);
+  byte[] guid_bytes=new byte[20];
+  OldStorageManager.guid_to_bytes(guid,guid_bytes,0);
+  buf.put(guid_bytes,0,20);
+  buf.put(data_hash,0,20);
+  buf.put((byte)(put ? 1 : 0));
+  buf.put(client_id.getAddress(),0,4);
+}

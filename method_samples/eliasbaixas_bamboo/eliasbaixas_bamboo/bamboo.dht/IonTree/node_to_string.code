@@ -1,0 +1,11 @@
+protected static String node_to_string(Node n){
+  return node_to_string(n,"");
+}
+protected static String node_to_string(Node n,String indent){
+  if (n == null)   return "(empty tree)";
+  String local=indent + "[" + n.low+ ", "+ n.high+ "] off="+ n.offset+ " val="+ n.value+ " height="+ n.height;
+  if (n.leaf())   return local;
+ else {
+    return local + "\n" + node_to_string(n.left,indent + "  ")+ "\n"+ node_to_string(n.right,indent + "  ");
+  }
+}

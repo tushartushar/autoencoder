@@ -1,0 +1,9 @@
+public String toString(){
+  return gen.getName();
+}
+public String toString(){
+  return encodingNames[index];
+}
+public String toString(){
+  return "" + size + "x"+ size;
+}

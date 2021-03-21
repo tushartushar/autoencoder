@@ -1,0 +1,3 @@
+protected void check_open_cursors(){
+  if (print_open_cursors)   logger.info(open_cursors.size() + " open cursors");
+}

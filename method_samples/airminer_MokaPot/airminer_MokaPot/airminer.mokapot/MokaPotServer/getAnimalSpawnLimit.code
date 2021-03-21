@@ -1,0 +1,3 @@
+@Override public int getAnimalSpawnLimit(){
+  throw new NotImplementedException();
+}

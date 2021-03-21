@@ -1,0 +1,6 @@
+public static void log(String s){
+  LuaState luaState=LuaStateRegistry.getLuaState();
+  luaState.getGlobal("LOG");
+  luaState.pushString(s);
+  luaState.call(1,0);
+}

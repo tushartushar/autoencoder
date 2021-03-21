@@ -1,0 +1,44 @@
+public void paint(Graphics g){
+  if (root == null)   return;
+  Graphics2D g2=(Graphics2D)g;
+  Dimension d=getSize();
+  g2.setStroke(new BasicStroke(2.0f));
+  PointList[] pl=leavesToPoints(root,0);
+  GeneralPath putsline=new GeneralPath(GeneralPath.WIND_EVEN_ODD,pl[0].size());
+  GeneralPath rline=new GeneralPath(GeneralPath.WIND_EVEN_ODD);
+  float px=(float)pl[0].x * scale;
+  float py=d.height - (float)pl[0].y * scale;
+  putsline.moveTo(px,py);
+  for (PointList i=pl[0].next; i != null; i=i.next) {
+    px=(float)i.x * scale;
+    py=d.height - (float)i.y * scale;
+    putsline.lineTo(px,py);
+  }
+  float rx=(float)now * scale;
+  float ry=d.height;
+  rline.moveTo(rx,ry);
+  while (ry > d.height - capacity * scale) {
+    rx+=scale;
+    rline.lineTo(rx,ry);
+    ry-=rate * scale;
+    rline.lineTo(rx,ry);
+  }
+  rx+=scale;
+  rline.lineTo(rx,ry);
+  pl=valuesToPoints(root,0);
+  GeneralPath sumline=new GeneralPath(GeneralPath.WIND_EVEN_ODD,pl[0].size());
+  float sx=(float)pl[0].x * scale;
+  float sy=d.height - (float)pl[0].y * scale;
+  sumline.moveTo(sx,sy);
+  for (PointList i=pl[0].next; i != null; i=i.next) {
+    sx=(float)i.x * scale;
+    sy=d.height - (float)i.y * scale;
+    sumline.lineTo(sx,sy);
+  }
+  g2.setPaint(Color.black);
+  g2.draw(putsline);
+  g2.setPaint(Color.red);
+  g2.draw(rline);
+  g2.setPaint(Color.blue);
+  g2.draw(sumline);
+}

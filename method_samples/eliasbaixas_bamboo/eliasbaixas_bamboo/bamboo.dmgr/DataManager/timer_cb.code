@@ -1,0 +1,38 @@
+public void timer_cb(Object user_data){
+  LinkedList resend=null;
+  long timer_ms=timer_ms();
+  Iterator i=put_or_remove_acks.keySet().iterator();
+  while (i.hasNext()) {
+    Long seq=(Long)i.next();
+    PutOrRemoveState p=(PutOrRemoveState)put_or_remove_acks.get(seq);
+    if (p.stored && (timer_ms > p.start_time + put_give_up_time)) {
+      i.remove();
+      if (p.expected_ack_cnt - p.unacked.size() < required_acks) {
+        logger.warn("did not get " + required_acks + " acks for put");
+      }
+      if (p.event.completion_queue != null) {
+        enqueue(p.event.completion_queue,new PutOrRemoveResp(p.event.user_data));
+      }
+    }
+ else     if (timer_ms > p.start_time + put_retry_time) {
+      if (resend == null)       resend=new LinkedList();
+      resend.addLast(new Object[]{seq,p});
+      i.remove();
+    }
+  }
+  if (resend != null) {
+    i=resend.iterator();
+    while (i.hasNext()) {
+      Object[] o=(Object[])i.next();
+      Long seq=(Long)o[0];
+      PutOrRemoveState p=(PutOrRemoveState)o[1];
+      p.start_time=timer_ms;
+      put_or_remove_acks.put(seq,p);
+      Iterator j=p.unacked.iterator();
+      while (j.hasNext()) {
+        dispatch(new PutOrRemoveMsg((NodeId)j.next(),p.event.time_usec,p.event.ttl_sec,p.event.guid,p.event.value,p.event.put,p.event.client_id,seq.longValue(),p.hash,p.event.secret_hash));
+      }
+    }
+  }
+  next_check_put_or_remove_acks();
+}

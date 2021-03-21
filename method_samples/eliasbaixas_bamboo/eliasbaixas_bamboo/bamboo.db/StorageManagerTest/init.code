@@ -1,0 +1,7 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  int debug_level=config.getInt("debug_level");
+  if (debug_level > 0)   DEBUG=true;
+  rand=new Random(1);
+  md=MessageDigest.getInstance("SHA");
+}

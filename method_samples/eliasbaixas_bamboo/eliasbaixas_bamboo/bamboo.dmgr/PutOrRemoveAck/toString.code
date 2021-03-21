@@ -1,0 +1,9 @@
+public String toString(){
+  StringBuffer result=new StringBuffer(100);
+  result.append("(PutOrRemoveAck super=");
+  result.append(super.toString());
+  result.append(" seq=");
+  result.append(seq);
+  result.append(")");
+  return result.toString();
+}

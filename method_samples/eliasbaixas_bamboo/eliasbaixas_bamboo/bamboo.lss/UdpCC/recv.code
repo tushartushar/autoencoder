@@ -1,0 +1,10 @@
+/** 
+ * Called when a message is received.
+ * @param msg        the message that was received
+ * @param src        the host and port from which the message wassent.  The source is not authenticated; this value is just what is read out of the IP packet header
+ * @param local      the localhost and port on which the message wasreceived
+ * @param tries      the number of times the message has been sent,including this one, or -1 if that information is not available (for example, if the message was sent with  {@link #send_nocc})
+ * @param wait_ms    the time in milliseconds that the message sat inthe sender's outbound queue before being sent, presumably because it was waiting behind other messages, or -1 if that information is not available
+ * @param est_rtt_ms the sender's estimate of the round trip time inmilliseconds between it and this host, or -1 if that information is not available
+ */
+void recv(Object msg,InetSocketAddress src,InetSocketAddress local,int tries,long wait_ms,long est_rtt_ms);

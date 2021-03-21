@@ -1,0 +1,3 @@
+@Override public ScanResult getItem(int position){
+  return items.get(items.keySet().toArray()[position]);
+}

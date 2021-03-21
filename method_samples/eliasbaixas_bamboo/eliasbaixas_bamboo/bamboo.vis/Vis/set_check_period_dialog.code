@@ -1,0 +1,9 @@
+protected void set_check_period_dialog(){
+  String s=(String)JOptionPane.showInputDialog(frame,"Set check period (seconds):","Set Check Period",JOptionPane.PLAIN_MESSAGE,null,null,Long.toString(check_period_ms / 1000));
+  if (s != null) {
+    check_period_ms=Long.parseLong(s) * 1000;
+    if (FNIT != null) {
+      FNIT.check_period_ms=check_period_ms;
+    }
+  }
+}

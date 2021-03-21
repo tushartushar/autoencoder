@@ -1,0 +1,60 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  int debug_level=config.getInt("debug_level");
+  if (debug_level > 0)   DEBUG=true;
+  int initial_check_time=config.getInt("initial_check_time");
+  if (initial_check_time < 0)   initial_check_time=60;
+  initial_check_time*=1000;
+  classifier.dispatch_later(new Alarm(),initial_check_time);
+  check_period=config.getInt("check_period");
+  if (check_period < 0)   check_period=60;
+  check_period*=1000;
+  output_prefix=config.getString("output_prefix");
+  if (output_prefix == null) {
+    System.err.println("must set output_prefix in cfg file");
+    System.exit(1);
+  }
+  if (config.getBoolean("fake_keys")) {
+    SecureHash sh=null;
+    String fakeguid=config.getString("fake_guid");
+    if (fakeguid != null) {
+      sh=new SHA1Hash(fakeguid.getBytes(),true);
+    }
+ else {
+      int offset=config.getInt("fake_key_offset");
+      if (offset != -1) {
+        sh=new SHA1Hash(my_node_id.toString() + offset);
+      }
+ else {
+        sh=new SHA1Hash(my_node_id);
+      }
+    }
+    my_ni=new NeighborInfo(my_node_id,GuidTools.secure_hash_to_big_integer(sh));
+  }
+ else {
+    String keyfilename=config.getString("pkey");
+    if (keyfilename != null && !keyfilename.equals("")) {
+      QSPublicKey pkey=null;
+      try {
+        FileInputStream keyfile=new FileInputStream(keyfilename);
+        pkey=(QSPublicKey)QSIO.read(keyfile);
+        keyfile.close();
+      }
+ catch (      Exception e) {
+        Carp.die("TClient.init:  Caught exception " + e + " while trying to read pkey from disk.");
+      }
+      my_ni=new NeighborInfo(my_node_id,GuidTools.secure_hash_to_big_integer(new SHA1Hash(pkey)));
+    }
+ else {
+      my_ni=new NeighborInfo(my_node_id,GuidTools.secure_hash_to_big_integer(new SHA1Hash(my_node_id)));
+    }
+  }
+  if (my_ni == null) {
+    logger.fatal("no guid!");
+    System.exit(1);
+  }
+  rand=new Random(my_ni.guid.hashCode());
+  System.out.println(my_ni + ": adding myself to the all_nodes set.");
+  all_nodes.add(my_ni);
+  guid_to_stage.put(my_ni.guid,this);
+}

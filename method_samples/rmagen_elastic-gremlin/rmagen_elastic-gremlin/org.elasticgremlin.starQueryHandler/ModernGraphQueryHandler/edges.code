@@ -1,0 +1,12 @@
+@Override public Iterator<Edge> edges(){
+  return starHandler.edges();
+}
+@Override public Iterator<Edge> edges(Object[] edgeIds){
+  return starHandler.edges(edgeIds);
+}
+@Override public Iterator<Edge> edges(Predicates predicates){
+  return starHandler.edges(predicates);
+}
+@Override public Map<Object,Set<Edge>> edges(Iterator<BaseVertex> vertices,Direction direction,String[] edgeLabels,Predicates predicates){
+  return starHandler.edges(vertices,direction,edgeLabels,predicates);
+}

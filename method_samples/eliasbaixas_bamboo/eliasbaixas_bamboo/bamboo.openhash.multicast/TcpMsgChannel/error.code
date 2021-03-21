@@ -1,0 +1,4 @@
+protected void error(){
+  close();
+  if (fail != null)   fail.run();
+}

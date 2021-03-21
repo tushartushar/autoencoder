@@ -1,0 +1,4 @@
+public void hide_guid(){
+  show_guid=false;
+  redraw_guid();
+}

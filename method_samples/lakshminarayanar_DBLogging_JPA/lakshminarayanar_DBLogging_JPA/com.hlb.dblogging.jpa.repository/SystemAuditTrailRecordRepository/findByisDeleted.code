@@ -1,0 +1,1 @@
+@Query("select l from SystemAuditTrail l where isDeleted = ?") List<SystemAuditTrail> findByisDeleted(int x);

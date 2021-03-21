@@ -1,0 +1,3 @@
+public int debug_level(){
+  return ((DEBUG) ? 0x4 : 0x0) | ((DEBUG_RTT) ? 0x2 : 0x0) | ((DEBUG_MIN) ? 0x1 : 0x0);
+}

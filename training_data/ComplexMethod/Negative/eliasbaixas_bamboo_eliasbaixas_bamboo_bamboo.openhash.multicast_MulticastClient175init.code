@@ -1,0 +1,23 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  int debug_level=config_get_int(config,"debug_level");
+  if (debug_level > 0) {
+    logger.setLevel(Level.DEBUG);
+    PublicMulticastClient.logger.setLevel(Level.DEBUG);
+    NattedMulticastClient.logger.setLevel(Level.DEBUG);
+    NattedMulticastParent.logger.setLevel(Level.DEBUG);
+  }
+  natted=config_get_boolean(config,"natted");
+  seed=now_ms() ^ my_node_id.hashCode();
+  Random rand=new Random(seed);
+  next_msg_num=rand.nextInt(Integer.MAX_VALUE);
+  total_levels=config_get_int(config,"levels");
+  replication=config_get_int(config,"replication");
+  String client_stg_name=config_get_string(config,"client_stage_name");
+  StageIF client_stg=config.getManager().getStage(client_stg_name);
+  client=(GatewayClient)client_stg.getWrapper().getEventHandler();
+  if (!natted) {
+    parent=new NattedMulticastParent(acore,my_node_id.port() + 1,pcall);
+  }
+  acore.registerTimer(0,ready);
+}

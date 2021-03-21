@@ -1,0 +1,5 @@
+public bamboo_hash(){
+}
+public bamboo_hash(XdrDecodingStream xdr) throws OncRpcException, IOException {
+  xdrDecode(xdr);
+}

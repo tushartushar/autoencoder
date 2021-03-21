@@ -1,0 +1,14 @@
+private void handleParentAlarm(ParentAlarm alarm){
+  if (DEBUG) {
+    Debug.printtagln(tag,"handleParentAlarm");
+    printLocalGroups();
+  }
+  Vector sendQueue=new Vector();
+  for (Enumeration e=myLocalGroups.elements(); e.hasMoreElements(); ) {
+    BigInteger bi=(BigInteger)e.nextElement();
+    MCastJoinMsg m=new MCastJoinMsg(my_node_id,bi);
+    if (DEBUG)     Debug.printtagln(tag,"handleParentAlarm will dispatch to " + GuidTools.guid_to_string(bi) + " message "+ m);
+    dispatch(new BambooRouteInit(bi,app_id,true,false,m));
+  }
+  classifier.dispatch_later(new ParentAlarm(),PARENT_ALARM_INTERVAL + rand.nextInt(PARENT_ALARM_VARIATION));
+}

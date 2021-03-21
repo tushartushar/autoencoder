@@ -1,0 +1,16 @@
+protected void handle_fhs(MerkleTree tree){
+  if (fhs == null) {
+    Iterator i=waiting.iterator();
+    waiting=new LinkedList();
+    while (i.hasNext()) {
+      TreeReadyCB cb=(TreeReadyCB)i.next();
+      cb.tree_ready(tree);
+    }
+  }
+ else {
+    assert !waiting.isEmpty() : "fhs=" + fhs;
+    keys=new LinkedList();
+    StorageManager.GetByTimeReq req=new StorageManager.GetByTimeReq(fhs.range_low,fhs.range_high,my_sink,this);
+    dispatch(req);
+  }
+}

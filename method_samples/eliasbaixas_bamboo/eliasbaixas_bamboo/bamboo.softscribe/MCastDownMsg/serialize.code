@@ -1,0 +1,7 @@
+public void serialize(OutputBuffer buffer){
+  super.serialize(buffer);
+  buffer.add(srcguid);
+  buffer.add(srcid);
+  buffer.add(dstid);
+  buffer.add(o);
+}

@@ -1,0 +1,6 @@
+/** 
+ * This node's level in the tree; leaves are below level 0.
+ */
+public int level(){
+  return level;
+}

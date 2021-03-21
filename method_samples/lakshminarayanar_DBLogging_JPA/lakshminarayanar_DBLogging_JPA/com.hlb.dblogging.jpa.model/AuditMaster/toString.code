@@ -1,0 +1,3 @@
+@Override public String toString(){
+  return "AuditMaster [LogInterface=" + LogInterface + ", MessageFormat="+ MessageFormat+ ", Host="+ Host+ ", TransType="+ TransType+ ", MessageID="+ MessageID+ ", ServiceID="+ ServiceID+ ", ApplName="+ ApplName+ ", AppID="+ AppID+ ", UniqueProcessID="+ UniqueProcessID+ ", JournalSeq="+ JournalSeq+ ", LogLevel="+ LogLevel+ ", StatusCode="+ StatusCode+ ", ErrorCode="+ ErrorCode+ ", ErrorMessage="+ ErrorMessage+ ", ReasonCode="+ ReasonCode+ ", TransDateTime="+ TransDateTime+ ", UpdatedDateTime="+ UpdatedDateTime+ ", CreatedDateTime="+ CreatedDateTime+ ", RequestDateTime="+ RequestDateTime+ ", CreatedBy="+ CreatedBy+ ", UpdatedBy="+ UpdatedBy+ ", Segment="+ Segment+ ", applicationTransactionId="+ applicationTransactionId+ "]";
+}

@@ -1,0 +1,3 @@
+protected long timer_ms(){
+  return bamboo.util.StandardStage.timer_ms(my_node_id);
+}

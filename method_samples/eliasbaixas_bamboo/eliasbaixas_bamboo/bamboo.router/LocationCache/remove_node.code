@@ -1,0 +1,8 @@
+public boolean remove_node(NeighborInfo ni){
+  Node n=(Node)cache.remove(ni.guid);
+  if (n == null)   return false;
+ else {
+    rem_n(n);
+    return true;
+  }
+}

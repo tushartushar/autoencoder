@@ -1,0 +1,11 @@
+public static String bytes_to_str(byte[] data){
+  return bytes_to_str(data,0,data.length,false);
+}
+public static String bytes_to_str(byte[] data,int offset,int length){
+  return bytes_to_str(data,offset,length,false);
+}
+public static String bytes_to_str(byte[] data,int offset,int length,boolean pretty){
+  StringBuffer sbuf=new StringBuffer(length * 2);
+  bytes_to_sbuf(data,offset,length,pretty,sbuf);
+  return sbuf.toString();
+}

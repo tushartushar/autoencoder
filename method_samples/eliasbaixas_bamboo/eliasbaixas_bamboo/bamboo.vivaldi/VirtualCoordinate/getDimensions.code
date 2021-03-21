@@ -1,0 +1,6 @@
+/** 
+ * Returns the number of dimensions to use for this version of the virtual coordinates.
+ */
+protected int getDimensions(){
+  return 3;
+}

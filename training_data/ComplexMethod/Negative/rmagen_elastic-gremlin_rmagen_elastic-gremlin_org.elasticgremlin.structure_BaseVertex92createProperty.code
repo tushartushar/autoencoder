@@ -1,0 +1,3 @@
+@Override public Property createProperty(String key,Object value){
+  return new BaseVertexProperty(this,key,value);
+}

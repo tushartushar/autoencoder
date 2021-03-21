@@ -1,0 +1,26 @@
+public void init(ConfigDataIF config) throws Exception {
+  super.init(config);
+  String put_log_path=config_get_string(config,"put_log_path");
+  if (put_log_path != null)   recover(put_log_path);
+  die_on_failure=config_get_boolean(config,"die_on_failure");
+  mean_put_period_ms=config_get_int(config,"mean_put_period_ms");
+  if (mean_put_period_ms == -1.0)   mean_put_period_ms=60.0 * 1000.0;
+  mean_get_period_ms=config_get_int(config,"mean_get_period_ms");
+  if (mean_get_period_ms == -1.0)   mean_get_period_ms=60.0 * 1000.0;
+  mean_get_period_ms/=getTypes.length;
+  storage_goal=config_get_int(config,"storage_goal");
+  if (storage_goal == -1)   storage_goal=1024 * 1024 * 1024;
+  int seed=config_get_int(config,"seed");
+  if (seed == -1)   seed=((int)now_ms()) ^ my_node_id.hashCode();
+  rand=new Random(seed);
+  try {
+    digest=MessageDigest.getInstance("SHA");
+  }
+ catch (  Exception e) {
+    assert false;
+  }
+  String client_stg_name=config_get_string(config,"client_stage_name");
+  client=(GatewayClient)lookup_stage(config,client_stg_name);
+  scheduleNextPut();
+  scheduleNextGet();
+}

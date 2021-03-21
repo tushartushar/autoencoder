@@ -1,0 +1,4 @@
+public StorageManagerTest(){
+  DEBUG=false;
+  event_types=new Class[]{StagesInitializedSignal.class,StorageManager.PutResp.class,StorageManager.GetByGuidResp.class,StorageManager.GetByTimeResp.class};
+}

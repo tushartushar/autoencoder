@@ -1,0 +1,3 @@
+public String getSegment(){
+  return Segment;
+}

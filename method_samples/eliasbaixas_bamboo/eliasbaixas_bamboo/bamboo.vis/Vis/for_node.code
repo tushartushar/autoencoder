@@ -1,0 +1,25 @@
+public void for_node(BambooNode node){
+  node.hide_path();
+}
+public void for_node(BambooNode node){
+  node.show_guid();
+}
+public void for_node(BambooNode node){
+  node.hide_guid();
+}
+public void for_node(BambooNode node){
+  node.show_leaf_set();
+}
+public void for_node(BambooNode node){
+  node.hide_leaf_set();
+}
+public void for_node(BambooNode node){
+  node.show_rt();
+}
+public void for_node(BambooNode node){
+  node.hide_rt();
+}
+public void for_node(BambooNode node){
+  node.show_path(dest);
+}
+void for_node(BambooNode node);

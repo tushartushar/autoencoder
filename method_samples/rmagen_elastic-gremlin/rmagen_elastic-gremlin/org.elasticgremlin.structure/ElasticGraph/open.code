@@ -1,0 +1,3 @@
+public static ElasticGraph open(final Configuration configuration) throws InstantiationException {
+  return new ElasticGraph(configuration);
+}

@@ -1,0 +1,20 @@
+public static void main(String[] args) throws Exception {
+  String cfgfile=null;
+  Simulator sim=new Simulator();
+  if (args.length == 3) {
+    String logfile=args[1];
+    cfgfile=args[2];
+    PropertyConfigurator pc=new PropertyConfigurator();
+    pc.configure(logfile);
+  }
+ else   if (args.length == 1) {
+    cfgfile=args[0];
+    Logger.getRoot().addAppender(new SimulatorLogAppender());
+    Logger.getRoot().setLevel(Level.INFO);
+  }
+ else {
+    System.err.println("usage: java bamboo.sim.Simulator <cfg file>");
+    System.exit(1);
+  }
+  sim.run(cfgfile);
+}

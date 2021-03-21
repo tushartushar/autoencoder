@@ -1,0 +1,5 @@
+@Override public Role findByRole(String role){
+  Role foundRole=roleRepository.findByRole(role);
+  if (foundRole == null)   throw new BSLException();
+  return foundRole;
+}

@@ -1,0 +1,4 @@
+public InnerEdge(Object edgeId,EdgeMapping mapping,Vertex outVertex,Vertex inVertex,Object[] keyValues,ElasticGraph graph){
+  super(edgeId,mapping.getLabel(),keyValues,outVertex,inVertex,graph);
+  this.mapping=mapping;
+}

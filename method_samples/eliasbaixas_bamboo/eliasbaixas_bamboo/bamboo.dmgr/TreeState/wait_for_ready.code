@@ -1,0 +1,7 @@
+public void wait_for_ready(TreeReadyCB cb){
+  waiting.addLast(cb);
+  if (waiting.size() == 1) {
+    fhs=tree.root().fill_holes(null,now_ms());
+    handle_fhs(tree);
+  }
+}

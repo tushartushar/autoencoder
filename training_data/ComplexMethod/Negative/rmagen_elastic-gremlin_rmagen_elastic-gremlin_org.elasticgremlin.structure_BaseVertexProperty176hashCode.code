@@ -1,0 +1,3 @@
+@Override public int hashCode(){
+  return ElementHelper.hashCode((Element)this);
+}

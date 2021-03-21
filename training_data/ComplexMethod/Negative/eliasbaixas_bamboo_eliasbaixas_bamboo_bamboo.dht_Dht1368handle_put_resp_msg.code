@@ -1,0 +1,8 @@
+protected void handle_put_resp_msg(PutRespMsg msg){
+  Object[] pair=(Object[])active_puts.remove(new Long(msg.seq));
+  if (pair != null) {
+    PutReq req=(PutReq)pair[0];
+    PutResp outb=new PutResp(msg.result,req.user_data);
+    enqueue(req.completion_queue,outb);
+  }
+}

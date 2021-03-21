@@ -1,0 +1,17 @@
+public void call(Object notUsed){
+  LinkedList<String> stagenames=new LinkedList<String>();
+  Enumeration allStages=mgr.getConfig().getStages();
+  while (allStages.hasMoreElements()) {
+    stageDescr descr=(stageDescr)allStages.nextElement();
+    stagenames.add(descr.stageName);
+  }
+  for (  String stageName : stagenames) {
+    try {
+      mgr.destroyStage(stageName);
+    }
+ catch (    Exception e) {
+      logger.warn("Got exception " + e + " when trying to destroy stage "+ stageName);
+    }
+  }
+  Classifier.removeClassifier(node_id);
+}

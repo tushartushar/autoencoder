@@ -1,0 +1,4 @@
+public EnqueueCb(QueueElementIF i,SinkIF s){
+  item=i;
+  sink=s;
+}

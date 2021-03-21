@@ -1,0 +1,5 @@
+@Override public Configuration newGraphConfiguration(String graphName,Class<?> test,String testMethodName,Map<String,Object> configurationOverrides,LoadGraphWith.GraphData loadGraphWith){
+  Configuration configuration=super.newGraphConfiguration(graphName,test,testMethodName,configurationOverrides,loadGraphWith);
+  configuration.setProperty("queryHandler",ModernGraphQueryHandler.class.getName());
+  return configuration;
+}

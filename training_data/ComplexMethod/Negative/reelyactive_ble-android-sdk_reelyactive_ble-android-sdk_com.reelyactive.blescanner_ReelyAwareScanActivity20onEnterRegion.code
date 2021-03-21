@@ -1,0 +1,3 @@
+@Override public void onEnterRegion(ScanResult beacon){
+  adapter.addItem(beacon);
+}

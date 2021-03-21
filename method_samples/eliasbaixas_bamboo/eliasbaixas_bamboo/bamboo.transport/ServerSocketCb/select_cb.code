@@ -1,0 +1,37 @@
+public void select_cb(SelectionKey skey,Object user_data){
+  if (skey.isAcceptable()) {
+    SocketChannel sc=null;
+    try {
+      sc=ssock_channel.accept();
+    }
+ catch (    IOException e) {
+      BUG(e);
+    }
+    if (sc == null)     return;
+    Socket s=sc.socket();
+    if (logger.isInfoEnabled()) {
+      StringBuffer buf=new StringBuffer(45);
+      buf.append("got connection from ");
+      buf.append(s.getInetAddress().getHostAddress());
+      buf.append(":");
+      buf.append(s.getPort());
+      logger.info(buf);
+    }
+    try {
+      sc.configureBlocking(false);
+    }
+ catch (    IOException e) {
+      BUG(e);
+    }
+    ChannelState state=new ChannelState();
+    state.channel=sc;
+    try {
+      state.skey=acore.register_selectable(state.channel,SelectionKey.OP_READ,state,null);
+    }
+ catch (    ClosedChannelException e) {
+      BUG(e);
+    }
+    InetSocketAddress addr=new InetSocketAddress(s.getInetAddress(),s.getPort());
+    server_channels.put(addr,state);
+  }
+}

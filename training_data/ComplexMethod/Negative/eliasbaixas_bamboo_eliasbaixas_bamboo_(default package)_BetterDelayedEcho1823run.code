@@ -1,0 +1,4 @@
+public void run(){
+  System.out.println(str);
+  System.exit(0);
+}

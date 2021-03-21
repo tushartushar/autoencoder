@@ -1,0 +1,4 @@
+public DiscardReq(Key k,boolean r){
+  key=k;
+  recycle=r;
+}

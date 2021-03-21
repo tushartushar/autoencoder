@@ -1,0 +1,3 @@
+@Id @GeneratedValue @Column(name="id",nullable=false,unique=true) public int getId(){
+  return id;
+}

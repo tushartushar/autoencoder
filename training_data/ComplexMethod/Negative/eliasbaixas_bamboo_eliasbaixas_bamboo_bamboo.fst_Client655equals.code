@@ -1,0 +1,4 @@
+public boolean equals(Object rhs){
+  Client other=(Client)rhs;
+  return Arrays.equals(bytes,other.bytes);
+}

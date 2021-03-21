@@ -1,0 +1,4 @@
+private String getOrgField() throws GeneratorException {
+  String org=txtOrg.getText();
+  return org;
+}

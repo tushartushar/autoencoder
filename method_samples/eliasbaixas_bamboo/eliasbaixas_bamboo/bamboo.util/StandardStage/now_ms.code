@@ -1,0 +1,12 @@
+/** 
+ * Returns the current time in milliseconds; works correctly under the Bamboo simulator and the Simple OceanStore Simulator (SOSS).
+ */
+protected long now_ms(){
+  return now_ms(my_node_id);
+}
+/** 
+ * Returns the current time in milliseconds; works correctly under the Bamboo simulator and the Simple OceanStore Simulator (SOSS).
+ */
+public static long now_ms(NodeId node_id){
+  return Clock.current_date(node_id).getTime();
+}

@@ -1,0 +1,10 @@
+/** 
+ * Sets the time that the display should show. Call this method will not change state(if it is running or paused.).
+ * @param time in seconds
+ */
+public void setTime(int time){
+  Long time2=time();
+  this.setBase(time2 - time * 1000);
+  clockReseted=false;
+  currentTimeLastStop=time2;
+}

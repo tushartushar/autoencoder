@@ -1,0 +1,4 @@
+protected void next_lookup(){
+  long s=Math.round(random_exponential(mean_period_ms,rand));
+  acore.register_timer(s,next_lookup_cb,null);
+}

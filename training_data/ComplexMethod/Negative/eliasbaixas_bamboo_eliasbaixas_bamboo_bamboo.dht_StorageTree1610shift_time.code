@@ -1,0 +1,22 @@
+public void shift_time(long new_low){
+  if (low + 1 == high) {
+    min_free=1;
+    offset=0;
+    valid=true;
+    low+=range;
+    high=low + 1;
+  }
+ else {
+    long dest=new_low - 1;
+    for (int index=0; index < branching; ++index) {
+      Node child=children[index];
+      child.offset+=offset;
+      if ((child.high >= dest) && (dest >= child.low))       child.shift_time(new_low);
+    }
+    offset=0;
+    compute_min_free();
+  }
+}
+public void shift_time(long new_low){
+  root.shift_time(new_low);
+}

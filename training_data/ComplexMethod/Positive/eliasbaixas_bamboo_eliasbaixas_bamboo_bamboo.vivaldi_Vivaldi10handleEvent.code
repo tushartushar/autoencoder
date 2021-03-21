@@ -1,0 +1,77 @@
+/** 
+ * Handle an event for the infrastructure node.
+ */
+public void handleEvent(QueueElementIF item){
+  if (item instanceof seda.sandStorm.api.StagesInitializedSignal) {
+    dispatch(new BambooRouterAppRegReq(_app_id,false,false,false,my_sink));
+  }
+ else   if (item instanceof BambooRouterAppRegResp) {
+    BambooRouterAppRegResp resp=(BambooRouterAppRegResp)item;
+    if (_generate_pings)     scheduleNextPing(new PingAlarm());
+    if (_status_period > 0)     scheduleNextStatus(new StatusAlarm());
+  }
+ else   if (item instanceof BambooRouteDeliver) {
+    BambooRouteDeliver msg=(BambooRouteDeliver)item;
+    if (msg.payload instanceof LocateNodeMsg) {
+      handleNodeMessage((LocateNodeMsg)msg.payload);
+    }
+ else     logger.error("got a " + msg.payload + " message");
+  }
+ else   if (item instanceof LocateNodeResp) {
+    handleNodeResponse((LocateNodeResp)item);
+  }
+ else   if (item instanceof PingMsg) {
+    if (_eavesdrop_pings) {
+      PingVCResp resp=new PingVCResp((PingMsg)item,_my_coordinate,_version_number);
+      resp.comp_q=null;
+      dispatch(resp);
+    }
+  }
+ else   if (item instanceof PingVCResp) {
+    PingVCResp resp=(PingVCResp)item;
+    if (resp.version_number != _version_number)     return;
+    dispatch(new NetworkLatencyReq(resp.peer,my_sink,resp.coordinate));
+  }
+ else   if (item instanceof NetworkLatencyResp) {
+    NetworkLatencyResp resp=(NetworkLatencyResp)item;
+    if (resp.success)     handleAddSample((VirtualCoordinate)resp.user_data,resp.rtt_ms / 2.0);
+  }
+ else   if (item instanceof NetworkMessageResult) {
+    NetworkMessageResult result=(NetworkMessageResult)item;
+    if (!result.success) {
+      logger.warn("dropping a packet");
+      return;
+    }
+    if (result.user_data instanceof PingCB) {
+      PingCB cb=(PingCB)result.user_data;
+      handleAddSample(cb.remote_coordinate,((double)(now_ms() - cb.send_ms) / 2.0));
+    }
+  }
+ else   if (item instanceof PingAlarm) {
+    handlePingAlarm();
+    scheduleNextPing((PingAlarm)item);
+  }
+ else   if (item instanceof StatusAlarm) {
+    handleStatusAlarm();
+    scheduleNextStatus((StatusAlarm)item);
+  }
+ else   if (item instanceof VivaldiAddSample) {
+    VivaldiAddSample s=(VivaldiAddSample)item;
+    handleAddSample(s.remote_coordinate,s.latency_ms);
+  }
+ else   if (item instanceof VivaldiRequestVC) {
+    VivaldiRequestVC request=(VivaldiRequestVC)item;
+    VivaldiReplyVC response=new VivaldiReplyVC(_my_coordinate,_samples,request.user_data);
+    if (request.comp_q != null) {
+      try {
+        request.comp_q.enqueue(response);
+      }
+ catch (      SinkClosedException e) {
+      }
+catch (      SinkException e) {
+        classifier.dispatch_later(request,100);
+      }
+    }
+  }
+ else   logger.warn("got unexpected event: " + item + ".");
+}
